@@ -242,6 +242,10 @@ textarea.field{min-height:150px;resize:vertical}
 .how b{display:block}
 .flash{border-radius:14px;padding:12px 14px;background:var(--primary-soft);font-size:15px;font-weight:600;margin-top:12px}
 
+/* Large text or a short screen: only the top bar (Help, and the YELLOW 988 bar) stays pinned. See fitChrome(). */
+:root.crowded .tabbar,:root.crowded .actions{position:static}
+:root.crowded .actions{background:none}
+
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 @media (prefers-reduced-motion:reduce){
@@ -1411,7 +1415,7 @@ const SCREENS = {
     return { close:false, body:`
       ${title("Your data")}
       <p class="sub">Copy this to keep a record. It doesn't go anywhere unless you paste it somewhere.</p>
-      <textarea class="field" id="exportBox" readonly style="min-height:300px;font-size:13px;font-family:ui-monospace,Menlo,monospace">${esc(json)}</textarea>
+      <textarea class="field" id="exportBox" aria-label="Your data, as text you can copy" readonly style="min-height:300px;font-size:13px;font-family:ui-monospace,Menlo,monospace">${esc(json)}</textarea>
       ${ui.flash ? `<p class="flash" role="status">${esc(ui.flash)}</p>` : ""}`,
       actions:`<button class="btn btn-primary" data-act="copyExport">Copy</button>
         <button class="btn btn-secondary" data-act="toSettings">Back</button>` };
@@ -1585,7 +1589,7 @@ function focusLoop(ts){
     const t = (ts - ui.focusStart) / 1000;
     const period = reducedMotion() ? 8 : 4.5;
     const x = ((Math.sin(t * 2 * Math.PI / period) + 1) / 2) * (g.w - g.ow);
-    const y = Math.sin(t * 2 * Math.PI / (period * 1.7)) * 18;
+    const y = reducedMotion() ? 0 : Math.sin(t * 2 * Math.PI / (period * 1.7)) * 18;   // reduced motion: slower, side to side only
     ui.focusX = x;
     g.orb.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
     const left = Math.max(0, 60 - t);
@@ -1649,6 +1653,17 @@ function devPanel(){
     </dl></div>`;
 }
 
+/* With large text (e.g. 200%) the pinned top bar, action buttons and tab bar can cover most of the screen.
+   If together they'd take more than 40% of it, let the bottom ones scroll with the page. Help stays pinned. */
+function fitChrome(){
+  const root = document.documentElement;
+  root.classList.remove("crowded");
+  const h = sel => { const el = document.querySelector(sel); return el ? el.offsetHeight : 0; };
+  const pinned = h("header.top") + h(".actions") + h(".tabbar");
+  root.classList.toggle("crowded", window.innerHeight > 0 && pinned > window.innerHeight * 0.4);
+}
+window.addEventListener("resize", () => fitChrome());
+
 function render(){
   // Until onboarding is done, anything that would land on Home (first launch, leaving a crisis
   // screen, "I feel safer") starts onboarding instead. Crisis screens are never gated.
@@ -1667,6 +1682,7 @@ function render(){
     </main>
     ${def.nav ? tabBar() : ""}
     ${session.devPanelOpen ? devPanel() : ""}`;
+  fitChrome();
   if (changed){
     window.scrollTo(0, 0);
     const h = document.getElementById("screen-title");
