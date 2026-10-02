@@ -1,0 +1,175 @@
+// Builds REVIEW.md: every word a person can see in ZigZag Mind, in one place, for clinician review.
+// Text is read from index.html itself (constants + every rendered screen), so it can't drift.
+// Run: npm run review    (review.test.js fails if REVIEW.md is out of date)
+const {JSDOM}=require('jsdom');
+const fs=require('fs'), path=require('path');
+const FILE=path.join(__dirname,'index.html'), OUT=path.join(__dirname,'REVIEW.md');
+const FIXED_NOW=Date.UTC(2026,0,15,15,0,0);
+
+function boot(){
+  const dom=new JSDOM(fs.readFileSync(FILE,'utf8'),{url:'https://zigzagmind.com/',runScripts:'dangerously',pretendToBeVisual:true,beforeParse(w){
+    w.scrollTo=()=>{}; w.scrollBy=()=>{};
+    const RealDate=w.Date;
+    class FixedDate extends RealDate { constructor(...a){ super(...(a.length?a:[FIXED_NOW])); } static now(){ return FIXED_NOW; } }
+    w.Date=FixedDate; w.performance.now=()=>0;
+    w.Intl=new Proxy(w.Intl,{get:(t,k)=>k==='DateTimeFormat'?function(){ return { resolvedOptions:()=>({timeZone:'America/Chicago'}), format:()=>'' }; }:t[k]});
+  }});
+  const w=dom.window; w.HTMLElement.prototype.scrollIntoView=()=>{};
+  w.eval('prefs.onboarded=true');
+  return w;
+}
+
+// Turn the rendered app into readable lines: headings, text, buttons, links (with where they go).
+const BLOCKS='h1,h2,h3,p,li,label,legend,dt,dd,button,a,.ybar p,.lbl,.meta,.cap,.legend span,.tm,.lb,.count,.big,.for,.zh';
+function lines(w, root){
+  const doc=w.document, out=[], seen=new Set();
+  const clean=s=>s.replace(/\s+/g,' ').trim();
+  const walk=el=>{
+    for(const n of el.childNodes){
+      if(n.nodeType!==1) continue;
+      if(n.matches('textarea,script,svg,[aria-hidden="true"]')) continue;
+      if(n.matches('.rating')){ out.push('- Rating buttons: 0 to 10'); continue; }
+      if(n.matches('button,a')){
+        const c=n.cloneNode(true); c.querySelectorAll('[aria-hidden="true"]').forEach(x=>x.remove());
+        c.querySelectorAll('.cap,.meta').forEach(x=>x.insertAdjacentText('beforebegin',' — '));
+        const t=clean(c.textContent), aria=n.getAttribute('aria-label'), href=n.getAttribute('href');
+        const kind=n.tagName==='A'?`Link${href?` → \`${href.replace(/body=[^&]*/,m=>'body='+decodeURIComponent(m.slice(5)))}\``:''}`:'Button';
+        const label=t||aria||'';
+        if(label){ out.push(`- **${kind}:** ${label}${aria&&t&&aria!==t?` _(screen reader: "${aria}")_`:''}`); }
+        continue;
+      }
+      if(n.matches('input')){ const p=n.getAttribute('placeholder'); out.push(`- **Text box**${n.getAttribute('aria-label')?` "${n.getAttribute('aria-label')}"`:''}${p?` (hint: "${p}")`:''}`); continue; }
+      if(n.matches('h1,h2,h3') || n.id==='screen-title'){ const t=clean(n.textContent); if(t) out.push(`- **Heading:** ${t}`); continue; }
+      const hasOwnText=[...n.childNodes].some(c=>c.nodeType===3 && c.textContent.trim());
+      if(hasOwnText && n.matches(BLOCKS+',div,span')){ const t=clean(n.textContent); if(t && !seen.has(n)){ out.push(`- ${t}`); seen.add(n); } continue; }
+      walk(n);
+    }
+  };
+  walk(root||doc.getElementById('app'));
+  return out;
+}
+
+function screenText(w, setup){
+  w.eval(`lastRendered=null; ui=freshUi(); session={...initialSession}; ${setup}; render();`);
+  return lines(w);
+}
+
+const md=[];
+const H=(lvl,t)=>md.push('', '#'.repeat(lvl)+' '+t, '');
+const P=t=>md.push(t);
+const list=a=>a.forEach(x=>md.push(`- ${x}`));
+const code=x=>'`'+x+'`';
+
+const w=boot();
+const G=x=>w.eval(x);
+
+P('# ZigZag Mind: clinician review pack');
+P('');
+P('Every safety rule, phrase list, crisis-screen string, intervention, and piece of flow copy in the app, word for word, so a licensed clinician can review it in one place.');
+P('');
+P('**Generated from `index.html` by `npm run review`. Do not edit by hand.** If the app\'s wording changes, the tests fail until this file is regenerated.');
+P('');
+P('How to read screen text: each screen is listed top to bottom as it appears on a phone. **Button** and **Link** lines are things a person can tap. Links show where they go (`tel:` opens the phone dialer, `sms:` opens Messages with the text shown). ZigZag Mind never calls or texts anyone itself.');
+
+H(2,'1. Escalation rules');
+P('Safety level lives only for the current visit and is **never saved**. Levels: GREEN (default), YELLOW (elevated), RED (crisis).');
+P('');
+list([
+  `**Free-text check.** Every free-text box (except My Plan fields, which are exempt) is checked when submitted. Text is lowercased, apostrophes removed, and everything that isn't a letter or number becomes a space. If it contains any RED phrase → RED. Otherwise, any YELLOW phrase → YELLOW. Otherwise GREEN. Matching is on whole words/phrases.`,
+  `**RED** stops everything (flows, games, check-ins) and opens the crisis screen immediately. Nothing from that moment is saved.`,
+  `**YELLOW** shows the support bar ("You don't have to handle this alone." · Call 988 · Talk to someone) on every non-crisis screen for the rest of the visit, and the suggestion engine offers connection, the person's own plan, grounding, or a change of space first.`,
+  `**Automatic YELLOW:** tapping "I still feel bad" twice in a visit, or giving a 9 or 10 rating (before or after) twice in a visit.`,
+  `**Tapping Help** (top right of every screen) or **"I don't feel safe"** → RED crisis screen. One tap, no confirmation.`,
+  `**Crisis question:** "Are you in danger of hurting yourself or someone else right now?" Yes or I'm not sure → full crisis screen (RED). No → YELLOW, "What would help right now?" (talk to someone / open my plan / do something grounding), then "Do you feel safer than a few minutes ago?" Yes → Home (YELLOW). No or Not sure → full crisis screen (RED).`,
+  `**Leaving RED** is only possible through "That's not what I meant — go back", No on the danger question, or Yes on "Do you feel safer". Each leads to YELLOW. Nothing ever returns to GREEN in the same visit.`,
+  `**Calling or texting** from the "What would help" screen moves straight to "Do you feel safer" in the same tap, before the phone app opens.`,
+  `**First launch:** onboarding never blocks the crisis screens. Leaving a crisis screen during onboarding returns to onboarding at YELLOW.`,
+  `**Outside the US** (guessed from the phone's time zone, then language; can be set in Settings): adds "Find a helpline in your country" (findahelpline.com) under 988. 911 and 988 are never hidden.`,
+]);
+
+H(2,'2. Safety phrase lists');
+H(3,`RED phrases (${G('RED_PHRASES.length')}) → crisis screen`);
+list(G('RED_PHRASES').map(x=>`"${x}"`));
+H(3,`YELLOW phrases (${G('YELLOW_PHRASES.length')}) → support bar for the rest of the visit`);
+list(G('YELLOW_PHRASES').map(x=>`"${x}"`));
+
+H(2,'3. Crisis contacts and prepared messages');
+list(Object.entries(G('LINKS')).map(([k,v])=>`${code(k)}: ${code(v)}`));
+P('');
+P(`Prepared text message to a trusted person: "${G('HARD_TIME_MSG')}"`);
+
+H(2,'4. Crisis screens');
+P('Shown with a trusted person in My Plan (example name "Jordan") unless noted. The Help button is in the top bar of every screen in the app.');
+const withPerson='ACTIONS.loadSample()';
+const crisisCases=[
+  ['Crisis (first screen)', `${withPerson}; session.safetyLevel="RED"; session.screen="crisis"`],
+  ['Full crisis screen (Yes / I\'m not sure)', `${withPerson}; session.safetyLevel="RED"; session.screen="crisis-full"; ui.placesOpen=true`],
+  ['Full crisis screen, nobody in My Plan yet', `ACTIONS.deleteAll(); session.safetyLevel="RED"; session.screen="crisis-full"; ui.placesOpen=true`],
+  ['"What would help right now?" (No)', `${withPerson}; session.safetyLevel="YELLOW"; session.yellow=true; session.screen="crisis-no"; ui.talkOpen=true`],
+  ['"Do you feel safer?"', `${withPerson}; session.safetyLevel="YELLOW"; session.yellow=true; session.screen="safety-check"`],
+  ['Talk to someone', `${withPerson}; session.safetyLevel="YELLOW"; session.yellow=true; session.screen="talk"`],
+  ['Crisis, outside the US', `${withPerson}; prefs.country="other"; session.safetyLevel="RED"; session.screen="crisis"`],
+];
+for(const [name,setup] of crisisCases){ H(3,name); md.push(...screenText(w,setup)); w.eval('prefs.country="auto"'); }
+H(3,'YELLOW support bar (shown above every non-crisis screen once YELLOW)');
+w.eval(`ui=freshUi(); session={...initialSession, yellow:true, safetyLevel:"YELLOW", screen:"home"}; render();`);
+md.push(...lines(w, w.document.querySelector('.ybar')));
+
+H(2,'5. Intervention library');
+for(const i of G('INTERVENTION_LIBRARY')){
+  H(3,`${i.name} (${code(i.id)})`);
+  list([`Button: "${i.tryLabel}"`, `Description: "${i.description}"`, `For: ${i.states.join(', ')} · about ${Math.round(i.durationSec/60*10)/10} min${i.needsMobility?' · needs moving around':''}`]);
+  P(''); P('Steps:'); i.steps.forEach((s,n)=>md.push(`${n+1}. ${s}`));
+}
+H(3,'Engine messages (the line shown with a suggestion)');
+{ const src=G('interventionEngine.toString()');
+  const msgs=[...new Set([...src.matchAll(/"([A-Z][^"]*[.!?])"|`([^`]*helped you before\.)`/g)].map(m=>m[1]||m[2]))].filter(m=>!/^No eligible/.test(m));
+  list(msgs.map(m=>`"${m.replace('${i.name}','[name]')}"`)); }
+H(3,'Engine order');
+P('Filter by state → filter by intensity → never repeat the last pick → if YELLOW: connection, then the person\'s own plan items, then grounding, then fresh air (no trying new things) → every 4th start tries something not yet tried this visit → rank by average drop in rating (2+ rated uses) → match to the person\'s plan → first eligible. Shown as an offer ("Walking helped you before."), never a promise.');
+
+H(2,'6. Other fixed copy');
+H(3,'Before-rating headings, by state'); list(Object.entries(G('BEFORE_HEAD')).map(([k,[a,b]])=>`${k}: "${a}"${b?` / "${b}"`:''}`));
+H(3,'Craving: waiting-it-out checklist'); list(G('CRAVING_STEPS').map(([,t])=>`"${t}"`));
+H(3,'5-4-3-2-1 grounding prompts'); list(G('GROUND').map(x=>`"${x.text}"`));
+H(3,'Suggestions from My Plan'); list(Object.entries(G('SUGGESTION_TEXT')).map(([k,v])=>`${k}: "${v}"`));
+H(3,'"Things that help me" choices'); list(G('HELP_CHIPS').map(([,l])=>`"${l}"`));
+H(3,'My Plan sections'); list(G('PLAN_SECTIONS').map(([,t,,hint])=>`"${t}"${hint?` (hint: "${hint}")`:''}`));
+
+H(2,'7. Every other screen');
+P('Rendered for each state where the screen changes by state. Identical renders are listed once.');
+const crisis=new Set(G('CRISIS_SCREENS').concat(['talk']));
+const states=['anxious','spiraling','low','craving','distraction'];
+const seenRenders=new Map();
+for(const s of G('Object.keys(SCREENS)')){
+  if(crisis.has(s)) continue;
+  const variants=[];
+  const ctx = st => `${withPerson}; session.screen=${JSON.stringify(s)}; session.currentState=${JSON.stringify(st)}; session.currentBeforeRating=7;
+    ui.thoughts=[{text:"(your thought)",place:null}]; ui.cravingStart=Date.now(); ui.cravingEnd=Date.now()+900000; ui.nextStep="(your next step)";
+    session.currentInterventionId=${JSON.stringify(st==='spiraling'?'thought_parking':st==='craving'?'craving_delay':st==='low'?'hydration':st==='distraction'?'distraction_game':'grounding')};
+    ${s==='plan-edit'?'ui.editSection="trustedPeople";':''}
+    ${s==='recommendation'?'runEngine();':''} ${s==='suggestion'?'ui.sugg="music";':''} ui.flash="";`;
+  for(const st of states){
+    let txt; try { txt=screenText(w, ctx(st)); } catch(e){ txt=[`- (could not render: ${e.message})`]; }
+    const key=txt.join('\n');
+    const v=variants.find(x=>x.key===key); if(v) v.states.push(st); else variants.push({key,txt,states:[st]});
+  }
+  H(3,code(s));
+  if(variants.length===1) md.push(...variants[0].txt);
+  else for(const v of variants){ P(''); P(`_When: ${v.states.join(', ')}_`); P(''); md.push(...v.txt); }
+}
+H(3,'Each intervention screen');
+for(const i of G('INTERVENTION_LIBRARY')){
+  H(4,i.name);
+  md.push(...screenText(w, `${withPerson}; session.screen="intervention"; session.currentState=${JSON.stringify(i.states[0])}; session.currentInterventionId=${JSON.stringify(i.id)}`));
+}
+H(3,'Home, iPhone Safari (shows the add-to-home-screen tip)');
+w.eval('prefs.homeTipDismissed=false; Object.defineProperty(navigator,"userAgent",{value:"Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1",configurable:true})');
+md.push(...screenText(w, `ACTIONS.deleteAll(); session.screen="home"`).filter(l=>/home screen|Got it/.test(l)));
+
+H(2,'8. Sample data (fictional, only when someone taps "Load sample data" in Settings)');
+P('```json'); P(JSON.stringify(G('SAMPLE_PLAYBOOK'),null,2)); P('```');
+
+const text=md.join('\n').replace(/\n{3,}/g,'\n\n').trim()+'\n';
+if(require.main===module){ fs.writeFileSync(OUT,text); console.log(`Wrote REVIEW.md (${text.split('\n').length} lines)`); }
+module.exports={ build:()=>text };

@@ -4,7 +4,8 @@
   "private": true,
   "description": "NEXT \u2014 get through what's happening right now. Deterministic support-tool prototype.",
   "scripts": {
-    "test": "node run-all.js"
+    "test": "node run-all.js",
+    "review": "node review.js"
   },
   "devDependencies": {
     "jsdom": "^24.0.0"
