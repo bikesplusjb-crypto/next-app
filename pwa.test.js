@@ -18,6 +18,31 @@ r.push(['every icon file exists at its stated size', icons.every(i=>fs.existsSyn
 r.push(['apple touch icon is 180x180', pngSize('apple-touch-icon.png')==='180x180']);
 r.push(['index.html links manifest and icons', /<link rel="manifest" href="manifest.webmanifest">/.test(HTML) && /rel="apple-touch-icon" href="apple-touch-icon.png"/.test(HTML)]);
 
+// The icon is Zags: same body, tuft, eyes and smile as zags-preview.html.
+{ const svg=read('icon.svg').toString('utf8'), ref=read('zags-preview.html').toString('utf8');
+  const parts=['M110 48 C160 48 186 84 186 128 C186 170 154 196 110 196 C66 196 34 170 34 128 C34 84 60 48 110 48 Z','M92 52 L102 30 L110 46 L120 24 L128 52','M100 140 Q110 148 120 140','cx="86" cy="118" rx="8" ry="10"','cx="134" cy="118" rx="8" ry="10"'];
+  r.push(['icon is Zags from zags-preview.html', parts.every(p=>svg.includes(p) && ref.includes(p)) && /#7BC4BB/i.test(svg) && /#2F6F6A/i.test(svg) && /#F6F4EF/i.test(svg)]); }
+// Maskable safe zone: every pixel outside the central circle (radius 40%) is plain warm paper.
+function decodePng(buf){
+  const zlib=require('zlib'); let i=8, w, h, type, idat=[];
+  while(i<buf.length){ const len=buf.readUInt32BE(i), t=buf.toString('ascii',i+4,i+8), d=buf.slice(i+8,i+8+len);
+    if(t==='IHDR'){ w=d.readUInt32BE(0); h=d.readUInt32BE(4); type=d[9]; if(d[8]!==8) throw new Error('bit depth'); }
+    if(t==='IDAT') idat.push(d); i+=12+len; }
+  const bpp=type===6?4:3, stride=w*bpp, raw=zlib.inflateSync(Buffer.concat(idat)), px=Buffer.alloc(h*stride);
+  for(let y=0;y<h;y++){ const f=raw[y*(stride+1)];
+    for(let x=0;x<stride;x++){ const v=raw[y*(stride+1)+1+x], a=x>=bpp?px[y*stride+x-bpp]:0, b=y?px[(y-1)*stride+x]:0, c=(x>=bpp&&y)?px[(y-1)*stride+x-bpp]:0;
+      const p=a+b-c, pa=Math.abs(p-a), pb=Math.abs(p-b), pc=Math.abs(p-c);
+      px[y*stride+x]=(v+[0,a,b,(a+b)>>1,(pa<=pb&&pa<=pc)?a:(pb<=pc?b:c)][f])&255; } }
+  return {w,h,at:(x,y)=>[...px.slice(y*stride+x*bpp,y*stride+x*bpp+3)]};
+}
+for(const f of ['icon-512.png','icon-192.png','apple-touch-icon.png']){
+  const img=decodePng(read(f)), c=img.w/2, R=img.w*0.4; let ok=true, inside=false;
+  for(let y=0;y<img.h;y++) for(let x=0;x<img.w;x++){ const [rr,gg,bb]=img.at(x,y), paper=Math.abs(rr-0xF6)+Math.abs(gg-0xF4)+Math.abs(bb-0xEF)<=6;
+    if(Math.hypot(x+.5-c,y+.5-c)>R){ if(!paper) ok=false; } else if(!paper) inside=true; }
+  r.push([`${f}: Zags fits the maskable safe zone`, ok && inside]);
+}
+r.push(['cache version bumped for the new icons', /const CACHE = "zz-shell-v2";/.test(read('sw.js').toString('utf8'))]);
+
 // ---- service worker harness ----
 const FILES={}; ['index.html','manifest.webmanifest','icon.svg','icon-192.png','icon-512.png','apple-touch-icon.png'].forEach(f=>FILES['/'+f]=read(f));
 FILES['/']=FILES['/index.html']; FILES['/data.json']=Buffer.from('{}');

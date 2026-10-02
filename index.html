@@ -463,7 +463,16 @@ function clearSaved(){
 const getPlan = () => store.sensitive.plan;
 function logActivity(type){ store.sensitive.activity.push({ type, ts:Date.now() }); saveStore(); }
 
-const prefs = { reduce:false, haptics:false };
+const prefs = { reduce:false, haptics:false, homeTipDismissed:false };
+/* iPhone Safari only, and only when not already opened from the home screen. Shown on Home until dismissed. */
+function showHomeTip(){
+  if (prefs.homeTipDismissed) return false;
+  const ua = navigator.userAgent || "";
+  const iPhoneSafari = /iPhone|iPod/.test(ua) && /Safari\//.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS|GSA\//.test(ua);
+  let installed = navigator.standalone === true;
+  try { installed = installed || !!(window.matchMedia && window.matchMedia("(display-mode: standalone)").matches); } catch (_){}
+  return iPhoneSafari && !installed;
+}
 const mqReduce = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
 function reducedMotion(){ return prefs.reduce || !!(mqReduce && mqReduce.matches); }
 function buzz(){ if (prefs.haptics && navigator.vibrate) { try { navigator.vibrate(10); } catch(_){} } }
@@ -834,6 +843,10 @@ const SCREENS = {
       <div style="display:flex;justify-content:center;margin:8px 0 12px">
         <button class="link" data-act="triage">I don't know — help me figure it out</button>
       </div>
+      ${showHomeTip() ? `<div class="panel" id="homeTip" role="note" style="margin:0 0 16px">
+        <p style="margin:0">Add ZigZag Mind to your home screen so your plan stays with you. Tap Share, then Add to Home Screen.</p>
+        <div style="display:flex;justify-content:flex-end"><button class="link" data-act="dismissHomeTip">Got it</button></div>
+      </div>` : ""}
       ${!getPlan().trustedPeople.length && !getPlan().helps.length ? `<button class="card wide" data-act="tab" data-arg="plan" style="margin-bottom:16px;width:100%"><span class="em" aria-hidden="true">📝</span><span>Build your plan for hard moments<span class="meta">Do it on a good day. It takes a few minutes.</span></span></button>` : ""}` };
   },
 
@@ -1614,6 +1627,7 @@ const ACTIONS = {
   tab(arg){ if (arg === "plan") ui.planFrom = "tab"; ui.flash = ""; go(arg); },
   home(){ go("home"); },
   crisis(){ openCrisis(); },
+  dismissHomeTip(){ prefs.homeTipDismissed = true; savePrefs(); render(); },
   triage(){ if (blockIfRed()) return; go("triage"); },
   flow(arg){ startFlow(arg); },
   triagePick(arg){

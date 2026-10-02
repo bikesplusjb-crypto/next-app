@@ -1,6 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Zags, from zags-preview.html (220x220 art), scaled 2x and centered; stays inside the maskable safe zone. -->
   <rect width="512" height="512" fill="#F6F4EF"/>
-  <path d="M150 362 C150 230 230 150 362 150 C362 282 282 362 150 362 Z" fill="#2F6F6A"/>
-  <path d="M150 362 L322 190" fill="none" stroke="#A9D8D1" stroke-width="12" stroke-linecap="round"/>
-  <path d="M120 392 L150 362" fill="none" stroke="#2F6F6A" stroke-width="14" stroke-linecap="round"/>
+  <g transform="translate(36 40) scale(2)">
+    <path d="M92 52 L102 30 L110 46 L120 24 L128 52" fill="none" stroke="#2F6F6A" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M110 48 C160 48 186 84 186 128 C186 170 154 196 110 196 C66 196 34 170 34 128 C34 84 60 48 110 48 Z" fill="#7BC4BB"/>
+    <ellipse cx="110" cy="160" rx="44" ry="26" fill="#FFFFFF" opacity=".28"/>
+    <ellipse cx="86" cy="118" rx="8" ry="10" fill="#1E2329"/>
+    <ellipse cx="134" cy="118" rx="8" ry="10" fill="#1E2329"/>
+    <circle cx="89" cy="114" r="2.6" fill="#FFFFFF"/>
+    <circle cx="137" cy="114" r="2.6" fill="#FFFFFF"/>
+    <ellipse cx="70" cy="138" rx="10" ry="6" fill="#F2A98F" opacity=".55"/>
+    <ellipse cx="150" cy="138" rx="10" ry="6" fill="#F2A98F" opacity=".55"/>
+    <path d="M100 140 Q110 148 120 140" fill="none" stroke="#1E2329" stroke-width="4" stroke-linecap="round"/>
+  </g>
 </svg>

@@ -3,7 +3,7 @@
 // It caches nothing else. Plan, history and prefs live only in localStorage and never
 // pass through here. tel: and sms: links never reach a service worker, so they work offline.
 // Bump CACHE whenever a shell file other than index.html changes.
-const CACHE = "zz-shell-v1";
+const CACHE = "zz-shell-v2";
 const SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icon.svg", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
 const NETWORK_TIMEOUT_MS = 3000;
 
