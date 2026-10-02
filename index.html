@@ -463,7 +463,8 @@ function clearSaved(){
 const getPlan = () => store.sensitive.plan;
 function logActivity(type){ store.sensitive.activity.push({ type, ts:Date.now() }); saveStore(); }
 
-const prefs = { reduce:false, haptics:false, homeTipDismissed:false };
+const prefs = { reduce:false, haptics:false, homeTipDismissed:false, onboarded:false };
+function finishOnboarding(){ prefs.onboarded = true; savePrefs(); }   // remembered in prefs only
 /* iPhone Safari only, and only when not already opened from the home screen. Shown on Home until dismissed. */
 function showHomeTip(){
   if (prefs.homeTipDismissed) return false;
@@ -1403,6 +1404,53 @@ const SCREENS = {
         <button class="btn btn-secondary" data-act="toSettings">Cancel</button>` };
   },
 
+  /* First launch only. Help stays in the top bar on every step, and 988 is on the first screen. */
+  "ob-about"(){
+    return { close:false, body:`
+      ${title("Welcome to ZigZag Mind.")}
+      <p class="sub">Help for hard moments, one small step at a time.</p>
+      <p class="small" style="margin:16px 0 0">In danger or thinking about suicide? Call or text 988. It's free and open 24/7.</p>
+      ${row988()}
+      <div class="panel"><h3>What it is</h3><ul>
+        <li>A self-help tool for anxiety, spiraling thoughts, cravings, and low moods.</li>
+        <li>Small, concrete things to try, and a plan you make yourself.</li>
+        <li>Private. What you write stays on this phone.</li></ul></div>
+      <div class="panel" style="margin-top:10px"><h3>What it isn't</h3><ul>
+        <li>Not an emergency service. Call 911 if someone is hurt or in danger.</li>
+        <li>Not therapy, medical care, or a diagnosis.</li>
+        <li>Not a person. It never contacts anyone for you.</li></ul></div>`,
+      actions:`<button class="btn btn-primary" data-act="obNext">Next</button>` };
+  },
+
+  "ob-age"(){
+    return { close:false, body:`
+      ${title("Are you 18 or older?")}
+      <p class="sub">ZigZag Mind is made for adults.</p>`,
+      actions:`<button class="btn btn-primary" data-act="obAdult">Yes, I'm 18 or older</button>
+        <button class="btn btn-secondary" data-act="obMinor">No, I'm under 18</button>
+        <button class="btn btn-secondary" data-act="obBack">Back</button>` };
+  },
+
+  "ob-minor"(){
+    return { close:false, body:`
+      ${title("ZigZag Mind is made for adults.")}
+      <p>You still deserve support that fits you. If things are hard right now, 988 is free, open 24/7, and there for people of any age.</p>
+      ${row988()}
+      <p style="margin-top:16px">You can also talk to an adult you trust: a parent, a teacher, a school counselor, or a doctor.</p>
+      <p class="disclaimer">Call 911 if someone is hurt or in danger.</p>`,
+      actions:`<button class="btn btn-secondary" data-act="obAgeBack">Back</button>` };
+  },
+
+  "ob-plan"(){
+    return { close:false, body:`
+      ${title("Want to make your plan now?")}
+      <p>Your plan holds what helps on a hard day: the early signs, things that help, people to reach, and what you want to remember.</p>
+      <p class="sub">It's easiest to make on a good day. It takes a few minutes, and it's saved only on this phone.</p>
+      <p class="small" style="margin-top:12px">You'll find it any time under My Plan.</p>`,
+      actions:`<button class="btn btn-primary" data-act="obPlanNow">Make my plan now</button>
+        <button class="btn btn-secondary" data-act="obLater">Later</button>` };
+  },
+
   about(){
     return { close:true, body:`
       <div class="about-hero">
@@ -1580,6 +1628,9 @@ function devPanel(){
 }
 
 function render(){
+  // Until onboarding is done, anything that would land on Home (first launch, leaving a crisis
+  // screen, "I feel safer") starts onboarding instead. Crisis screens are never gated.
+  if (session.screen === "home" && !prefs.onboarded) dispatch({ type:"SET_SCREEN", screen:"ob-about" });
   const s = session.screen;
   const def = (SCREENS[s] || SCREENS.home)();
   const changed = s !== lastRendered;
@@ -1628,6 +1679,13 @@ const ACTIONS = {
   home(){ go("home"); },
   crisis(){ openCrisis(); },
   dismissHomeTip(){ prefs.homeTipDismissed = true; savePrefs(); render(); },
+  obNext(){ go("ob-age"); },
+  obBack(){ go("ob-about"); },
+  obAdult(){ go("ob-plan"); },
+  obMinor(){ go("ob-minor"); },
+  obAgeBack(){ go("ob-age"); },
+  obPlanNow(){ finishOnboarding(); ui.planFrom = "tab"; go("plan"); },
+  obLater(){ finishOnboarding(); go("home"); },
   triage(){ if (blockIfRed()) return; go("triage"); },
   flow(arg){ startFlow(arg); },
   triagePick(arg){

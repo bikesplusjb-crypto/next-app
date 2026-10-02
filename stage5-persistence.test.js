@@ -5,6 +5,7 @@ function boot(seed){const dom=new JSDOM(fs.readFileSync(FILE,'utf8'),{url:'https
   beforeParse(w){ if(seed) for(const [k,v] of Object.entries(seed)) w.localStorage.setItem(k,v); w.scrollTo=()=>{}; w.scrollBy=()=>{}; }});
  const w=dom.window; w.HTMLElement.prototype.scrollIntoView=()=>{};
  const click=(sel)=>{const el=w.document.querySelector(sel); if(!el) throw new Error('missing '+sel+' on '+w.eval('session.screen')); el.dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true}));};
+ if(String(w.eval('session.screen')).startsWith('ob-')) ['obNext','obAdult','obLater'].forEach(a=>click(`[data-act="${a}"]`)); // first-launch onboarding: see onboarding.test.js
  const dump=()=>{const o={}; for(let i=0;i<w.localStorage.length;i++){const k=w.localStorage.key(i); o[k]=w.localStorage.getItem(k);} return o;};
  return {w,click,S:()=>w.eval('session'),G:x=>w.eval(x),T:()=>w.document.body.textContent,dump};}
 const act=(a,arg)=>arg!==undefined?`[data-act="${a}"][data-arg="${arg}"]`:`[data-act="${a}"]`;

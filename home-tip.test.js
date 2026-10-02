@@ -55,6 +55,8 @@ r.push(['not in Chrome on iPhone', !boot({ua:UA.iphoneChrome}).tip()]);
 r.push(['not on iPad', !boot({ua:UA.ipad}).tip()]);
 r.push(['not on Android', !boot({ua:UA.android}).tip()]);
 r.push(['not on desktop Safari', !boot({ua:UA.desktop}).tip()]);
+{const dom=new JSDOM(HTML,{url:'https://next.example/',runScripts:'dangerously',pretendToBeVisual:true,beforeParse(w){ w.scrollTo=()=>{}; Object.defineProperty(w.navigator,'userAgent',{value:UA.iphoneSafari}); }});
+ r.push(['not during first-launch onboarding', dom.window.eval('session.screen')==='ob-about' && !dom.window.document.getElementById('homeTip')]);}
 {const a=boot(); a.click(act('tab','plan'));
  r.push(['not on other screens', a.S().screen==='plan' && !a.tip()]);}
 console.log(r.map(x=>(x[1]?'PASS ':'FAIL ')+x[0]).join('\n'));

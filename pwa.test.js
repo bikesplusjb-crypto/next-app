@@ -115,11 +115,11 @@ const bootOpts=(url,extra)=>({url,runScripts:'dangerously',pretendToBeVisual:tru
   // Registration
   const withSW=(secure,register)=>w=>{ Object.defineProperty(w,'isSecureContext',{value:secure}); Object.defineProperty(w.navigator,'serviceWorker',{value:{ register }}); };
   { const calls=[]; const dom=new JSDOM(HTML,bootOpts(ORIGIN+'/',withSW(true,u=>{ calls.push(u); return Promise.resolve(); })));
-    r.push(['page registers sw.js', calls.length===1 && calls[0]==='sw.js' && dom.window.eval('session.screen')==='home']); dom.window.close(); }
+    r.push(['page registers sw.js', calls.length===1 && calls[0]==='sw.js' && dom.window.eval('session.screen')==='ob-about']); dom.window.close(); }
   { const calls=[]; const dom=new JSDOM(HTML,bootOpts('http://example.com/',withSW(false,u=>{ calls.push(u); return Promise.resolve(); })));
-    r.push(['no registration on insecure pages', calls.length===0 && dom.window.eval('session.screen')==='home']); dom.window.close(); }
+    r.push(['no registration on insecure pages', calls.length===0 && dom.window.eval('session.screen')==='ob-about']); dom.window.close(); }
   { const dom=new JSDOM(HTML,bootOpts(ORIGIN+'/',withSW(true,()=>{ throw new Error('blocked'); })));
-    r.push(['app still works if registration fails', dom.window.eval('session.screen')==='home']); dom.window.close(); }
+    r.push(['app still works if registration fails', dom.window.eval('session.screen')==='ob-about']); dom.window.close(); }
 
   console.log(r.map(x=>(x[1]?'PASS ':'FAIL ')+x[0]).join('\n'));
   process.exit(0);
