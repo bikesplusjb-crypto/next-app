@@ -37,10 +37,10 @@ let saved;
  saved=d2;
 }
 {const e=boot(saved);
- r.push(['off persists; sample in memory', e.G('persistOn')===false && e.G('getPlan().trustedPeople.length')===1]);
+ r.push(['off persists; starts empty', e.G('persistOn')===false && e.G('getPlan().trustedPeople.length')===0 && e.G('store.sensitive.baseHistory.length')===0]);
 }
 {const f=boot({'next.v1.sensitive':'{broken json','next.v1.prefs':'also broken'});
- r.push(['corrupt data does not crash', f.S().screen==='home' && f.G('getPlan().trustedPeople.length')===1]);}
+ r.push(['corrupt data does not crash', f.S().screen==='home' && f.G('getPlan().trustedPeople.length')===0]);}
 // RED text still never saved
 {const g=boot(); g.click(act('flow','spiraling')); g.click(act('beforeSkip')); g.w.document.getElementById('thoughts').value='I want to die'; g.click(act('spMake'));
  const d=g.dump(); r.push(['crisis text not saved', !JSON.stringify(d).includes('want to die') && g.S().screen==='crisis']);}

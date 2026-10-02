@@ -8,6 +8,7 @@ function boot(){const dom=new JSDOM(fs.readFileSync(require('path').join(__dirna
 const act=(a,arg)=>arg!==undefined?`[data-act="${a}"][data-arg="${arg}"]`:`[data-act="${a}"]`;
 const r=[];
 {const {w,click,S,G,T}=boot();
+ click(act('tab','settings')); click(act('loadSample')); // these edits build on the sample plan; real users start empty
  click(act('tab','plan'));
  r.push(['plan editable', w.document.querySelectorAll('[data-act="planEdit"]').length===8]);
  r.push(['never-contact line', T().includes('ZigZag Mind will never contact these people for you')]);
@@ -26,6 +27,7 @@ const r=[];
  r.push(['safer space', G('getPlan().saferSpace')==='Give my keys to Sam']);
 }
 {const {w,click,S,G,T}=boot();
+ click(act('tab','settings')); click(act('loadSample'));
  click(act('tab','progress'));
  const t=T(); r.push(['progress sample', t.includes('Hard moments handled') && t.includes('Walking') && t.includes('→') && !/streak/i.test(t), (t.match(/(\d+(\.\d)?) → (\d+(\.\d)?)/)||[''])[0]]);
  click(act('tab','settings')); click(act('askDelete')); click(act('deleteAll'));

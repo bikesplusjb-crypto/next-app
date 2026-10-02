@@ -410,7 +410,7 @@ function seedActivity(){
   return a;
 }
 const store = {
-  sensitive:{ plan:samplePlan(), baseHistory:seedHistory(), activity:seedActivity() },
+  sensitive:{ plan:emptyPlan(), baseHistory:[], activity:[] },   // real users start empty; Settings → Load sample data for demos
   product:{ appVersion:"0.4-prototype" }
 };
 /* On-device saving (browser localStorage, this device only, never sent anywhere).

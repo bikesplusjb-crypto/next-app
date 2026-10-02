@@ -68,7 +68,8 @@ let r=[];
  s=S(); r.push(['ground -> safety-check', s.screen==='safety-check']);
  click(act('safeNotSure')); s=S(); r.push(['not sure -> RED full', s.screen==='crisis-full'&&s.safetyLevel==='RED']);
 }
-{const {w,click,S}=boot(); click(act('crisis')); click(act('cNo')); click(act('noTalk'));
+{const {w,click,S}=boot(); click(act('tab','settings')); click(act('loadSample')); // needs a trusted person; real users start empty
+ click(act('crisis')); click(act('cNo')); click(act('noTalk'));
  const a=w.document.querySelector('[data-noexit]'); a.addEventListener('click',e=>e.preventDefault()); click('[data-noexit]');
  let s=S(); r.push(['call sets safety-check', s.screen==='safety-check']);
 
