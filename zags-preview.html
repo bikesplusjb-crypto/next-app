@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Zags — calm down with me (preview)</title>
+<style>
+:root{
+  --bg:#F6F4EF;--surface:#FFFFFF;--text:#1E2329;--muted:#5E6670;
+  --primary:#2F6F6A;--on-primary:#FFFFFF;--primary-soft:#E3EFEC;
+  --zag:#7BC4BB;--zag-dark:#2F6F6A;--cheek:#F2A98F;--eye:#1E2329;
+  --safety:#B5562E;--on-safety:#FFFFFF;--safety-soft:#F7E6DD;--line:#E3DFD6;
+  color-scheme:light;box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12151A;--surface:#1B2027;--text:#ECEAE4;--muted:#A3A9B1;
+  --primary:#7BC4BB;--on-primary:#12151A;--primary-soft:#1F3634;
+  --zag:#7BC4BB;--zag-dark:#BFE6E0;--cheek:#E59A80;--eye:#12151A;
+  --safety:#F09A6E;--on-safety:#12151A;--safety-soft:#3A2219;--line:#2A313A;color-scheme:dark}}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.45;-webkit-tap-highlight-color:transparent}
+.app{max-width:430px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;padding:0 20px}
+.top{display:flex;justify-content:space-between;align-items:center;padding:12px 0;min-height:64px}
+.voice{min-height:44px;border-radius:22px;border:1px solid var(--line);background:var(--surface);color:var(--text);font:inherit;font-size:15px;font-weight:600;padding:0 14px}
+.help{min-height:44px;border-radius:22px;border:1.5px solid var(--safety);background:var(--safety-soft);color:var(--text);font:inherit;font-size:15px;font-weight:600;padding:0 14px;text-decoration:none;display:inline-flex;align-items:center}
+.stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding-bottom:12px}
+.zags{width:220px;height:220px;display:block}
+.zbody{transform-origin:110px 140px;transition:transform 4s ease-in-out}
+.zbody.in{transform:scale(1.08)}
+.zbody.out{transform:scale(.96);transition-duration:6s}
+.idle .zbody{animation:bob 3.2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.eye{transform-box:fill-box;transform-origin:center;animation:blink 5s infinite}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}96%{transform:scaleY(.1)}}
+.mouth-open{opacity:0}
+.talking .mouth-open{animation:talk .28s steps(2) infinite}
+.talking .mouth-closed{animation:talk2 .28s steps(2) infinite}
+@keyframes talk{0%{opacity:1}100%{opacity:0}}
+@keyframes talk2{0%{opacity:0}100%{opacity:1}}
+.bubble{margin-top:14px;background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:16px 18px;max-width:340px;font-size:22px;line-height:1.3;font-weight:600;min-height:64px;position:relative}
+.bubble::before{content:"";position:absolute;top:-9px;left:50%;margin-left:-9px;width:16px;height:16px;background:var(--surface);border-left:1px solid var(--line);border-top:1px solid var(--line);transform:rotate(45deg)}
+.sub{color:var(--muted);font-size:15px;margin-top:10px;min-height:22px}
+.actions{display:flex;flex-direction:column;gap:10px;padding:12px 0 20px}
+.btn{min-height:56px;border-radius:16px;border:none;font:inherit;font-weight:600;font-size:17px;width:100%;display:flex;align-items:center;justify-content:center;text-decoration:none;cursor:pointer}
+.btn.primary{background:var(--primary);color:var(--on-primary)}
+.btn.secondary{background:var(--surface);color:var(--text);border:1px solid var(--line)}
+.btn.safety{background:var(--safety);color:var(--on-safety)}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.note{font-size:13px;color:var(--muted);text-align:center;margin:0 0 8px}
+:focus-visible{outline:3px solid #6C63C7;outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <button class="voice" id="voiceBtn" aria-pressed="false">🔈 Voice off</button>
+    <a class="help" href="tel:988" aria-label="Call 988 now">Help · 988</a>
+  </div>
+
+  <div class="stage idle" id="stage">
+    <svg class="zags" viewBox="0 0 220 220" role="img" aria-label="Zags, a small calm guide character">
+      <g class="zbody" id="zbody">
+        <!-- zigzag tuft -->
+        <path d="M92 52 L102 30 L110 46 L120 24 L128 52" fill="none" stroke="var(--zag-dark)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- body -->
+        <path d="M110 48 C160 48 186 84 186 128 C186 170 154 196 110 196 C66 196 34 170 34 128 C34 84 60 48 110 48 Z" fill="var(--zag)"/>
+        <!-- soft belly -->
+        <ellipse cx="110" cy="160" rx="44" ry="26" fill="#FFFFFF" opacity=".28"/>
+        <!-- eyes -->
+        <g id="eyesOpen">
+          <ellipse class="eye" cx="86" cy="118" rx="8" ry="10" fill="var(--eye)"/>
+          <ellipse class="eye" cx="134" cy="118" rx="8" ry="10" fill="var(--eye)"/>
+          <circle cx="89" cy="114" r="2.6" fill="#fff"/><circle cx="137" cy="114" r="2.6" fill="#fff"/>
+        </g>
+        <g id="eyesCalm" style="display:none">
+          <path d="M77 120 Q86 112 95 120" fill="none" stroke="var(--eye)" stroke-width="4" stroke-linecap="round"/>
+          <path d="M125 120 Q134 112 143 120" fill="none" stroke="var(--eye)" stroke-width="4" stroke-linecap="round"/>
+        </g>
+        <!-- cheeks -->
+        <ellipse cx="70" cy="138" rx="10" ry="6" fill="var(--cheek)" opacity=".55"/>
+        <ellipse cx="150" cy="138" rx="10" ry="6" fill="var(--cheek)" opacity=".55"/>
+        <!-- mouth -->
+        <path class="mouth-closed" d="M100 140 Q110 148 120 140" fill="none" stroke="var(--eye)" stroke-width="4" stroke-linecap="round"/>
+        <ellipse class="mouth-open" cx="110" cy="143" rx="8" ry="6" fill="var(--eye)"/>
+      </g>
+    </svg>
+    <div class="bubble" id="bubble" aria-live="polite"></div>
+    <div class="sub" id="sub"></div>
+  </div>
+
+  <div class="actions" id="actions"></div>
+  <p class="note">Preview · Zags is a scripted guide, not AI and not a person. Nothing you tap is saved or sent.</p>
+</div>
+
+<script>
+"use strict";
+const $ = id => document.getElementById(id);
+const stage = $("stage"), body = $("zbody"), bubble = $("bubble"), sub = $("sub"), actions = $("actions");
+const REDUCED = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+let voiceOn = false, timers = [], round = 0;
+
+/* ---- Every line Zags can say lives here (clinician-reviewable) ---- */
+const LINES = {
+  hello: "Hi, I'm Zags. I'm not a person, just a little guide. I can stay with you for a few minutes.",
+  quiet: "You don't have to say anything. Just breathe with me.",
+  in: "Breathe in…",
+  out: "And out, slowly…",
+  nice: "Nice. Now press your feet into the floor.",
+  blue: "Look around. Find one thing that's blue.",
+  sound: "Now listen. What's the farthest sound you can hear?",
+  doing: "You're doing it. One small thing at a time.",
+  check: "How are you feeling now?",
+  better: "I'm really glad. Want to let someone know how you're doing?",
+  again: "That's okay. Hard feelings take a while. Let's do one more round together.",
+  stillHard: "Thank you for staying with me. This is a good moment to reach a real person.",
+  worse: "Thank you for telling me. Let's get you to a real person right now.",
+  bye: "Bye for now. Go be with your people."
+};
+
+function clearTimers(){ timers.forEach(clearTimeout); timers = []; }
+function later(fn, ms){ timers.push(setTimeout(fn, ms)); }
+
+function say(text, subtext = ""){
+  bubble.textContent = text;
+  sub.textContent = subtext;
+  stage.classList.add("talking");
+  const dur = Math.min(4000, 400 + text.length * 45);
+  later(() => stage.classList.remove("talking"), dur);
+  if (voiceOn && "speechSynthesis" in window){
+    try {
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.rate = 0.88; u.pitch = 1.15;
+      speechSynthesis.speak(u);
+    } catch (_){}
+  }
+}
+function calmEyes(on){ $("eyesOpen").style.display = on ? "none" : ""; $("eyesCalm").style.display = on ? "" : "none"; }
+function setActions(html){ actions.innerHTML = html; }
+
+function start(){
+  clearTimers(); round = 0;
+  stage.classList.add("idle"); calmEyes(false);
+  say(LINES.hello);
+  setActions(`<button class="btn primary" data-go="breathe">Okay, Zags</button>
+    <button class="btn secondary" data-go="bye">Not right now</button>`);
+}
+
+function breathe(cycles = 4){
+  clearTimers();
+  stage.classList.remove("idle");
+  say(LINES.quiet);
+  setActions(`<button class="btn secondary" data-go="steps">Skip breathing</button>`);
+  let t = 2600;
+  for (let i = 0; i < cycles; i++){
+    later(() => { body.classList.remove("out"); body.classList.add("in"); calmEyes(false); say(LINES.in, `Breath ${i + 1} of ${cycles}`); }, t);
+    t += 4000;
+    later(() => { body.classList.remove("in"); body.classList.add("out"); calmEyes(true); say(LINES.out, `Breath ${i + 1} of ${cycles}`); }, t);
+    t += 6000;
+  }
+  later(() => { body.classList.remove("in", "out"); calmEyes(false); steps(); }, t);
+}
+
+function steps(){
+  clearTimers();
+  body.classList.remove("in", "out"); calmEyes(false); stage.classList.add("idle");
+  const seq = [LINES.nice, LINES.blue, LINES.sound, LINES.doing];
+  let i = 0;
+  const next = () => {
+    say(seq[i]);
+    const last = i === seq.length - 1;
+    setActions(`<button class="btn primary" data-go="${last ? "check" : "next"}">${last ? "Okay" : "Done"}</button>`);
+  };
+  window.__zagsNext = () => { i++; next(); };
+  next();
+}
+
+function check(){
+  clearTimers(); calmEyes(false);
+  say(LINES.check);
+  setActions(`<button class="btn primary" data-go="better">A bit better</button>
+    <button class="btn secondary" data-go="hard">Still hard</button>
+    <button class="btn secondary" data-go="worse">Worse</button>`);
+}
+
+const PEOPLE = `<div class="pair">
+    <a class="btn secondary" href="sms:5550142?&body=${encodeURIComponent("Rough night. Can you talk for a few minutes?")}">Text Jordan</a>
+    <a class="btn secondary" href="tel:18009451355">Warm Line</a>
+  </div>`;
+
+function better(){
+  calmEyes(true);
+  say(LINES.better, "Florida Warm Line: real people, 4pm–10pm daily");
+  setActions(`${PEOPLE}<button class="btn secondary" data-go="bye">I'm okay for now</button>`);
+}
+function hard(){
+  round++;
+  if (round < 2){ say(LINES.again); setActions(`<button class="btn primary" data-go="breathe">One more round</button>${PEOPLE}`); return; }
+  say(LINES.stillHard, "Florida Warm Line: real people, 4pm–10pm daily");
+  setActions(`${PEOPLE}<div class="pair"><a class="btn safety" href="tel:988">Call 988</a><a class="btn safety" href="sms:988">Text 988</a></div>`);
+}
+function worse(){
+  calmEyes(false);
+  say(LINES.worse);
+  setActions(`<div class="pair"><a class="btn safety" href="tel:988">Call 988</a><a class="btn safety" href="sms:988">Text 988</a></div>
+    ${PEOPLE}<p class="note" style="margin:4px 0 0">In the real site this goes to the full crisis screen.</p>`);
+}
+function bye(){
+  clearTimers(); calmEyes(true); stage.classList.add("idle");
+  say(LINES.bye);
+  setActions(`<button class="btn secondary" data-go="start">Start again</button>`);
+}
+
+const GO = { breathe:() => breathe(REDUCED ? 3 : 4), steps, next:() => window.__zagsNext(), check, better, hard, worse, bye, start };
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-go]");
+  if (!b) return;
+  e.preventDefault();
+  if (voiceOn && "speechSynthesis" in window) speechSynthesis.cancel();
+  GO[b.dataset.go]();
+});
+$("voiceBtn").addEventListener("click", () => {
+  voiceOn = !voiceOn;
+  $("voiceBtn").textContent = voiceOn ? "🔊 Voice on" : "🔈 Voice off";
+  $("voiceBtn").setAttribute("aria-pressed", String(voiceOn));
+  if (voiceOn) say(bubble.textContent, sub.textContent);
+  else if ("speechSynthesis" in window) speechSynthesis.cancel();
+});
+start();
+</script>
+</body>
+</html>

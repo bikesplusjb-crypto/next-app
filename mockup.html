@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ZigZag Mind — Mockup reference (all screens)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&amp;family=Nunito:wght@700;800&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#2F6F6A}a:hover{color:#1F4F4B}
+.scr{box-sizing:border-box;background:#F6F4EF;color:#1E2329;font-family:'Atkinson Hyperlegible',system-ui,sans-serif;font-size:17px;line-height:1.45;display:flex;flex-direction:column;overflow:hidden}
+.top{display:flex;justify-content:space-between;align-items:center;padding:14px 20px 8px;min-height:64px;box-sizing:border-box}
+.help{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px 0 12px;border-radius:22px;border:1.5px solid #B5562E;background:#F7E6DD;color:#1E2329;font-weight:700;font-size:15px;text-decoration:none}
+.back{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:22px;border:1px solid #E3DFD6;background:#FFFFFF;color:#1E2329;text-decoration:none}
+.body{flex-grow:1;padding:4px 20px 20px;display:flex;flex-direction:column;gap:12px}
+h1{font-family:'Nunito',system-ui,sans-serif;font-weight:800;font-size:28px;line-height:1.15;margin:4px 0 0;letter-spacing:-0.01em}
+h2{font-family:'Nunito',system-ui,sans-serif;font-weight:800;font-size:19px;line-height:1.2;margin:10px 0 0}
+p{margin:0}
+.sub{color:#555D66;font-size:15px}
+.lbl{font-size:13px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#555D66}
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;min-height:56px;border-radius:16px;font-weight:700;font-size:17px;text-decoration:none;box-sizing:border-box;padding:0 18px;text-align:center;font-family:inherit;border:none}
+.p{background:#2F6F6A;color:#FFFFFF}
+.s{background:#FFFFFF;color:#1E2329;border:1px solid #E3DFD6}
+.d{background:#B5562E;color:#FFFFFF}
+.o{background:#FFFFFF;color:#1E2329;border:1.5px solid #B5562E}
+.card{background:#FFFFFF;border:1px solid #E3DFD6;border-radius:20px;padding:16px;box-sizing:border-box}
+.soft{background:#E3EFEC;border-radius:20px;padding:16px;box-sizing:border-box}
+.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.opt{display:flex;align-items:center;gap:14px;min-height:64px;padding:12px 16px;border-radius:18px;background:#FFFFFF;border:1px solid #E3DFD6;text-decoration:none;color:#1E2329;font-weight:700;box-sizing:border-box}
+.opt .m{display:block;font-weight:400;font-size:14px;color:#555D66}
+.ico{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:12px;background:#E3EFEC;color:#2F6F6A;flex-shrink:0}
+.chip{display:inline-flex;align-items:center;min-height:44px;padding:0 16px;border-radius:22px;border:1px solid #E3DFD6;background:#FFFFFF;font-weight:700;font-size:15px;color:#1E2329;text-decoration:none}
+.chip.on{background:#2F6F6A;color:#FFFFFF;border-color:#2F6F6A}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid #E3DFD6;background:#F6F4EF}
+.tab{display:flex;align-items:center;justify-content:center;min-height:58px;font-size:13px;font-weight:700;color:#555D66;text-decoration:none}
+.tab.on{color:#2F6F6A}
+.note{font-size:13px;color:#555D66;text-align:center}
+.dot{width:52px;height:52px;border-radius:26px;border:2px solid #6C63C7;box-sizing:border-box}
+.dot.on{background:#6C63C7}
+.bubble{background:#FFFFFF;border:1px solid #E3DFD6;border-radius:22px;padding:16px 18px;font-size:21px;font-weight:700;line-height:1.3;text-align:center}
+.msg{background:#2F6F6A;color:#FFFFFF;border-radius:20px 20px 6px 20px;padding:14px 16px;font-size:16px;line-height:1.4}
+.verse{font-family:'Nunito',system-ui,sans-serif;font-size:22px;line-height:1.4;font-weight:700}
+.check{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px solid #E3DFD6}
+.box{width:26px;height:26px;border-radius:8px;border:2px solid #2F6F6A;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#FFFFFF;box-sizing:border-box}
+.box.on{background:#2F6F6A}
+
+html{background:#E9E6DF}
+.wrap{padding:24px}
+.intro{max-width:760px;font-family:'Atkinson Hyperlegible',system-ui,sans-serif;color:#1E2329;margin:0 0 8px}
+.rowtitle{font-family:'Nunito',system-ui,sans-serif;font-size:28px;margin:40px 0 12px;color:#1E2329}
+.row{display:flex;gap:32px;flex-wrap:wrap;align-items:flex-start}
+figure{margin:0;display:flex;flex-direction:column;gap:8px}
+figcaption{font-family:'Atkinson Hyperlegible',system-ui,sans-serif;font-weight:700;font-size:15px;color:#1E2329}
+figcaption span{font-weight:400;color:#555D66}
+figure > .scr, figure > .top, figure > .body{box-shadow:0 1px 0 #D5D1C8}
+</style></head><body><div class="wrap">
+<h1 class="intro" style="font-family:'Nunito',system-ui,sans-serif">ZigZag Mind — approved mockup (reference only)</h1>
+<p class="intro">Visual and content reference for STAGE6-SPEC.md. Every screen is static; links jump between screens on this page. Match the look, copy, structure and tone. Do not ship this file as the site, and do not copy its static markup as-is: build each screen inside index.html with the existing architecture, safety rules and tests.</p>
+<h2 class="rowtitle">Get help fast: Home and the four escape routes</h2><div class="row"><figure id="Main"><figcaption>Home <span>(Main)</span></figcaption><div class="scr" style="width: 390px; height: 900px">
+<div class="top"><span style="width: 44px; height: 44px"></span><a class="help" href="#Crisis" aria-label="Get help now"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"></path></svg>Help</a></div>
+<div class="body" style="gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 4px; padding-top: 4px">
+<p style="font-family: 'Nunito', system-ui, sans-serif; font-weight: 800; font-size: 34px; line-height: 1; color: #2F6F6A">ZigZag Mind</p>
+<p class="sub" style="font-size: 16px">Get through what&#39;s happening right now.</p>
+</div>
+<a class="btn p" href="#DontKnow" style="min-height: 72px; font-size: 19px; border-radius: 20px">I don&#39;t know what I need</a>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<a class="opt" href="#Calm" style="flex-direction: column; align-items: flex-start; min-height: 104px"><span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10c2-3 4-3 6 0s4 3 6 0 4-3 6 0M3 16c2-3 4-3 6 0s4 3 6 0 4-3 6 0"></path></svg></span><span>Calm down</span></a>
+<a class="opt" href="#Distract" style="flex-direction: column; align-items: flex-start; min-height: 104px"><span class="ico" style="background: #ECEAFB; color: #6C63C7"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.3 6.3l2.8 2.8M14.9 14.9l2.8 2.8M17.7 6.3l-2.8 2.8M9.1 14.9l-2.8 2.8"></path></svg></span><span>Get out of my head</span></a>
+<a class="opt" href="#Connect" style="flex-direction: column; align-items: flex-start; min-height: 104px"><span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"></circle><circle cx="17" cy="9" r="2.5"></circle><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M15.5 14.6c2.5.3 4.5 2.4 4.5 5.4"></path></svg></span><span>Connect</span></a>
+<a class="opt" href="#ChangeScene" style="flex-direction: column; align-items: flex-start; min-height: 104px"><span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 4H5v16h5M14 8l4 4-4 4M18 12H9"></path></svg></span><span>Change the scene</span></a>
+</div>
+<p class="lbl" style="margin-top: 4px">Or tell me what&#39;s happening</p>
+<div class="chips"><a class="chip" href="#Calm">I&#39;m anxious</a><a class="chip" href="#Distract">I&#39;m spiraling</a><a class="chip" href="#Main">I want to use</a><a class="chip" href="#Main">I feel low</a><a class="chip" href="#Connect">I feel alone</a><a class="chip" href="#AfterER">Just out of the ER</a></div>
+<a class="opt" href="#TechCheck"><span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="2"></rect><path d="M11 18h2"></path></svg></span><span>Tech check<span class="m">AI, scrolling, or checking is getting to me</span></span></a>
+<a class="opt" href="#Crisis" style="background: #F7E6DD; border: 1.5px solid #B5562E"><span class="ico" style="background: #FFFFFF; color: #B5562E"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v6c0 4-3 7.5-7 9-4-1.5-7-5-7-9V6z"></path></svg></span><span>I don&#39;t feel safe<span class="m">Get to a real person fast</span></span></a>
+</div>
+<nav class="tabs" aria-label="Main"><a class="tab on" href="#Main">Home</a><a class="tab" href="#MyPlan">My Plan</a><a class="tab" href="#Main">Progress</a><a class="tab" href="#Faith">Settings</a></nav>
+</div></figure><figure id="DontKnow"><figcaption>I don't know what I need <span>(DontKnow)</span></figcaption><div class="scr" style="width: 390px; height: 844px">
+<div class="top"><a class="back" href="#Main" aria-label="Back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a><a class="help" href="#Crisis" aria-label="Get help now"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"></path></svg>Help</a></div>
+<div class="body" style="gap: 14px">
+<h1>That&#39;s okay. One question.</h1>
+<p class="sub">Do you want to calm down, get distracted, connect with someone, or get out of where you are?</p>
+<a class="opt" href="#Calm" style="min-height: 88px"><span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10c2-3 4-3 6 0s4 3 6 0 4-3 6 0M3 16c2-3 4-3 6 0s4 3 6 0 4-3 6 0"></path></svg></span><span>Calm down<span class="m">Slow my body down</span></span></a>
+<a class="opt" href="#Distract" style="min-height: 88px"><span class="ico" style="background: #ECEAFB; color: #6C63C7"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.3 6.3l2.8 2.8M14.9 14.9l2.8 2.8M17.7 6.3l-2.8 2.8M9.1 14.9l-2.8 2.8"></path></svg></span><span>Get distracted<span class="m">Interrupt the loop for a few minutes</span></span></a>
+<a class="opt" href="#Connect" style="min-height: 88px"><span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"></circle><circle cx="17" cy="9" r="2.5"></circle><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M15.5 14.6c2.5.3 4.5 2.4 4.5 5.4"></path></svg></span><span>Connect with someone<span class="m">A person, not another answer</span></span></a>
+<a class="opt" href="#ChangeScene" style="min-height: 88px"><span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 4H5v16h5M14 8l4 4-4 4M18 12H9"></path></svg></span><span>Get out of where I am<span class="m">Change the scene</span></span></a>
+<p class="note" style="margin-top: 8px">Scared of what you might do? <a href="#Crisis">Get help now</a></p>
+</div>
+</div></figure><figure id="Calm"><figcaption>Calm down <span>(Calm)</span></figcaption><div class="scr" style="width: 390px; height: 844px">
+<div class="top"><a class="back" href="#Main" aria-label="Back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a><a class="help" href="#Crisis" aria-label="Get help now"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"></path></svg>Help</a></div>
+<div class="body">
+<h1>Let&#39;s slow things down.</h1>
+<p class="sub">Pick one. You can stop any time.</p>
+<a class="card" href="#ZagsBreathe" style="display: flex; align-items: center; gap: 14px; text-decoration: none; color: #1E2329; background: #E3EFEC; border-color: #E3EFEC">
+<svg width="92" height="92" viewBox="0 0 220 220" role="img" aria-label="Zags, a small calm guide"><path d="M92 52 L102 30 L110 46 L120 24 L128 52" fill="none" stroke="#2F6F6A" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"></path><path d="M110 48 C160 48 186 84 186 128 C186 170 154 196 110 196 C66 196 34 170 34 128 C34 84 60 48 110 48 Z" fill="#7BC4BB"></path><ellipse cx="110" cy="160" rx="44" ry="26" fill="#FFFFFF" opacity="0.28"></ellipse><ellipse cx="86" cy="118" rx="8" ry="10" fill="#1E2329"></ellipse><ellipse cx="134" cy="118" rx="8" ry="10" fill="#1E2329"></ellipse><circle cx="89" cy="114" r="2.6" fill="#FFFFFF"></circle><circle cx="137" cy="114" r="2.6" fill="#FFFFFF"></circle><ellipse cx="70" cy="138" rx="10" ry="6" fill="#F2A98F" opacity="0.55"></ellipse><ellipse cx="150" cy="138" rx="10" ry="6" fill="#F2A98F" opacity="0.55"></ellipse><path d="M100 140 Q110 148 120 140" fill="none" stroke="#1E2329" stroke-width="4" stroke-linecap="round"></path></svg>
+<span style="display: flex; flex-direction: column; gap: 4px"><span style="font-weight: 700; font-size: 18px">Calm down with Zags</span><span class="sub">Breathe together for a few minutes</span></span>
+</a>
+<a class="opt" href="#ZagsBreathe"><span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10c2-3 4-3 6 0s4 3 6 0 4-3 6 0M3 16c2-3 4-3 6 0s4 3 6 0 4-3 6 0"></path></svg></span><span>Breathe for 1 minute<span class="m">In for 4, out for 6</span></span></a>
+<a class="opt" href="#Game"><span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14zM5 19l7-7"></path></svg></span><span>5-4-3-2-1 grounding<span class="m">Notice what&#39;s around you</span></span></a>
+<a class="opt" href="#Calm"><span class="ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></span><span>Feet on the floor<span class="m">Three tiny steps, 2 minutes</span></span></a>
+<div style="flex-grow: 1"></div>
+<a class="btn s" href="#Connect">I&#39;d rather talk to someone</a>
+</div>
+</div></figure><figure id="Distract"><figcaption>Get out of my head <span>(Distract)</span></figcaption><div class="scr" style="width: 390px; height: 900px">
+<div class="top"><a class="back" href="#Main" aria-label="Back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a><a class="help" href="#Crisis" aria-label="Get help now"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"></path></svg>Help</a></div>
+<div class="body" style="gap: 10px">
+<h1>Get out of my head.</h1>
+<p class="sub">Quick games to interrupt the loop. 1 to 5 minutes. No points, no levels.</p>
+<a class="opt" href="#Game"><span class="ico" style="background: #ECEAFB; color: #6C63C7"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.3 6.3l2.8 2.8M14.9 14.9l2.8 2.8M17.7 6.3l-2.8 2.8M9.1 14.9l-2.8 2.8"></path></svg></span><span>Color hunt<span class="m">Find 5 blue things, then 3 red</span></span></a><a class="opt" href="#Game"><span class="ico" style="background: #ECEAFB; color: #6C63C7"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.3 6.3l2.8 2.8M14.9 14.9l2.8 2.8M17.7 6.3l-2.8 2.8M9.1 14.9l-2.8 2.8"></path></svg></span><span>Around me<span class="m">Something soft, cold, older than you</span></span></a><a class="opt" href="#Game"><span class="ico" style="background: #ECEAFB; color: #6C63C7"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.3 6.3l2.8 2.8M14.9 14.9l2.8 2.8M17.7 6.3l-2.8 2.8M9.1 14.9l-2.8 2.8"></path></svg></span><span>Rapid categories<span class="m">5 animals, 5 cities, 5 foods</span></span></a><a class="opt" href="#Game"><span class="ico" style="background: #ECEAFB; color: #6C63C7"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.3 6.3l2.8 2.8M14.9 14.9l2.8 2.8M17.7 6.3l-2.8 2.8M9.1 14.9l-2.8 2.8"></path></svg></span><span>Memory snap<span class="m">See 6 objects, then name them</span></span></a><a class="opt" href="#Game"><span class="ico" style="background: #ECEAFB; color: #6C63C7"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.3 6.3l2.8 2.8M14.9 14.9l2.8 2.8M17.7 6.3l-2.8 2.8M9.1 14.9l-2.8 2.8"></path></svg></span><span>Pattern break<span class="m">Watch a pattern, tap it back</span></span></a><a class="opt" href="#Game"><span class="ico" style="background: #ECEAFB; color: #6C63C7"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.3 6.3l2.8 2.8M14.9 14.9l2.8 2.8M17.7 6.3l-2.8 2.8M9.1 14.9l-2.8 2.8"></path></svg></span><span>60-second challenge<span class="m">Your only job: beat the timer</span></span></a>
+<p class="note" style="margin-top: 6px">Thoughts stuck on repeat? <a href="#BreakLoop">Break the loop</a></p>
+</div>
+</div></figure><figure id="Game"><figcaption>Color hunt <span>(Game)</span></figcaption><div class="scr" style="width: 390px; height: 844px">
+<div class="top"><a class="back" href="#Distract" aria-label="Back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a><a class="help" href="#Crisis" aria-label="Get help now"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"></path></svg>Help</a></div>
+<div class="body" style="gap: 16px">
+<p class="lbl">Color hunt · Part 1 of 2</p>
+<p style="font-family: 'Nunito', system-ui, sans-serif; font-weight: 800; font-size: 30px; line-height: 1.2; margin-top: 40px">Find 5 things around you that are blue.</p>
+<p class="sub">Tap a circle for each one. No need to type.</p>
+<div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px">
+<span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot"></span><span class="dot"></span>
+</div>
+<p class="sub">Then: 3 things that are red.</p>
+<div style="flex-grow: 1"></div>
+<a class="btn p" href="#ZagsCheck">Next</a>
+<p class="note">After the game: Did the intensity change? Yes · A little · No</p>
+</div>
+</div></figure><figure id="Connect"><figcaption>Connect <span>(Connect)</span></figcaption><div class="scr" style="width: 390px; height: 1080px">
+<div class="top"><a class="back" href="#Main" aria-label="Back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a><a class="help" href="#Crisis" aria-label="Get help now"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"></path></svg>Help</a></div>
+<div class="body">
+<h1>You don&#39;t have to sit with this alone.</h1>
+<div class="card" style="display: flex; flex-direction: column; gap: 10px">
+<p class="lbl">Talk to someone who&#39;s been there</p>
+<p style="font-weight: 700; font-size: 18px">Florida Warm Line</p>
+<p class="sub">Every day, 4pm–10pm. Not a crisis line. Just real people who&#39;ve been through it.</p>
+<a class="btn p" href="tel:18009451355">Call the Warm Line</a>
+<a class="note" href="https://findahelpline.com" style="text-align: left">After 10pm or outside Florida: find a warmline near you</a>
+</div>
+<div class="card" style="display: flex; flex-direction: column; gap: 10px">
+<p class="lbl">Reach one of your people</p>
+<p style="font-weight: 700">Jordan · friend</p>
+<div class="pair"><a class="btn o" href="sms:5550142">Text</a><a class="btn o" href="tel:5550142">Call</a></div>
+<a class="btn s" href="sms:5550142" style="border-color: #2F6F6A">Send my code word to Jordan</a>
+<p class="sub" style="margin-top: 4px">Don&#39;t know what to say? Tap one:</p>
+<div class="chips"><a class="chip" href="sms:5550142">Can&#39;t sleep, you up?</a><a class="chip" href="sms:5550142">Rough night. Can you talk for 5 minutes?</a><a class="chip" href="sms:5550142">Want to catch up this week?</a></div>
+</div>
+<a class="card" href="#ZagsBreathe" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: #1E2329">
+<svg width="64" height="64" viewBox="0 0 220 220" role="img" aria-label="Zags, a small calm guide"><path d="M92 52 L102 30 L110 46 L120 24 L128 52" fill="none" stroke="#2F6F6A" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"></path><path d="M110 48 C160 48 186 84 186 128 C186 170 154 196 110 196 C66 196 34 170 34 128 C34 84 60 48 110 48 Z" fill="#7BC4BB"></path><ellipse cx="110" cy="160" rx="44" ry="26" fill="#FFFFFF" opacity="0.28"></ellipse><ellipse cx="86" cy="118" rx="8" ry="10" fill="#1E2329"></ellipse><ellipse cx="134" cy="118" rx="8" ry="10" fill="#1E2329"></ellipse><circle cx="89" cy="114" r="2.6" fill="#FFFFFF"></circle><circle cx="137" cy="114" r="2.6" fill="#FFFFFF"></circle><ellipse cx="70" cy="138" rx="10" ry="6" fill="#F2A98F" opacity="0.55"></ellipse><ellipse cx="150" cy="138" rx="10" ry="6" fill="#F2A98F" opacity="0.55"></ellipse><path d="M100 140 Q110 148 120 140" fill="none" stroke="#1E2329" stroke-width="4" stroke-linecap="round"></path></svg>
+<span style="display: flex; flex-direction: column"><span style="font-weight: 700">Stay with Zags for a few minutes</span><span class="sub">Until someone calls back</span></span>
+</a>
+<p class="lbl" style="margin-top: 4px">If it gets heavier</p>
+<div class="pair"><a class="btn d" href="tel:988">Call 988</a><a class="btn d" href="sms:988">Text 988</a></div>
+</div>
+</div></figure><figure id="ChangeScene"><figcaption>Change the scene <span>(ChangeScene)</span></figcaption><div class="scr" style="width: 390px; height: 960px">
+<div class="top"><a class="back" href="#Main" aria-label="Back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a><a class="help" href="#Crisis" aria-label="Get help now"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"></path></svg>Help</a></div>
+<div class="body">
+<h1>Change the scene.</h1>
+<p class="sub">Sometimes your brain needs a different place, not another question. Pick one.</p>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<a class="opt" href="#ZagsCheck">Step outside for 5 minutes</a>
+<a class="opt" href="#ZagsCheck">Take a short walk</a>
+<a class="opt" href="#ZagsCheck">Sit somewhere different</a>
+<a class="opt" href="#ZagsCheck">Take a shower</a>
+<a class="opt" href="#ZagsCheck">Get something to drink</a>
+</div>
+<h2>Somewhere to go</h2>
+<p class="sub">Opens your phone&#39;s Maps. ZigZag Mind never sees your location.</p>
+<div class="chips"><a class="chip" href="https://maps.apple.com/?q=library">Library</a><a class="chip" href="https://maps.apple.com/?q=park">Park</a><a class="chip" href="https://maps.apple.com/?q=coffee">Coffee shop</a><a class="chip" href="https://maps.apple.com/?q=community+center">Community center</a></div>
+<div class="soft" style="display: flex; flex-direction: column; gap: 8px; margin-top: 4px">
+<p style="font-weight: 700">Need real-world help near you?</p>
+<p class="sub">211 connects you to local help: food, housing, support groups. Free.</p>
+<a class="btn s" href="tel:211">Call 211</a>
+</div>
+</div>
+</div></figure></div><h2 class="rowtitle">When things get really bad</h2><div class="row"><figure id="PlanNow"><figcaption>I need my plan <span>(PlanNow)</span></figcaption><div class="scr" style="width: 390px; height: 1120px">
+<div class="top"><a class="back" href="#Main" aria-label="Back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a><a class="help" href="#Crisis" aria-label="Get help now"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"></path></svg>Help</a></div>
+<div class="body" style="gap: 10px">
+<h1>Your plan.</h1>
+<p class="sub">Just the essentials, right now.</p>
+<div class="card"><p class="lbl">Do this first</p><p style="font-weight: 700; font-size: 19px; margin-top: 6px">Walk outside for 5 minutes.</p></div>
+<div class="card" style="display: flex; flex-direction: column; gap: 10px"><p class="lbl">Reach a person</p>
+<a class="btn p" href="sms:5550142">Send my code word to Jordan</a>
+<div class="pair"><a class="btn o" href="tel:5550142">Call Jordan</a><a class="btn o" href="tel:5550199">Call Sam</a></div></div>
+<div class="card"><p class="lbl">Places I can go</p><p style="margin-top: 6px">The coffee shop on Main St · The public library</p></div>
+<div class="card"><p class="lbl">My time-and-distance plan</p><p style="margin-top: 6px">Sam is holding onto some things for me. I&#39;ll ask for them back after I talk it over with Jordan.</p></div>
+<div class="card"><p class="lbl">What I want to remember</p><p style="margin-top: 6px">Don&#39;t make big decisions when I&#39;m overwhelmed.</p></div>
+<p class="lbl" style="margin-top: 4px">Crisis support</p>
+<div class="pair"><a class="btn d" href="tel:988">Call 988</a><a class="btn d" href="sms:988">Text 988</a></div>
+<a class="btn d" href="tel:911">Call 911 if someone is hurt or in danger</a>
+<p class="note">ZigZag Mind is not an emergency service.</p>
+</div>
+</div></figure><figure id="Crisis"><figcaption>Crisis <span>(Crisis)</span></figcaption><div class="scr" style="width: 390px; height: 844px">
+<div class="scr" style="width: 390px; height: 844px; background: #F7E6DD">
+<div class="top"><span style="width: 44px; height: 44px"></span><a class="help" href="#Crisis" aria-label="Get help now"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"></path></svg>Help</a></div>
+<div class="body" style="gap: 14px">
+<h1>I&#39;m glad you told me.</h1>
+<div class="pair"><a class="btn d" href="tel:988">Call 988</a><a class="btn d" href="sms:988">Text 988</a></div>
+<div class="card" style="display: flex; flex-direction: column; gap: 10px">
+<p style="font-family: 'Nunito', system-ui, sans-serif; font-weight: 800; font-size: 20px; line-height: 1.3">Are you in danger of hurting yourself or someone else right now?</p>
+<a class="btn s" href="#PlanNow">Yes</a>
+<a class="btn s" href="#SafetyCheck">No</a>
+<a class="btn s" href="#PlanNow">I&#39;m not sure</a>
+</div>
+<a class="btn o" href="sms:5550142">Send my code word to Jordan</a>
+<div style="flex-grow: 1"></div>
+<p class="note">ZigZag Mind is not an emergency service.</p>
+<a class="note" href="#Main">That&#39;s not what I meant — go back</a>
+</div>
+</div>
+</div></figure><figure id="SafetyCheck"><figcaption>Do you feel safer <span>(SafetyCheck)</span></figcaption><div class="scr" style="width: 390px; height: 844px">
+<div class="scr" style="width: 390px; height: 844px; background: #F7E6DD">
+<div class="top"><span style="width: 44px; height: 44px"></span><a class="help" href="#Crisis" aria-label="Get help now"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"></path></svg>Help</a></div>
+<div class="body" style="gap: 14px">
+<h1>Do you feel safer than a few minutes ago?</h1>
+<div class="pair"><a class="btn d" href="tel:988">Call 988</a><a class="btn d" href="sms:988">Text 988</a></div>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px">
+<a class="btn s" href="#Main">Yes</a>
+<a class="btn s" href="#PlanNow">No</a>
+<a class="btn s" href="#PlanNow">Not sure</a>
+</div>
+<div style="flex-grow: 1"></div>
+<p class="note">Shown after you call or text someone, open your plan, or finish grounding.</p>
+</div>
+</div>
+</div></figure><figure id="CodeWord"><figcaption>Code word setup <span>(CodeWord)</span></figcaption><div class="scr" style="width: 390px; height: 900px">
+<div class="top"><a class="back" href="#MyPlan" aria-label="Back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a><a class="help" href="#Crisis" aria-label="Get help now"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"></path></svg>Help</a></div>
+<div class="body">
+<p class="lbl">Set up with your people · Code word</p>
+<h1>Pick a word for Jordan.</h1>
+<p class="sub">On a hard day, you&#39;ll send just this word. Jordan will know what it means. No explaining.</p>
+<div class="chips"><a class="chip on" href="#CodeWord">lighthouse</a><a class="chip" href="#CodeWord">blue kite</a><a class="chip" href="#CodeWord">pineapple</a><a class="chip" href="#CodeWord">My own word</a></div>
+<p class="lbl" style="margin-top: 10px">Your message to Jordan</p>
+<div style="display: flex; justify-content: flex-end"><p class="msg" style="max-width: 300px">Hey Jordan, I&#39;m making a plan for hard days. If I ever text you &quot;lighthouse&quot;, it means I&#39;m struggling and need you to call me or come be with me. You don&#39;t have to fix anything. Here&#39;s a short guide: zigzagmind.com/support</p></div>
+<div style="flex-grow: 1"></div>
+<a class="btn p" href="sms:5550142">Open Messages</a>
+<p class="note">ZigZag Mind never sends anything for you. You tap Send.</p>
+</div>
+</div></figure><figure id="Support"><figcaption>Supporter guide <span>(Support)</span></figcaption><div class="scr" style="width: 390px; height: 1500px">
+<div class="top"><span style="font-family: 'Nunito', system-ui, sans-serif; font-weight: 800; font-size: 20px; color: #2F6F6A">ZigZag Mind</span><a class="help" href="tel:988"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"></path></svg>988</a></div>
+<div class="body">
+<p class="lbl">zigzagmind.com/support</p>
+<h1>Someone you care about trusted you.</h1>
+<div class="soft"><h2 style="margin-top: 0">If you got a code word</h2><p style="margin-top: 6px">It means they&#39;re struggling. Call them now. If they don&#39;t answer, keep trying, then go to them if you can.</p></div>
+<div class="card"><h2 style="margin-top: 0">What to say</h2><p style="margin-top: 6px">Ask directly: &quot;Are you thinking about suicide?&quot; Asking doesn&#39;t put the idea in someone&#39;s head. Listen more than you talk. &quot;I&#39;m here&quot; and &quot;I&#39;m glad you told me&quot; are enough.</p></div>
+<div class="card"><h2 style="margin-top: 0">Get help together</h2><p style="margin-top: 6px">Call or text 988 together. 988 helps people who are supporting someone, too.</p><div class="pair"><a class="btn d" href="tel:988">Call 988</a><a class="btn d" href="sms:988">Text 988</a></div><a class="btn d" href="tel:911" style="margin-top: 10px">Call 911 if they&#39;re in danger or took something</a></div>
+<div class="card"><h2 style="margin-top: 0">Time and distance</h2><p style="margin-top: 6px">Offer to hold onto things for a while, or help them get somewhere safer.</p></div>
+<div class="card" style="display: flex; flex-direction: column; gap: 10px"><h2 style="margin-top: 0">Check in now and then</h2><p>Short, no-pressure messages help. Add reminders to your calendar:</p>
+<a class="opt" href="#Support">Gentle<span class="m" style="margin-left: auto">Weekly, then monthly</span></a>
+<a class="opt" href="#Support">Close<span class="m" style="margin-left: auto">Every 3 days, then weekly</span></a>
+<p class="sub">Ideas: &quot;Thinking of you. No need to reply.&quot; · &quot;Want to grab food this week?&quot;</p></div>
+<div class="card"><h2 style="margin-top: 0">Look after yourself</h2><p style="margin-top: 6px">This is heavy. You can call 988 for yourself, too.</p></div>
+<p class="note">ZigZag Mind is a self-help support tool, not an emergency service.</p>
+</div>
+</div></figure><figure id="AfterER"><figcaption>First 30 days <span>(AfterER)</span></figcaption><div class="scr" style="width: 390px; height: 900px">
+<div class="top"><a class="back" href="#Main" aria-label="Back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a><a class="help" href="#Crisis" aria-label="Get help now"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"></path></svg>Help</a></div>
+<div class="body">
+<div class="soft" style="display: flex; justify-content: space-between; align-items: center"><span style="font-weight: 700">First 30 days · support is close</span><a class="chip" href="tel:988" style="background: #B5562E; color: #FFFFFF; border-color: #B5562E">988</a></div>
+<h1>Welcome home. One small thing at a time.</h1>
+<p class="sub">All optional. Any order.</p>
+<div>
+<div class="check"><span class="box on"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></span><span>Tell one person you&#39;re home<span class="m" style="display: block; color: #555D66; font-size: 14px">Done</span></span></div>
+<div class="check"><span class="box on"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></span><span>Set up your code word</span></div>
+<div class="check"><span class="box"></span><span>Add your follow-up appointment<span style="display: block; color: #555D66; font-size: 14px">No appointment yet? Ask the place you were seen to help schedule one.</span></span></div>
+<div class="check"><span class="box"></span><span>Ask your people to check in</span></div>
+<div class="check"><span class="box"></span><span>Daily reminders for 2 weeks<span style="display: block; color: #555D66; font-size: 14px">Adds them to your own calendar</span></span></div>
+</div>
+</div>
+</div></figure></div><h2 class="rowtitle">Zags, your plan, and faith</h2><div class="row"><figure id="ZagsBreathe"><figcaption>Zags breathing <span>(ZagsBreathe)</span></figcaption><div class="scr" style="width: 390px; height: 844px">
+<div class="top"><a class="back" href="#Calm" aria-label="Back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a><a class="chip" href="#ZagsBreathe">Voice off</a><a class="help" href="#Crisis" aria-label="Get help now"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"></path></svg>Help</a></div>
+<div class="body" style="align-items: center; justify-content: center; text-align: center; gap: 16px">
+<svg width="240" height="240" viewBox="0 0 220 220" role="img" aria-label="Zags, a small calm guide"><path d="M92 52 L102 30 L110 46 L120 24 L128 52" fill="none" stroke="#2F6F6A" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"></path><path d="M110 48 C160 48 186 84 186 128 C186 170 154 196 110 196 C66 196 34 170 34 128 C34 84 60 48 110 48 Z" fill="#7BC4BB"></path><ellipse cx="110" cy="160" rx="44" ry="26" fill="#FFFFFF" opacity="0.28"></ellipse><path d="M77 120 Q86 112 95 120" fill="none" stroke="#1E2329" stroke-width="4" stroke-linecap="round"></path><path d="M125 120 Q134 112 143 120" fill="none" stroke="#1E2329" stroke-width="4" stroke-linecap="round"></path><ellipse cx="70" cy="138" rx="10" ry="6" fill="#F2A98F" opacity="0.55"></ellipse><ellipse cx="150" cy="138" rx="10" ry="6" fill="#F2A98F" opacity="0.55"></ellipse><path d="M100 140 Q110 148 120 140" fill="none" stroke="#1E2329" stroke-width="4" stroke-linecap="round"></path></svg>
+<p class="bubble" style="width: 100%; box-sizing: border-box">And out, slowly…</p>
+<p class="sub">Breath 2 of 4</p>
+<div style="flex-grow: 1"></div>
+<a class="btn s" href="#ZagsCheck" style="width: 100%">Skip breathing</a>
+<p class="note">Zags is a scripted guide, not a person and not AI.</p>
+</div>
+</div></figure><figure id="ZagsCheck"><figcaption>Zags check-in <span>(ZagsCheck)</span></figcaption><div class="scr" style="width: 390px; height: 844px">
+<div class="top"><a class="back" href="#Calm" aria-label="Back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a><a class="help" href="#Crisis" aria-label="Get help now"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"></path></svg>Help</a></div>
+<div class="body" style="align-items: center; text-align: center; gap: 14px">
+<svg width="180" height="180" viewBox="0 0 220 220" role="img" aria-label="Zags, a small calm guide"><path d="M92 52 L102 30 L110 46 L120 24 L128 52" fill="none" stroke="#2F6F6A" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"></path><path d="M110 48 C160 48 186 84 186 128 C186 170 154 196 110 196 C66 196 34 170 34 128 C34 84 60 48 110 48 Z" fill="#7BC4BB"></path><ellipse cx="110" cy="160" rx="44" ry="26" fill="#FFFFFF" opacity="0.28"></ellipse><ellipse cx="86" cy="118" rx="8" ry="10" fill="#1E2329"></ellipse><ellipse cx="134" cy="118" rx="8" ry="10" fill="#1E2329"></ellipse><circle cx="89" cy="114" r="2.6" fill="#FFFFFF"></circle><circle cx="137" cy="114" r="2.6" fill="#FFFFFF"></circle><ellipse cx="70" cy="138" rx="10" ry="6" fill="#F2A98F" opacity="0.55"></ellipse><ellipse cx="150" cy="138" rx="10" ry="6" fill="#F2A98F" opacity="0.55"></ellipse><path d="M100 140 Q110 148 120 140" fill="none" stroke="#1E2329" stroke-width="4" stroke-linecap="round"></path></svg>
+<p class="bubble" style="width: 100%; box-sizing: border-box">How are you feeling now?</p>
+<div style="flex-grow: 1"></div>
+<a class="btn p" href="#Connect" style="width: 100%">A bit better</a>
+<a class="btn s" href="#ZagsBreathe" style="width: 100%">Still hard</a>
+<a class="btn s" href="#Crisis" style="width: 100%">Worse</a>
+<p class="note">Every session ends with a real person: a friend, the Warm Line, or 988.</p>
+</div>
+</div></figure><figure id="MyPlan"><figcaption>My Plan <span>(MyPlan)</span></figcaption><div class="scr" style="width: 390px; height: 1060px">
+<div class="top"><span style="width: 44px; height: 44px"></span><a class="help" href="#Crisis" aria-label="Get help now"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"></path></svg>Help</a></div>
+<div class="body" style="gap: 10px">
+<h1>My plan for hard moments</h1>
+<p class="sub">Build it on a good day, so it&#39;s ready on a hard one.</p>
+<a class="btn p" href="#PlanNow">I need my plan now</a>
+<h2>Set up with your people</h2>
+<a class="opt" href="#CodeWord"><span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"></path></svg></span><span>Code word<span class="m">Done · &quot;lighthouse&quot; with Jordan</span></span></a>
+<a class="opt" href="#Support"><span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"></circle><circle cx="17" cy="9" r="2.5"></circle><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M15.5 14.6c2.5.3 4.5 2.4 4.5 5.4"></path></svg></span><span>Check-in reminders<span class="m">Set up · Jordan</span></span></a>
+<a class="opt" href="#PlanNow"><span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v6c0 4-3 7.5-7 9-4-1.5-7-5-7-9V6z"></path></svg></span><span>Time and distance plan<span class="m">Set up</span></span></a>
+<h2>My plan</h2>
+<a class="opt" href="#MyPlan">How I know a hard moment is starting</a>
+<a class="opt" href="#MyPlan">Things that help me</a>
+<a class="opt" href="#MyPlan">People and places</a>
+<a class="opt" href="#MyPlan">My trusted people</a>
+<a class="opt" href="#MyPlan">What I want to remember</a>
+</div>
+<nav class="tabs" aria-label="Main"><a class="tab" href="#Main">Home</a><a class="tab on" href="#MyPlan">My Plan</a><a class="tab" href="#Main">Progress</a><a class="tab" href="#Faith">Settings</a></nav>
+</div></figure><figure id="Faith"><figcaption>Faith and hope <span>(Faith)</span></figcaption><div class="scr" style="width: 390px; height: 900px">
+<div class="top"><a class="back" href="#Main" aria-label="Back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a><a class="help" href="#Crisis" aria-label="Get help now"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"></path></svg>Help</a></div>
+<div class="body">
+<p class="lbl">Faith &amp; hope · turned on in Settings</p>
+<h1>When I&#39;m afraid</h1>
+<div class="card" style="display: flex; flex-direction: column; gap: 10px; padding: 22px">
+<span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h6a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H4zM20 5h-6a2 2 0 0 0-2 2v13a2 2 0 0 1 2-2h6z"></path></svg></span>
+<p class="verse">&quot;Fear thou not; for I am with thee: be not dismayed; for I am thy God: I will strengthen thee.&quot;</p>
+<p class="sub">Isaiah 41:10 (KJV)</p>
+</div>
+<p class="lbl" style="margin-top: 6px">Take this with you. Then:</p>
+<div class="pair"><a class="btn s" href="#Faith">Pray</a><a class="btn s" href="#Connect">Text someone</a><a class="btn s" href="#ChangeScene">Take a walk</a><a class="btn s" href="#Calm">Ground myself</a></div>
+<a class="btn s" href="#PlanNow">Open my plan</a>
+<p class="note">Off by default. Offered only to people who choose it.</p>
+</div>
+</div></figure></div><h2 class="rowtitle">Tech check</h2><div class="row"><figure id="TechCheck"><figcaption>Tech check <span>(TechCheck)</span></figcaption><div class="scr" style="width: 390px; height: 900px">
+<div class="top"><a class="back" href="#Main" aria-label="Back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a><a class="help" href="#Crisis" aria-label="Get help now"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"></path></svg>Help</a></div>
+<div class="body" style="gap: 9px">
+<h1>Tech check</h1>
+<p class="sub">No judgment. Tech is allowed. Let&#39;s just see what it&#39;s doing to you right now.</p>
+<a class="opt" href="#AIReliance" style="min-height: 58px">I keep asking AI the same thing</a><a class="opt" href="#BreakLoop" style="min-height: 58px">I keep checking (texts, feeds, news)</a><a class="opt" href="#AIFomo" style="min-height: 58px">I&#39;m afraid I&#39;m falling behind</a><a class="opt" href="#AIAttached" style="min-height: 58px">I think I&#39;m getting attached to AI</a><a class="opt" href="#AIAttached" style="min-height: 58px">My AI changed or is gone</a><a class="opt" href="#AIAttached" style="min-height: 58px">I&#39;m using AI instead of people</a><a class="opt" href="#Connect" style="min-height: 58px">I&#39;m not sure what&#39;s real</a>
+</div>
+</div></figure><figure id="BreakLoop"><figcaption>Break the loop <span>(BreakLoop)</span></figcaption><div class="scr" style="width: 390px; height: 900px">
+<div class="top"><a class="back" href="#TechCheck" aria-label="Back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a><a class="help" href="#Crisis" aria-label="Get help now"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"></path></svg>Help</a></div>
+<div class="body">
+<h1>Are you looking for information, or reassurance?</h1>
+<div class="pair"><a class="btn s" href="#BreakLoop">Information</a><a class="btn p" href="#BreakLoop">Reassurance</a></div>
+<div class="soft" style="display: flex; flex-direction: column; align-items: center; gap: 6px; margin-top: 6px">
+<p class="lbl">10-minute loop break</p>
+<p style="font-family: 'Nunito', system-ui, sans-serif; font-weight: 800; font-size: 54px; line-height: 1; color: #2F6F6A">10:00</p>
+</div>
+<div>
+<div class="check"><span class="box on"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></span><span>Stop checking</span></div>
+<div class="check"><span class="box on"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></span><span>Put the phone face down</span></div>
+<div class="check"><span class="box"></span><span>Do one physical thing: stand, stretch, get water</span></div>
+<div class="check"><span class="box"></span><span>Play a quick game or change the scene</span></div>
+</div>
+<p class="sub">In 10 minutes, ask: do I still need to check?</p>
+</div>
+</div></figure><figure id="AIReliance"><figcaption>Asking AI again <span>(AIReliance)</span></figcaption><div class="scr" style="width: 390px; height: 844px">
+<div class="top"><a class="back" href="#TechCheck" aria-label="Back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a><a class="help" href="#Crisis" aria-label="Get help now"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"></path></svg>Help</a></div>
+<div class="body" style="gap: 14px">
+<p class="verse" style="margin-top: 20px">Sometimes another answer doesn&#39;t solve uncertainty. It just gives it another place to go.</p>
+<div class="card"><p class="lbl">Stop</p><p style="margin-top: 4px; font-weight: 700">Close the chat for 10 minutes.</p></div>
+<div class="card"><p class="lbl">Decide</p><p style="margin-top: 4px; font-weight: 700">What do you actually need to decide?</p></div>
+<div class="card"><p class="lbl">Act</p><p style="margin-top: 4px; font-weight: 700">Take one real-world step.</p></div>
+<div style="flex-grow: 1"></div>
+<a class="btn p" href="#BreakLoop">Start a 10-minute break</a>
+</div>
+</div></figure><figure id="AIAttached"><figcaption>Attached to AI <span>(AIAttached)</span></figcaption><div class="scr" style="width: 390px; height: 1020px">
+<div class="top"><a class="back" href="#TechCheck" aria-label="Back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a><a class="help" href="#Crisis" aria-label="Get help now"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"></path></svg>Help</a></div>
+<div class="body">
+<h1>Getting attached to an AI</h1>
+<p>AI can feel personal. It answers fast, remembers what you said, and never gets tired. That can feel meaningful. It still isn&#39;t a human relationship.</p>
+<p class="lbl" style="margin-top: 6px">What does it give you?</p>
+<div class="chips"><a class="chip on" href="#AIAttached">Someone to talk to</a><a class="chip" href="#AIAttached">Reassurance</a><a class="chip on" href="#AIAttached">No judgment</a><a class="chip" href="#AIAttached">Company</a><a class="chip" href="#AIAttached">Advice</a></div>
+<p class="lbl" style="margin-top: 6px">What might it be replacing?</p>
+<div class="chips"><a class="chip" href="#AIAttached">Friends</a><a class="chip on" href="#AIAttached">Sleep</a><a class="chip" href="#AIAttached">Family</a><a class="chip" href="#AIAttached">Dating</a><a class="chip" href="#AIAttached">Nothing</a></div>
+<h2>Would one real-world connection help right now?</h2>
+<div class="pair"><a class="btn s" href="#Connect">Text someone</a><a class="btn s" href="#ChangeScene">Go somewhere</a></div>
+<div class="card" style="display: flex; flex-direction: column; gap: 8px"><p class="lbl">Set a boundary with your AI</p><p class="sub">Paste this into your AI&#39;s custom instructions. It&#39;s a nudge, not a guarantee.</p><a class="btn s" href="#AIAttached">Copy boundary text</a></div>
+</div>
+</div></figure><figure id="AIFomo"><figcaption>Falling behind <span>(AIFomo)</span></figcaption><div class="scr" style="width: 390px; height: 900px">
+<div class="top"><a class="back" href="#TechCheck" aria-label="Back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a><a class="help" href="#Crisis" aria-label="Get help now"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"></path></svg>Help</a></div>
+<div class="body">
+<h1>Afraid you&#39;re falling behind?</h1>
+<p class="lbl">What are you afraid of missing?</p>
+<div class="chips"><a class="chip on" href="#AIFomo">Career</a><a class="chip" href="#AIFomo">Money</a><a class="chip" href="#AIFomo">Productivity</a><a class="chip" href="#AIFomo">Knowledge</a><a class="chip" href="#AIFomo">Something else</a></div>
+<div class="card"><p class="lbl">What I know</p><p style="margin-top: 4px">My job is changing. Nobody has told me it&#39;s ending.</p></div>
+<div class="card"><p class="lbl">What I&#39;m afraid of</p><p style="margin-top: 4px">Being replaced and not keeping up.</p></div>
+<div class="soft"><p class="lbl">One thing I can actually do</p><p style="margin-top: 4px; font-weight: 700">Spend 20 minutes learning one tool this week.</p></div>
+<p class="sub">You don&#39;t need to keep checking. Pick one thing, then close it and do the thing.</p>
+<a class="btn p" href="#Connect">Talk it over with someone</a>
+</div>
+</div></figure></div>
+</div></body></html>
