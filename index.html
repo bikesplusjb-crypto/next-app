@@ -293,7 +293,8 @@ const LINKS = {
   call988: "tel:988",
   text988: "sms:988",
   chat988: "https://988lifeline.org/chat",
-  call911: "tel:911"
+  call911: "tel:911",
+  findHelpline: "https://findahelpline.com"
 };
 const HARD_TIME_MSG = "I'm having a really hard time. Can you call me?";
 function smsLink(phone, body){
@@ -463,8 +464,21 @@ function clearSaved(){
 const getPlan = () => store.sensitive.plan;
 function logActivity(type){ store.sensitive.activity.push({ type, ts:Date.now() }); saveStore(); }
 
-const prefs = { reduce:false, haptics:false, homeTipDismissed:false, onboarded:false };
+const prefs = { reduce:false, haptics:false, homeTipDismissed:false, onboarded:false, country:"auto" };
 function finishOnboarding(){ prefs.onboarded = true; savePrefs(); }   // remembered in prefs only
+
+/* Outside the US? Only ever ADDS "Find a helpline in your country" next to 988; never hides 911 or 988.
+   "auto" uses the phone's time zone, then its language, as a hint. No location is read or sent. */
+const US_ZONES = /^(America\/(New_York|Chicago|Denver|Los_Angeles|Phoenix|Anchorage|Juneau|Sitka|Metlakatla|Yakutat|Nome|Adak|Boise|Detroit|Menominee|Indiana\/.+|Kentucky\/.+|North_Dakota\/.+|Indianapolis|Louisville|Fort_Wayne|Knox_IN|Atka|Shiprock|Puerto_Rico|St_Thomas|Virgin)|Pacific\/(Honolulu|Johnston|Midway|Wake|Guam|Saipan|Pago_Pago|Samoa)|US\/.+|Navajo)$/;
+function likelyOutsideUS(){
+  if (prefs.country === "us") return false;
+  if (prefs.country === "other") return true;
+  let tz = "";
+  try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ""; } catch (_){}
+  if (tz && tz !== "UTC" && tz !== "Etc/UTC") return !US_ZONES.test(tz);
+  const region = ((navigator.language || "").split("-")[1] || "").toUpperCase();
+  return !!region && region !== "US";
+}
 /* iPhone Safari only, and only when not already opened from the home screen. Shown on Home until dismissed. */
 function showHomeTip(){
   if (prefs.homeTipDismissed) return false;
@@ -802,7 +816,8 @@ function row988(){
   return `<div class="pair" style="margin-top:12px">
     <a class="btn btn-safety" href="${LINKS.call988}" aria-label="Call 988, the Suicide and Crisis Lifeline">Call 988</a>
     <a class="btn btn-safety" href="${LINKS.text988}" aria-label="Text 988, the Suicide and Crisis Lifeline">Text 988</a>
-  </div>`;
+  </div>${likelyOutsideUS() ? `
+  <a class="btn btn-secondary" style="margin-top:10px" href="${LINKS.findHelpline}" target="_blank" rel="noopener">Find a helpline in your country</a>` : ""}`;
 }
 function personButtons(msg, noexit){
   const p = person();
@@ -1364,6 +1379,13 @@ const SCREENS = {
         ${seg("haptics","off",prefs.haptics ? "on" : "off","Off")}${seg("haptics","on",prefs.haptics ? "on" : "off","On")}
       </div>
       <p class="small" style="margin-top:8px">A light tap when you finish a step. Not every phone supports this.</p>
+      <h2>Where you are</h2>
+      <div class="seg-theme" role="group" aria-label="Where you are">
+        ${seg("country","auto",prefs.country,"Auto")}${seg("country","us",prefs.country,"In the US")}${seg("country","other",prefs.country,"Outside the US")}
+      </div>
+      <p class="small" style="margin-top:8px">${prefs.country === "auto"
+        ? `Auto uses your phone's time zone and language as a hint. Right now it ${likelyOutsideUS() ? "adds" : "doesn't add"} "Find a helpline in your country".`
+        : prefs.country === "other" ? `Crisis screens add "Find a helpline in your country".` : "Crisis screens show US numbers."} 911 and 988 always stay on screen.</p>
       <h2>Your data</h2>
       ${STORAGE_OK ? `
       <p class="small" style="margin-bottom:8px">Save on this device</p>
@@ -1934,6 +1956,7 @@ const ACTIONS = {
   howScroll(){ const el = document.getElementById("how"); if (el) el.scrollIntoView({ behavior:reducedMotion() ? "auto" : "smooth" }); },
   motion(arg){ prefs.reduce = arg === "reduce"; document.documentElement.classList.toggle("reduce", prefs.reduce); savePrefs(); render(); },
   haptics(arg){ prefs.haptics = arg === "on"; if (prefs.haptics) buzz(); savePrefs(); render(); },
+  country(arg){ if (["auto","us","other"].includes(arg)){ prefs.country = arg; savePrefs(); } render(); },
   persist(arg){
     persistOn = arg === "on";
     if (persistOn){ saveStore(); ui.flash = "Saving is on. Your data stays on this device."; }
