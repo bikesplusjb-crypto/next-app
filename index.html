@@ -64,8 +64,8 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;backgroun
 .help-pill{min-height:48px;padding:0 16px 0 12px;border-radius:24px;border:1.5px solid var(--safety);background:var(--safety-soft);font-weight:600;font-size:15px;display:inline-flex;align-items:center;gap:8px}
 .help-pill svg{width:20px;height:20px;flex:none}
 
-.ybar{margin:0 20px 10px;padding:12px 14px;border-radius:16px;background:var(--surface);border:1.5px solid var(--safety)}
-.ybar p{margin:0 0 10px;font-weight:600;font-size:15px}
+.ybar{margin:0 20px 8px;padding:12px 14px;border-radius:16px;background:var(--surface);border:1.5px solid var(--safety)}
+.ybar p{margin:0 0 8px;font-weight:600;font-size:15px}
 .ybar .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .chip{min-height:48px;border-radius:12px;border:1px solid var(--line);background:var(--bg);font-weight:600;font-size:15px;display:flex;align-items:center;justify-content:center;text-decoration:none;padding:0 10px;text-align:center}
 .chip.safety{background:var(--safety);color:var(--on-safety);border-color:var(--safety)}
@@ -241,6 +241,25 @@ textarea.field{min-height:150px;resize:vertical}
 .how li::before{counter-increment:how;content:counter(how);width:32px;height:32px;border-radius:50%;background:var(--primary-soft);color:var(--primary);font-weight:650;display:grid;place-items:center}
 .how b{display:block}
 .flash{border-radius:14px;padding:12px 14px;background:var(--primary-soft);font-size:15px;font-weight:600;margin-top:12px}
+
+/* Stage 6.1: Home */
+.home-hero{padding:4px 0 0}
+.home-hero .brand{font-size:34px}
+h1.home-tag{font-size:16px;font-weight:400;line-height:1.35;letter-spacing:0;color:var(--text-muted);margin:4px 0 0}
+.btn-big{min-height:72px;font-size:19px;border-radius:20px;margin-top:10px}
+.routes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.route{min-height:80px;border-radius:18px;background:var(--surface);border:1px solid var(--line);padding:10px 14px;
+  display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:6px;font-weight:600;font-size:17px;line-height:1.25;text-align:left}
+.ico{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:12px;background:var(--primary-soft);color:var(--primary);flex:none}
+.ico svg{width:22px;height:22px}
+.ico.alt{background:var(--accent-soft);color:var(--accent)}
+.route .ico{width:34px;height:34px;border-radius:10px}
+.route .ico svg{width:20px;height:20px}
+.ico.safety{background:var(--surface);color:var(--safety)}
+.lbl{font-size:13px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted);margin:14px 0 8px}
+.sits{display:flex;flex-wrap:wrap;gap:8px}
+.home-safe{width:100%;margin-top:12px;min-height:68px}
+.sit{min-height:44px;border-radius:22px;border:1px solid var(--line);background:var(--surface);padding:0 16px;font-weight:600;font-size:15px}
 
 /* Large text or a short screen: only the top bar (Help, and the YELLOW 988 bar) stays pinned. See fitChrome(). */
 :root.crowded .tabbar,:root.crowded .actions{position:static}
@@ -690,8 +709,9 @@ function startFlow(stateId, opts = {}){
   const theme = ui.theme;
   ui = freshUi(); ui.theme = theme;
   ui.lowFirst = !!opts.firstHydration;
+  ui.firstPick = opts.firstPick || null;
   logActivity("moment");
-  const first = opts.firstHydration ? "hydration" : FLOW_FIRST[stateId];
+  const first = opts.firstHydration ? "hydration" : ui.firstPick || FLOW_FIRST[stateId];
   dispatch({ type:"SET_ENGINE_RESULT", pick:first, reason:first ? "Default first step for this state." : "User chooses the first step." });
   go("before");
 }
@@ -699,6 +719,7 @@ function startFlow(stateId, opts = {}){
 function beginAfterBefore(){
   if (blockIfRed()) return;
   const st = session.currentState;
+  if (ui.firstPick){ startIntervention(ui.firstPick); return; }
   if (st === "anxious") startIntervention("grounding", { route:"anx-feet" });
   else if (st === "spiraling") startIntervention("thought_parking");
   else if (st === "low"){ if (ui.lowFirst) startIntervention("hydration"); else go("low-choose"); }
@@ -825,7 +846,7 @@ function row988(){
 }
 function personButtons(msg, noexit){
   const p = person();
-  if (!p) return `<p class="note">Add someone you trust (coming soon).</p>`;
+  if (!p) return `<p class="note">Add someone you trust in My Plan.</p>`;
   const attr = noexit ? `data-act="noContact" data-noexit="1"` : "";
   return `<div class="pair">
     <a class="btn btn-outline" href="${telLink(p.phone)}" ${attr} aria-label="Call ${esc(p.name)}">Call ${esc(p.name)}</a>
@@ -833,6 +854,16 @@ function personButtons(msg, noexit){
   </div>`;
 }
 const title = t => `<h1 id="screen-title" tabindex="-1">${t}</h1>`;
+/* Small inline stroke icons (no emoji), from mockup.html. */
+const ICONS = {
+  calm:'<path d="M3 10c2-3 4-3 6 0s4 3 6 0 4-3 6 0M3 16c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/>',
+  head:'<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.3 6.3l2.8 2.8M14.9 14.9l2.8 2.8M17.7 6.3l-2.8 2.8M9.1 14.9l-2.8 2.8"/>',
+  people:'<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M15.5 14.6c2.5.3 4.5 2.4 4.5 5.4"/>',
+  door:'<path d="M10 4H5v16h5M14 8l4 4-4 4M18 12H9"/>',
+  shield:'<path d="M12 3l7 3v6c0 4-3 7.5-7 9-4-1.5-7-5-7-9V6z"/>',
+  plan:'<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>'
+};
+const icon = (name, variant) => `<span class="ico${variant === true ? " alt" : variant ? " " + variant : ""}" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS[name]}</svg></span>`;
 const stepTitle = (t, tight) => `<p id="screen-title" tabindex="-1" class="step-big${tight ? " tight" : ""}">${t}</p>`;
 
 /* ---------- SCREENS ---------- */
@@ -847,27 +878,31 @@ const BEFORE_HEAD = {
 const SCREENS = {
   home(){
     return { nav:true, close:false, body:`
-      <div class="hero">
+      <div class="home-hero">
         <button class="brand" data-act="wordmark" aria-label="ZigZag Mind">ZigZag Mind</button>
-        <p class="sub">Get through what's happening right now.</p>
+        <h1 id="screen-title" tabindex="-1" class="home-tag">Get through what's happening right now.</h1>
       </div>
-      ${title("What's happening right now?")}
-      <div class="grid">
-        <button class="card" data-act="flow" data-arg="anxious"><span class="em" aria-hidden="true">😰</span>I'm anxious</button>
-        <button class="card" data-act="flow" data-arg="spiraling"><span class="em" aria-hidden="true">🌀</span>I'm spiraling</button>
-        <button class="card" data-act="flow" data-arg="craving"><span class="em" aria-hidden="true">🌿</span>I want to use</button>
-        <button class="card" data-act="flow" data-arg="low"><span class="em" aria-hidden="true">😔</span>I feel low</button>
-        <button class="card wide" data-act="flow" data-arg="distraction"><span class="em" aria-hidden="true">🎮</span>I need a distraction</button>
-        <button class="card wide safety" data-act="crisis"><span class="em" aria-hidden="true">🛡️</span><span>I don't feel safe<span class="meta">Get to a real person fast</span></span></button>
+      <button class="btn btn-primary btn-big" data-act="triage">I don't know what I need</button>
+      <div class="routes">
+        <button class="route" data-act="route" data-arg="calm">${icon("calm")}Calm down</button>
+        <button class="route" data-act="route" data-arg="head">${icon("head", true)}Get out of my head</button>
+        <button class="route" data-act="route" data-arg="connect">${icon("people")}Connect</button>
+        <button class="route" data-act="route" data-arg="scene">${icon("door")}Change the scene</button>
       </div>
-      <div style="display:flex;justify-content:center;margin:8px 0 12px">
-        <button class="link" data-act="triage">I don't know — help me figure it out</button>
+      <p class="lbl" id="sitLabel">Or tell me what's happening</p>
+      <div class="sits" role="group" aria-labelledby="sitLabel">
+        <button class="sit" data-act="flow" data-arg="anxious">I'm anxious</button>
+        <button class="sit" data-act="flow" data-arg="spiraling">I'm spiraling</button>
+        <button class="sit" data-act="flow" data-arg="craving">I want to use</button>
+        <button class="sit" data-act="flow" data-arg="low">I feel low</button>
+        <button class="sit" data-act="route" data-arg="connect">I feel alone</button>
       </div>
-      ${showHomeTip() ? `<div class="panel" id="homeTip" role="note" style="margin:0 0 16px">
+      <button class="card wide safety home-safe" data-act="crisis">${icon("shield", "safety")}<span>I don't feel safe<span class="meta">Get to a real person fast</span></span></button>
+      ${showHomeTip() ? `<div class="panel" id="homeTip" role="note">
         <p style="margin:0">Add ZigZag Mind to your home screen so your plan stays with you. Tap Share, then Add to Home Screen.</p>
         <div style="display:flex;justify-content:flex-end"><button class="link" data-act="dismissHomeTip">Got it</button></div>
       </div>` : ""}
-      ${!getPlan().trustedPeople.length && !getPlan().helps.length ? `<button class="card wide" data-act="tab" data-arg="plan" style="margin-bottom:16px;width:100%"><span class="em" aria-hidden="true">📝</span><span>Build your plan for hard moments<span class="meta">Do it on a good day. It takes a few minutes.</span></span></button>` : ""}` };
+      ${!getPlan().trustedPeople.length && !getPlan().helps.length ? `<button class="card wide" data-act="tab" data-arg="plan" style="margin:14px 0 16px;width:100%">${icon("plan")}<span>Build your plan for hard moments<span class="meta">Do it on a good day. It takes a few minutes.</span></span></button>` : ""}` };
   },
 
   triage(){
@@ -1191,7 +1226,7 @@ const SCREENS = {
     return { close:false, body:`
       ${title("Talk to someone")}
       <p class="sub">ZigZag Mind never contacts anyone for you. These buttons open your phone.</p>
-      ${person() ? `<h2>${esc(person().name)} <span class="small">(${esc(person().relationship)})</span></h2>${personButtons(msg, false)}` : `<p class="note">Add someone you trust (coming soon).</p>`}
+      ${person() ? `<h2>${esc(person().name)} <span class="small">(${esc(person().relationship)})</span></h2>${personButtons(msg, false)}` : `<p class="note">Add someone you trust in My Plan.</p>`}
       <h2>988 Suicide &amp; Crisis Lifeline</h2>
       <p class="small">Free, 24/7. Also for substance-use crises.</p>
       ${row988()}
@@ -1223,7 +1258,7 @@ const SCREENS = {
         <a class="btn btn-safety two-line" href="${LINKS.call911}">Call 911<span class="cap">If someone is hurt, or someone else is in danger</span></a>
         ${row988().replace('style="margin-top:12px"', "")}
         <a class="btn btn-secondary" href="${LINKS.chat988}" target="_blank" rel="noopener">Chat online with 988</a>
-        ${p ? personButtons(HARD_TIME_MSG, false) : `<p class="note">Add someone you trust (coming soon).</p>`}
+        ${p ? personButtons(HARD_TIME_MSG, false) : `<p class="note">Add someone you trust in My Plan.</p>`}
         <button class="btn btn-secondary" data-act="cPlaces" aria-expanded="${ui.placesOpen}">Go where other people are</button>
         ${ui.placesOpen ? `<div class="panel" style="margin-top:0"><ul>${getPlan().places.length ? getPlan().places.map(x => `<li>${esc(x)}</li>`).join("") : "<li>A shop, a library, a friend's place — anywhere with people.</li>"}</ul></div>` : ""}
         <button class="btn btn-secondary" data-act="cPlan">Open my plan</button>
@@ -1726,6 +1761,14 @@ const ACTIONS = {
   obLater(){ finishOnboarding(); go("home"); },
   triage(){ if (blockIfRed()) return; go("triage"); },
   flow(arg){ startFlow(arg); },
+  /* Home's four escape routes. Until parts 6.3–6.6 land, each opens the closest existing flow. */
+  route(arg){
+    if (blockIfRed()) return;
+    if (arg === "calm") startFlow("anxious");
+    else if (arg === "head") startFlow("distraction");
+    else if (arg === "connect") ACTIONS.talk();
+    else if (arg === "scene") startFlow("low", { firstPick:"environment_change" });
+  },
   triagePick(arg){
     if (arg === "red"){ applySafetyResult("RED"); return; }
     if (arg === "cant"){ startFlow("low", { firstHydration:true }); return; }

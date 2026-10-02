@@ -115,7 +115,7 @@ Shown with a trusted person in My Plan (example name "Jordan") unless noted. The
 - **Link → `tel:988`:** Call 988 _(screen reader: "Call 988, the Suicide and Crisis Lifeline")_
 - **Link → `sms:988`:** Text 988 _(screen reader: "Text 988, the Suicide and Crisis Lifeline")_
 - **Link → `https://988lifeline.org/chat`:** Chat online with 988
-- Add someone you trust (coming soon).
+- Add someone you trust in My Plan.
 - **Button:** Go where other people are
 - A shop, a library, a friend's place — anywhere with people.
 - **Button:** Open my plan
@@ -370,15 +370,19 @@ Rendered for each state where the screen changes by state. Identical renders are
 
 - **Button:** Help _(screen reader: "Get help now")_
 - **Button:** ZigZag Mind
-- Get through what's happening right now.
-- **Heading:** What's happening right now?
+- **Heading:** Get through what's happening right now.
+- **Button:** I don't know what I need
+- **Button:** Calm down
+- **Button:** Get out of my head
+- **Button:** Connect
+- **Button:** Change the scene
+- Or tell me what's happening
 - **Button:** I'm anxious
 - **Button:** I'm spiraling
 - **Button:** I want to use
 - **Button:** I feel low
-- **Button:** I need a distraction
+- **Button:** I feel alone
 - **Button:** I don't feel safe — Get to a real person fast
-- **Button:** I don't know — help me figure it out
 - **Button:** Home
 - **Button:** My Plan
 - **Button:** Progress

@@ -36,12 +36,12 @@ const r=[];
  r.push(['used -> rec not craving_delay', s.screen==='recommendation' && s.lastEnginePick!=='craving_delay' && s.sessionHistory.length===1, s.lastEnginePick]);
 }
 {const {w,click,S}=boot();
- click(act('flow','distraction')); click(act('beforeSkip')); click(act('distFocus'));
+ click(act('route','head')); /* Home 6.1: Get out of my head */ click(act('beforeSkip')); click(act('distFocus'));
  let s=S(); r.push(['distraction focus', s.screen==='focus'&&s.currentInterventionId==='distraction_game']);
  click(act('focusDone')); r.push(['focus -> checkin', S().screen==='checkin']);
 }
 {const {w,click,S}=boot();
- click(act('flow','distraction')); click(act('beforeSkip')); click(act('distPark'));
+ click(act('route','head')); /* Home 6.1: Get out of my head */ click(act('beforeSkip')); click(act('distPark'));
  w.document.getElementById('thoughts').value='work stuff\nI want to end it all';
  click(act('spMake')); const s=S(); r.push(['RED in thought parking via distraction', s.screen==='crisis'&&s.safetyLevel==='RED']);
 }
