@@ -24,7 +24,7 @@ const r=[];
 // Routing
 const go=(sel,after)=>{ const a=boot(); a.click(sel); if(after) after(a); return a.S(); };
 let s;
-s=go(act('triage')); r.push(['I don\'t know what I need → triage (6.2 later)', s.screen==='triage']);
+s=go(act('dontKnow')); r.push(['I don\'t know what I need → its one-question screen (6.2)', s.screen==='dont-know']);
 s=go(act('route','calm'),a=>a.click(act('beforeSkip'))); r.push(['Calm down → calming steps (6.3 later)', s.currentState==='anxious' && s.screen==='anx-feet']);
 s=go(act('route','head'),a=>a.click(act('beforeSkip'))); r.push(['Get out of my head → games (6.4 later)', s.currentState==='distraction' && s.screen==='distraction-choose']);
 s=go(act('route','connect')); r.push(['Connect → Talk to someone (6.6 later)', s.screen==='talk']);

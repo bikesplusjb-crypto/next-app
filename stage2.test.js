@@ -52,11 +52,11 @@ let r=[];
  click(act('spSortNext')); click(act('spTemplate','Put it on my calendar')); click(act('spNextDone')); click(act('ciSkip'));
  const s=S(); r.push(['T5 spiral', s.screen==='recommendation'&&s.sessionHistory[0].interventionId==='thought_parking']);
 }
-// Test 6, 7
-{const {w,click,S}=boot(); click(act('triage')); click(act('triagePick','cant')); click(act('beforeSkip'));
- const s=S(); r.push(['T6 cant tell hydration', s.currentState==='low'&&s.currentInterventionId==='hydration'&&s.screen==='intervention']);}
-{const {w,click,S}=boot(); click(act('triage')); click(act('triagePick','red'));
- const s=S(); r.push(['T7 crisis triage', s.screen==='crisis'&&s.safetyLevel==='RED']);}
+// Test 6, 7 (Stage 6.2 replaced the six-option triage with "I don't know what I need")
+{const {w,click,S}=boot(); click(act('dontKnow')); click(act('route','scene')); click(act('beforeSkip'));
+ const s=S(); r.push(['T6 dont-know -> change the scene', s.currentInterventionId==='environment_change'&&s.screen==='intervention']);}
+{const {w,click,S}=boot(); click(act('dontKnow')); click(act('getHelpNow'));
+ const s=S(); r.push(['T7 dont-know Get help now -> crisis RED', s.screen==='crisis'&&s.safetyLevel==='RED']);}
 // Test 9
 {const {w,click,S}=boot(); click(act('crisis')); click(act('cBack'));
  const s=S(); r.push(['T9 exit', s.screen==='home'&&s.safetyLevel==='YELLOW'&&s.yellow&&!!w.document.querySelector('.ybar')]);}

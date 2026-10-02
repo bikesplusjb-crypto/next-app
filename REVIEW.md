@@ -388,18 +388,17 @@ Rendered for each state where the screen changes by state. Identical renders are
 - **Button:** Progress
 - **Button:** Settings
 
-### `triage`
+### `dont-know`
 
 - **Button:** × _(screen reader: "Close and go to home")_
 - **Button:** Help _(screen reader: "Get help now")_
-- **Heading:** Which feels closest?
-- You don't have to explain everything.
-- **Button:** My body feels tense or racing
-- **Button:** My thoughts keep looping
-- **Button:** I feel heavy, empty, or stuck
-- **Button:** Something is pulling at me
-- **Button:** I'm scared of what I might do
-- **Button:** I can't tell
+- **Heading:** That's okay. One question.
+- Do you want to calm down, get distracted, connect with someone, or get out of where you are?
+- **Button:** Calm down — Slow my body down
+- **Button:** Get distracted — Interrupt the loop for a few minutes
+- **Button:** Connect with someone — A person, not another answer
+- **Button:** Get out of where I am — Change the scene
+- Scared of what you might do? Get help now
 
 ### `before`
 

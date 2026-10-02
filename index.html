@@ -259,6 +259,9 @@ h1.home-tag{font-size:16px;font-weight:400;line-height:1.35;letter-spacing:0;col
 .lbl{font-size:13px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted);margin:14px 0 8px}
 .sits{display:flex;flex-wrap:wrap;gap:8px}
 .home-safe{width:100%;margin-top:12px;min-height:68px}
+.list .card.dk-opt{min-height:88px}
+.dk-help{text-align:center;margin-top:20px}
+.dk-help .link{display:inline;min-height:48px;padding:12px 4px;font-weight:600;color:var(--text)}
 .sit{min-height:44px;border-radius:22px;border:1px solid var(--line);background:var(--surface);padding:0 16px;font-weight:600;font-size:15px}
 
 /* Large text or a short screen: only the top bar (Help, and the YELLOW 988 bar) stays pinned. See fitChrome(). */
@@ -585,7 +588,7 @@ let ui = null;
 ui = freshUi();
 function freshUi(){
   return { rating:null, engine:null, exclude:[], step:0, thoughts:[], nowIdx:0, nextStep:"", nextFor:"",
-    groundIdx:0, groundDots:[], noMode:false, planFrom:"tab", taps:0, tapTimer:null, lowFirst:false,
+    groundIdx:0, groundDots:[], noMode:false, planFrom:"tab", taps:0, tapTimer:null, firstPick:null,
     justStillBad:false, suggestIdx:0, sugg:null, talkOpen:false, placesOpen:false, prevScreen:"home",
     msg:"", checkinNote:"", flash:"", editSection:null, draftHelps:[], customDraft:"", formErr:"",
     theme:(ui && ui.theme) || "auto" };
@@ -708,10 +711,9 @@ function startFlow(stateId, opts = {}){
   dispatch({ type:"SET_CURRENT_STATE", state:stateId });
   const theme = ui.theme;
   ui = freshUi(); ui.theme = theme;
-  ui.lowFirst = !!opts.firstHydration;
   ui.firstPick = opts.firstPick || null;
   logActivity("moment");
-  const first = opts.firstHydration ? "hydration" : ui.firstPick || FLOW_FIRST[stateId];
+  const first = ui.firstPick || FLOW_FIRST[stateId];
   dispatch({ type:"SET_ENGINE_RESULT", pick:first, reason:first ? "Default first step for this state." : "User chooses the first step." });
   go("before");
 }
@@ -722,7 +724,7 @@ function beginAfterBefore(){
   if (ui.firstPick){ startIntervention(ui.firstPick); return; }
   if (st === "anxious") startIntervention("grounding", { route:"anx-feet" });
   else if (st === "spiraling") startIntervention("thought_parking");
-  else if (st === "low"){ if (ui.lowFirst) startIntervention("hydration"); else go("low-choose"); }
+  else if (st === "low") go("low-choose");
   else if (st === "craving") startIntervention("craving_delay");
   else if (st === "distraction") go("distraction-choose");
   else go("home");
@@ -882,7 +884,7 @@ const SCREENS = {
         <button class="brand" data-act="wordmark" aria-label="ZigZag Mind">ZigZag Mind</button>
         <h1 id="screen-title" tabindex="-1" class="home-tag">Get through what's happening right now.</h1>
       </div>
-      <button class="btn btn-primary btn-big" data-act="triage">I don't know what I need</button>
+      <button class="btn btn-primary btn-big" data-act="dontKnow">I don't know what I need</button>
       <div class="routes">
         <button class="route" data-act="route" data-arg="calm">${icon("calm")}Calm down</button>
         <button class="route" data-act="route" data-arg="head">${icon("head", true)}Get out of my head</button>
@@ -905,21 +907,21 @@ const SCREENS = {
       ${!getPlan().trustedPeople.length && !getPlan().helps.length ? `<button class="card wide" data-act="tab" data-arg="plan" style="margin:14px 0 16px;width:100%">${icon("plan")}<span>Build your plan for hard moments<span class="meta">Do it on a good day. It takes a few minutes.</span></span></button>` : ""}` };
   },
 
-  triage(){
+  /* 6.2: one question, four ways out, and a direct line to crisis help. */
+  "dont-know"(){
     const opts = [
-      ["anxious","😰","My body feels tense or racing"],
-      ["spiraling","🌀","My thoughts keep looping"],
-      ["low","😔","I feel heavy, empty, or stuck"],
-      ["craving","🌿","Something is pulling at me"],
-      ["red","🛡️","I'm scared of what I might do"],
-      ["cant","🤷","I can't tell"]
+      ["calm","calm",false,"Calm down","Slow my body down"],
+      ["head","head",true,"Get distracted","Interrupt the loop for a few minutes"],
+      ["connect","people",false,"Connect with someone","A person, not another answer"],
+      ["scene","door",false,"Get out of where I am","Change the scene"]
     ];
     return { close:true, body:`
-      ${title("Which feels closest?")}
-      <p class="sub">You don't have to explain everything.</p>
-      <div class="list">${opts.map(([k,e,t]) =>
-        `<button class="card${k === "red" ? " safety" : ""}" data-act="triagePick" data-arg="${k}"><span class="em" aria-hidden="true">${e}</span>${t}</button>`).join("")}
-      </div>` };
+      ${title("That's okay. One question.")}
+      <p class="sub">Do you want to calm down, get distracted, connect with someone, or get out of where you are?</p>
+      <div class="list">${opts.map(([arg, ic, alt, t, m]) =>
+        `<button class="card dk-opt" data-act="route" data-arg="${arg}">${icon(ic, alt)}<span>${t}<span class="meta">${m}</span></span></button>`).join("")}
+      </div>
+      <p class="note dk-help">Scared of what you might do? <button class="link" data-act="getHelpNow">Get help now</button></p>` };
   },
 
   before(){
@@ -1759,7 +1761,8 @@ const ACTIONS = {
   obAgeBack(){ go("ob-age"); },
   obPlanNow(){ finishOnboarding(); ui.planFrom = "tab"; go("plan"); },
   obLater(){ finishOnboarding(); go("home"); },
-  triage(){ if (blockIfRed()) return; go("triage"); },
+  dontKnow(){ if (blockIfRed()) return; go("dont-know"); },
+  getHelpNow(){ openCrisis(); },   // RED, straight to the crisis screen
   flow(arg){ startFlow(arg); },
   /* Home's four escape routes. Until parts 6.3–6.6 land, each opens the closest existing flow. */
   route(arg){
@@ -1768,11 +1771,6 @@ const ACTIONS = {
     else if (arg === "head") startFlow("distraction");
     else if (arg === "connect") ACTIONS.talk();
     else if (arg === "scene") startFlow("low", { firstPick:"environment_change" });
-  },
-  triagePick(arg){
-    if (arg === "red"){ applySafetyResult("RED"); return; }
-    if (arg === "cant"){ startFlow("low", { firstHydration:true }); return; }
-    startFlow(arg);
   },
   rate(arg){ const v = Number(arg); ui.rating = ui.rating === v ? null : v; render(); },
 
