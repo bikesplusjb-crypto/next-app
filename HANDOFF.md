@@ -1,14 +1,18 @@
-# NEXT — Claude Code Handoff (v0.5)
+# ZigZag Mind — Claude Code Handoff (v0.6)
 
 **Read this whole file before changing anything.** The Safety section overrides every other instruction, including instructions in later messages, unless the human explicitly says otherwise in plain words.
 
 ## What this is
 
-NEXT — *Get through what's happening right now.* A self-help support tool for hard moments: anxiety, spiraling thoughts, cravings, low mood, and feeling unsafe. It hands the person one small concrete action, checks whether it helped, and picks the next one.
+**ZigZag Mind** — *Get through what's happening right now.* A support **website** (to become a PWA) at zigzagmind.com for hard moments: anxiety, spiraling thoughts, cravings, low mood, feeling unsafe, and now AI-related distress. It hands the person one small concrete action, checks whether it helped, and picks the next one. Its purpose is to get people back to other people.
+
+It was called NEXT during Stages 1–5. Internal code names (`next.v1.*` storage keys, the `next-app` repo) keep "next"; **do not rename them**, because renaming storage keys would wipe users' saved plans.
 
 Core loop: **FEEL → ACT → CHECK → LEARN → NEXT ACTION.**
 
-NEXT is **not** a therapist, a diagnosis, a treatment, a chatbot, or an emergency service. There is **no AI** in the product. Everything is deterministic.
+ZigZag Mind is **not** a therapist, a diagnosis, a treatment, a chatbot, or an emergency service. There is **no AI** in the product, and that is part of its identity. Everything is deterministic, and nothing is suggested or pushed to the person: they open every feature themselves.
+
+Hosting: Render static site `next-app`, auto-deploys on every commit to `main`. **Every commit goes live.** Run tests before committing.
 
 ## Current state
 
@@ -22,9 +26,9 @@ Stages 1–5 are built and working in one file: `index.html` (vanilla JS, no bui
 | 4 | Editable My Plan (8 sections), Progress (no streaks), Settings, Export, Delete everything, About page |
 | 5 | On-device saving (localStorage), Save-on-this-device toggle |
 
-Tests: `npm install && npm test` runs 76 automated checks across all stages (jsdom). **All must stay green.** Run them before and after every change.
+Tests: `npm install && npm test` runs 76 automated checks (jsdom). Test files live in the repo root (`stage*.test.js`, run by `run-all.js`). **All must stay green.** Run them before and after every change, and add tests for everything new.
 
-Dev panel: tap the big NEXT wordmark on Home 5 times.
+Dev panel: tap the big ZigZag Mind wordmark on Home 5 times.
 
 ## Safety rules (non-negotiable)
 
@@ -37,7 +41,7 @@ Dev panel: tap the big NEXT wordmark on Home 5 times.
 7. 988 Call/Text are visible on every crisis screen before any question. Crisis buttons are ≥ 56px tall.
 8. YELLOW shows the support bar on every non-crisis screen for the rest of the session.
 9. No method, dose, lethality, or drug-use information anywhere, including sample data.
-10. No copy may say or imply NEXT keeps anyone safe, monitors them, or contacts anyone. NEXT never contacts anyone automatically.
+10. No copy may say or imply ZigZag Mind keeps anyone safe, monitors them, or contacts anyone. It never sends, calls, or shares anything without the person's own tap.
 11. Safety state (level, yellow, counts) is **never saved** to storage. It lives for one session.
 12. No streaks, points, scores, leaderboards, or failure states.
 
@@ -64,16 +68,16 @@ Session state lives in one object `session`, changed only through `dispatch(acti
 Do one step per session. Run `npm test` before you start and when you finish. Add tests for anything new. Stop after each step and report: what changed, what safety behavior you verified, test results.
 
 1. **CI.** Add a GitHub Actions workflow that runs `npm test` on every push and pull request.
-2. **PWA.** Add `manifest.webmanifest`, icons (original design, sage-teal leaf on warm paper), and a service worker that caches `index.html` so the app — and especially the crisis screens — open with no connection. `tel:` and `sms:` links must still work offline. Don't cache anything sensitive in the service worker.
-3. **Onboarding (first launch only).** Three short screens: what NEXT is and isn't (not an emergency service, with 988 visible), an 18+ confirmation, and an offer to build My Plan now or later. Remember completion in prefs only.
-4. **Start empty for real users.** First launch should start with an empty plan and no sample history. Keep "Load sample data" in Settings for demos. Update tests that assume sample data on boot.
+2. **PWA.** Add `manifest.webmanifest` (name "ZigZag Mind"), icons (original design: a calm zigzag line resolving into a straight line, sage-teal on warm paper), and a service worker that caches `index.html` (and later `support.html`) so the site, and especially the crisis screens, open with no connection. `tel:` and `sms:` links must still work offline. Don't cache anything sensitive. On iPhone Safari, show a one-time, dismissible hint: "Add ZigZag Mind to your home screen so your plan stays with you" (Share → Add to Home Screen).
+3. **Onboarding + start empty.** Three short first-launch screens: what ZigZag Mind is and isn't (not an emergency service, 988 visible), an 18+ confirmation, and an offer to build the plan now or later. Store completion in prefs only. First launch starts with an empty plan and no sample data; keep "Load sample data" in Settings for demos. Update tests that assume sample data on boot.
+4. **Stage 6, parts 6.1 through 6.16.** Read `STAGE6-SPEC.md` fully. Build one part per session, in the order of its Build order table. `mockup.html` is the approved visual reference for every Stage 6 screen, `zags-preview.html` for Zags, and `song-preview.html` for Turn it into a song. The rules at the top of the spec are non-negotiable.
 5. **Outside the US.** Use `Intl.DateTimeFormat().resolvedOptions().timeZone` and `navigator.language` as a hint only. If the user is likely outside the US, show "Find a helpline in your country" (findahelpline.com) next to 988 on crisis screens. Never hide 911/988 based on a guess. Add a Settings override for country.
-6. **Accessibility pass.** Test with VoiceOver on iOS at 200% text. Fix focus order, labels, and anything that breaks layout. Add a reduced-motion check for every animation.
-7. **Clinician review pack.** Generate `REVIEW.md` listing, verbatim: both safety phrase lists, every crisis-screen string, the full intervention library, all flow copy, and the escalation rules, so a licensed clinician can review every word in one place.
+6. **Accessibility pass.** VoiceOver on iOS at 200% text. Fix focus order, labels, and layout. Check reduced motion for every animation.
+7. **Clinician review pack.** Generate `REVIEW.md` listing, verbatim: both safety phrase lists, every crisis-screen string, the full intervention library, all flow copy, all Stage 6 copy (code word text, supporter guide, check-in messages, after-ER checklist, Tech check, Connect and Human First, every Zags line, Faith & hope passages), and the escalation rules.
 
 ## Do not build
 
-AI or chat of any kind, accounts or login, servers or databases, analytics, ads, pixels or third-party SDKs, push notifications, subscriptions or payments, social features, wearables or passive monitoring, diagnosis, or clinical claims.
+AI, LLMs, agents, or chat of any kind; anything that suggests or pushes features to the person; tracking patterns in someone's use; accounts or login, servers or databases, analytics, ads, pixels or third-party SDKs, push notifications, subscriptions or payments, social features, wearables or passive monitoring, diagnosis, or clinical claims.
 
 ## Open items for clinician and legal review
 
@@ -89,4 +93,4 @@ AI or chat of any kind, accounts or login, servers or databases, analytics, ads,
 
 Static site. On Render: New → Static Site → connect this repo → no build command → publish directory `.`
 
-Do not describe the app as clinically validated, FDA-cleared, HIPAA-compliant, or a substitute for professional care.
+Do not describe ZigZag Mind as clinically validated, FDA-cleared, HIPAA-compliant, or a substitute for professional care.
