@@ -376,6 +376,11 @@ const INTERVENTION_LIBRARY = [
     states:["craving"], intensityRange:[0,10], needsMobility:false,
     steps:["Move to another room.","Drink some water.","Put some distance between you and the thing you're craving.","Text your person, or wait a few more minutes before deciding."],
     completion:"tap_done" },
+  { id:"still_true", name:"What's still true", tryLabel:"Find what's still true",
+    description:"Start with what you know, one thing at a time.", durationSec:120,
+    states:["anxious","spiraling","low"], intensityRange:[0,10], needsMobility:false,
+    steps:["Read one short statement.","Tap That's true, or Not true for me.","Stop when you've found a few."],
+    completion:"tap_done" },
   { id:"behavioral_activation", name:"One tiny task", tryLabel:"Do one tiny task",
     description:"One small, doable thing.", durationSec:180,
     states:["low"], intensityRange:[0,10], needsMobility:true,
@@ -383,6 +388,17 @@ const INTERVENTION_LIBRARY = [
     completion:"tap_done" }
 ];
 const findIntervention = id => INTERVENTION_LIBRARY.find(i => i.id === id);
+/* "What's still true?" (Calm). The person decides what's true for them; never argued with, never saved. */
+const STILL_TRUE = [
+  "I am here right now.",
+  "My feet are touching something.",
+  "The room is still around me.",
+  "This moment is happening right now.",
+  "I don't have to solve everything right now.",
+  "I can take one small step.",
+  "I can ask someone to stay with me."
+];
+const STILL_TRUE_ENOUGH = 3;
 
 /* ---------- SAMPLE DATA (fictional) ---------- */
 const SAMPLE_HISTORY = [
@@ -588,7 +604,7 @@ let ui = null;
 ui = freshUi();
 function freshUi(){
   return { rating:null, engine:null, exclude:[], step:0, thoughts:[], nowIdx:0, nextStep:"", nextFor:"",
-    groundIdx:0, groundDots:[], noMode:false, planFrom:"tab", taps:0, tapTimer:null, firstPick:null,
+    groundIdx:0, groundDots:[], noMode:false, planFrom:"tab", taps:0, tapTimer:null, firstPick:null, trueIdx:0, trueCount:0,
     justStillBad:false, suggestIdx:0, sugg:null, talkOpen:false, placesOpen:false, prevScreen:"home",
     msg:"", checkinNote:"", flash:"", editSection:null, draftHelps:[], customDraft:"", formErr:"",
     theme:(ui && ui.theme) || "auto" };
@@ -718,6 +734,17 @@ function startFlow(stateId, opts = {}){
   go("before");
 }
 
+/* 6.3 Calm: a short menu. No before-rating; every option ends at the usual check-in. */
+function openCalm(){
+  if (blockIfRed()) return;
+  dispatch({ type:"RESET_CURRENT_FLOW" });
+  dispatch({ type:"SET_CURRENT_STATE", state:"anxious" });
+  const theme = ui.theme;
+  ui = freshUi(); ui.theme = theme;
+  logActivity("moment");
+  go("calm");
+}
+
 function beginAfterBefore(){
   if (blockIfRed()) return;
   const st = session.currentState;
@@ -740,7 +767,9 @@ function startIntervention(interventionId, opts = {}){
   ui.step = 0;
   let route = opts.route;
   if (!route) route = interventionId === "thought_parking" ? "spiral-input"
-    : interventionId === "craving_delay" ? "craving-delay" : "intervention";
+    : interventionId === "craving_delay" ? "craving-delay"
+    : interventionId === "still_true" ? "still-true" : "intervention";
+  if (interventionId === "still_true"){ ui.trueIdx = 0; ui.trueCount = 0; }
   if (interventionId === "craving_delay"){
     ui.cravingStart = Date.now();
     ui.cravingEnd = Date.now() + CRAVING_MS;
@@ -863,6 +892,9 @@ const ICONS = {
   people:'<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M15.5 14.6c2.5.3 4.5 2.4 4.5 5.4"/>',
   door:'<path d="M10 4H5v16h5M14 8l4 4-4 4M18 12H9"/>',
   shield:'<path d="M12 3l7 3v6c0 4-3 7.5-7 9-4-1.5-7-5-7-9V6z"/>',
+  leaf:'<path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14zM5 19l7-7"/>',
+  check:'<path d="M5 12l5 5 9-10"/>',
+  anchor:'<circle cx="12" cy="5" r="2"/><path d="M12 7v14M5 13a7 7 0 0 0 14 0M8 11h8"/>',
   plan:'<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>'
 };
 const icon = (name, variant) => `<span class="ico${variant === true ? " alt" : variant ? " " + variant : ""}" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS[name]}</svg></span>`;
@@ -905,6 +937,45 @@ const SCREENS = {
         <div style="display:flex;justify-content:flex-end"><button class="link" data-act="dismissHomeTip">Got it</button></div>
       </div>` : ""}
       ${!getPlan().trustedPeople.length && !getPlan().helps.length ? `<button class="card wide" data-act="tab" data-arg="plan" style="margin:14px 0 16px;width:100%">${icon("plan")}<span>Build your plan for hard moments<span class="meta">Do it on a good day. It takes a few minutes.</span></span></button>` : ""}` };
+  },
+
+  /* 6.3: Calm. (Zags, 6.7, will be the featured card here.) */
+  calm(){
+    const opts = [
+      ["breathe","calm","Breathe for 1 minute","In for 4, out for 6"],
+      ["ground","leaf","5-4-3-2-1 grounding","Notice what's around you"],
+      ["feet","check","Feet on the floor","Three tiny steps, 2 minutes"],
+      ["true","anchor","What's still true?","Start with what you know"]
+    ];
+    return { close:true, body:`
+      ${title("Let's slow things down.")}
+      <p class="sub">Pick one. You can stop any time.</p>
+      <div class="list">${opts.map(([arg, ic, t, m]) =>
+        `<button class="card" data-act="calmPick" data-arg="${arg}">${icon(ic)}<span>${t}<span class="meta">${m}</span></span></button>`).join("")}
+      </div>`,
+      actions:`<button class="btn btn-secondary" data-act="route" data-arg="connect">I'd rather talk to someone</button>` };
+  },
+
+  "still-true"(){
+    const done = ui.trueCount >= STILL_TRUE_ENOUGH || ui.trueIdx >= STILL_TRUE.length;
+    if (done && ui.trueCount > 0){
+      return { close:true, body:`${stepTitle("You found something that was true for you.")}`,
+        actions:`<button class="btn btn-primary" data-act="trueDone">Next</button>` };
+    }
+    if (done){
+      return { close:true, body:`
+        ${stepTitle("That's okay. Nothing has to feel true right now.", true)}
+        <p class="sub">Sometimes a person helps more than a sentence.</p>
+        <button class="btn btn-secondary" data-act="talk">Talk to someone</button>
+        ${row988()}`,
+        actions:`<button class="btn btn-primary" data-act="trueDone">Next</button>` };
+    }
+    return { close:true, body:`
+      <p class="step-count">What's still true?${ui.trueIdx === 0 ? "" : ` · ${ui.trueIdx + 1} of ${STILL_TRUE.length}`}</p>
+      ${ui.trueIdx === 0 ? `<p class="sub" style="margin-top:6px">When everything feels like too much, start with what you know.</p>` : ""}
+      ${stepTitle(esc(STILL_TRUE[ui.trueIdx]), ui.trueIdx === 0)}`,
+      actions:`<button class="btn btn-primary" data-act="trueYes">That's true</button>
+        <button class="btn btn-secondary" data-act="trueNo">Not true for me</button>` };
   },
 
   /* 6.2: one question, four ways out, and a direct line to crisis help. */
@@ -1763,11 +1834,21 @@ const ACTIONS = {
   obLater(){ finishOnboarding(); go("home"); },
   dontKnow(){ if (blockIfRed()) return; go("dont-know"); },
   getHelpNow(){ openCrisis(); },   // RED, straight to the crisis screen
+  calmPick(arg){
+    if (blockIfRed()) return;
+    if (arg === "breathe") startIntervention("breathing");
+    else if (arg === "ground") startIntervention("grounding", { route:"ground" });
+    else if (arg === "feet") startIntervention("grounding", { route:"anx-feet" });
+    else if (arg === "true") startIntervention("still_true");
+  },
+  trueYes(){ if (blockIfRed()) return; ui.trueCount++; ui.trueIdx++; lastRendered = null; render(); },
+  trueNo(){ if (blockIfRed()) return; ui.trueIdx++; lastRendered = null; render(); },
+  trueDone(){ if (blockIfRed()) return; go("checkin"); },
   flow(arg){ startFlow(arg); },
   /* Home's four escape routes. Until parts 6.3–6.6 land, each opens the closest existing flow. */
   route(arg){
     if (blockIfRed()) return;
-    if (arg === "calm") startFlow("anxious");
+    if (arg === "calm") openCalm();
     else if (arg === "head") startFlow("distraction");
     else if (arg === "connect") ACTIONS.talk();
     else if (arg === "scene") startFlow("low", { firstPick:"environment_change" });

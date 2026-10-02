@@ -285,6 +285,17 @@ Steps:
 3. Put some distance between you and the thing you're craving.
 4. Text your person, or wait a few more minutes before deciding.
 
+### What's still true (`still_true`)
+
+- Button: "Find what's still true"
+- Description: "Start with what you know, one thing at a time."
+- For: anxious, spiraling, low · about 2 min
+
+Steps:
+1. Read one short statement.
+2. Tap That's true, or Not true for me.
+3. Stop when you've found a few.
+
 ### One tiny task (`behavioral_activation`)
 
 - Button: "Do one tiny task"
@@ -333,6 +344,16 @@ Filter by state → filter by intensity → never repeat the last pick → if YE
 - "Notice 3 things you can hear."
 - "Notice 2 things you can smell."
 - "Notice 1 thing you can taste."
+
+### "What's still true?" statements (one at a time; That's true / Not true for me; ends after 3 true)
+
+- "I am here right now."
+- "My feet are touching something."
+- "The room is still around me."
+- "This moment is happening right now."
+- "I don't have to solve everything right now."
+- "I can take one small step."
+- "I can ask someone to stay with me."
 
 ### Suggestions from My Plan
 
@@ -387,6 +408,28 @@ Rendered for each state where the screen changes by state. Identical renders are
 - **Button:** My Plan
 - **Button:** Progress
 - **Button:** Settings
+
+### `calm`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Let's slow things down.
+- Pick one. You can stop any time.
+- **Button:** Breathe for 1 minute — In for 4, out for 6
+- **Button:** 5-4-3-2-1 grounding — Notice what's around you
+- **Button:** Feet on the floor — Three tiny steps, 2 minutes
+- **Button:** What's still true? — Start with what you know
+- **Button:** I'd rather talk to someone
+
+### `still-true`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- What's still true?
+- When everything feels like too much, start with what you know.
+- **Heading:** I am here right now.
+- **Button:** That's true
+- **Button:** Not true for me
 
 ### `dont-know`
 
@@ -1034,6 +1077,14 @@ _When: distraction_
 - **Link → `tel:911`:** Already used, or took too much? Call 911.
 - Shaking, sweating, confused, or seeing things? Withdrawal can be a medical emergency. Get medical help.
 - **Link → `tel:988`:** Call or text 988 for support.
+- **Button:** Next
+
+#### What's still true
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- What's still true · Step 1 of 3
+- **Heading:** Read one short statement.
 - **Button:** Next
 
 #### One tiny task

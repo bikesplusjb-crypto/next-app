@@ -26,7 +26,7 @@ const r=[];
 // Each option routes like the matching Home escape route.
 const pick=(arg,then)=>{ const a=boot(); a.click(act('route',arg)); if(then) then(a); return a.S(); };
 let s;
-s=pick('calm',a=>a.click(act('beforeSkip'))); r.push(['Calm down → calming steps (6.3 later)', s.currentState==='anxious' && s.screen==='anx-feet']);
+s=pick('calm'); r.push(['Calm down → the Calm menu (6.3)', s.screen==='calm']);
 s=pick('head',a=>a.click(act('beforeSkip'))); r.push(['Get distracted → games (6.4 later)', s.currentState==='distraction' && s.screen==='distraction-choose']);
 s=pick('connect'); r.push(['Connect with someone → Talk to someone (6.6 later)', s.screen==='talk']);
 s=pick('scene',a=>a.click(act('beforeSkip'))); r.push(['Get out of where I am → Fresh air (6.5 later)', s.screen==='intervention' && s.currentInterventionId==='environment_change']);
