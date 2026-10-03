@@ -3,7 +3,8 @@ const {JSDOM}=require('jsdom');
 const fs=require('fs');
 const SRC=fs.readFileSync(require('path').join(__dirname,'index.html'),'utf8');
 const URL_='https://ko-fi.com/zigzagmind-test';
-const withUrl=u=>SRC.replace('const DONATE_URL = "";',`const DONATE_URL = ${JSON.stringify(u)};`);
+const withUrl=u=>SRC.replace(/const DONATE_URL = "[^"]*";/,`const DONATE_URL = ${JSON.stringify(u)};`);
+const EMPTY=withUrl('');
 function boot(html){const dom=new JSDOM(html,{url:'https://next.example/',runScripts:'dangerously',pretendToBeVisual:true,beforeParse(w){ w.scrollTo=()=>{}; w.scrollBy=()=>{}; }});
  const w=dom.window; w.HTMLElement.prototype.scrollIntoView=()=>{};
  const click=(sel)=>{const el=w.document.querySelector(sel); if(!el) throw new Error('missing '+sel+' on '+w.eval('session.screen')); el.dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true}));};
@@ -13,8 +14,9 @@ function boot(html){const dom=new JSDOM(html,{url:'https://next.example/',runScr
 const act=(a,arg)=>arg!==undefined?`[data-act="${a}"][data-arg="${arg}"]`:`[data-act="${a}"]`;
 const links=a=>[...a.doc.querySelectorAll('#app a')].filter(x=>/Support ZigZag Mind/.test(x.textContent));
 const r=[];
+r.push(['the real link is set: https://ko-fi.com/zigzagmind', /const DONATE_URL = "https:\/\/ko-fi\.com\/zigzagmind";/.test(SRC)]);
 
-r.push(['one constant at the top of the app script, empty by default', /<script>\s*"use strict";\s*\/\*[^]*?\*\/\s*const DONATE_URL = "";/.test(SRC) && (SRC.match(/const DONATE_URL/g)||[]).length===1]);
+r.push(['one constant at the top of the app script', /<script>\s*"use strict";\s*\/\*[^]*?\*\/\s*const DONATE_URL = "[^"]*";/.test(SRC) && (SRC.match(/const DONATE_URL/g)||[]).length===1]);
 
 // ---- set ----
 {const a=boot(withUrl(URL_)); a.click(act('tab','settings'));
@@ -44,14 +46,14 @@ r.push(['one constant at the top of the app script, empty by default', /<script>
  r.push(['the list covers Home, crisis, Help, Calm, My Plan and the check-ins', ['home','crisis','crisis-full','talk','calm','plan','checkin','game-check','recommendation','zags','connect'].every(s=>screens.includes(s))]);}
 
 // ---- hidden when empty (or left as the placeholder) ----
-for(const [label,html] of [['empty',SRC],['placeholder left in',withUrl('PASTE-LINK-HERE')],['not a web link',withUrl('javascript:alert(1)')]]){
+for(const [label,html] of [['empty',EMPTY],['placeholder left in',withUrl('PASTE-LINK-HERE')],['not a web link',withUrl('javascript:alert(1)')]]){
   const a=boot(html); a.click(act('tab','settings')); const s1=links(a).length + (/Support ZigZag Mind/.test(a.T())?1:0);
   a.click(act('about')); const s2=links(a).length + (/Support ZigZag Mind/.test(a.T())?1:0);
   r.push([`hidden everywhere when ${label}`, s1===0 && s2===0]);
 }
 
 // ---- no storage keys added ----
-{const a=boot(SRC), b=boot(withUrl(URL_));
+{const a=boot(EMPTY), b=boot(withUrl(URL_));
  for(const x of [a,b]){ x.click(act('tab','settings')); x.click(act('about')); }
  r.push(['no storage keys added', JSON.stringify(Object.keys(a.dump()).sort())===JSON.stringify(Object.keys(b.dump()).sort()) && !/donat|ko-fi|support/i.test(JSON.stringify(b.dump()))]);}
 

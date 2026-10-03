@@ -1611,6 +1611,8 @@ _When: distraction_
 - **Heading:** About
 - **Button:** About ZigZag Mind
 - ZigZag Mind is a self-help support tool. It is not therapy, medical care, or an emergency service. If you're in danger, call 911 or call or text 988.
+- **Link → `https://ko-fi.com/zigzagmind`:** Support ZigZag Mind
+- Free for everyone, always. If it helped, you can help keep it running.
 - **Button:** Home
 - **Button:** My Plan
 - **Button:** Progress
@@ -1711,6 +1713,7 @@ _When: distraction_
 - What you write stays on your phone. We don't sell or share it. You can delete everything with one tap.
 - In this prototype, data is saved only in your browser on this device. Turn saving off in Settings for a shared phone.
 - ZigZag Mind is a self-help support tool. It is not therapy, medical care, or an emergency service. If you're in danger, call 911 or call or text 988.
+- Free for everyone, always. Support ZigZag Mind
 
 ### Each intervention screen
 
