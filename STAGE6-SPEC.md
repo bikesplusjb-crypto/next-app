@@ -447,3 +447,23 @@ Store verse text in one constant for review. **Clinician or chaplain review requ
 - Every line in `ZAGS_LINES`; legal confirmation that scripted Zags is outside companion chatbot laws.
 - Faith & hope passages and framing.
 - Turn it into a song: prompts, after-song copy, the replay reflections, and whether replaying hard songs helps or hurts.
+
+---
+
+## Stage 7 — Premium + honest visual redesign
+
+**Part A (built): visual pass, styling only.** New palette (light and dark), a quiet system serif for page titles (nothing downloaded), softer cards (shadow instead of borders in light mode), the ZigZag mark (a thin, soft line drawn once on Home, About and the first welcome screen; static with reduced motion), crisis screens kept plain (no serif, no shadows, no motion). No flow, copy or safety changes. `layout.test.js` checks every screen at 375, 390 and 430px.
+
+**Part B (needs the owner's decision): Home redesign.** The proposal (hero "It's okay not to be okay.", "Find my next step", a quieter "I'm stuck") would replace the 6.1 Home. Whatever is chosen must keep **"I don't feel safe" and Help on the first screen** in normal and large text (`home-viewport.test.js`) and a way into the existing flows (including "I have an urge to use (drink or drugs)"). "I'm stuck" overlaps "I don't know what I need" (6.2): pick one.
+
+**Part C (ON HOLD — new experiences, need owner + clinician sign-off before building).** All person-initiated, local-only, no scores/streaks/feeds, Help one tap away, `blockIfRed()` first, at most five items where a list is involved, and never on crisis screens.
+
+- **Find something real (REAL WORLD + Touch):** "Find something real." / "You don't have to feel okay. Let's just notice something that's here." One large image card ("Touch something real", Try it) → "Put your hand on something near you." → "Notice the texture." → "Notice the temperature." → "You found something real." No progress bar, no score.
+- **Digital fidget (a soft pebble):** press / hold / release; haptics off by default; reduced motion respected; no sound by default; tap alternative to any drag. Ends: "Now find something real that feels good to hold." / I'm done.
+- **Show me something good:** "Give me something good." / "You don't have to feel happy. Just look at something that exists." One image + a short caption at a time; Another / I'm done; five at most; no autoplay.
+- **Make me smile:** "I need something stupid." / "No pressure to feel better. Just something a little lighter." One joke, absurd observation, animal fact or silly image at a time; five at most. **Clinician review of every item**; never about suicide, self-harm, mental illness, trauma, medical emergencies or protected characteristics.
+- **Borrow a little calm:** invitations, not "fake it": put both feet down · unclench your hands · sit somewhere comfortable · take one slow step · look around the room · let your shoulders drop → "You don't have to believe you're okay yet."
+- **Put the phone down:** after some REAL WORLD activities: "You're ready." / "You can put me away for a few minutes." / Put the phone down. Never auto-launches or suggests another feature.
+- **Photography:** needs a curated, licensed **local** image set (real, ordinary moments; no staged wellness, no smiling-at-camera stock, nothing implying diagnosis or treatment). No remote images or image APIs. Until it exists, these features would rely on placeholders, which is a reason to wait.
+- **Microcopy rules** (apply everywhere): short and honest ("It's okay not to be okay." · "You can stop here."); never "You got this!", "Great job!", "This will make you feel better" or treatment claims.
+

@@ -11,11 +11,13 @@
 <title>ZigZag Mind — Get through what's happening right now</title>
 <style>
 :root{
-  --bg:#F6F4EF;--surface:#FFFFFF;--text:#1E2329;--text-muted:#5E6670;
-  --primary:#2F6F6A;--on-primary:#FFFFFF;--primary-soft:#E3EFEC;
-  --accent:#6C63C7;--accent-soft:#ECEAFB;
-  --safety:#B5562E;--on-safety:#FFFFFF;--safety-soft:#F7E6DD;
-  --line:#E3DFD6;--focus:#6C63C7;
+  --bg:#F7F4EE;--surface:#FFFFFF;--text:#252A2D;--text-muted:#667078;
+  --primary:#356F6A;--on-primary:#FFFFFF;--primary-soft:#E2EEEA;
+  --accent:#A9A4D6;--accent-soft:#EEEDF8;--accent-ink:#6E68B5;--secondary-accent:#91AFC0;
+  --safety:#B85C43;--on-safety:#FFFFFF;--safety-soft:#F5E4DE;
+  --line:#E3DED5;--border:var(--line);--focus:#6C63C7;
+  --serif:"New York","Iowan Old Style","Charter","Georgia","Times New Roman",serif;
+  --card-shadow:0 1px 2px rgba(37,42,45,.04),0 10px 28px rgba(37,42,45,.06);
   color-scheme:light;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
@@ -23,20 +25,20 @@
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --bg:#12151A;--surface:#1B2027;--text:#ECEAE4;--text-muted:#A3A9B1;
-    --primary:#7BC4BB;--on-primary:#12151A;--primary-soft:#1F3634;
-    --accent:#A59EF0;--accent-soft:#25233D;
-    --safety:#F09A6E;--on-safety:#12151A;--safety-soft:#3A2219;
-    --line:#2A313A;--focus:#A59EF0;--zag-dark:#BFE6E0;--zag-eye:#12151A;--zag-cheek:#E59A80;
+    --bg:#171A1C;--surface:#202427;--text:#EEECE6;--text-muted:#A7ADB0;
+    --primary:#79BDB5;--on-primary:#171A1C;--primary-soft:#203936;
+    --accent:#AAA4DD;--accent-soft:#2A2840;--accent-ink:#AAA4DD;--secondary-accent:#91AFC0;
+    --safety:#E79570;--on-safety:#171A1C;--safety-soft:#3A241D;
+    --line:#2E3438;--focus:#AAA4DD;--card-shadow:none;--zag-dark:#BFE6E0;--zag-eye:#12151A;--zag-cheek:#E59A80;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#12151A;--surface:#1B2027;--text:#ECEAE4;--text-muted:#A3A9B1;
-  --primary:#7BC4BB;--on-primary:#12151A;--primary-soft:#1F3634;
-  --accent:#A59EF0;--accent-soft:#25233D;
-  --safety:#F09A6E;--on-safety:#12151A;--safety-soft:#3A2219;
-  --line:#2A313A;--focus:#A59EF0;--zag-dark:#BFE6E0;--zag-eye:#12151A;--zag-cheek:#E59A80;
+  --bg:#171A1C;--surface:#202427;--text:#EEECE6;--text-muted:#A7ADB0;
+  --primary:#79BDB5;--on-primary:#171A1C;--primary-soft:#203936;
+  --accent:#AAA4DD;--accent-soft:#2A2840;--accent-ink:#AAA4DD;--secondary-accent:#91AFC0;
+  --safety:#E79570;--on-safety:#171A1C;--safety-soft:#3A241D;
+  --line:#2E3438;--focus:#AAA4DD;--card-shadow:none;--zag-dark:#BFE6E0;--zag-eye:#12151A;--zag-cheek:#E59A80;
   color-scheme:dark;
 }
 :root.crisis-mode{--bg:var(--safety-soft)}
@@ -46,7 +48,7 @@ html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
 body{
   margin:0;height:100%;background:var(--bg);color:var(--text);
   font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-  font-size:17px;line-height:1.45;-webkit-font-smoothing:antialiased;
+  font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased;
   -webkit-tap-highlight-color:transparent;
 }
 #app{max-width:430px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;background:var(--bg)}
@@ -124,8 +126,8 @@ textarea.field{min-height:150px;resize:vertical}
 .notice{border-radius:14px;padding:12px 14px;background:var(--primary-soft);font-size:15px;margin-top:12px}
 
 .dots{display:flex;flex-wrap:wrap;gap:14px;margin:28px 0 8px}
-.dot{width:60px;height:60px;border-radius:50%;border:2px solid var(--accent);background:transparent;transition:background .2s ease,transform .2s ease}
-.dot[aria-pressed="true"]{background:var(--accent);transform:scale(.94)}
+.dot{width:60px;height:60px;border-radius:50%;border:2px solid var(--accent-ink);background:transparent;transition:background .2s ease,transform .2s ease}
+.dot[aria-pressed="true"]{background:var(--accent-ink);transform:scale(.94)}
 .count{font-size:72px;font-weight:600;color:var(--primary);text-align:center;margin:28px 0 0;font-variant-numeric:tabular-nums}
 
 .tcard{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:16px;margin-top:12px;transition:opacity .3s ease,transform .3s ease}
@@ -190,7 +192,7 @@ textarea.field{min-height:150px;resize:vertical}
 /* Stage 3: focus game */
 .focus-area{position:relative;height:230px;border-radius:20px;background:var(--surface);border:1px solid var(--line);margin-top:20px;overflow:hidden;touch-action:manipulation;user-select:none;-webkit-user-select:none;cursor:pointer}
 .focus-area .track{position:absolute;left:28px;right:28px;top:50%;height:2px;background:var(--line)}
-.target{position:absolute;left:50%;top:50%;width:78px;height:78px;margin:-39px 0 0 -39px;border-radius:50%;border:3px solid var(--accent)}
+.target{position:absolute;left:50%;top:50%;width:78px;height:78px;margin:-39px 0 0 -39px;border-radius:50%;border:3px solid var(--accent-ink)}
 .target.hit{animation:pulse .5s ease-out}
 @keyframes pulse{0%{transform:scale(1);box-shadow:0 0 0 0 var(--accent-soft)}50%{transform:scale(1.12);box-shadow:0 0 0 14px var(--accent-soft)}100%{transform:scale(1);box-shadow:0 0 0 0 transparent}}
 .orb{position:absolute;top:50%;left:0;width:42px;height:42px;margin-top:-21px;border-radius:50%;background:var(--primary);will-change:transform}
@@ -252,7 +254,7 @@ h1.home-tag{font-size:16px;font-weight:400;line-height:1.35;letter-spacing:0;col
   display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:6px;font-weight:600;font-size:17px;line-height:1.25;text-align:left}
 .ico{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:12px;background:var(--primary-soft);color:var(--primary);flex:none}
 .ico svg{width:22px;height:22px}
-.ico.alt{background:var(--accent-soft);color:var(--accent)}
+.ico.alt{background:var(--accent-soft);color:var(--accent-ink)}
 .route .ico{width:34px;height:34px;border-radius:10px}
 .route .ico svg{width:20px;height:20px}
 .ico.safety{background:var(--surface);color:var(--safety)}
@@ -276,7 +278,7 @@ span.dot.on{background:var(--accent)}
 .shapes .shape svg{width:40px;height:40px}
 .shapes button.shape[aria-pressed="true"]{background:var(--primary-soft);border-color:var(--primary)}
 .shapes .shape.picked{background:var(--primary-soft)}
-.shapes .shape.was{border:3px solid var(--accent)}
+.shapes .shape.was{border:3px solid var(--accent-ink)}
 .pads{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
 .pad{min-height:110px;border-radius:20px;border:1.5px solid var(--line);transition:background .15s ease}
 .pad.p0{background:var(--primary-soft)}.pad.p1{background:var(--accent-soft)}.pad.p2{background:color-mix(in srgb,#3F6FC4 16%,var(--surface))}.pad.p3{background:var(--surface)}
@@ -348,6 +350,29 @@ a.cw-open,a.ci-open{text-decoration:none;display:flex;align-items:center;justify
 .places .sit{display:inline-flex;align-items:center;text-decoration:none;color:var(--text)}
 .scene-211{margin-top:20px}
 .scene-211 .btn{text-decoration:none;display:flex;align-items:center;justify-content:center}
+
+/* Stage 7 visual pass: calm, editorial, honest. Styling only; no flow or safety changes.
+   Titles get a quiet system serif (nothing downloaded); cards lose their borders for a soft shadow;
+   crisis screens stay plain: no serif, no shadows, no motion. */
+h1,.step-big{font-family:var(--serif);font-weight:500;letter-spacing:-.015em}
+h1{font-size:34px;line-height:1.15;margin:10px 0 10px}
+h2{font-size:22px;line-height:1.25}
+.step-big{font-size:32px;line-height:1.2}
+.sub,.small{line-height:1.5}
+.card,.route,.panel{border-color:transparent;box-shadow:var(--card-shadow)}
+.card.safety,.card.zcard{box-shadow:none}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .card,:root:not([data-theme="light"]) .route,:root:not([data-theme="light"]) .panel{border-color:var(--line)}}
+:root[data-theme="dark"] .card,:root[data-theme="dark"] .route,:root[data-theme="dark"] .panel{border-color:var(--line)}
+.btn-secondary{border-color:var(--line)}
+/* The zigzag: a thin, soft line that changes direction and keeps going. Drawn once; static with reduced motion. */
+.zz{display:block;width:120px;height:24px;margin:6px 0 2px;color:var(--primary);overflow:visible}
+.zz path{fill:none;stroke:currentColor;stroke-width:2.25;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:0;animation:zzDraw .9s ease-out}
+@keyframes zzDraw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+/* Crisis: clarity over beauty */
+:root.crisis-mode h1{font-family:inherit;font-weight:700;font-size:32px;letter-spacing:-.01em}
+:root.crisis-mode main.screen.enter{animation:none}
+:root.crisis-mode .card,:root.crisis-mode .panel{box-shadow:none;border-color:var(--line)}
+:root.crisis-mode .zz{display:none}
 
 /* Large text or a short screen: only the top bar (Help, and the YELLOW 988 bar) stays pinned. See fitChrome(). */
 :root.crowded .tabbar,:root.crowded .actions{position:static}
@@ -1237,6 +1262,8 @@ function personButtons(msg, noexit){
   </div>`;
 }
 const title = t => `<h1 id="screen-title" tabindex="-1">${t}</h1>`;
+/* The ZigZag mark (Stage 7): decorative, used sparingly (Home, About, first welcome screen). */
+const zigzag = () => `<svg class="zz" viewBox="0 0 120 24" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 16 H30 C36 16 38 13 41 9 C44 5 47 4 50 7 L58 16 C61 19 64 19 67 16 L74 8 C77 5 80 5 83 8 C86 11 88 12 94 12 H118"/></svg>`;
 /* Small inline stroke icons (no emoji), from mockup.html. */
 const ICONS = {
   calm:'<path d="M3 10c2-3 4-3 6 0s4 3 6 0 4-3 6 0M3 16c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/>',
@@ -1266,6 +1293,7 @@ const SCREENS = {
     return { nav:true, close:false, body:`
       <div class="home-hero">
         <button class="brand" data-act="wordmark" aria-label="ZigZag Mind">ZigZag Mind</button>
+        ${zigzag()}
         <h1 id="screen-title" tabindex="-1" class="home-tag">Get through what's happening right now.</h1>
       </div>
       <button class="card wide safety home-safe" data-act="crisis">${icon("shield", "safety")}<span>I don't feel safe<span class="meta">Get to a real person fast</span></span></button>
@@ -2262,6 +2290,7 @@ const SCREENS = {
   "ob-about"(){
     return { close:false, body:`
       ${title("Welcome to ZigZag Mind.")}
+      ${zigzag()}
       <p class="sub">Help for hard moments, one small step at a time.</p>
       <p class="small" style="margin:16px 0 0">In danger or thinking about suicide? Call or text 988. It's free and open 24/7.</p>
       ${row988()}
@@ -2309,6 +2338,7 @@ const SCREENS = {
     return { close:true, body:`
       <div class="about-hero">
         <span class="brand brand-xl" style="display:block">ZigZag Mind</span>
+        ${zigzag()}
         <p class="tag" id="screen-title" tabindex="-1">Get through what's happening right now.</p>
         <p class="sub" style="font-size:17px">Small actions. Real support. One moment at a time.</p>
       </div>
