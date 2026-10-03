@@ -319,6 +319,13 @@ p.bubble::before{content:"";position:absolute;top:-9px;left:50%;margin-left:-9px
 .zface{width:44px;height:44px;flex:none;display:block}
 .zface svg{width:44px;height:44px;display:block}
 
+/* Stage 6.7c: Zags listens */
+textarea.listen-box{min-height:200px;font-size:19px;line-height:1.45}
+.listen-said{margin-top:14px;padding:14px 16px;border-radius:16px;border:1px dashed var(--line);color:var(--text-muted);white-space:pre-wrap;max-height:160px;overflow:auto;transition:opacity 1.2s ease}
+.listen-said.fading{opacity:0}
+.kept-row{display:flex;gap:10px;align-items:flex-start;margin-top:10px;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--surface)}
+.kept-text{margin:0;flex:1;white-space:pre-wrap;max-height:6.5em;overflow:hidden}
+
 /* Stage 6.7b: Snuggle Zags */
 .zstage.snuggling{padding-top:20px}
 .zstage.compact .zags{width:130px;height:130px;margin-top:4px}
@@ -527,6 +534,11 @@ const INTERVENTION_LIBRARY = [
     states:["anxious","low","distraction","alone"], intensityRange:[0,10], needsMobility:false,
     steps:["Hold your phone close.","Breathe in as Zags breathes in, out as he breathes out."],
     completion:"tap_done" },
+  { id:"zags_listen", name:"Zags listens", tryLabel:"Get it out with Zags",
+    description:"Write what's on your mind. Zags doesn't reply to it; nothing is kept unless you choose.", durationSec:180,
+    states:["anxious","spiraling","low","alone"], intensityRange:[0,10], needsMobility:false,
+    steps:["Write whatever you need to get out.","Let it go, or keep it private."],
+    completion:"tap_done" },
   /* 6.5 Change the scene: the person picks one of CHANGE_SCENE; it's shown full-screen with Done. */
   { id:"change_scene", name:"Change the scene", tryLabel:"Change the scene",
     description:"Sometimes your brain needs a different place, not another question.", durationSec:300,
@@ -581,7 +593,12 @@ const ZAGS_LINES = {
   bye:"Bye for now. Go be with your people.",
   snuggleHello:"Hi, I'm Zags. I'm not a person, just a little guide. Let's get cozy and breathe slowly.",
   snuggleTip:"Hold me close. Rest your phone on your chest and breathe with me.",
-  snuggleEnd:"Feeling a bit more settled? I'm here if you need me, and so are your people."
+  snuggleEnd:"Feeling a bit more settled? I'm here if you need me, and so are your people.",
+  listen:"I'm listening. Go ahead.",
+  listenAck:"Thank you for getting that out. That sounds heavy to carry.",
+  listenNotPerson:"I'm not a person, but I'm here while you get it out.",
+  listenGone:"It's gone. You don't have to carry it here.",
+  listenKept:"Kept on this phone, just for you. You can delete it in Settings."
 };
 const ZAGS_STEPS = ["feet","blue","sound","doing"];
 const ZAGS_MAX_ROUNDS = 2;          // breathing rounds per session, at most
@@ -707,7 +724,7 @@ function seedActivity(){
   return a;
 }
 const store = {
-  sensitive:{ plan:emptyPlan(), baseHistory:[], activity:[] },   // real users start empty; Settings → Load sample data for demos
+  sensitive:{ plan:emptyPlan(), baseHistory:[], activity:[], kept:[] },   // kept: words kept private from "Zags listens" (6.7c)   // real users start empty; Settings → Load sample data for demos
   product:{ appVersion:"0.4-prototype" }
 };
 /* On-device saving (browser localStorage, this device only, never sent anywhere).
@@ -736,7 +753,8 @@ function loadStore(){
       store.sensitive = {
         plan:{ ...emptyPlan(), ...(d.plan || {}) },
         baseHistory:Array.isArray(d.history) ? d.history : [],
-        activity:Array.isArray(d.activity) ? d.activity : []
+        activity:Array.isArray(d.activity) ? d.activity : [],
+        kept:Array.isArray(d.kept) ? d.kept.filter(k => k && typeof k.text === "string") : []
       };
     }
   } catch (_){ /* corrupted data: keep defaults */ }
@@ -746,7 +764,8 @@ function saveStore(){
   try {
     const history = [ ...store.sensitive.baseHistory, ...session.sessionHistory ].slice(-HISTORY_CAP);
     const activity = store.sensitive.activity.slice(-HISTORY_CAP);
-    localStorage.setItem(STORE_KEY, JSON.stringify({ v:1, plan:store.sensitive.plan, history, activity }));
+    const kept = store.sensitive.kept || [];
+    localStorage.setItem(STORE_KEY, JSON.stringify({ v:1, plan:store.sensitive.plan, history, activity, ...(kept.length ? { kept } : {}) }));
   } catch (_){}
 }
 function savePrefs(){
@@ -1083,6 +1102,7 @@ function startIntervention(interventionId, opts = {}){
   let route = opts.route;
   if (GAME_ROUTES[interventionId]){ resetGame(interventionId); if (!route) route = GAME_ROUTES[interventionId]; }
   if (interventionId === "change_scene" && !route) route = "scene";
+  if (interventionId === "zags_listen"){ route = "listen"; ui.listen = { phase:"write", text:"" }; }
   if (interventionId === "zags_snuggle"){ route = "snuggle"; ui.snuggle = { phase:"setup", endsAt:0, half:null }; }
   if (interventionId === "zags"){ route = "zags"; if (!ui.zags || ui.zags.phase !== "hello") ui.zags = { phase:"hello", step:0, rounds:0, hard:0, breath:0, half:null }; }
   if (!route) route = interventionId === "thought_parking" ? "spiral-input"
@@ -1689,6 +1709,7 @@ const SCREENS = {
       case "hello":
         actions = `<button class="btn btn-primary" data-act="zagsBreathe">Okay, Zags</button>
           <button class="btn btn-secondary" data-act="snuggleStart" data-arg="zags">Just snuggle</button>
+          <button class="btn btn-secondary" data-act="listenStart">I need to get something out</button>
           <button class="link" data-act="zagsBye">Not right now</button>`; break;
       case "breathe":
         sub = z.half ? `Breath ${z.breath + 1} of ${zagsBreaths()}` : "";
@@ -1721,6 +1742,47 @@ const SCREENS = {
         <p class="zsub" id="zagsSub" aria-live="polite">${sub}</p>
       </div>`,
       actions:`${actions}<p class="note znote">${ZAGS_NOTE}</p>` };
+  },
+
+  /* 6.7c: Zags listens. No AI: Zags never replies to what's written. Nothing kept unless the person taps Keep. */
+  listen(){
+    const L = ui.listen || { phase:"write", text:"" };
+    const after = `<button class="btn btn-secondary" data-act="listenCalm">Help me calm down</button>
+      <button class="btn btn-secondary" data-act="route" data-arg="connect">I want a real person</button>`;
+    if (L.phase === "write"){
+      return { close:true, body:`
+        <div class="zstage idle compact">
+          ${zagsSvg(null, false)}
+          <p id="screen-title" tabindex="-1" class="bubble">${ZAGS_LINES.listen}</p>
+        </div>
+        <label for="listenBox" class="sr">What's on your mind</label>
+        <textarea class="field listen-box" id="listenBox" maxlength="4000" autocomplete="off" spellcheck="true">${esc(L.text || "")}</textarea>
+        ${ui.msg ? `<p class="err" role="alert">${esc(ui.msg)}</p>` : ""}`,
+        actions:`<button class="btn btn-primary" data-act="listenDone">Done</button>
+          <p class="note znote">${ZAGS_NOTE} Nothing you write is kept unless you choose.</p>` };
+    }
+    if (L.phase === "ack"){
+      return { close:true, body:`
+        <div class="zstage idle compact">
+          ${zagsSvg(null, true)}
+          <p id="screen-title" tabindex="-1" class="bubble">${ZAGS_LINES.listenAck}</p>
+          <p class="zsub">${ZAGS_LINES.listenNotPerson}</p>
+        </div>
+        <div class="listen-said" id="listenSaid">${esc(L.text)}</div>`,
+        actions:`<button class="btn btn-secondary" data-act="listenMore">I'm not done — keep listening</button>
+          <button class="btn btn-secondary" data-act="listenLetGo">Let it go</button>
+          <button class="btn btn-secondary" data-act="listenKeep">Keep it private</button>
+          ${after}
+          <p class="note znote">${ZAGS_NOTE}</p>` };
+    }
+    return { close:true, body:`
+      <div class="zstage idle compact">
+        ${zagsSvg(null, true)}
+        <p id="screen-title" tabindex="-1" class="bubble">${L.phase === "kept" ? ZAGS_LINES.listenKept : ZAGS_LINES.listenGone}</p>
+      </div>`,
+      actions:`${after}
+        <button class="btn btn-primary" data-act="listenFinish">Done</button>
+        <p class="note znote">${ZAGS_NOTE}</p>` };
   },
 
   /* 6.7b: Snuggle Zags. setup → snuggle (fixed length) → his closing line → the usual check-in. */
@@ -2153,6 +2215,10 @@ const SCREENS = {
         ? "Your plan and check-ins are saved only in this browser on this phone. Nothing is sent anywhere."
         : "Nothing is saved. Everything is gone when you close or reload. Useful on a shared phone."}</p>`
       : `<p class="small">This browser isn't letting ZigZag Mind save, so everything is gone when you reload. Nothing is sent anywhere.</p>`}
+      ${(store.sensitive.kept || []).length ? `<h2>Kept private</h2>
+      <p class="small">Words you kept from "Zags listens". Only on this phone.</p>
+      ${store.sensitive.kept.map((k, i) => `<div class="kept-row"><p class="kept-text">${esc(k.text)}</p>
+        <button class="edit-btn" data-act="keptDelete" data-arg="${i}" aria-label="Delete kept words ${i + 1}">Delete</button></div>`).join("")}` : ""}
       <div class="stack" style="margin-top:12px">
         <button class="btn btn-secondary" data-act="exportData">Export my data</button>
         <button class="btn btn-secondary" data-act="loadSample">Load sample data</button>
@@ -2309,7 +2375,8 @@ function buildExport(){
     app:store.product.appVersion,
     plan:getPlan(),
     checkIns:[ ...store.sensitive.baseHistory, ...session.sessionHistory ].map(strip),
-    activity:store.sensitive.activity.map(a => ({ type:a.type, date:new Date(a.ts).toISOString(), sample:a.sample || undefined }))
+    activity:store.sensitive.activity.map(a => ({ type:a.type, date:new Date(a.ts).toISOString(), sample:a.sample || undefined })),
+    keptPrivate:(store.sensitive.kept || []).map(k => ({ text:k.text, date:new Date(k.ts).toISOString() }))
   };
 }
 
@@ -2469,6 +2536,15 @@ function zagsSvg(half, calm, blanket){
       <path d="M58 168 L70 180 M96 170 L108 182 M134 170 L146 182 M168 166 L178 176" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" opacity=".6"/>` : ""}
     </g></svg>`;
 }
+/* 6.7c: keep words privately, on this device only (deletable in Settings). */
+function keepWords(text){
+  store.sensitive.kept = store.sensitive.kept || [];
+  store.sensitive.kept.push({ text, ts:Date.now() });
+  saveStore();
+  ui.listen = { phase:"kept", text:"" };
+  lastRendered = null; render();
+}
+
 /* 6.7b Snuggle runtime: slow breathing (in 4s, out 6s), a heartbeat glow at about 60 a minute,
    optional buzz (only where navigator.vibrate exists) and optional soft sound (Web Audio, on the device). */
 let snugTimer = null, snugBeat = null, snugRaf = null, snugAudio = null;
@@ -2857,6 +2933,44 @@ const ACTIONS = {
     const state = arg === "connect" ? "alone" : arg === "head" ? "distraction" : arg === "calm" ? "anxious" : null;
     startZags(state);
   },
+  listenStart(){ if (blockIfRed()) return; startIntervention("zags_listen"); },
+  listenDone(){
+    if (blockIfRed()) return;
+    const box = document.getElementById("listenBox");
+    const text = ((box && box.value) || "").trim();
+    if (!text){ ui.msg = "Write as much or as little as you like."; render(); return; }
+    ui.msg = "";
+    handleSafeTextSubmit({ text,
+      onRed(){ ui.listen = { phase:"write", text:"" }; applySafetyResult("RED"); },
+      onYellow(){ applySafetyResult("YELLOW"); ui.listen = { phase:"ack", text }; lastRendered = null; render(); },
+      onGreen(){ ui.listen = { phase:"ack", text }; lastRendered = null; render(); } });
+  },
+  listenMore(){ if (blockIfRed()) return; ui.listen.phase = "write"; lastRendered = null; render();
+    const b = document.getElementById("listenBox"); if (b){ b.focus(); b.setSelectionRange(b.value.length, b.value.length); } },
+  listenLetGo(){
+    if (blockIfRed()) return;
+    const gone = () => { if (ui.listen){ ui.listen = { phase:"gone", text:"" }; } lastRendered = null; render(); };
+    const said = document.getElementById("listenSaid");
+    if (said && !reducedMotion()){ ui.listen.text = ""; said.classList.add("fading"); setTimeout(gone, 1200); }
+    else gone();
+  },
+  listenKeep(){
+    if (blockIfRed()) return;
+    const text = (ui.listen && ui.listen.text || "").trim();
+    if (!text) return;
+    handleSafeTextSubmit({ text,
+      onRed(){ ui.listen = { phase:"write", text:"" }; applySafetyResult("RED"); },
+      onYellow(){ applySafetyResult("YELLOW"); keepWords(text); },
+      onGreen(){ keepWords(text); } });
+  },
+  listenCalm(){ if (blockIfRed()) return; ui.listen = null; openCalm(); },
+  listenFinish(){ if (blockIfRed()) return; ui.listen = null; go("checkin"); },
+  keptDelete(arg){
+    const i = Number(arg);
+    const k = store.sensitive.kept || [];
+    if (i >= 0 && i < k.length){ k.splice(i, 1); saveStore(); ui.flash = "Deleted."; }
+    render();
+  },
   snuggleStart(arg){
     if (blockIfRed()) return;
     if (arg === "calm") dispatch({ type:"SET_CURRENT_STATE", state:"anxious" });
@@ -3072,7 +3186,7 @@ const ACTIONS = {
   toSettings(){ ui.flash = ""; go("settings"); },
   askDelete(){ ui.flash = ""; go("confirm-delete"); },
   deleteAll(){
-    store.sensitive = { plan:emptyPlan(), baseHistory:[], activity:[] };
+    store.sensitive = { plan:emptyPlan(), baseHistory:[], activity:[], kept:[] };
     saveStore();
     dispatch({ type:"DELETE_DATA" });
     ui.engine = null;
@@ -3080,7 +3194,7 @@ const ACTIONS = {
     go("settings");
   },
   loadSample(){
-    store.sensitive = { plan:samplePlan(), baseHistory:seedHistory(), activity:seedActivity() };
+    store.sensitive = { plan:samplePlan(), baseHistory:seedHistory(), activity:seedActivity(), kept:store.sensitive.kept || [] };
     saveStore();
     ui.flash = "Sample data loaded.";
     render();

@@ -194,6 +194,12 @@ for(const [label,phase,extra] of zShots){
 }
 P('');
 P('Worse → straight to the crisis screen (`openCrisis()`, RED).');
+H(3,'Zags listens (6.7c)');
+P('A big text box from Zags\'s start screen ("I need to get something out"). No AI: Zags never replies to what is written; the acknowledgment is always the same line. Done and Keep both run the safety check (RED → crisis screen, nothing kept). Nothing is stored unless the person taps "Keep it private"; kept words stay on this phone and can be deleted in Settings (or with Delete everything). "I want a real person" opens Connect.');
+for(const [label,extra] of [['Writing','ui.listen={phase:"write",text:""};'],['After Done','ui.listen={phase:"ack",text:"(what they wrote)"};'],['After Let it go','ui.listen={phase:"gone",text:""};'],['After Keep it private','ui.listen={phase:"kept",text:""};']]){
+  P(''); P(`_${label}_`); P('');
+  md.push(...screenText(w, `session.currentState="anxious"; session.currentInterventionId="zags_listen"; ${extra} session.screen="listen"`));
+}
 H(3,'Snuggle Zags (6.7b)');
 P('A short comfort mode from Calm or Zags\'s start screen. Slow breathing (in 4, out 6) with a heartbeat glow about 60 a minute. Length 2, 3 or 5 minutes (default 3), no endless mode. Buzz (only on phones that support vibration) and soft sound (made on the device) are both off by default. Reduced motion: Zags stays still and the glow fades slowly. Ends with his line, then the usual check-in. Only the three settings are stored.');
 for(const [label,extra] of [['Start','ui.snuggle={phase:"setup"};'],['Snuggling','ui.snuggle={phase:"run",endsAt:Date.now()+180000,half:"in"};'],['End','ui.snuggle={phase:"end"};']]){
@@ -202,13 +208,9 @@ for(const [label,extra] of [['Start','ui.snuggle={phase:"setup"};'],['Snuggling'
   w.eval('snuggleStopAll()');
 }
 
-H(3,'Proposed, not built yet: 6.7c Zags listens, 6.7d Safe place');
+H(3,'Proposed, not built yet: 6.7d Safe place');
 P('Copy from STAGE6-SPEC.md for early review. These lines are not in the app yet.');
 list([
-  '6.7c prompt: "I\'m listening. Go ahead."',
-  '6.7c acknowledgment (example): "Thank you for getting that out. That sounds heavy to carry."',
-  '6.7c: "I\'m not a person, but I\'m here while you get it out."',
-  '6.7c choices: "I\'m not done — keep listening" · "Let it go" · "Keep it private" · "Help me calm down" · "I want a real person"',
   '6.7d on every step: "Stop — I want to come back" (→ 5-4-3-2-1 grounding). Trauma caution: guided imagery can bring up distressing memories.',
   '6.7d Part B: "This is a safe space. Nothing you type here leaves your phone." · "Call first" · "Directions"'
 ]);

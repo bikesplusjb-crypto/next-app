@@ -363,6 +363,16 @@ Steps:
 1. Hold your phone close.
 2. Breathe in as Zags breathes in, out as he breathes out.
 
+### Zags listens (`zags_listen`)
+
+- Button: "Get it out with Zags"
+- Description: "Write what's on your mind. Zags doesn't reply to it; nothing is kept unless you choose."
+- For: anxious, spiraling, low, alone · about 3 min
+
+Steps:
+1. Write whatever you need to get out.
+2. Let it go, or keep it private.
+
 ### Change the scene (`change_scene`)
 
 - Button: "Change the scene"
@@ -733,6 +743,11 @@ Scripted, not AI. Taps only. Says he is not a person in every session's first li
 - `snuggleHello`: "Hi, I'm Zags. I'm not a person, just a little guide. Let's get cozy and breathe slowly."
 - `snuggleTip`: "Hold me close. Rest your phone on your chest and breathe with me."
 - `snuggleEnd`: "Feeling a bit more settled? I'm here if you need me, and so are your people."
+- `listen`: "I'm listening. Go ahead."
+- `listenAck`: "Thank you for getting that out. That sounds heavy to carry."
+- `listenNotPerson`: "I'm not a person, but I'm here while you get it out."
+- `listenGone`: "It's gone. You don't have to carry it here."
+- `listenKept`: "Kept on this phone, just for you. You can delete it in Settings."
 
 Under every Zags screen: "Zags is a scripted guide, not a person and not AI."
 
@@ -743,6 +758,7 @@ _Hello_
 - **Heading:** Hi, I'm Zags. I'm not a person, just a little guide. I can stay with you for a few minutes.
 - **Button:** Okay, Zags
 - **Button:** Just snuggle
+- **Button:** I need to get something out
 - **Button:** Not right now
 - Zags is a scripted guide, not a person and not AI.
 
@@ -821,6 +837,53 @@ _Bye_
 
 Worse → straight to the crisis screen (`openCrisis()`, RED).
 
+### Zags listens (6.7c)
+
+A big text box from Zags's start screen ("I need to get something out"). No AI: Zags never replies to what is written; the acknowledgment is always the same line. Done and Keep both run the safety check (RED → crisis screen, nothing kept). Nothing is stored unless the person taps "Keep it private"; kept words stay on this phone and can be deleted in Settings (or with Delete everything). "I want a real person" opens Connect.
+
+_Writing_
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** I'm listening. Go ahead.
+- What's on your mind
+- **Button:** Done
+- Zags is a scripted guide, not a person and not AI. Nothing you write is kept unless you choose.
+
+_After Done_
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Thank you for getting that out. That sounds heavy to carry.
+- I'm not a person, but I'm here while you get it out.
+- (what they wrote)
+- **Button:** I'm not done — keep listening
+- **Button:** Let it go
+- **Button:** Keep it private
+- **Button:** Help me calm down
+- **Button:** I want a real person
+- Zags is a scripted guide, not a person and not AI.
+
+_After Let it go_
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** It's gone. You don't have to carry it here.
+- **Button:** Help me calm down
+- **Button:** I want a real person
+- **Button:** Done
+- Zags is a scripted guide, not a person and not AI.
+
+_After Keep it private_
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Kept on this phone, just for you. You can delete it in Settings.
+- **Button:** Help me calm down
+- **Button:** I want a real person
+- **Button:** Done
+- Zags is a scripted guide, not a person and not AI.
+
 ### Snuggle Zags (6.7b)
 
 A short comfort mode from Calm or Zags's start screen. Slow breathing (in 4, out 6) with a heartbeat glow about 60 a minute. Length 2, 3 or 5 minutes (default 3), no endless mode. Buzz (only on phones that support vibration) and soft sound (made on the device) are both off by default. Reduced motion: Zags stays still and the glow fades slowly. Ends with his line, then the usual check-in. Only the three settings are stored.
@@ -857,13 +920,9 @@ _End_
 - **Button:** Reach someone
 - Zags is a scripted guide, not a person and not AI.
 
-### Proposed, not built yet: 6.7c Zags listens, 6.7d Safe place
+### Proposed, not built yet: 6.7d Safe place
 
 Copy from STAGE6-SPEC.md for early review. These lines are not in the app yet.
-- 6.7c prompt: "I'm listening. Go ahead."
-- 6.7c acknowledgment (example): "Thank you for getting that out. That sounds heavy to carry."
-- 6.7c: "I'm not a person, but I'm here while you get it out."
-- 6.7c choices: "I'm not done — keep listening" · "Let it go" · "Keep it private" · "Help me calm down" · "I want a real person"
 - 6.7d on every step: "Stop — I want to come back" (→ 5-4-3-2-1 grounding). Trauma caution: guided imagery can bring up distressing memories.
 - 6.7d Part B: "This is a safe space. Nothing you type here leaves your phone." · "Call first" · "Directions"
 
@@ -1314,8 +1373,18 @@ _When: distraction_
 - **Heading:** Hi, I'm Zags. I'm not a person, just a little guide. I can stay with you for a few minutes.
 - **Button:** Okay, Zags
 - **Button:** Just snuggle
+- **Button:** I need to get something out
 - **Button:** Not right now
 - Zags is a scripted guide, not a person and not AI.
+
+### `listen`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** I'm listening. Go ahead.
+- What's on your mind
+- **Button:** Done
+- Zags is a scripted guide, not a person and not AI. Nothing you write is kept unless you choose.
 
 ### `snuggle`
 
@@ -1846,6 +1915,14 @@ _When: distraction_
 - **Button:** Help _(screen reader: "Get help now")_
 - Snuggle Zags · Step 1 of 2
 - **Heading:** Hold your phone close.
+- **Button:** Next
+
+#### Zags listens
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Zags listens · Step 1 of 2
+- **Heading:** Write whatever you need to get out.
 - **Button:** Next
 
 #### Change the scene
