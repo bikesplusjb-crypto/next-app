@@ -353,6 +353,8 @@ Replace "Making my space safer" with a structured, private plan: **Things I'll k
 
 ### 6.12 I need my plan — essentials view (mockup: PlanNow, MyPlan)
 
+> **As built:** screen `plan-now`. "Do this first" maps the first "thing that helps" to a plain step (`FIRST_STEP`; personal items use their own text), or "Put both feet on the floor and let one slow breath out." Empty sections are left out; 988 and 911 are always there. From the NO branch every call/text link moves to `safety-check` in the same tap, and the YELLOW bar is hidden on this screen (it has its own 988 buttons). The read-only plan view is no longer used from crisis screens.
+
 **One plan, two views.** My Plan (editing, built on a good day) stays as is, plus a "Set up with your people" section (Code word · Check-in reminders · Time and distance plan, each "Set up" or "Done · Change"). The **essentials view** shows only what helps right now, read-only, in this order: Do this first (their grounding action from "things that help") · Reach a person (code word button, then trusted people) · Places I can go · My time-and-distance plan · What I want to remember · 988 · 911.
 
 **Entry:** a big "I need my plan now" button at the top of My Plan, plus "Open my plan" on `crisis-full` and the NO branch (replacing the read-only plan view there). The NO-branch rule still applies: after "I'm done," go to `safety-check`.

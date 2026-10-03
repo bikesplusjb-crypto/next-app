@@ -332,6 +332,13 @@ a.cw-open,a.ci-open{text-decoration:none;display:flex;align-items:center;justify
 .cw-words{margin-top:14px}
 .cw-words .sit[aria-pressed="true"]{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
 
+/* Stage 6.12: I need my plan */
+.plan-now-btn{margin:6px 0 4px}
+.panel.pn{margin-top:12px}
+.panel.pn .lbl{margin:0 0 4px}
+.panel.pn p:last-child{margin-bottom:0}
+.pn-first{font-size:19px;font-weight:650;line-height:1.35;margin:4px 0 0}
+
 /* Stage 6.11: Time and distance plan */
 .td-q{font-weight:600;margin:14px 0 2px}
 .td-a{margin:0;white-space:pre-wrap}
@@ -496,6 +503,16 @@ const TD_FIELDS = [
   ["getBack","When I'll get them back","For example: after I've talked it over with someone I trust."]
 ];
 const TD_ASK = "Would you be willing to hold onto a few things for me for a while? I'll explain when we talk.";
+/* 6.12 "Do this first": a plain first step for each of "things that help". */
+const FIRST_STEP = { walking:"Take a short, slow walk.", breathing:"Breathe in for 4, out for 6. Do it five times.",
+  environment_change:"Get some fresh air: open a window or step outside.", distraction_game:"Play a quick game to give your mind somewhere else to go.",
+  connection:"Reach out to someone you trust." };
+const FIRST_STEP_DEFAULT = "Put both feet on the floor and let one slow breath out.";
+function firstStep(){
+  const h = (getPlan().helps || [])[0];
+  if (!h) return FIRST_STEP_DEFAULT;
+  return FIRST_STEP[h] || SUGGESTION_TEXT[h] || `${helpLabel(h)}.`;
+}
 const MESSAGE_IDEAS = ["Can't sleep, you up?","Rough night. Can you talk for 5 minutes?","Want to catch up this week?"];
 /* Human First (session only, never saved): after 2 taps on "Something else", or 2 finished steps without
    "That helped", ask once per visit whether a person would help more. */
@@ -1875,6 +1892,34 @@ const SCREENS = {
         <button class="btn btn-secondary" data-act="ciCancel">Not yet</button>` };
   },
 
+  /* 6.12: I need my plan: the essentials, read-only, in this order. Same plan data; never a second plan.
+     From the NO branch, calling or texting moves to the safety check in the same tap, and "I'm done" goes there too. */
+  "plan-now"(){
+    const pb = getPlan(), no = ui.planFrom === "no";
+    const attr = no ? ` data-act="noContact" data-noexit="1"` : "";
+    const td = pb.timeDistance || {};
+    const tdLines = TD_FIELDS.filter(([k]) => td[k]).map(([k, t]) => `<p class="td-q">${t}</p><p class="td-a">${esc(td[k])}</p>`).join("");
+    const people = pb.trustedPeople || [];
+    return { close:false, body:`
+      ${title("Your plan.")}
+      <p class="sub">Just the essentials, right now.</p>
+      <div class="panel pn"><p class="lbl">Do this first</p><p class="pn-first">${esc(firstStep())}</p></div>
+      <div class="panel pn"><p class="lbl">Reach a person</p>
+        ${codeWord() ? codeWordButton(no, "btn btn-primary") : ""}
+        ${people.length ? people.map(p => `<div class="pair" style="margin-top:10px">
+            <a class="btn btn-outline" href="${telLink(p.phone)}"${attr} aria-label="Call ${esc(p.name)}">Call ${esc(p.name)}</a>
+            <a class="btn btn-outline" href="${smsLink(p.phone, HARD_TIME_MSG)}"${attr} aria-label="Text ${esc(p.name)}">Text ${esc(p.name)}</a></div>`).join("")
+          : `<p class="small" style="margin:6px 0 0">No one in your plan yet. 988 is below, any time.</p>`}</div>
+      ${pb.places.length ? `<div class="panel pn"><p class="lbl">Places I can go</p><p>${pb.places.map(esc).join(" · ")}</p></div>` : ""}
+      ${tdLines ? `<div class="panel pn"><p class="lbl">My time and distance plan</p>${tdLines}</div>` : ""}
+      ${pb.reminders.length ? `<div class="panel pn"><p class="lbl">What I want to remember</p>${pb.reminders.map(x => `<p>${esc(x)}</p>`).join("")}</div>` : ""}
+      <p class="lbl" style="margin-top:18px">Crisis support</p>
+      ${row988().replace(/<a class="btn btn-safety"/g, `<a class="btn btn-safety"${no ? ' data-act="noContact" data-noexit="1"' : ""}`)}
+      <a class="btn btn-safety two-line" style="margin-top:10px" href="${LINKS.call911}"${attr}>Call 911<span class="cap">If someone is hurt or in danger</span></a>
+      <p class="note">ZigZag Mind is not an emergency service.</p>`,
+      actions:`<button class="btn btn-primary" data-act="planDone">I'm done</button>` };
+  },
+
   /* 6.6: Connect (I just feel alone). Zags (6.7) and the code word (6.8) join this screen when they're built. */
   connect(){
     const people = getPlan().trustedPeople || [];
@@ -2144,6 +2189,7 @@ const SCREENS = {
         ${pb.professional.phone ? `<a class="btn btn-secondary" href="${telLink(pb.professional.phone)}">Call ${esc(pb.professional.name)}</a>` : ""}` : "";
     return { nav:editable, close:false, body:`
       ${title("My plan for hard moments")}
+      ${editable ? `<button class="btn btn-primary btn-big plan-now-btn" data-act="planNow">I need my plan now</button>` : ""}
       <p class="sub">${editable ? "Build it on a good day, so it's ready on a hard one. Each part saves on its own." : "Your plan, for right now."}</p>
       ${ui.flash && editable ? `<p class="flash" role="status">${esc(ui.flash)}</p>` : ""}
       <div class="panel">${head("warningSigns", "How I know a hard moment is starting")}${ul(pb.warningSigns)}</div>
@@ -2449,7 +2495,7 @@ function buildExport(){
 }
 
 const CRISIS_SCREENS = ["crisis","crisis-full","crisis-no","safety-check"];
-const NO_YBAR = [...CRISIS_SCREENS, "talk"];
+const NO_YBAR = [...CRISIS_SCREENS, "talk", "plan-now"];   // plan-now has its own 988/911 (and NO-branch rules)
 
 /* ---------- SHELL ---------- */
 const app = document.getElementById("app");
@@ -3125,12 +3171,13 @@ const ACTIONS = {
   cNo(){ dispatch({ type:"SET_SAFETY_LEVEL", level:"YELLOW" }); ui.talkOpen = false; go("crisis-no"); },
   cBack(){ exitCrisis(); },
   cPlaces(){ ui.placesOpen = !ui.placesOpen; render(); },
-  cPlan(){ ui.planFrom = "crisis"; logActivity("plan"); go("plan"); },
+  cPlan(){ ui.planFrom = "crisis"; logActivity("plan"); go("plan-now"); },
 
   noTalk(){ ui.talkOpen = !ui.talkOpen; render(); },
-  noPlan(){ ui.planFrom = "no"; logActivity("plan"); go("plan"); },
+  noPlan(){ ui.planFrom = "no"; logActivity("plan"); go("plan-now"); },
   noGround(){ ui.noMode = true; startGround(); },
-  planDone(){ go(ui.planFrom === "no" ? "safety-check" : "crisis-full"); },
+  planDone(){ go(ui.planFrom === "no" ? "safety-check" : ui.planFrom === "tab" ? "plan" : "crisis-full"); },
+  planNow(){ ui.flash = ""; ui.planFrom = "tab"; logActivity("plan"); go("plan-now"); },
 
   safeYes(){ dispatch({ type:"SET_SAFETY_LEVEL", level:"YELLOW" }); go("home"); },
   safeNo(){ dispatch({ type:"SET_SAFETY_LEVEL", level:"RED" }); ui.placesOpen = false; go("crisis-full"); },

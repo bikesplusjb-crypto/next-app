@@ -785,6 +785,16 @@ A static page for the people in someone's plan: no scripts, no storage, no track
 
 Footer: "ZigZag Mind is a self-help support tool, not an emergency service."
 
+### I need my plan (6.12)
+
+The essentials, read-only, from the same plan: Do this first · Reach a person (code word first) · Places I can go · My time and distance plan · What I want to remember · 988 · 911. Opens from "I need my plan now" in My Plan and "Open my plan" on the crisis screens.
+- Do this first, if "walking" is first in things that help: "Take a short, slow walk."
+- Do this first, if "breathing" is first in things that help: "Breathe in for 4, out for 6. Do it five times."
+- Do this first, if "environment_change" is first in things that help: "Get some fresh air: open a window or step outside."
+- Do this first, if "distraction_game" is first in things that help: "Play a quick game to give your mind somewhere else to go."
+- Do this first, if "connection" is first in things that help: "Reach out to someone you trust."
+- Otherwise: "Put both feet on the floor and let one slow breath out."
+
 ### Time and distance plan (6.11)
 
 Replaces "Making my space safer" in My Plan. Three questions, answered only in the person's own words. ZigZag Mind gives no examples and never suggests a means. Plan fields are not run through the safety check. Old "safer space" text moves into the first answer.
@@ -1412,6 +1422,27 @@ _When: distraction_
 - **Button:** Jordan — friend
 - **Button:** Back to My Plan
 
+### `plan-now`
+
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Your plan.
+- Just the essentials, right now.
+- Do this first
+- Take a short, slow walk.
+- Reach a person
+- **Link → `tel:5550142`:** Call Jordan
+- **Link → `sms:5550142?&body=I'm having a really hard time. Can you call me?`:** Text Jordan
+- Places I can go
+- The coffee shop on Main St · The public library
+- What I want to remember
+- Don't make big decisions when I'm overwhelmed.
+- Crisis support
+- **Link → `tel:988`:** Call 988 _(screen reader: "Call 988, the Suicide and Crisis Lifeline")_
+- **Link → `sms:988`:** Text 988 _(screen reader: "Text 988, the Suicide and Crisis Lifeline")_
+- **Link → `tel:911`:** Call 911 — If someone is hurt or in danger
+- ZigZag Mind is not an emergency service.
+- **Button:** I'm done
+
 ### `connect`
 
 - **Button:** × _(screen reader: "Close and go to home")_
@@ -1568,6 +1599,7 @@ _When: distraction_
 
 - **Button:** Help _(screen reader: "Get help now")_
 - **Heading:** My plan for hard moments
+- **Button:** I need my plan now
 - Build it on a good day, so it's ready on a hard one. Each part saves on its own.
 - **Heading:** How I know a hard moment is starting
 - **Button:** Edit _(screen reader: "Edit: How I know a hard moment is starting")_

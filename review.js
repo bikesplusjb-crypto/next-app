@@ -201,6 +201,10 @@ P('A static page for the people in someone\'s plan: no scripts, no storage, no t
   }
   P(''); P(`Footer: "${g.querySelector('footer').textContent.trim()}"`); }
 
+H(3,'I need my plan (6.12)');
+P('The essentials, read-only, from the same plan: Do this first · Reach a person (code word first) · Places I can go · My time and distance plan · What I want to remember · 988 · 911. Opens from "I need my plan now" in My Plan and "Open my plan" on the crisis screens.');
+list(Object.entries(G('FIRST_STEP')).map(([k,v])=>`Do this first, if "${k}" is first in things that help: "${v}"`).concat([`Otherwise: "${G('FIRST_STEP_DEFAULT')}"`]));
+
 H(3,'Time and distance plan (6.11)');
 P('Replaces "Making my space safer" in My Plan. Three questions, answered only in the person\'s own words. ZigZag Mind gives no examples and never suggests a means. Plan fields are not run through the safety check. Old "safer space" text moves into the first answer.');
 list(G('TD_FIELDS').map(([,t,h])=>`"${t}"${h?` (hint: "${h}")`:''}`));
