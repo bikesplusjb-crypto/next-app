@@ -201,6 +201,11 @@ P('A static page for the people in someone\'s plan: no scripts, no storage, no t
   }
   P(''); P(`Footer: "${g.querySelector('footer').textContent.trim()}"`); }
 
+H(3,'Time and distance plan (6.11)');
+P('Replaces "Making my space safer" in My Plan. Three questions, answered only in the person\'s own words. ZigZag Mind gives no examples and never suggests a means. Plan fields are not run through the safety check. Old "safer space" text moves into the first answer.');
+list(G('TD_FIELDS').map(([,t,h])=>`"${t}"${h?` (hint: "${h}")`:''}`));
+P(''); P(`Optional prepared text ("Ask [name]"): "${G('TD_ASK')}"`);
+
 H(3,'Check-in reminders (6.10)');
 P('The person asks someone (My Plan → Set up with your people → Check-in reminders). Messages or the share sheet opens with the ask and a link to the guide with only their first name (`?for=`; letters, spaces and hyphens, 20 characters max). Saved after "Yes, I sent it" as who was asked. On the guide, the supporter picks Gentle (weekly for 4 weeks, then monthly for 5 months: 9 reminders) or Close (every 3 days for 2 weeks, then weekly for 6 weeks: 10 reminders). Their phone builds a calendar file; nothing is sent or stored.');
 P(''); P(`The ask: "${G('CHECKIN_ASK')}"`);

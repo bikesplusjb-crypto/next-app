@@ -332,6 +332,12 @@ a.cw-open,a.ci-open{text-decoration:none;display:flex;align-items:center;justify
 .cw-words{margin-top:14px}
 .cw-words .sit[aria-pressed="true"]{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
 
+/* Stage 6.11: Time and distance plan */
+.td-q{font-weight:600;margin:14px 0 2px}
+.td-a{margin:0;white-space:pre-wrap}
+.td-label{display:block;font-weight:600;margin-top:18px}
+#tdPanel a.sit{display:inline-flex;align-items:center;text-decoration:none;color:var(--text)}
+
 /* Stage 6.9: share the supporter guide */
 .link.share-guide{display:block;min-height:44px;margin-top:4px;padding:0 4px;text-align:left}
 
@@ -482,6 +488,14 @@ function checkinAsked(){
 /* 6.9 The supporter guide lives at support/ next to the app (zigzagmind.com/support). */
 function supportUrl(){ try { return new URL("support/", location.href).href; } catch (_){ return "https://" + SUPPORT_URL_TEXT; } }
 const codeWordSetupMsg = (name, word) => `Hey ${name}, I'm making a plan for hard days. If I ever text you "${word}", it means I'm struggling and need you to call me or come be with me. You don't have to fix anything. Here's a short guide: ${SUPPORT_URL_TEXT}`;
+/* 6.11 Time and distance plan. The person's own words only: no examples, no suggestions of means, ever.
+   Plan fields are exempt from safetyCheck. */
+const TD_FIELDS = [
+  ["keepAway","Things I'll keep away from myself during hard times","In your own words."],
+  ["holder","Who will hold them, or where they'll go",""],
+  ["getBack","When I'll get them back","For example: after I've talked it over with someone I trust."]
+];
+const TD_ASK = "Would you be willing to hold onto a few things for me for a while? I'll explain when we talk.";
 const MESSAGE_IDEAS = ["Can't sleep, you up?","Rough night. Can you talk for 5 minutes?","Want to catch up this week?"];
 /* Human First (session only, never saved): after 2 taps on "Something else", or 2 finished steps without
    "That helped", ask once per visit whether a person would help more. */
@@ -728,10 +742,18 @@ function helpLabel(h){
    "sensitive" (plan, check-ins, activity) is kept apart from "product" data. */
 function emptyPlan(){
   return { warningSigns:[], helps:[], places:[], trustedPeople:[], professional:{ name:"", phone:"" },
-    saferSpace:"", avoid:[], reminders:[] };
+    timeDistance:{ keepAway:"", holder:"", getBack:"" }, avoid:[], reminders:[] };
+}
+/* 6.11: "Making my space safer" became the time and distance plan. Old text moves into the first field. */
+function migratePlan(pl){
+  const td = pl.timeDistance && typeof pl.timeDistance === "object" ? pl.timeDistance : {};
+  pl.timeDistance = { keepAway:String(td.keepAway || ""), holder:String(td.holder || ""), getBack:String(td.getBack || "") };
+  if (typeof pl.saferSpace === "string" && pl.saferSpace.trim() && !pl.timeDistance.keepAway) pl.timeDistance.keepAway = pl.saferSpace.trim();
+  delete pl.saferSpace;
+  return pl;
 }
 function samplePlan(){
-  return { ...emptyPlan(), ...JSON.parse(JSON.stringify(SAMPLE_PLAYBOOK)) };
+  return migratePlan({ ...emptyPlan(), ...JSON.parse(JSON.stringify(SAMPLE_PLAYBOOK)) });
 }
 function seedHistory(){
   const day = 86400000, now = Date.now();
@@ -772,7 +794,7 @@ function loadStore(){
     if (raw){
       const d = JSON.parse(raw);
       store.sensitive = {
-        plan:{ ...emptyPlan(), ...(d.plan || {}) },
+        plan:migratePlan({ ...emptyPlan(), ...(d.plan || {}) }),
         baseHistory:Array.isArray(d.history) ? d.history : [],
         activity:Array.isArray(d.activity) ? d.activity : []
       };
@@ -2137,10 +2159,15 @@ const SCREENS = {
         <div class="setup-row"><span><b>Code word</b><span class="small">${codeWord() ? `${esc(codeWord().word)} · with ${esc(codeWord().person.name)}` : "One word that means: I'm struggling, call me."}</span></span>
           <button class="edit-btn" data-act="cwStart">${codeWord() ? "Change" : "Set up"}</button></div>
         ${codeWord() ? `<button class="link" data-act="cwRemove" style="margin-top:4px">Remove code word</button>` : ""}
+        <div class="setup-row"><span><b>Time and distance plan</b><span class="small">${(pb.timeDistance || {}).keepAway ? "Done" : "What you'll keep away during hard times, and who holds it."}</span></span>
+          <button class="edit-btn" data-act="planEdit" data-arg="timeDistance">${(pb.timeDistance || {}).keepAway ? "Change" : "Set up"}</button></div>
         <div class="setup-row"><span><b>Check-in reminders</b><span class="small">${checkinAsked().length ? `Asked: ${checkinAsked().map(p => esc(p.name)).join(", ")}` : "Ask someone to check in on you now and then."}</span></span>
           <button class="edit-btn" data-act="ciStart">${checkinAsked().length ? "Ask someone" : "Set up"}</button></div></div>` : ""}
-      <div class="panel">${head("saferSpace", "Making my space safer")}
-        ${pb.saferSpace ? `<p style="margin-top:6px">${esc(pb.saferSpace)}</p>` : `<p class="empty">Nothing here yet.</p>`}</div>
+      <div class="panel" id="tdPanel">${head("timeDistance", "My time and distance plan")}
+        <p class="small" style="margin:4px 0 0">Private. Only on this phone.</p>
+        ${TD_FIELDS.map(([k, t]) => `<p class="td-q">${t}</p>${(pb.timeDistance || {})[k] ? `<p class="td-a">${esc(pb.timeDistance[k])}</p>` : `<p class="empty">Nothing here yet.</p>`}`).join("")}
+        ${editable && pb.trustedPeople.length ? `<p class="small" style="margin:14px 0 6px">Ask someone to hold onto a few things:</p>
+          <div class="sits">${pb.trustedPeople.map(p => `<a class="sit" href="${smsLink(p.phone, TD_ASK)}" aria-label="Ask ${esc(p.name)} to hold onto a few things">Ask ${esc(p.name)}</a>`).join("")}</div>` : ""}</div>
       <div class="panel">${head("avoid", "Things to avoid when I'm struggling")}${ul(pb.avoid)}</div>
       <div class="panel">${head("reminders", "What I want ZigZag Mind to remind me")}${ul(pb.reminders)}</div>`,
       actions: editable ? "" : `<button class="btn btn-primary" data-act="planDone">${ui.planFrom === "no" ? "I'm done" : "Back"}</button>` };
@@ -2158,6 +2185,11 @@ const SCREENS = {
     } else if (kind === "text"){
       form = `<label class="sub" for="edText">${esc(hint)}</label>
         <textarea class="field" id="edText" style="min-height:110px">${esc(pb[key])}</textarea>`;
+    } else if (kind === "td"){
+      const td = pb.timeDistance || {};
+      form = `<p class="sub">Time and distance can make a hard moment safer. Write it in your own words. It stays on this phone.</p>
+        ${TD_FIELDS.map(([k, t, h], i) => `<label class="td-label" for="td${i}">${t}</label>${h ? `<p class="small" style="margin:2px 0 0">${h}</p>` : ""}
+        <textarea class="field" id="td${i}" style="min-height:90px">${esc(td[k] || "")}</textarea>`).join("")}`;
     } else if (kind === "helps"){
       const d = ui.draftHelps;
       const custom = d.filter(x => !HELP_CHIPS.some(c => c[0] === x));
@@ -2375,7 +2407,7 @@ const PLAN_SECTIONS = [
   ["places","People and places that take my mind off things","list","Names or places. One per line."],
   ["trustedPeople","My trusted people","people",""],
   ["professional","Professional and crisis support","pro",""],
-  ["saferSpace","Making my space safer","text","Things I'll put away or give to someone when I'm struggling."],
+  ["timeDistance","My time and distance plan","td",""],
   ["avoid","Things to avoid when I'm struggling","list","One per line."],
   ["reminders","What I want ZigZag Mind to remind me","list","Short statements in your own words. One per line."]
 ];
@@ -3137,6 +3169,8 @@ const ACTIONS = {
       pb[key] = val("edList").split("\n").map(x => x.trim().slice(0, 120)).filter(Boolean).slice(0, 10);
     } else if (kind === "text"){
       pb[key] = val("edText").slice(0, 300);
+    } else if (kind === "td"){
+      pb.timeDistance = { keepAway:val("td0").slice(0, 400), holder:val("td1").slice(0, 200), getBack:val("td2").slice(0, 200) };
     } else if (kind === "helps"){
       const extra = val("edCustom").toLowerCase().slice(0, 40);
       if (extra && !ui.draftHelps.includes(extra)) ui.draftHelps.push(extra);

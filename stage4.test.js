@@ -10,7 +10,7 @@ const r=[];
 {const {w,click,S,G,T}=boot();
  click(act('tab','settings')); click(act('loadSample')); // these edits build on the sample plan; real users start empty
  click(act('tab','plan'));
- r.push(['plan editable', w.document.querySelectorAll('[data-act="planEdit"]').length===8]);
+ r.push(['plan editable', w.document.querySelectorAll('.plan-head [data-act="planEdit"]').length===8]);
  r.push(['never-contact line', T().includes('ZigZag Mind will never contact these people for you')]);
  click(act('planEdit','warningSigns')); w.document.getElementById('edList').value='I stop eating\n\nI go quiet'; click(act('planSave'));
  r.push(['list saved', JSON.stringify(G('getPlan().warningSigns'))==='["I stop eating","I go quiet"]' && T().includes('Saved.')]);
@@ -23,8 +23,8 @@ const r=[];
  r.push(['bad phone rejected', S().screen==='plan-edit' && T().includes('needs a name and a phone')]);
  r.push(['draft kept', w.document.getElementById('pn1').value==='Sam']); w.document.getElementById('pp1').value='772-555-0100'; click(act('planSave'));
  r.push(['2 people saved', G('getPlan().trustedPeople.length')===2]);
- click(act('planEdit','saferSpace')); w.document.getElementById('edText').value='Give my keys to Sam'; click(act('planSave'));
- r.push(['safer space', G('getPlan().saferSpace')==='Give my keys to Sam']);
+ click(act('planEdit','timeDistance')); w.document.getElementById('td0').value='Give my keys to Sam'; click(act('planSave'));
+ r.push(['safer space (now the time and distance plan, 6.11)', G('getPlan().timeDistance.keepAway')==='Give my keys to Sam']);
 }
 {const {w,click,S,G,T}=boot();
  click(act('tab','settings')); click(act('loadSample'));

@@ -347,6 +347,8 @@ Add "Share the supporter guide" next to each trusted person in My Plan (`share_l
 
 ### 6.11 Time and distance plan
 
+> **As built:** `plan.timeDistance = { keepAway, holder, getBack }`, shown in My Plan as "My time and distance plan" (also in "Set up with your people"). The only hint is on "When I'll get them back": "For example: after I've talked it over with someone I trust." "Ask [name]" buttons (sms: with the prepared text) appear in the editable plan only. A test guards against any means-related word in the app's own copy for this part.
+
 Replace "Making my space safer" with a structured, private plan: **Things I'll keep away from myself during hard times** (own words; no examples, no suggestions of means) · **Who will hold them, or where they'll go** · **When I'll get them back** (e.g. "after I've talked it over with Jordan"). Optional `compose_sms`: "Would you be willing to hold onto a few things for me for a while? I'll explain when we talk." Migrate existing `saferSpace` text into the first field. Plan fields exempt from `safetyCheck`. No method, dose, or lethality content anywhere.
 
 ### 6.12 I need my plan — essentials view (mockup: PlanNow, MyPlan)

@@ -482,7 +482,7 @@ Changed for review: the craving button now reads "I have an urge to use (drink o
 - "People and places that take my mind off things" (hint: "Names or places. One per line.")
 - "My trusted people"
 - "Professional and crisis support"
-- "Making my space safer" (hint: "Things I'll put away or give to someone when I'm struggling.")
+- "My time and distance plan"
 - "Things to avoid when I'm struggling" (hint: "One per line.")
 - "What I want ZigZag Mind to remind me" (hint: "Short statements in your own words. One per line.")
 
@@ -784,6 +784,15 @@ A static page for the people in someone's plan: no scripts, no storage, no track
 - This is heavy. You can call or text 988 for yourself, too.
 
 Footer: "ZigZag Mind is a self-help support tool, not an emergency service."
+
+### Time and distance plan (6.11)
+
+Replaces "Making my space safer" in My Plan. Three questions, answered only in the person's own words. ZigZag Mind gives no examples and never suggests a means. Plan fields are not run through the safety check. Old "safer space" text moves into the first answer.
+- "Things I'll keep away from myself during hard times" (hint: "In your own words.")
+- "Who will hold them, or where they'll go"
+- "When I'll get them back" (hint: "For example: after I've talked it over with someone I trust.")
+
+Optional prepared text ("Ask [name]"): "Would you be willing to hold onto a few things for me for a while? I'll explain when we talk."
 
 ### Check-in reminders (6.10)
 
@@ -1589,11 +1598,21 @@ _When: distraction_
 - **Heading:** Set up with your people
 - One word that means: I'm struggling, call me.
 - **Button:** Set up
+- What you'll keep away during hard times, and who holds it.
+- **Button:** Set up
 - Ask someone to check in on you now and then.
 - **Button:** Set up
-- **Heading:** Making my space safer
-- **Button:** Edit _(screen reader: "Edit: Making my space safer")_
+- **Heading:** My time and distance plan
+- **Button:** Edit _(screen reader: "Edit: My time and distance plan")_
+- Private. Only on this phone.
+- Things I'll keep away from myself during hard times
 - Nothing here yet.
+- Who will hold them, or where they'll go
+- Nothing here yet.
+- When I'll get them back
+- Nothing here yet.
+- Ask someone to hold onto a few things:
+- **Link → `sms:5550142?&body=Would you be willing to hold onto a few things for me for a while? I'll explain when we talk.`:** Ask Jordan _(screen reader: "Ask Jordan to hold onto a few things")_
 - **Heading:** Things to avoid when I'm struggling
 - **Button:** Edit _(screen reader: "Edit: Things to avoid when I'm struggling")_
 - Scrolling in bed late at night.
