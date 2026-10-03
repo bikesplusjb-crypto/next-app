@@ -29,7 +29,7 @@ let s;
 s=pick('calm'); r.push(['Calm down → the Calm menu (6.3)', s.screen==='calm']);
 s=pick('head'); r.push(['Get distracted → the games menu (6.4)', s.currentState==='distraction' && s.screen==='distract']);
 s=pick('connect'); r.push(['Connect with someone → Talk to someone (6.6 later)', s.screen==='talk']);
-s=pick('scene',a=>a.click(act('beforeSkip'))); r.push(['Get out of where I am → Fresh air (6.5 later)', s.screen==='intervention' && s.currentInterventionId==='environment_change']);
+s=pick('scene'); r.push(['Get out of where I am → Change the scene (6.5)', s.screen==='scene']);
 // Get help now: RED and the crisis screen immediately, no extra screen.
 {const a=boot(); a.click(act('getHelpNow'));
  const hrefs=[...a.doc.querySelectorAll('#app a[href]')].map(x=>x.getAttribute('href'));

@@ -68,6 +68,7 @@ Safety level lives only for the current visit and is **never saved**. Levels: GR
 - `text988`: `sms:988`
 - `chat988`: `https://988lifeline.org/chat`
 - `call911`: `tel:911`
+- `call211`: `tel:211`
 - `findHelpline`: `https://findahelpline.com`
 
 Prepared text message to a trusted person: "I'm having a really hard time. Can you call me?"
@@ -337,6 +338,19 @@ Steps:
 Steps:
 1. For the next 60 seconds, your only job is to beat the timer.
 2. Tap when the dot is inside the ring.
+
+### Change the scene (`change_scene`)
+
+- Button: "Change the scene"
+- Description: "Sometimes your brain needs a different place, not another question."
+- For: low, anxious, spiraling, craving · about 5 min · needs moving around
+
+Steps:
+1. Step outside for 5 minutes.
+2. Take a short walk.
+3. Sit somewhere different.
+4. Take a shower.
+5. Get something to drink.
 
 ### Waiting it out (`craving_delay`)
 
@@ -985,6 +999,36 @@ _When: distraction_
 - 1:00
 - **Button:** Done
 
+### `scene`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Change the scene.
+- Sometimes your brain needs a different place, not another question. Pick one.
+- **Button:** Step outside for 5 minutes
+- **Button:** Take a short walk
+- **Button:** Sit somewhere different
+- **Button:** Take a shower
+- **Button:** Get something to drink
+- **Heading:** Somewhere to go
+- Opens your phone's Maps. ZigZag Mind never sees your location.
+- **Link → `https://www.google.com/maps/search/library`:** Library
+- **Link → `https://www.google.com/maps/search/park`:** Park
+- **Link → `https://www.google.com/maps/search/coffee+shop`:** Coffee shop
+- **Link → `https://www.google.com/maps/search/community+center`:** Community center
+- **Heading:** Need real-world help near you?
+- 211 connects you to local help: food, housing, support groups. Free.
+- **Link → `tel:211`:** Call 211
+
+### `scene-step`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Change the scene
+- **Heading:** Step outside for 5 minutes.
+- Tap Done when you've done it, or whenever you're ready.
+- **Button:** Done
+
 ### `distract`
 
 - **Button:** × _(screen reader: "Close and go to home")_
@@ -1411,6 +1455,14 @@ _When: distraction_
 - **Button:** Help _(screen reader: "Get help now")_
 - 60-second challenge · Step 1 of 2
 - **Heading:** For the next 60 seconds, your only job is to beat the timer.
+- **Button:** Next
+
+#### Change the scene
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Change the scene · Step 1 of 5
+- **Heading:** Step outside for 5 minutes.
 - **Button:** Next
 
 #### Waiting it out

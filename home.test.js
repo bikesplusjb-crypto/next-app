@@ -29,7 +29,7 @@ s=go(act('route','calm')); r.push(['Calm down → the Calm menu (6.3)', s.screen
 s=go(act('route','head')); r.push(['Get out of my head → the games menu (6.4)', s.currentState==='distraction' && s.screen==='distract']);
 s=go(act('route','connect')); r.push(['Connect → Talk to someone (6.6 later)', s.screen==='talk']);
 {const a=boot(); a.click(act('route','connect')); a.click(act('talkBack')); r.push(['Talk to someone → Back returns Home', a.S().screen==='home']);}
-s=go(act('route','scene'),a=>a.click(act('beforeSkip'))); r.push(['Change the scene → Fresh air step (6.5 later)', s.screen==='intervention' && s.currentInterventionId==='environment_change']);
+s=go(act('route','scene')); r.push(['Change the scene → its menu (6.5)', s.screen==='scene']);
 for(const [arg,label] of [['anxious',"I'm anxious"],['spiraling',"I'm spiraling"],['low','I feel low']]){
   const a=boot(); const b=[...a.doc.querySelectorAll('.sit')].find(x=>x.textContent===label); b.dispatchEvent(new a.w.MouseEvent('click',{bubbles:true}));
   r.push([`"${label}" opens the existing ${arg} flow`, a.S().screen==='before' && a.S().currentState===arg]);

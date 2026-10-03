@@ -284,6 +284,13 @@ span.dot.on{background:var(--accent)}
 .pad.p0.lit{background:var(--primary)}.pad.p1.lit{background:var(--accent)}.pad.p2.lit{background:#3F6FC4}.pad.p3.lit{background:var(--text-muted)}
 .pat-msg{min-height:24px;text-align:center;font-weight:600;color:var(--text-muted);margin-top:14px}
 
+/* Stage 6.5: Change the scene */
+.list .card.scene-opt{min-height:60px}
+.places{margin-top:8px}
+.places .sit{display:inline-flex;align-items:center;text-decoration:none;color:var(--text)}
+.scene-211{margin-top:20px}
+.scene-211 .btn{text-decoration:none;display:flex;align-items:center;justify-content:center}
+
 /* Large text or a short screen: only the top bar (Help, and the YELLOW 988 bar) stays pinned. See fitChrome(). */
 :root.crowded .tabbar,:root.crowded .actions{position:static}
 :root.crowded .actions{background:none}
@@ -340,6 +347,7 @@ const LINKS = {
   text988: "sms:988",
   chat988: "https://988lifeline.org/chat",
   call911: "tel:911",
+  call211: "tel:211",
   findHelpline: "https://findahelpline.com"
 };
 const HARD_TIME_MSG = "I'm having a really hard time. Can you call me?";
@@ -422,6 +430,12 @@ const INTERVENTION_LIBRARY = [
     states:["distraction","spiraling","craving"], intensityRange:[0,10], needsMobility:false,
     steps:["For the next 60 seconds, your only job is to beat the timer.","Tap when the dot is inside the ring."],
     completion:"tap_done" },
+  /* 6.5 Change the scene: the person picks one of CHANGE_SCENE; it's shown full-screen with Done. */
+  { id:"change_scene", name:"Change the scene", tryLabel:"Change the scene",
+    description:"Sometimes your brain needs a different place, not another question.", durationSec:300,
+    states:["low","anxious","spiraling","craving"], intensityRange:[0,10], needsMobility:true,
+    steps:["Step outside for 5 minutes.","Take a short walk.","Sit somewhere different.","Take a shower.","Get something to drink."],
+    completion:"tap_done" },
   { id:"craving_delay", name:"Waiting it out", tryLabel:"Try waiting it out",
     description:"Put some time between the urge and the decision.", durationSec:900,
     states:["craving"], intensityRange:[0,10], needsMobility:false,
@@ -450,6 +464,23 @@ const STILL_TRUE = [
   "I can ask someone to stay with me."
 ];
 const STILL_TRUE_ENOUGH = 3;
+
+/* 6.5 Change the scene. [key, button, full-screen line]. */
+const CHANGE_SCENE = [
+  ["outside","Step outside for 5 minutes","Step outside for 5 minutes."],
+  ["walk","Take a short walk","Take a short walk. Anywhere is fine."],
+  ["sit","Sit somewhere different","Sit somewhere different. Another room, another chair."],
+  ["shower","Take a shower","Take a shower. Warm or cool, whatever feels right."],
+  ["drink","Get something to drink","Get something to drink, and drink it slowly."]
+];
+/* "Somewhere to go": opens the phone's own Maps app with a plain search. No location is read or sent,
+   and these places are never presented as crisis services. */
+const SCENE_PLACES = [["Library","library"],["Park","park"],["Coffee shop","coffee shop"],["Community center","community center"]];
+function isApple(){ return /iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent || ""); }
+function mapsLink(q){
+  const term = encodeURIComponent(q).replace(/%20/g, "+");
+  return isApple() ? `https://maps.apple.com/?q=${term}` : `https://www.google.com/maps/search/${term}`;
+}
 
 /* 6.4 Get out of my head. Menu order: [action arg, intervention id, title, line]. */
 const GAMES = [
@@ -853,6 +884,17 @@ function openDistract(){
   logActivity("moment");
   go("distract");
 }
+/* 6.5 Change the scene: a short menu, no before-rating. Ends at the usual check-in. */
+function openScene(){
+  if (blockIfRed()) return;
+  dispatch({ type:"RESET_CURRENT_FLOW" });
+  dispatch({ type:"SET_CURRENT_STATE", state:"low" });
+  const theme = ui.theme;
+  ui = freshUi(); ui.theme = theme;
+  logActivity("moment");
+  go("scene");
+}
+
 function resetGame(id){
   const n = gamePlays++;
   ui.gamePart = 0; ui.gameDots = []; ui.gameFound = {};
@@ -883,6 +925,7 @@ function startIntervention(interventionId, opts = {}){
   ui.step = 0;
   let route = opts.route;
   if (GAME_ROUTES[interventionId]){ resetGame(interventionId); if (!route) route = GAME_ROUTES[interventionId]; }
+  if (interventionId === "change_scene" && !route) route = "scene";
   if (!route) route = interventionId === "thought_parking" ? "spiral-input"
     : interventionId === "craving_delay" ? "craving-delay"
     : interventionId === "still_true" ? "still-true" : "intervention";
@@ -904,6 +947,7 @@ function completeCheckIn({ after, action, change }){
   const outcome = { source:"session", state:session.currentState, interventionId:session.currentInterventionId,
     before:session.currentBeforeRating, after:afterVal, timestamp:Date.now() };
   if (change) outcome.change = change;   // games: "yes" | "a_little" | "no"
+  if (outcome.interventionId === "change_scene" && ui.sceneOpt) outcome.option = ui.sceneOpt;
   const ended = session.currentInterventionId;
   dispatch({ type:"ADD_OUTCOME", outcome });
   if (typeof afterVal === "number" && afterVal >= 9) recordHighRating();
@@ -1402,6 +1446,35 @@ const SCREENS = {
       </div>
       <div class="focus-meta"><span id="focusMsg" aria-live="polite"></span><span id="focusTime">1:00</span></div>`,
       actions:`<button class="btn btn-primary" data-act="focusDone">Done</button>` };
+  },
+
+  /* 6.5: Change the scene. */
+  scene(){
+    return { close:true, body:`
+      ${title("Change the scene.")}
+      <p class="sub">Sometimes your brain needs a different place, not another question. Pick one.</p>
+      <div class="list">${CHANGE_SCENE.map(([k, t]) =>
+        `<button class="card scene-opt" data-act="scenePick" data-arg="${k}">${icon("door")}<span>${t}</span></button>`).join("")}
+      </div>
+      <h2>Somewhere to go</h2>
+      <p class="sub">Opens your phone's Maps. ZigZag Mind never sees your location.</p>
+      <div class="sits places">${SCENE_PLACES.map(([label, q]) =>
+        `<a class="sit" href="${mapsLink(q)}" target="_blank" rel="noopener">${label}</a>`).join("")}
+      </div>
+      <div class="panel scene-211">
+        <h3>Need real-world help near you?</h3>
+        <p class="small" style="margin:0 0 10px">211 connects you to local help: food, housing, support groups. Free.</p>
+        <a class="btn btn-secondary" href="${LINKS.call211}">Call 211</a>
+      </div>` };
+  },
+
+  "scene-step"(){
+    const o = CHANGE_SCENE.find(x => x[0] === ui.sceneOpt) || CHANGE_SCENE[0];
+    return { close:true, body:`
+      <p class="step-count">Change the scene</p>
+      ${stepTitle(o[2])}
+      <p class="sub">Tap Done when you've done it, or whenever you're ready.</p>`,
+      actions:`<button class="btn btn-primary" data-act="sceneDone">Done</button>` };
   },
 
   /* 6.4: Get out of my head. ("Thoughts stuck on repeat? Break the loop" waits for 6.14.) */
@@ -2111,7 +2184,7 @@ const ACTIONS = {
     if (arg === "calm") openCalm();
     else if (arg === "head") openDistract();
     else if (arg === "connect") ACTIONS.talk();
-    else if (arg === "scene") startFlow("low", { firstPick:"environment_change" });
+    else if (arg === "scene") openScene();
   },
   rate(arg){ const v = Number(arg); ui.rating = ui.rating === v ? null : v; render(); },
 
@@ -2215,6 +2288,14 @@ const ACTIONS = {
   spNone(){ if (blockIfRed()) return; ui.nextStep = "Let the rest wait for now."; ui.nextFor = ""; go("spiral-next"); },
   spNextDone(){ if (blockIfRed()) return; go("checkin"); },
 
+  scenePick(arg){
+    if (blockIfRed()) return;
+    if (!CHANGE_SCENE.some(x => x[0] === arg)) return;
+    ui.sceneOpt = arg;
+    if (session.currentInterventionId === "change_scene") go("scene-step");   // the engine already started it
+    else startIntervention("change_scene", { route:"scene-step" });
+  },
+  sceneDone(){ if (blockIfRed()) return; buzz(); go("checkin"); },
   distFocus(){ ui.focusReturn = null; startIntervention("distraction_game", { route:"focus" }); },
   game(arg){
     if (blockIfRed()) return;
