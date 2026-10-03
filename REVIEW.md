@@ -372,6 +372,16 @@ Filter by state → filter by intensity → never repeat the last pick → if YE
 - "Shower"
 - "Being around people"
 
+### Home: "Or tell me what's happening" buttons (label → flow it opens)
+
+- "I'm anxious" → `flow:anxious`
+- "I'm spiraling" → `flow:spiraling`
+- "I have an urge to use (drink or drugs)" → `flow:craving`
+- "I feel low" → `flow:low`
+- "I feel alone" → `route:connect`
+
+Changed for review: the craving button now reads "I have an urge to use (drink or drugs)" (was "I want to use"). It still opens the same craving flow (`flow:craving`).
+
 ### My Plan sections
 
 - "How I know a hard moment is starting" (hint: "In your own words. One per line.")
@@ -392,6 +402,7 @@ Rendered for each state where the screen changes by state. Identical renders are
 - **Button:** Help _(screen reader: "Get help now")_
 - **Button:** ZigZag Mind
 - **Heading:** Get through what's happening right now.
+- **Button:** I don't feel safe — Get to a real person fast
 - **Button:** I don't know what I need
 - **Button:** Calm down
 - **Button:** Get out of my head
@@ -400,10 +411,9 @@ Rendered for each state where the screen changes by state. Identical renders are
 - Or tell me what's happening
 - **Button:** I'm anxious
 - **Button:** I'm spiraling
-- **Button:** I want to use
+- **Button:** I have an urge to use (drink or drugs)
 - **Button:** I feel low
 - **Button:** I feel alone
-- **Button:** I don't feel safe — Get to a real person fast
 - **Button:** Home
 - **Button:** My Plan
 - **Button:** Progress

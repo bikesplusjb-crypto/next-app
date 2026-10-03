@@ -70,16 +70,16 @@ Top to bottom:
 
 1. Top bar with the Help button (unchanged behavior).
 2. Wordmark "ZigZag Mind" and "Get through what's happening right now." The 5-tap dev panel stays on the wordmark.
-3. One big primary button: **I don't know what I need** (6.2).
-4. A 2×2 grid of the four escape routes: **Calm down** (6.3), **Get out of my head** (6.4), **Connect** (6.6), **Change the scene** (6.5). Each has a small inline stroke icon (no emoji).
-5. "Or tell me what's happening" with chips that open the **existing** flows: I'm anxious · I'm spiraling · I want to use · I feel low · I feel alone (6.6) · Just out of the ER (6.13).
-6. A row: **Tech check** — "AI, scrolling, or checking is getting to me" (6.14).
-7. The warm-clay card: **I don't feel safe** — "Get to a real person fast" → `openCrisis()`.
+3. The warm-clay card, directly under the tagline: **I don't feel safe** — "Get to a real person fast" → `openCrisis()`. It must be on the first screen without scrolling at 390×844, in normal and large text (`home-viewport.test.js`).
+4. One big primary button: **I don't know what I need** (6.2).
+5. A 2×2 grid of the four escape routes: **Calm down** (6.3), **Get out of my head** (6.4), **Connect** (6.6), **Change the scene** (6.5). Each has a small inline stroke icon (no emoji).
+6. "Or tell me what's happening" with chips that open the **existing** flows: I'm anxious · I'm spiraling · I have an urge to use (drink or drugs) · I feel low · I feel alone (6.6) · Just out of the ER (6.13).
+7. A row: **Tech check** — "AI, scrolling, or checking is getting to me" (6.14).
 8. Bottom tabs: Home · My Plan · Progress · Settings.
 
 The YELLOW bar and the 30-day bar (6.13) still appear above content when active. Home must fit a 390×844 screen without the critical items (Help, I don't know what I need, I don't feel safe) falling below the fold.
 
-**Tests:** every Home control routes to the right flow; "I want to use" still reaches the craving delay; "I don't feel safe" still calls `openCrisis()`.
+**Tests:** every Home control routes to the right flow; "I have an urge to use (drink or drugs)" still reaches the craving delay; "I don't feel safe" still calls `openCrisis()`.
 
 ### 6.2 I don't know what I need (mockup: DontKnow)
 

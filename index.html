@@ -259,6 +259,9 @@ h1.home-tag{font-size:16px;font-weight:400;line-height:1.35;letter-spacing:0;col
 .lbl{font-size:13px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted);margin:14px 0 8px}
 .sits{display:flex;flex-wrap:wrap;gap:8px}
 .home-safe{width:100%;margin-top:12px;min-height:68px}
+.home-safe + .btn-big{margin-top:12px}
+/* Large text (200% makes a 390px phone ~195px wide): keep "I don't feel safe" compact so it fits on the first screen. */
+@media (max-width:320px){.home-safe{padding:10px 12px;gap:10px;min-height:0}.home-safe .ico{width:30px;height:30px;border-radius:9px}.home-safe .ico svg{width:18px;height:18px}.home-safe .meta{font-size:13px}}
 .list .card.dk-opt{min-height:88px}
 .dk-help{text-align:center;margin-top:20px}
 .dk-help .link{display:inline;min-height:48px;padding:12px 4px;font-weight:600;color:var(--text)}
@@ -916,6 +919,7 @@ const SCREENS = {
         <button class="brand" data-act="wordmark" aria-label="ZigZag Mind">ZigZag Mind</button>
         <h1 id="screen-title" tabindex="-1" class="home-tag">Get through what's happening right now.</h1>
       </div>
+      <button class="card wide safety home-safe" data-act="crisis">${icon("shield", "safety")}<span>I don't feel safe<span class="meta">Get to a real person fast</span></span></button>
       <button class="btn btn-primary btn-big" data-act="dontKnow">I don't know what I need</button>
       <div class="routes">
         <button class="route" data-act="route" data-arg="calm">${icon("calm")}Calm down</button>
@@ -927,11 +931,10 @@ const SCREENS = {
       <div class="sits" role="group" aria-labelledby="sitLabel">
         <button class="sit" data-act="flow" data-arg="anxious">I'm anxious</button>
         <button class="sit" data-act="flow" data-arg="spiraling">I'm spiraling</button>
-        <button class="sit" data-act="flow" data-arg="craving">I want to use</button>
+        <button class="sit" data-act="flow" data-arg="craving">I have an urge to use (drink or drugs)</button>
         <button class="sit" data-act="flow" data-arg="low">I feel low</button>
         <button class="sit" data-act="route" data-arg="connect">I feel alone</button>
       </div>
-      <button class="card wide safety home-safe" data-act="crisis">${icon("shield", "safety")}<span>I don't feel safe<span class="meta">Get to a real person fast</span></span></button>
       ${showHomeTip() ? `<div class="panel" id="homeTip" role="note">
         <p style="margin:0">Add ZigZag Mind to your home screen so your plan stays with you. Tap Share, then Add to Home Screen.</p>
         <div style="display:flex;justify-content:flex-end"><button class="link" data-act="dismissHomeTip">Got it</button></div>

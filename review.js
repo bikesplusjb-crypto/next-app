@@ -135,6 +135,11 @@ H(3,'5-4-3-2-1 grounding prompts'); list(G('GROUND').map(x=>`"${x.text}"`));
 H(3,`"What's still true?" statements (one at a time; That's true / Not true for me; ends after ${G('STILL_TRUE_ENOUGH')} true)`); list(G('STILL_TRUE').map(x=>`"${x}"`));
 H(3,'Suggestions from My Plan'); list(Object.entries(G('SUGGESTION_TEXT')).map(([k,v])=>`${k}: "${v}"`));
 H(3,'"Things that help me" choices'); list(G('HELP_CHIPS').map(([,l])=>`"${l}"`));
+H(3,'Home: "Or tell me what\'s happening" buttons (label → flow it opens)');
+G('ui=freshUi(); session={...initialSession, screen:"home"}; render();');
+list([...w.document.querySelectorAll('.sits .sit')].map(b=>`"${b.textContent}" → ${code(b.dataset.act+':'+b.dataset.arg)}`));
+P('');
+P('Changed for review: the craving button now reads "I have an urge to use (drink or drugs)" (was "I want to use"). It still opens the same craving flow (`flow:craving`).');
 H(3,'My Plan sections'); list(G('PLAN_SECTIONS').map(([,t,,hint])=>`"${t}"${hint?` (hint: "${hint}")`:''}`));
 
 H(2,'7. Every other screen');
