@@ -273,6 +273,71 @@ Steps:
 2. Count backward from 30 by threes.
 3. Name 3 foods you'd like to eat this week.
 
+### Color hunt (`distraction_color_hunt`)
+
+- Button: "Try a color hunt"
+- Description: "Find 5 blue things, then 3 red."
+- For: distraction, anxious, spiraling, craving · about 2 min
+
+Steps:
+1. Find 5 things around you that are blue.
+2. Now find 3 things that are red.
+
+### Around me (`distraction_around_me`)
+
+- Button: "Look around you"
+- Description: "Something soft, cold, older than you."
+- For: distraction, anxious, spiraling, craving · about 2 min
+
+Steps:
+1. Find something soft.
+2. Find something cold.
+3. Find something rectangular.
+4. Find something older than you.
+5. Find something that makes a sound.
+
+### Rapid categories (`distraction_categories`)
+
+- Button: "Try rapid categories"
+- Description: "5 animals, 5 cities, 5 foods."
+- For: distraction, spiraling, craving · about 2 min
+
+Steps:
+1. Name 5 animals.
+2. Name 5 cities.
+3. Name 5 foods.
+
+### Memory snap (`distraction_memory`)
+
+- Button: "Try memory snap"
+- Description: "See 6 shapes, then find them again."
+- For: distraction, spiraling, craving · about 1.5 min
+
+Steps:
+1. Look at 6 shapes for a few seconds.
+2. Tap the ones you remember.
+3. See what was there.
+
+### Pattern break (`distraction_pattern`)
+
+- Button: "Try pattern break"
+- Description: "Watch a pattern, tap it back."
+- For: distraction, spiraling, craving · about 1.5 min
+
+Steps:
+1. Watch 4 pads light up.
+2. Tap them back in the same order.
+
+### 60-second challenge (`distraction_60_second`)
+
+- Button: "Try the 60-second challenge"
+- Description: "Your only job: beat the timer."
+- For: distraction, spiraling, craving · about 1 min
+
+Steps:
+1. For the next 60 seconds, your only job is to beat the timer.
+2. Tap when the dot is inside the ring.
+
 ### Waiting it out (`craving_delay`)
 
 - Button: "Try waiting it out"
@@ -392,6 +457,151 @@ Changed for review: the craving button now reads "I have an urge to use (drink o
 - "Making my space safer" (hint: "Things I'll put away or give to someone when I'm struggling.")
 - "Things to avoid when I'm struggling" (hint: "One per line.")
 - "What I want ZigZag Mind to remind me" (hint: "Short statements in your own words. One per line.")
+
+### Get out of my head: every game screen, in play order
+
+No points, no levels, no scores. Each game ends with "Did the intensity change?" Yes / A little / No (or Skip). Yes and A little record the change; No records it and the next suggestion is a different step. No is not counted as "I still feel bad".
+
+_Color hunt, part 1_
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Color hunt · Part 1 of 2
+- **Heading:** Find 5 things around you that are blue.
+- Tap a circle for each one. No need to type.
+- **Button:** Blue thing 1
+- **Button:** Blue thing 2
+- **Button:** Blue thing 3
+- **Button:** Blue thing 4
+- **Button:** Blue thing 5
+- Then: 3 things that are red.
+- **Button:** Next
+
+_Color hunt, part 2_
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Color hunt · Part 2 of 2
+- **Heading:** Now find 3 things that are red.
+- Tap a circle for each one. No need to type.
+- **Button:** Red thing 1
+- **Button:** Red thing 2
+- **Button:** Red thing 3
+- **Button:** Done
+
+_Around me_
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Around me
+- **Heading:** Look around you. Find each one.
+- Tap each one when you find it. Skip any you like.
+- **Button:** Something soft
+- **Button:** Something cold
+- **Button:** Something rectangular
+- **Button:** Something older than you
+- **Button:** Something that makes a sound
+- **Button:** Done
+
+_Rapid categories, part 1 (then cities, then foods)_
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Rapid categories · Part 1 of 3
+- **Heading:** Name 5 animals.
+- Out loud or in your head. Tap the button for each one.
+- **Button:** I named one
+- **Button:** Next
+
+_Memory snap, shapes shown for 5 seconds_
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Memory snap
+- **Heading:** Look at these 6 shapes.
+- They'll hide in a few seconds.
+
+_Memory snap, choose_
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Memory snap
+- **Heading:** Tap the ones you remember.
+- Guessing is fine.
+- **Button:** diamond
+- **Button:** square
+- **Button:** drop
+- **Button:** moon
+- **Button:** star
+- **Button:** heart
+- **Button:** cloud
+- **Button:** plus
+- **Button:** triangle
+- **Button:** hexagon
+- **Button:** arrow
+- **Button:** circle
+- **Button:** Show me
+
+_Memory snap, reveal_
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Memory snap
+- **Heading:** Here's what was there.
+- The ones that were there are outlined. Shaded ones are the ones you tapped.
+- **Button:** Done
+
+_Pattern break_
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Pattern break
+- **Heading:** Watch the pads light up, then tap them back.
+- Missed one? It just plays again.
+- **Button:** Pad, top left
+- **Button:** Pad, top right
+- **Button:** Pad, bottom left
+- **Button:** Pad, bottom right
+- Watch.
+- **Button:** Show it again
+- **Button:** I'm done
+
+_Pattern break, finished_
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Pattern break
+- **Heading:** That's the pattern.
+- Take a breath.
+- **Button:** Pad, top left
+- **Button:** Pad, top right
+- **Button:** Pad, bottom left
+- **Button:** Pad, bottom right
+- **Button:** Done
+
+_60-second challenge_
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** For the next 60 seconds, your only job is to beat the timer.
+- Tap when the dot is inside the ring. No score.
+- 1:00
+- **Button:** Done
+
+_End of every game_
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Did the intensity change?
+- You can skip this.
+- **Button:** Yes
+- **Button:** A little
+- **Button:** No
+- **Button:** Skip
+
+Pattern break messages: "Watch." while it plays, "Your turn." after, "Let's watch it again." after a missed tap (it replays; there is no fail state).
+
+60-second challenge, when the minute is up: "You beat the timer."
 
 ## 7. Every other screen
 
@@ -775,15 +985,92 @@ _When: distraction_
 - 1:00
 - **Button:** Done
 
-### `distraction-choose`
+### `distract`
 
 - **Button:** × _(screen reader: "Close and go to home")_
 - **Button:** Help _(screen reader: "Get help now")_
-- **Heading:** Pick something to focus on.
+- **Heading:** Get out of my head.
+- Quick games to interrupt the loop. 1 to 5 minutes. No points, no levels.
+- **Button:** Color hunt — Find 5 blue things, then 3 red
+- **Button:** Around me — Something soft, cold, older than you
+- **Button:** Rapid categories — 5 animals, 5 cities, 5 foods
+- **Button:** Memory snap — See 6 shapes, then find them again
+- **Button:** Pattern break — Watch a pattern, tap it back
+- **Button:** 60-second challenge — Your only job: beat the timer
 - **Button:** Focus — Tap when the dot reaches the ring. One minute.
-- **Button:** Ground — Notice what's around you, one sense at a time.
-- **Button:** Thought Parking — Get thoughts out of your head and sort them.
-- **Button:** Quick distraction — A few small puzzles for your mind.
+
+### `g-color`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Color hunt · Part 1 of 2
+- **Heading:** Find 5 things around you that are blue.
+- Tap a circle for each one. No need to type.
+- **Button:** Blue thing 1
+- **Button:** Blue thing 2
+- **Button:** Blue thing 3
+- **Button:** Blue thing 4
+- **Button:** Blue thing 5
+- Then: 3 things that are red.
+- **Button:** Next
+
+### `g-around`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Around me
+- **Heading:** Look around you. Find each one.
+- Tap each one when you find it. Skip any you like.
+- **Button:** Something soft
+- **Button:** Something cold
+- **Button:** Something rectangular
+- **Button:** Something older than you
+- **Button:** Something that makes a sound
+- **Button:** Done
+
+### `g-cats`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Rapid categories · Part 1 of 3
+- **Heading:** Name 5 animals.
+- Out loud or in your head. Tap the button for each one.
+- **Button:** I named one
+- **Button:** Next
+
+### `g-memory`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Memory snap
+- **Heading:** Look at these 6 shapes.
+- They'll hide in a few seconds.
+
+### `g-pattern`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Pattern break
+- **Heading:** Watch the pads light up, then tap them back.
+- Missed one? It just plays again.
+- **Button:** Pad, top left
+- **Button:** Pad, top right
+- **Button:** Pad, bottom left
+- **Button:** Pad, bottom right
+- Watch.
+- **Button:** Show it again
+- **Button:** I'm done
+
+### `game-check`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Did the intensity change?
+- You can skip this.
+- **Button:** Yes
+- **Button:** A little
+- **Button:** No
+- **Button:** Skip
 
 ### `plan`
 
@@ -1076,6 +1363,54 @@ _When: distraction_
 - **Button:** Help _(screen reader: "Get help now")_
 - Quick distraction · Step 1 of 3
 - **Heading:** Find 5 things around you that are blue.
+- **Button:** Next
+
+#### Color hunt
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Color hunt · Step 1 of 2
+- **Heading:** Find 5 things around you that are blue.
+- **Button:** Next
+
+#### Around me
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Around me · Step 1 of 5
+- **Heading:** Find something soft.
+- **Button:** Next
+
+#### Rapid categories
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Rapid categories · Step 1 of 3
+- **Heading:** Name 5 animals.
+- **Button:** Next
+
+#### Memory snap
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Memory snap · Step 1 of 3
+- **Heading:** Look at 6 shapes for a few seconds.
+- **Button:** Next
+
+#### Pattern break
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Pattern break · Step 1 of 2
+- **Heading:** Watch 4 pads light up.
+- **Button:** Next
+
+#### 60-second challenge
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- 60-second challenge · Step 1 of 2
+- **Heading:** For the next 60 seconds, your only job is to beat the timer.
 - **Button:** Next
 
 #### Waiting it out

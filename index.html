@@ -267,6 +267,23 @@ h1.home-tag{font-size:16px;font-weight:400;line-height:1.35;letter-spacing:0;col
 .dk-help .link{display:inline;min-height:48px;padding:12px 4px;font-weight:600;color:var(--text)}
 .sit{min-height:44px;border-radius:22px;border:1px solid var(--line);background:var(--surface);padding:0 16px;font-weight:600;font-size:15px}
 
+/* Stage 6.4: games. No scores anywhere. Color only changes; reduced motion stops the transitions. */
+.dot.blue{border-color:#3F6FC4}.dot.blue[aria-pressed="true"]{background:#3F6FC4}
+.dot.red{border-color:#C2553F}.dot.red[aria-pressed="true"]{background:#C2553F}
+span.dot.on{background:var(--accent)}
+.shapes{list-style:none;padding:0;margin:20px 0 0;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.shapes .shape{min-height:80px;border-radius:16px;border:1.5px solid var(--line);background:var(--surface);color:var(--text);display:grid;place-items:center}
+.shapes .shape svg{width:40px;height:40px}
+.shapes button.shape[aria-pressed="true"]{background:var(--primary-soft);border-color:var(--primary)}
+.shapes .shape.picked{background:var(--primary-soft)}
+.shapes .shape.was{border:3px solid var(--accent)}
+.pads{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
+.pad{min-height:110px;border-radius:20px;border:1.5px solid var(--line);transition:background .15s ease}
+.pad.p0{background:var(--primary-soft)}.pad.p1{background:var(--accent-soft)}.pad.p2{background:color-mix(in srgb,#3F6FC4 16%,var(--surface))}.pad.p3{background:var(--surface)}
+.pad.lit{border-color:var(--text);box-shadow:inset 0 0 0 4px var(--focus)}
+.pad.p0.lit{background:var(--primary)}.pad.p1.lit{background:var(--accent)}.pad.p2.lit{background:#3F6FC4}.pad.p3.lit{background:var(--text-muted)}
+.pat-msg{min-height:24px;text-align:center;font-weight:600;color:var(--text-muted);margin-top:14px}
+
 /* Large text or a short screen: only the top bar (Help, and the YELLOW 988 bar) stays pinned. See fitChrome(). */
 :root.crowded .tabbar,:root.crowded .actions{position:static}
 :root.crowded .actions{background:none}
@@ -374,6 +391,37 @@ const INTERVENTION_LIBRARY = [
     states:["distraction","anxious","craving"], intensityRange:[0,10], needsMobility:false,
     steps:["Find 5 things around you that are blue.","Count backward from 30 by threes.","Name 3 foods you'd like to eat this week."],
     completion:"tap_done" },
+  /* 6.4 Get out of my head: quick games. No points, no levels, no scores. */
+  { id:"distraction_color_hunt", name:"Color hunt", tryLabel:"Try a color hunt",
+    description:"Find 5 blue things, then 3 red.", durationSec:120,
+    states:["distraction","anxious","spiraling","craving"], intensityRange:[0,10], needsMobility:false,
+    steps:["Find 5 things around you that are blue.","Now find 3 things that are red."],
+    completion:"tap_done" },
+  { id:"distraction_around_me", name:"Around me", tryLabel:"Look around you",
+    description:"Something soft, cold, older than you.", durationSec:120,
+    states:["distraction","anxious","spiraling","craving"], intensityRange:[0,10], needsMobility:false,
+    steps:["Find something soft.","Find something cold.","Find something rectangular.","Find something older than you.","Find something that makes a sound."],
+    completion:"tap_done" },
+  { id:"distraction_categories", name:"Rapid categories", tryLabel:"Try rapid categories",
+    description:"5 animals, 5 cities, 5 foods.", durationSec:120,
+    states:["distraction","spiraling","craving"], intensityRange:[0,10], needsMobility:false,
+    steps:["Name 5 animals.","Name 5 cities.","Name 5 foods."],
+    completion:"tap_done" },
+  { id:"distraction_memory", name:"Memory snap", tryLabel:"Try memory snap",
+    description:"See 6 shapes, then find them again.", durationSec:90,
+    states:["distraction","spiraling","craving"], intensityRange:[0,10], needsMobility:false,
+    steps:["Look at 6 shapes for a few seconds.","Tap the ones you remember.","See what was there."],
+    completion:"tap_done" },
+  { id:"distraction_pattern", name:"Pattern break", tryLabel:"Try pattern break",
+    description:"Watch a pattern, tap it back.", durationSec:90,
+    states:["distraction","spiraling","craving"], intensityRange:[0,10], needsMobility:false,
+    steps:["Watch 4 pads light up.","Tap them back in the same order."],
+    completion:"tap_done" },
+  { id:"distraction_60_second", name:"60-second challenge", tryLabel:"Try the 60-second challenge",
+    description:"Your only job: beat the timer.", durationSec:60,
+    states:["distraction","spiraling","craving"], intensityRange:[0,10], needsMobility:false,
+    steps:["For the next 60 seconds, your only job is to beat the timer.","Tap when the dot is inside the ring."],
+    completion:"tap_done" },
   { id:"craving_delay", name:"Waiting it out", tryLabel:"Try waiting it out",
     description:"Put some time between the urge and the decision.", durationSec:900,
     states:["craving"], intensityRange:[0,10], needsMobility:false,
@@ -402,6 +450,52 @@ const STILL_TRUE = [
   "I can ask someone to stay with me."
 ];
 const STILL_TRUE_ENOUGH = 3;
+
+/* 6.4 Get out of my head. Menu order: [action arg, intervention id, title, line]. */
+const GAMES = [
+  ["color","distraction_color_hunt","Color hunt","Find 5 blue things, then 3 red"],
+  ["around","distraction_around_me","Around me","Something soft, cold, older than you"],
+  ["cats","distraction_categories","Rapid categories","5 animals, 5 cities, 5 foods"],
+  ["memory","distraction_memory","Memory snap","See 6 shapes, then find them again"],
+  ["pattern","distraction_pattern","Pattern break","Watch a pattern, tap it back"],
+  ["sixty","distraction_60_second","60-second challenge","Your only job: beat the timer"]
+];
+const GAME_ROUTES = { distraction_color_hunt:"g-color", distraction_around_me:"g-around", distraction_categories:"g-cats",
+  distraction_memory:"g-memory", distraction_pattern:"g-pattern", distraction_60_second:"focus" };
+const COLOR_HUNT = [
+  { color:"blue", n:5, text:"Find 5 things around you that are blue.", then:"Then: 3 things that are red." },
+  { color:"red", n:3, text:"Now find 3 things that are red.", then:"" }
+];
+const AROUND_ME = ["Something soft","Something cold","Something rectangular","Something older than you","Something that makes a sound"];
+const CATEGORIES = [["animals","Name 5 animals."],["cities","Name 5 cities."],["foods","Name 5 foods."]];
+const CATEGORY_N = 5;
+const MEMORY_SHAPES = {
+  circle:'<circle cx="12" cy="12" r="8"/>',
+  square:'<rect x="4.5" y="4.5" width="15" height="15" rx="1.5"/>',
+  triangle:'<path d="M12 4l8.5 15h-17z"/>',
+  star:'<path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.8l-5.2 2.8 1-5.8-4.3-4.1 5.9-.8z"/>',
+  heart:'<path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.6 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z"/>',
+  moon:'<path d="M19 14.5A8 8 0 1 1 9.5 5a6.3 6.3 0 0 0 9.5 9.5z"/>',
+  diamond:'<path d="M12 3l8 9-8 9-8-9z"/>',
+  plus:'<path d="M12 4v16M4 12h16"/>',
+  hexagon:'<path d="M12 3.5l7.4 4.25v8.5L12 20.5l-7.4-4.25v-8.5z"/>',
+  drop:'<path d="M12 3.5s6 6.6 6 10.8a6 6 0 0 1-12 0c0-4.2 6-10.8 6-10.8z"/>',
+  cloud:'<path d="M7 18h10a4 4 0 0 0 .5-8 5.5 5.5 0 0 0-10.7 1.3A3.4 3.4 0 0 0 7 18z"/>',
+  arrow:'<path d="M4 12h15M13 6l6 6-6 6"/>'
+};
+/* Each round: the 6 shown, then all 12 in this order. Fixed rounds, no randomness. */
+const MEMORY_ROUNDS = [
+  { show:["circle","star","moon","plus","drop","square"],
+    all:["heart","circle","arrow","star","hexagon","moon","triangle","plus","cloud","drop","diamond","square"] },
+  { show:["triangle","heart","diamond","cloud","arrow","hexagon"],
+    all:["circle","triangle","star","heart","moon","diamond","plus","cloud","square","arrow","drop","hexagon"] },
+  { show:["square","moon","heart","plus","hexagon","circle"],
+    all:["diamond","square","drop","moon","star","heart","cloud","plus","triangle","hexagon","arrow","circle"] }
+];
+const MEMORY_SHOW_MS = 5000;
+const PATTERN_PADS = ["top left","top right","bottom left","bottom right"];
+const PATTERNS = [[0,3,1,2],[2,0,3,1],[1,2,0,3],[3,1,2,0]];
+let gamePlays = 0;   // in memory only: rotates memory rounds and patterns within a visit
 
 /* ---------- SAMPLE DATA (fictional) ---------- */
 const SAMPLE_HISTORY = [
@@ -748,6 +842,25 @@ function openCalm(){
   go("calm");
 }
 
+/* 6.4 Get out of my head: a short games menu. No before-rating; every game ends with
+   "Did the intensity change?" which records the outcome like any other check-in. */
+function openDistract(){
+  if (blockIfRed()) return;
+  dispatch({ type:"RESET_CURRENT_FLOW" });
+  dispatch({ type:"SET_CURRENT_STATE", state:"distraction" });
+  const theme = ui.theme;
+  ui = freshUi(); ui.theme = theme;
+  logActivity("moment");
+  go("distract");
+}
+function resetGame(id){
+  const n = gamePlays++;
+  ui.gamePart = 0; ui.gameDots = []; ui.gameFound = {};
+  if (id === "distraction_color_hunt") ui.gameDots = Array(COLOR_HUNT[0].n).fill(false);
+  if (id === "distraction_memory"){ ui.memRound = n % MEMORY_ROUNDS.length; ui.memPhase = "show"; ui.memPicked = {}; }
+  if (id === "distraction_pattern"){ ui.patSeq = PATTERNS[n % PATTERNS.length]; ui.patInput = []; ui.patDone = false; ui.patPlaying = false; }
+}
+
 function beginAfterBefore(){
   if (blockIfRed()) return;
   const st = session.currentState;
@@ -756,7 +869,7 @@ function beginAfterBefore(){
   else if (st === "spiraling") startIntervention("thought_parking");
   else if (st === "low") go("low-choose");
   else if (st === "craving") startIntervention("craving_delay");
-  else if (st === "distraction") go("distraction-choose");
+  else if (st === "distraction") go("distract");
   else go("home");
 }
 
@@ -769,6 +882,7 @@ function startIntervention(interventionId, opts = {}){
   dispatch({ type:"SET_CURRENT_INTERVENTION", id:interventionId });
   ui.step = 0;
   let route = opts.route;
+  if (GAME_ROUTES[interventionId]){ resetGame(interventionId); if (!route) route = GAME_ROUTES[interventionId]; }
   if (!route) route = interventionId === "thought_parking" ? "spiral-input"
     : interventionId === "craving_delay" ? "craving-delay"
     : interventionId === "still_true" ? "still-true" : "intervention";
@@ -784,16 +898,19 @@ function startIntervention(interventionId, opts = {}){
   return true;
 }
 
-function completeCheckIn({ after, action }){
+function completeCheckIn({ after, action, change }){
   if (blockIfRed()) return;
   const afterVal = action === "skip" ? null : (typeof after === "number" ? after : null);
   const outcome = { source:"session", state:session.currentState, interventionId:session.currentInterventionId,
     before:session.currentBeforeRating, after:afterVal, timestamp:Date.now() };
+  if (change) outcome.change = change;   // games: "yes" | "a_little" | "no"
+  const ended = session.currentInterventionId;
   dispatch({ type:"ADD_OUTCOME", outcome });
   if (typeof afterVal === "number" && afterVal >= 9) recordHighRating();
   if (action === "still_bad") recordStillBad();
-  ui.justStillBad = action === "still_bad";
+  ui.justStillBad = action === "still_bad" || change === "no";
   ui.rating = null; ui.exclude = []; ui.checkinNote = ""; ui.suggestIdx = 0; ui.checkinVariant = null;
+  if (change === "no" && ended) ui.exclude = [ended];   // didn't change anything: offer something else
   // the next step starts from where this one ended (null if skipped — never invented)
   dispatch({ type:"SET_BEFORE_RATING", value:afterVal });
   runEngine();
@@ -1276,9 +1393,10 @@ const SCREENS = {
   },
 
   focus(){
+    const sixty = session.currentInterventionId === "distraction_60_second";
     return { close:true, body:`
-      ${title("Tap when the dot is inside the ring.")}
-      <p class="sub">No score. Just follow it.</p>
+      ${title(sixty ? "For the next 60 seconds, your only job is to beat the timer." : "Tap when the dot is inside the ring.")}
+      <p class="sub">${sixty ? "Tap when the dot is inside the ring. No score." : "No score. Just follow it."}</p>
       <div class="focus-area" id="focusArea" tabindex="0" role="button" aria-label="Tap when the dot is inside the ring">
         <div class="track"></div><div class="target" id="focusTarget"></div><div class="orb" id="focusOrb"></div>
       </div>
@@ -1286,15 +1404,106 @@ const SCREENS = {
       actions:`<button class="btn btn-primary" data-act="focusDone">Done</button>` };
   },
 
-  "distraction-choose"(){
+  /* 6.4: Get out of my head. ("Thoughts stuck on repeat? Break the loop" waits for 6.14.) */
+  distract(){
     return { close:true, body:`
-      ${title("Pick something to focus on.")}
-      <div class="list">
-        <button class="card" data-act="distFocus"><span class="em" aria-hidden="true">🎯</span><span>Focus<span class="meta">Tap when the dot reaches the ring. One minute.</span></span></button>
-        <button class="card" data-act="distGround"><span class="em" aria-hidden="true">🖐️</span><span>Ground<span class="meta">Notice what's around you, one sense at a time.</span></span></button>
-        <button class="card" data-act="distPark"><span class="em" aria-hidden="true">🗂️</span><span>Thought Parking<span class="meta">Get thoughts out of your head and sort them.</span></span></button>
-        <button class="card" data-act="distQuick"><span class="em" aria-hidden="true">🧩</span><span>Quick distraction<span class="meta">A few small puzzles for your mind.</span></span></button>
+      ${title("Get out of my head.")}
+      <p class="sub">Quick games to interrupt the loop. 1 to 5 minutes. No points, no levels.</p>
+      <div class="list">${GAMES.map(([arg, , t, m]) =>
+        `<button class="card" data-act="game" data-arg="${arg}">${icon("head", true)}<span>${t}<span class="meta">${m}</span></span></button>`).join("")}
+        <button class="card" data-act="distFocus">${icon("head", true)}<span>Focus<span class="meta">Tap when the dot reaches the ring. One minute.</span></span></button>
       </div>` };
+  },
+
+  "g-color"(){
+    const part = COLOR_HUNT[ui.gamePart || 0] || COLOR_HUNT[0];
+    const dots = (ui.gameDots && ui.gameDots.length ? ui.gameDots : Array(part.n).fill(false)).map((on, i) =>
+      `<button class="dot ${part.color}" data-act="gDot" data-arg="${i}" aria-pressed="${on}" aria-label="${part.color[0].toUpperCase() + part.color.slice(1)} thing ${i + 1}"></button>`).join("");
+    const last = (ui.gamePart || 0) === COLOR_HUNT.length - 1;
+    return { close:true, body:`
+      <p class="step-count">Color hunt · Part ${(ui.gamePart || 0) + 1} of ${COLOR_HUNT.length}</p>
+      ${stepTitle(part.text, true)}
+      <p class="sub">Tap a circle for each one. No need to type.</p>
+      <div class="dots">${dots}</div>
+      ${part.then ? `<p class="sub">${part.then}</p>` : ""}`,
+      actions:`<button class="btn btn-primary" data-act="gNext">${last ? "Done" : "Next"}</button>` };
+  },
+
+  "g-around"(){
+    const found = ui.gameFound || {};
+    return { close:true, body:`
+      <p class="step-count">Around me</p>
+      ${stepTitle("Look around you. Find each one.", true)}
+      <p class="sub">Tap each one when you find it. Skip any you like.</p>
+      ${AROUND_ME.map((t, i) => `<button class="todo" data-act="gFound" data-arg="${i}" aria-pressed="${!!found[i]}">
+        <span class="ck" aria-hidden="true">${found[i] ? "✓" : ""}</span><span class="tx">${t}</span></button>`).join("")}`,
+      actions:`<button class="btn btn-primary" data-act="gDone">Done</button>` };
+  },
+
+  "g-cats"(){
+    const i = Math.min(ui.gamePart || 0, CATEGORIES.length - 1);
+    const n = Math.min((ui.gameDots || []).length, CATEGORY_N);
+    const last = i === CATEGORIES.length - 1;
+    return { close:true, body:`
+      <p class="step-count">Rapid categories · Part ${i + 1} of ${CATEGORIES.length}</p>
+      ${stepTitle(CATEGORIES[i][1], true)}
+      <p class="sub">Out loud or in your head. Tap the button for each one.</p>
+      <div class="dots" aria-hidden="true">${Array.from({ length:CATEGORY_N }, (_, k) => `<span class="dot${k < n ? " on" : ""}"></span>`).join("")}</div>
+      <button class="btn btn-secondary" data-act="gTally">I named one</button>`,
+      actions:`<button class="btn btn-primary" data-act="gNext">${last ? "Done" : "Next"}</button>` };
+  },
+
+  "g-memory"(){
+    const round = MEMORY_ROUNDS[ui.memRound || 0];
+    const phase = ui.memPhase || "show";
+    const shape = (k, extra = "") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${MEMORY_SHAPES[k]}</svg>${extra}`;
+    if (phase === "show"){
+      return { close:true, body:`
+        <p class="step-count">Memory snap</p>
+        ${stepTitle("Look at these 6 shapes.", true)}
+        <p class="sub">They'll hide in a few seconds.</p>
+        <ul class="shapes" aria-label="Shapes to remember">${round.show.map(k => `<li class="shape" role="img" aria-label="${k}">${shape(k)}</li>`).join("")}</ul>` };
+    }
+    const picked = ui.memPicked || {};
+    if (phase === "pick"){
+      return { close:true, body:`
+        <p class="step-count">Memory snap</p>
+        ${stepTitle("Tap the ones you remember.", true)}
+        <p class="sub">Guessing is fine.</p>
+        <div class="shapes">${round.all.map(k => `<button class="shape" data-act="memPick" data-arg="${k}" aria-pressed="${!!picked[k]}" aria-label="${k}">${shape(k)}</button>`).join("")}</div>`,
+        actions:`<button class="btn btn-primary" data-act="memReveal">Show me</button>` };
+    }
+    return { close:true, body:`
+      <p class="step-count">Memory snap</p>
+      ${stepTitle("Here's what was there.", true)}
+      <p class="sub">The ones that were there are outlined. Shaded ones are the ones you tapped.</p>
+      <ul class="shapes">${round.all.map(k => { const was = round.show.includes(k);
+        return `<li class="shape${was ? " was" : ""}${picked[k] ? " picked" : ""}" role="img" aria-label="${k}${was ? ", was there" : ""}${picked[k] ? ", you tapped it" : ""}">${shape(k)}</li>`; }).join("")}</ul>`,
+      actions:`<button class="btn btn-primary" data-act="gDone">Done</button>` };
+  },
+
+  "g-pattern"(){
+    const done = !!ui.patDone;
+    return { close:true, body:`
+      <p class="step-count">Pattern break</p>
+      ${stepTitle(done ? "That's the pattern." : "Watch the pads light up, then tap them back.", true)}
+      <p class="sub">${done ? "Take a breath." : "Missed one? It just plays again."}</p>
+      <div class="pads">${PATTERN_PADS.map((p, i) => `<button class="pad p${i}" id="pad${i}" data-act="padTap" data-arg="${i}" aria-label="Pad, ${p}"></button>`).join("")}</div>
+      <p class="pat-msg" id="patMsg" aria-live="polite">${done ? "" : (ui.patPlaying ? "Watch." : "")}</p>`,
+      actions: done ? `<button class="btn btn-primary" data-act="gDone">Done</button>`
+        : `<button class="btn btn-secondary" data-act="padReplay">Show it again</button>
+           <button class="link" data-act="gDone">I'm done</button>` };
+  },
+
+  /* End of every 6.4 game. Feeds the outcome history and the engine like the usual check-in. */
+  "game-check"(){
+    return { close:true, body:`
+      ${title("Did the intensity change?")}
+      <p class="sub">You can skip this.</p>`,
+      actions:`<button class="btn btn-primary" data-act="gameChange" data-arg="yes">Yes</button>
+        <button class="btn btn-secondary" data-act="gameChange" data-arg="a_little">A little</button>
+        <button class="btn btn-secondary" data-act="gameChange" data-arg="no">No</button>
+        <button class="link" data-act="ciSkip">Skip</button>` };
   },
 
   talk(){
@@ -1709,7 +1918,7 @@ function focusLoop(ts){
     if (left <= 0 && !ui.focusEndedMsg){
       ui.focusEndedMsg = true;
       const m = document.getElementById("focusMsg");
-      if (m) m.textContent = "Stop whenever you like.";
+      if (m) m.textContent = session.currentInterventionId === "distraction_60_second" ? "You beat the timer." : "Stop whenever you like.";
     }
   }
   focusRaf = requestAnimationFrame(focusLoop);
@@ -1726,6 +1935,50 @@ function focusTap(){
     clearTimeout(ui.focusMsgTimer);
     ui.focusMsgTimer = setTimeout(() => { const mm = document.getElementById("focusMsg"); if (mm && mm.textContent === "Nice.") mm.textContent = ""; }, 900);
   }
+}
+
+/* 6.4 timers: Memory snap hides its shapes after a few seconds; Pattern break plays its sequence. */
+let memTimer = null, patTimer = null, patLitTimer = null;
+function stopGameTimers(){ clearTimeout(memTimer); clearTimeout(patTimer); clearTimeout(patLitTimer); memTimer = patTimer = patLitTimer = null; ui.patPlaying = false; }
+function memHide(){
+  memTimer = null;
+  if (session.screen !== "g-memory" || ui.memPhase !== "show") return;
+  ui.memPhase = "pick"; lastRendered = null; render();
+}
+function patGap(){ return reducedMotion() ? 950 : 700; }
+function lightPad(i, ms){
+  document.querySelectorAll(".pad.lit").forEach(p => p.classList.remove("lit"));
+  const el = document.getElementById("pad" + i);
+  if (!el) return;
+  el.classList.add("lit");
+  clearTimeout(patLitTimer);
+  patLitTimer = setTimeout(() => el.classList.remove("lit"), ms);
+}
+function setPatMsg(t){ const m = document.getElementById("patMsg"); if (m) m.textContent = t; }
+function playPattern(){
+  if (session.screen !== "g-pattern" || ui.patDone) return;
+  clearTimeout(patTimer);
+  ui.patInput = []; ui.patPlaying = true; setPatMsg("Watch.");
+  const seq = ui.patSeq || PATTERNS[0], gap = patGap();
+  let k = 0;
+  const step = () => {
+    if (session.screen !== "g-pattern"){ ui.patPlaying = false; return; }
+    if (k < seq.length){ lightPad(seq[k], gap * 0.7); k++; patTimer = setTimeout(step, gap); return; }
+    ui.patPlaying = false; patTimer = null; setPatMsg("Your turn.");
+  };
+  patTimer = setTimeout(step, 500);
+}
+function patternTap(i){
+  if (ui.patPlaying || ui.patDone) return;
+  const seq = ui.patSeq || PATTERNS[0];
+  if (seq[ui.patInput.length] !== i){   // no fail state: just show it again, gently
+    setPatMsg("Let's watch it again.");
+    clearTimeout(patTimer); ui.patPlaying = true;
+    patTimer = setTimeout(playPattern, 800);
+    return;
+  }
+  ui.patInput.push(i); buzz(); lightPad(i, 300);
+  if (ui.patInput.length === seq.length){ ui.patDone = true; lastRendered = null; render(); }
 }
 
 function topBar(def){
@@ -1802,7 +2055,11 @@ function render(){
     clearInterval(palmsTimer); palmsTimer = null;
     clearInterval(cravingTimer); cravingTimer = null;
     if (focusRaf){ cancelAnimationFrame(focusRaf); focusRaf = null; }
+    clearTimeout(memTimer); memTimer = null;
+    if (s !== "g-pattern"){ clearTimeout(patTimer); patTimer = null; }
     if (s === "craving-delay") cravingTimer = setInterval(cravingTick, 1000);
+    if (s === "g-memory" && ui.memPhase === "show") memTimer = setTimeout(memHide, MEMORY_SHOW_MS);
+    if (s === "g-pattern" && !ui.patDone && !ui.patPlaying) playPattern();
     if (s === "focus"){ if (!ui.focusStart) ui.focusStart = performance.now(); focusRaf = requestAnimationFrame(focusLoop); }
     if (s === "anx-palms"){
       let n = 10;
@@ -1852,7 +2109,7 @@ const ACTIONS = {
   route(arg){
     if (blockIfRed()) return;
     if (arg === "calm") openCalm();
-    else if (arg === "head") startFlow("distraction");
+    else if (arg === "head") openDistract();
     else if (arg === "connect") ACTIONS.talk();
     else if (arg === "scene") startFlow("low", { firstPick:"environment_change" });
   },
@@ -1958,9 +2215,40 @@ const ACTIONS = {
   spNone(){ if (blockIfRed()) return; ui.nextStep = "Let the rest wait for now."; ui.nextFor = ""; go("spiral-next"); },
   spNextDone(){ if (blockIfRed()) return; go("checkin"); },
 
-  distGround(){ startIntervention("grounding", { route:"ground" }); },
   distFocus(){ ui.focusReturn = null; startIntervention("distraction_game", { route:"focus" }); },
-  distPark(){ startIntervention("thought_parking"); },
+  game(arg){
+    if (blockIfRed()) return;
+    const g = GAMES.find(x => x[0] === arg);
+    if (g) startIntervention(g[1]);
+  },
+  gDot(arg){
+    if (blockIfRed()) return;
+    const i = Number(arg); ui.gameDots[i] = !ui.gameDots[i]; buzz(); render();
+  },
+  gFound(arg){ if (blockIfRed()) return; ui.gameFound[arg] = !ui.gameFound[arg]; buzz(); render(); },
+  gTally(){
+    if (blockIfRed()) return;
+    if (ui.gameDots.length < CATEGORY_N) ui.gameDots.push(true);
+    buzz(); render();
+    const b = document.querySelector('[data-act="gTally"]'); if (b) b.focus({ preventScroll:true });
+  },
+  gNext(){
+    if (blockIfRed()) return;
+    const parts = session.screen === "g-color" ? COLOR_HUNT : CATEGORIES;
+    if (ui.gamePart >= parts.length - 1){ ACTIONS.gDone(); return; }
+    ui.gamePart++;
+    ui.gameDots = session.screen === "g-color" ? Array(COLOR_HUNT[ui.gamePart].n).fill(false) : [];
+    buzz(); lastRendered = null; render();
+  },
+  gDone(){ if (blockIfRed()) return; stopGameTimers(); go("game-check"); },
+  gameChange(arg){
+    const after = null;
+    completeCheckIn({ after, action:arg === "no" ? "no_change" : "helped", change:arg });
+  },
+  memPick(arg){ if (blockIfRed()) return; ui.memPicked[arg] = !ui.memPicked[arg]; render(); },
+  memReveal(){ if (blockIfRed()) return; ui.memPhase = "reveal"; lastRendered = null; render(); },
+  padTap(arg){ if (blockIfRed()) return; patternTap(Number(arg)); },
+  padReplay(){ if (blockIfRed()) return; playPattern(); },
 
   crvStep(arg){ ui.cravingDone = ui.cravingDone || {}; ui.cravingDone[arg] = !ui.cravingDone[arg]; render(); },
   crvWave(){ ui.waveOpen = !ui.waveOpen; render(); },
@@ -1983,10 +2271,10 @@ const ACTIONS = {
 
   focusDone(){
     if (blockIfRed()) return;
+    if (session.currentInterventionId === "distraction_60_second"){ go("game-check"); return; }
     if (ui.focusReturn === "craving"){ ui.focusReturn = null; ui.cravingDone = ui.cravingDone || {}; go("craving-delay"); return; }
     go("checkin");
   },
-  distQuick(){ startIntervention("distraction_game"); },
 
   talk(){ ui.prevScreen = session.screen; go("talk"); },
   talkBack(){ go(ui.prevScreen || "home"); },

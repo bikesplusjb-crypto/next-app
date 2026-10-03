@@ -142,6 +142,31 @@ P('');
 P('Changed for review: the craving button now reads "I have an urge to use (drink or drugs)" (was "I want to use"). It still opens the same craving flow (`flow:craving`).');
 H(3,'My Plan sections'); list(G('PLAN_SECTIONS').map(([,t,,hint])=>`"${t}"${hint?` (hint: "${hint}")`:''}`));
 
+H(3,'Get out of my head: every game screen, in play order');
+P('No points, no levels, no scores. Each game ends with "Did the intensity change?" Yes / A little / No (or Skip). Yes and A little record the change; No records it and the next suggestion is a different step. No is not counted as "I still feel bad".');
+const gameShots=[
+  ['Color hunt, part 1','g-color','distraction_color_hunt',''],
+  ['Color hunt, part 2','g-color','distraction_color_hunt','ui.gamePart=1; ui.gameDots=[false,false,false];'],
+  ['Around me','g-around','distraction_around_me',''],
+  ['Rapid categories, part 1 (then cities, then foods)','g-cats','distraction_categories',''],
+  ['Memory snap, shapes shown for 5 seconds','g-memory','distraction_memory',''],
+  ['Memory snap, choose','g-memory','distraction_memory','ui.memPhase="pick";'],
+  ['Memory snap, reveal','g-memory','distraction_memory','ui.memPhase="reveal";'],
+  ['Pattern break','g-pattern','distraction_pattern','ui.patPlaying=true;'],
+  ['Pattern break, finished','g-pattern','distraction_pattern','ui.patDone=true;'],
+  ['60-second challenge','focus','distraction_60_second',''],
+  ['End of every game','game-check','distraction_color_hunt','']
+];
+for(const [label,screen,id,extra] of gameShots){
+  P(''); P(`_${label}_`); P('');
+  md.push(...screenText(w, `session.currentState="distraction"; session.currentInterventionId=${JSON.stringify(id)}; resetGame(${JSON.stringify(id)}); ${extra} session.screen=${JSON.stringify(screen)}; stopGameTimers(); ${extra}`));
+  w.eval('stopGameTimers()');
+}
+P('');
+P('Pattern break messages: "Watch." while it plays, "Your turn." after, "Let\'s watch it again." after a missed tap (it replays; there is no fail state).');
+P('');
+P('60-second challenge, when the minute is up: "You beat the timer."');
+
 H(2,'7. Every other screen');
 P('Rendered for each state where the screen changes by state. Identical renders are listed once.');
 const crisis=new Set(G('CRISIS_SCREENS').concat(['talk']));
