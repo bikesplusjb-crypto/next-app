@@ -319,6 +319,17 @@ p.bubble::before{content:"";position:absolute;top:-9px;left:50%;margin-left:-9px
 .zface{width:44px;height:44px;flex:none;display:block}
 .zface svg{width:44px;height:44px;display:block}
 
+/* Stage 6.8: Code word */
+.ybar .row.one{grid-template-columns:1fr;margin-top:8px}
+a.codeword{text-decoration:none;display:flex;align-items:center;justify-content:center;margin-top:10px;text-align:center}
+.ybar a.codeword{margin-top:0}
+.setup-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:10px}
+.setup-row > span{display:flex;flex-direction:column}
+.msg-preview{margin:8px 0 12px;padding:14px 16px;border-radius:18px 18px 4px 18px;background:var(--primary-soft);line-height:1.4}
+a.cw-open{text-decoration:none;display:flex;align-items:center;justify-content:center}
+.cw-words{margin-top:14px}
+.cw-words .sit[aria-pressed="true"]{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
+
 /* Stage 6.6: Connect */
 .panel.conn{display:flex;flex-direction:column;gap:8px;margin-top:14px}
 .panel.conn h3{margin:6px 0 0}
@@ -419,6 +430,12 @@ const HELPING_OTHERS = "Helping someone else can help you too. Small acts of kin
    Nothing about who was messaged is kept, and kind acts are never counted. */
 const KIND_WORDS = ["Thinking of you","Thanks for being in my life","Hey, how are you doing lately?","Thank you for ___"];
 const KIND_OFFLINE = ["Hold a door for someone.","Give someone a compliment.","Help a neighbor with something small."];
+/* 6.8 Code word. Agreed on a good day; on a hard day one tap sends just the word. Never typed into ZigZag Mind to
+   enter a mode. Suggestions are neutral on purpose. Saved as plan.codeWord = { personIndex, word, setAt, phone }. */
+const CODE_WORDS = ["lighthouse","blue kite","pineapple","paper boat","sunflower","red balloon","penguin","maple leaf",
+  "teacup","snow globe","cactus","marigold","kayak","honeybee","harbor"];
+const SUPPORT_URL_TEXT = "zigzagmind.com/support";
+const codeWordSetupMsg = (name, word) => `Hey ${name}, I'm making a plan for hard days. If I ever text you "${word}", it means I'm struggling and need you to call me or come be with me. You don't have to fix anything. Here's a short guide: ${SUPPORT_URL_TEXT}`;
 const MESSAGE_IDEAS = ["Can't sleep, you up?","Rough night. Can you talk for 5 minutes?","Want to catch up this week?"];
 /* Human First (session only, never saved): after 2 taps on "Something else", or 2 finished steps without
    "That helped", ask once per visit whether a person would help more. */
@@ -1158,6 +1175,21 @@ function go(screen){ dispatch({ type:"SET_SCREEN", screen }); render(); }
 /* ---------- RENDER HELPERS ---------- */
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
 const person = () => getPlan().trustedPeople[0] || null;
+/* The code word and who it goes to, or null. Matched by phone so editing the list never sends it to the wrong person. */
+function codeWord(){
+  const cw = getPlan().codeWord, people = getPlan().trustedPeople || [];
+  if (!cw || !cw.word) return null;
+  const digits = x => String(x || "").replace(/\D/g, "");
+  const p = people.find(x => digits(x.phone) && digits(x.phone) === cw.phone);
+  return p ? { word:cw.word, person:p } : null;
+}
+/* "Send my code word to [name]": opens Messages with the word only. noexit: crisis-no rule (safety check first). */
+function codeWordButton(noexit, cls = "btn btn-outline"){
+  const cw = codeWord();
+  if (!cw) return "";
+  const attr = noexit ? `data-act="noContact" data-noexit="1"` : "";
+  return `<a class="${cls} codeword" href="${smsLink(cw.person.phone, cw.word)}" ${attr}>Send my code word to ${esc(cw.person.name)}</a>`;
+}
 
 function ratingRow(selected, legendLow, legendHigh){
   let b = "";
@@ -1694,6 +1726,54 @@ const SCREENS = {
       actions:`${actions}<p class="note znote">${ZAGS_NOTE}</p>` };
   },
 
+  /* 6.8: Code word setup. choose_person → choose_word → compose_sms → confirm. */
+  "cw-person"(){
+    const people = getPlan().trustedPeople || [];
+    return { close:false, body:`
+      <p class="lbl">Set up with your people · Code word</p>
+      ${title("Who should get your code word?")}
+      <p class="sub">Pick someone who'd want to know when things are hard.</p>
+      ${people.length ? `<div class="list">${people.map((p, i) =>
+        `<button class="card" data-act="cwPerson" data-arg="${i}">${icon("people")}<span>${esc(p.name)}${p.relationship ? `<span class="meta">${esc(p.relationship)}</span>` : ""}</span></button>`).join("")}</div>`
+        : `<p class="note">Add someone you trust first. Then come back here.</p>
+          <button class="btn btn-secondary" data-act="planEdit" data-arg="trustedPeople">Add someone</button>`}`,
+      actions:`<button class="btn btn-secondary" data-act="cwCancel">Back to My Plan</button>` };
+  },
+  "cw-word"(){
+    const p = (getPlan().trustedPeople || [])[ui.cwPerson];
+    if (!p) return SCREENS["cw-person"]();
+    const opts = ui.cwOptions || [];
+    const own = ui.cwOwn;
+    const word = own ? (ui.cwOwnText || "") : ui.cwWord;
+    return { close:false, body:`
+      <p class="lbl">Set up with your people · Code word</p>
+      ${title(`Pick a word for ${esc(p.name)}.`)}
+      <p class="sub">On a hard day, you'll send just this word. ${esc(p.name)} will know what it means. No explaining.</p>
+      <div class="sits cw-words">${opts.map(w => `<button class="sit" data-act="cwWord" data-arg="${esc(w)}" aria-pressed="${!own && ui.cwWord === w}">${esc(w)}</button>`).join("")}
+        <button class="sit" data-act="cwOwn" aria-pressed="${!!own}">My own word</button></div>
+      <button class="link" data-act="cwShuffle">Show other words</button>
+      ${own ? `<label for="cwOwnBox" class="small" style="display:block;margin-top:10px">Your word</label>
+        <input class="field" id="cwOwnBox" maxlength="30" autocomplete="off" value="${esc(ui.cwOwnText || "")}">` : ""}
+      ${ui.msg ? `<p class="err" role="alert">${esc(ui.msg)}</p>` : ""}
+      ${word && !own ? `<p class="lbl" style="margin-top:16px">Your message to ${esc(p.name)}</p><p class="msg-preview">${esc(codeWordSetupMsg(p.name, word))}</p>` : ""}`,
+      actions:`<button class="btn btn-primary" data-act="cwNext">Next</button>
+        <button class="btn btn-secondary" data-act="cwCancel">Back to My Plan</button>` };
+  },
+  "cw-send"(){
+    const p = (getPlan().trustedPeople || [])[ui.cwPerson];
+    if (!p || !ui.cwFinal) return SCREENS["cw-person"]();
+    const text = codeWordSetupMsg(p.name, ui.cwFinal);
+    return { close:false, body:`
+      <p class="lbl">Set up with your people · Code word</p>
+      ${title(`Your message to ${esc(p.name)}`)}
+      <p class="msg-preview">${esc(text)}</p>
+      <a class="btn btn-primary cw-open" href="${smsLink(p.phone, text)}">Open Messages</a>
+      <p class="note">ZigZag Mind never sends anything for you. You tap Send.</p>
+      <h2>Did you send it?</h2>`,
+      actions:`<button class="btn btn-primary" data-act="cwSaved">Yes, I sent it</button>
+        <button class="btn btn-secondary" data-act="cwCancel">Not yet</button>` };
+  },
+
   /* 6.6: Connect (I just feel alone). Zags (6.7) and the code word (6.8) join this screen when they're built. */
   connect(){
     const people = getPlan().trustedPeople || [];
@@ -1714,6 +1794,7 @@ const SCREENS = {
             <a class="btn btn-secondary" href="${smsLink(p.phone)}" aria-label="Text ${esc(p.name)}">Text</a>
             <a class="btn btn-secondary" href="${telLink(p.phone)}" aria-label="Call ${esc(p.name)}">Call</a>
           </div>`).join("") + `
+          ${codeWordButton(false)}
           <p class="small" style="margin:14px 0 8px">Don't know what to say${people.length > 1 ? ` to ${esc(first.name)}` : ""}? Tap one:</p>
           <div class="sits">${MESSAGE_IDEAS.map(m => `<a class="sit idea" href="${smsLink(first.phone, m)}">${esc(m)}</a>`).join("")}</div>`
         : `<p class="small">Add someone you trust, and they'll be here with Text and Call.</p>
@@ -1873,6 +1954,7 @@ const SCREENS = {
     return { close:false, body:`
       ${title("Talk to someone")}
       <p class="sub">ZigZag Mind never contacts anyone for you. These buttons open your phone.</p>
+      ${codeWord() ? `<div style="margin-top:14px">${codeWordButton(false)}</div>` : ""}
       ${person() ? `<h2>${esc(person().name)} <span class="small">(${esc(person().relationship)})</span></h2>${personButtons(msg, false)}` : `<p class="note">Add someone you trust in My Plan.</p>`}
       <h2>988 Suicide &amp; Crisis Lifeline</h2>
       <p class="small">Free, 24/7. Also for substance-use crises.</p>
@@ -1885,6 +1967,7 @@ const SCREENS = {
     return { close:false, body:`
       ${title("I'm glad you told me.")}
       ${row988()}
+      ${codeWord() ? `<div style="margin-top:10px">${codeWordButton(false)}</div>` : ""}
       <div class="panel">
         <h3 style="font-size:20px;line-height:1.3">Are you in danger of hurting yourself or someone else right now?</h3>
         <div class="stack" style="margin-top:14px">
@@ -1905,6 +1988,7 @@ const SCREENS = {
         <a class="btn btn-safety two-line" href="${LINKS.call911}">Call 911<span class="cap">If someone is hurt, or someone else is in danger</span></a>
         ${row988().replace('style="margin-top:12px"', "")}
         <a class="btn btn-secondary" href="${LINKS.chat988}" target="_blank" rel="noopener">Chat online with 988</a>
+        ${codeWordButton(false)}
         ${p ? personButtons(HARD_TIME_MSG, false) : `<p class="note">Add someone you trust in My Plan.</p>`}
         <button class="btn btn-secondary" data-act="cPlaces" aria-expanded="${ui.placesOpen}">Go where other people are</button>
         ${ui.placesOpen ? `<div class="panel" style="margin-top:0"><ul>${getPlan().places.length ? getPlan().places.map(x => `<li>${esc(x)}</li>`).join("") : "<li>A shop, a library, a friend's place — anywhere with people.</li>"}</ul></div>` : ""}
@@ -1919,6 +2003,7 @@ const SCREENS = {
     return { close:false, body:`
       ${title("Okay. Thank you for checking in with yourself.")}
       ${row988()}
+      ${codeWord() ? `<div style="margin-top:10px">${codeWordButton(true)}</div>` : ""}
       <h2>What would help right now?</h2>
       <div class="stack">
         <button class="btn btn-secondary" data-act="noTalk" aria-expanded="${ui.talkOpen}">Talk to someone</button>
@@ -1968,6 +2053,10 @@ const SCREENS = {
       <div class="panel">${head("professional", "Professional and crisis support")}
         <p class="small" style="margin-top:6px">988 Suicide &amp; Crisis Lifeline, free and 24/7. Always in your plan.</p>${row988()}${pro}
         ${editable ? `<p class="small strength-short" style="margin:14px 0 0">${HELP_IS_STRENGTH_SHORT} <button class="link inline" data-act="readStrength">Read more</button></p>` : ""}</div>
+      ${editable ? `<div class="panel" id="setupPeople"><h3>Set up with your people</h3>
+        <div class="setup-row"><span><b>Code word</b><span class="small">${codeWord() ? `${esc(codeWord().word)} · with ${esc(codeWord().person.name)}` : "One word that means: I'm struggling, call me."}</span></span>
+          <button class="edit-btn" data-act="cwStart">${codeWord() ? "Change" : "Set up"}</button></div>
+        ${codeWord() ? `<button class="link" data-act="cwRemove" style="margin-top:4px">Remove code word</button>` : ""}</div>` : ""}
       <div class="panel">${head("saferSpace", "Making my space safer")}
         ${pb.saferSpace ? `<p style="margin-top:6px">${esc(pb.saferSpace)}</p>` : `<p class="empty">Nothing here yet.</p>`}</div>
       <div class="panel">${head("avoid", "Things to avoid when I'm struggling")}${ul(pb.avoid)}</div>
@@ -2397,6 +2486,15 @@ function zagsSvg(half, calm){
       <path d="M100 140 Q110 148 120 140" fill="none" stroke="var(--zag-eye)" stroke-width="4" stroke-linecap="round"/>
     </g></svg>`;
 }
+/* 6.8: three different neutral suggestions (not the ones just shown, when possible). */
+function pickCodeWords(avoid = []){
+  let pool = CODE_WORDS.filter(w => !avoid.includes(w));
+  if (pool.length < 3) pool = CODE_WORDS.slice();
+  const out = [];
+  while (out.length < 3){ const w = pool[Math.floor(Math.random() * pool.length)]; if (!out.includes(w)) out.push(w); }
+  return out;
+}
+
 /* Small face for the entry cards. */
 function zagsFace(){
   return `<span class="zface" aria-hidden="true"><svg viewBox="0 0 220 220">
@@ -2463,7 +2561,7 @@ function yellowBar(){
     <div class="row">
       <a class="chip safety" href="${LINKS.call988}">Call 988</a>
       <button class="chip" data-act="talk">Talk to someone</button>
-    </div></div>`;
+    </div>${codeWord() ? `<div class="row one">${codeWordButton(false, "chip")}</div>` : ""}</div>`;
 }
 function tabBar(){
   const tabs = [["home","Home"],["plan","My Plan"],["progress","Progress"],["settings","Settings"]];
@@ -2757,6 +2855,35 @@ const ACTIONS = {
     zagsPhase(z.hard >= 2 || z.rounds >= ZAGS_MAX_ROUNDS ? "hard" : "again");
   },
   zagsBye(){ if (blockIfRed()) return; zagsStopBreathing(); zagsPhase("bye"); },
+  cwStart(){ ui.msg = ""; ui.cwPerson = null; ui.cwWord = null; ui.cwOwn = false; ui.cwOwnText = ""; ui.cwFinal = null; go("cw-person"); },
+  cwPerson(arg){ ui.cwPerson = Number(arg); ui.cwOptions = pickCodeWords(); ui.cwWord = ui.cwOptions[0]; ui.cwOwn = false; ui.msg = ""; go("cw-word"); },
+  cwWord(arg){ ui.cwWord = arg; ui.cwOwn = false; ui.msg = ""; render(); },
+  cwShuffle(){ ui.cwOptions = pickCodeWords(ui.cwOptions); if (!ui.cwOwn) ui.cwWord = ui.cwOptions[0]; render(); },
+  cwOwn(){ ui.cwOwn = true; ui.msg = ""; render(); const b = document.getElementById("cwOwnBox"); if (b) b.focus(); },
+  cwNext(){
+    let word = ui.cwWord;
+    if (ui.cwOwn){
+      const b = document.getElementById("cwOwnBox");
+      word = ((b && b.value) || "").trim().replace(/\s+/g, " ");
+      ui.cwOwnText = word;
+      // Plan fields never trigger a crisis, but the code word must never be anything alarming.
+      if (!word){ ui.msg = "Type a word, or pick one above."; render(); return; }
+      if (safetyCheck(word) !== "GREEN"){ ui.msg = "Pick something that sounds ordinary, so it's safe if someone else sees your phone."; render(); return; }
+    }
+    if (!word) return;
+    ui.cwFinal = word; ui.msg = "";
+    go("cw-send");
+  },
+  cwSaved(){
+    const p = (getPlan().trustedPeople || [])[ui.cwPerson];
+    if (!p || !ui.cwFinal) return;
+    getPlan().codeWord = { personIndex:ui.cwPerson, word:ui.cwFinal, setAt:Date.now(), phone:String(p.phone).replace(/\D/g, "") };
+    saveStore();
+    ui.cwFinal = null; ui.flash = "Code word saved."; ui.planFrom = "tab";
+    go("plan");
+  },
+  cwCancel(){ ui.cwFinal = null; ui.msg = ""; ui.planFrom = "tab"; go("plan"); },
+  cwRemove(){ delete getPlan().codeWord; saveStore(); ui.flash = "Code word removed."; render(); },
   planFromConnect(){ ui.planFrom = "tab"; go("plan"); },
   hfNotNow(){ if (blockIfRed()) return; go("recommendation"); },
   hfPeople(){

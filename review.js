@@ -180,6 +180,16 @@ for(const [label,screen,extra] of [['Start','kind',''],['Who comes to mind?','ki
   md.push(...screenText(w, `${withPerson}; session.currentState="low"; session.currentInterventionId="kind_act"; ${extra} session.screen=${JSON.stringify(screen)}`));
 }
 
+H(3,'Code word (6.8)');
+P('Set up on a good day from My Plan → Set up with your people. The person picks who gets it and a word (3 neutral suggestions, or their own; anything alarming is refused). Messages opens with the setup text; the person sends it. Saved only after "Yes, I sent it". Once set, "Send my code word to [name]" (the word only) appears on the YELLOW bar, the crisis screen, the full crisis screen, "What would help right now?" (which moves to "Do you feel safer?" in the same tap), Talk to someone and Connect.');
+P(''); P(`Setup text: "${G('codeWordSetupMsg("[name]","[word]")')}"`);
+P(''); P(`Suggested words: ${G('CODE_WORDS').map(w=>`"${w}"`).join(' · ')}`);
+P(''); P('Own word refused if alarming: "Pick something that sounds ordinary, so it\'s safe if someone else sees your phone."');
+for(const [label,screen,extra] of [['Who should get your code word?','cw-person',''],['Pick a word','cw-word','ui.cwPerson=0; ui.cwOptions=["lighthouse","blue kite","pineapple"]; ui.cwWord="lighthouse";'],['Your message','cw-send','ui.cwPerson=0; ui.cwFinal="lighthouse";']]){
+  P(''); P(`_${label}_`); P('');
+  md.push(...screenText(w, `${withPerson}; ${extra} session.screen=${JSON.stringify(screen)}`));
+}
+
 H(3,'Zags: every line he can say (ZAGS_LINES)');
 P('Scripted, not AI. Taps only. Says he is not a person in every session\'s first line. No relationship language, no pressure to stay, no memory between sessions, never the person\'s name. Every session ends at a person. RED stops Zags. At most two breathing rounds per session (4 breaths each: in 4 seconds, out 6; 3 breaths with reduced motion). Voice is off by default and uses the device\'s own speech only.');
 list(Object.entries(G('ZAGS_LINES')).map(([k,v])=>`${code(k)}: "${v}"`));

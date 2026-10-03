@@ -305,6 +305,8 @@ The person writes three short lines in their own words, and ZigZag Mind turns th
 
 ### 6.8 Code word (mockup: CodeWord)
 
+> **As built:** the person it goes to is matched by phone number (stored with the code word), so editing or reordering trusted people never sends it to the wrong person; if that person is removed, the buttons disappear. Own words that `safetyCheck` flags are refused (no crisis is triggered from My Plan). Not yet on "I need my plan" (6.12) — add it there when 6.12 is built. The guide link (zigzagmind.com/support) works once 6.9 is built.
+
 **Why:** people who feel like a burden don't reach out. A word agreed on a good day makes asking for help one tap with no explaining.
 
 **Setup** (My Plan → Set up with your people → Code word):

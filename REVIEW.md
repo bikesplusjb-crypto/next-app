@@ -704,6 +704,53 @@ _Without my phone_
 - **Button:** Done
 - **Button:** Not right now
 
+### Code word (6.8)
+
+Set up on a good day from My Plan → Set up with your people. The person picks who gets it and a word (3 neutral suggestions, or their own; anything alarming is refused). Messages opens with the setup text; the person sends it. Saved only after "Yes, I sent it". Once set, "Send my code word to [name]" (the word only) appears on the YELLOW bar, the crisis screen, the full crisis screen, "What would help right now?" (which moves to "Do you feel safer?" in the same tap), Talk to someone and Connect.
+
+Setup text: "Hey [name], I'm making a plan for hard days. If I ever text you "[word]", it means I'm struggling and need you to call me or come be with me. You don't have to fix anything. Here's a short guide: zigzagmind.com/support"
+
+Suggested words: "lighthouse" · "blue kite" · "pineapple" · "paper boat" · "sunflower" · "red balloon" · "penguin" · "maple leaf" · "teacup" · "snow globe" · "cactus" · "marigold" · "kayak" · "honeybee" · "harbor"
+
+Own word refused if alarming: "Pick something that sounds ordinary, so it's safe if someone else sees your phone."
+
+_Who should get your code word?_
+
+- **Button:** Help _(screen reader: "Get help now")_
+- Set up with your people · Code word
+- **Heading:** Who should get your code word?
+- Pick someone who'd want to know when things are hard.
+- **Button:** Jordan — friend
+- **Button:** Back to My Plan
+
+_Pick a word_
+
+- **Button:** Help _(screen reader: "Get help now")_
+- Set up with your people · Code word
+- **Heading:** Pick a word for Jordan.
+- On a hard day, you'll send just this word. Jordan will know what it means. No explaining.
+- **Button:** lighthouse
+- **Button:** blue kite
+- **Button:** pineapple
+- **Button:** My own word
+- **Button:** Show other words
+- Your message to Jordan
+- Hey Jordan, I'm making a plan for hard days. If I ever text you "lighthouse", it means I'm struggling and need you to call me or come be with me. You don't have to fix anything. Here's a short guide: zigzagmind.com/support
+- **Button:** Next
+- **Button:** Back to My Plan
+
+_Your message_
+
+- **Button:** Help _(screen reader: "Get help now")_
+- Set up with your people · Code word
+- **Heading:** Your message to Jordan
+- Hey Jordan, I'm making a plan for hard days. If I ever text you "lighthouse", it means I'm struggling and need you to call me or come be with me. You don't have to fix anything. Here's a short guide: zigzagmind.com/support
+- **Link → `sms:5550142?&body=Hey Jordan, I'm making a plan for hard days. If I ever text you "lighthouse", it means I'm struggling and need you to call me or come be with me. You don't have to fix anything. Here's a short guide: zigzagmind.com/support`:** Open Messages
+- ZigZag Mind never sends anything for you. You tap Send.
+- **Heading:** Did you send it?
+- **Button:** Yes, I sent it
+- **Button:** Not yet
+
 ### Zags: every line he can say (ZAGS_LINES)
 
 Scripted, not AI. Taps only. Says he is not a person in every session's first line. No relationship language, no pressure to stay, no memory between sessions, never the person's name. Every session ends at a person. RED stops Zags. At most two breathing rounds per session (4 breaths each: in 4 seconds, out 6; 3 breaths with reduced motion). Voice is off by default and uses the device's own speech only.
@@ -1267,6 +1314,33 @@ _When: distraction_
 - **Button:** Not right now
 - Zags is a scripted guide, not a person and not AI.
 
+### `cw-person`
+
+- **Button:** Help _(screen reader: "Get help now")_
+- Set up with your people · Code word
+- **Heading:** Who should get your code word?
+- Pick someone who'd want to know when things are hard.
+- **Button:** Jordan — friend
+- **Button:** Back to My Plan
+
+### `cw-word`
+
+- **Button:** Help _(screen reader: "Get help now")_
+- Set up with your people · Code word
+- **Heading:** Who should get your code word?
+- Pick someone who'd want to know when things are hard.
+- **Button:** Jordan — friend
+- **Button:** Back to My Plan
+
+### `cw-send`
+
+- **Button:** Help _(screen reader: "Get help now")_
+- Set up with your people · Code word
+- **Heading:** Who should get your code word?
+- Pick someone who'd want to know when things are hard.
+- **Button:** Jordan — friend
+- **Button:** Back to My Plan
+
 ### `connect`
 
 - **Button:** × _(screen reader: "Close and go to home")_
@@ -1449,6 +1523,9 @@ _When: distraction_
 - **Link → `tel:988`:** Call 988 _(screen reader: "Call 988, the Suicide and Crisis Lifeline")_
 - **Link → `sms:988`:** Text 988 _(screen reader: "Text 988, the Suicide and Crisis Lifeline")_
 - Getting help is a strength, not a weakness. Read more
+- **Heading:** Set up with your people
+- One word that means: I'm struggling, call me.
+- **Button:** Set up
 - **Heading:** Making my space safer
 - **Button:** Edit _(screen reader: "Edit: Making my space safer")_
 - Nothing here yet.
