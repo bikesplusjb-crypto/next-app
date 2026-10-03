@@ -85,6 +85,7 @@ AI, LLMs, agents, or chat of any kind; anything that suggests or pushes features
 - The RED/YELLOW phrase lists, especially false negatives.
 - All crisis-screen and craving/withdrawal copy.
 - Zags (6.7): every line in `ZAGS_LINES`. Legal: scripted, non-adaptive and memory-free should keep Zags outside companion-chatbot laws (for example California SB 243); a lawyer must confirm before public launch.
+- Snuggle Zags (6.7b): closing line "I'm here if you need me, and so are your people." is close to Zags rule 3 (never "I'm always here for you"). Confirm or reword.
 - Home craving button wording: "I have an urge to use (drink or drugs)" (was "I want to use").
 - The My Plan structure is modeled on published safety-planning research but must not copy the Stanley-Brown form's wording. Confirm originality.
 - On-device data is not encrypted at rest. Decide whether that's acceptable for a prototype.

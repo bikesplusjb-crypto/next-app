@@ -194,12 +194,17 @@ for(const [label,phase,extra] of zShots){
 }
 P('');
 P('Worse → straight to the crisis screen (`openCrisis()`, RED).');
+H(3,'Snuggle Zags (6.7b)');
+P('A short comfort mode from Calm or Zags\'s start screen. Slow breathing (in 4, out 6) with a heartbeat glow about 60 a minute. Length 2, 3 or 5 minutes (default 3), no endless mode. Buzz (only on phones that support vibration) and soft sound (made on the device) are both off by default. Reduced motion: Zags stays still and the glow fades slowly. Ends with his line, then the usual check-in. Only the three settings are stored.');
+for(const [label,extra] of [['Start','ui.snuggle={phase:"setup"};'],['Snuggling','ui.snuggle={phase:"run",endsAt:Date.now()+180000,half:"in"};'],['End','ui.snuggle={phase:"end"};']]){
+  P(''); P(`_${label}_`); P('');
+  md.push(...screenText(w, `session.currentState="anxious"; session.currentInterventionId="zags_snuggle"; ${extra} session.screen="snuggle"`));
+  w.eval('snuggleStopAll()');
+}
 
-H(3,'Proposed, not built yet: 6.7b Snuggle Zags, 6.7c Zags listens, 6.7d Safe place');
+H(3,'Proposed, not built yet: 6.7c Zags listens, 6.7d Safe place');
 P('Copy from STAGE6-SPEC.md for early review. These lines are not in the app yet.');
 list([
-  '6.7b ending: "Feeling a bit more settled? I\'m here if you need me, and so are your people." (Check against Zags rule 3: never "I\'m always here for you".)',
-  '6.7b tip: "Hold me close"',
   '6.7c prompt: "I\'m listening. Go ahead."',
   '6.7c acknowledgment (example): "Thank you for getting that out. That sounds heavy to carry."',
   '6.7c: "I\'m not a person, but I\'m here while you get it out."',

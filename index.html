@@ -319,6 +319,20 @@ p.bubble::before{content:"";position:absolute;top:-9px;left:50%;margin-left:-9px
 .zface{width:44px;height:44px;flex:none;display:block}
 .zface svg{width:44px;height:44px;display:block}
 
+/* Stage 6.7b: Snuggle Zags */
+.zstage.snuggling{padding-top:20px}
+.zstage.compact .zags{width:130px;height:130px;margin-top:4px}
+.zstage.compact p.bubble{font-size:19px;padding:12px 16px}
+.snglow{position:absolute;left:50%;top:40px;width:240px;height:240px;margin-left:-120px;border-radius:50%;
+  background:radial-gradient(circle,var(--primary-soft) 0%,transparent 70%);opacity:.45;pointer-events:none}
+.snglow.beat{animation:snbeat 1s ease-out}
+@keyframes snbeat{0%{opacity:.45}15%{opacity:.8}30%{opacity:.55}45%{opacity:.75}100%{opacity:.45}}
+.zstage.snuggling .zags{position:relative}
+.snlen{margin-top:6px}
+.toggle-row{display:flex;justify-content:space-between;align-items:center;width:100%;min-height:56px;margin-top:10px;padding:0 16px;border-radius:14px;border:1px solid var(--line);background:var(--surface);font-weight:600;font-size:17px;color:var(--text)}
+.toggle-row .tg{color:var(--text-muted);font-weight:600}
+.toggle-row[aria-pressed="true"] .tg{color:var(--primary)}
+
 /* Stage 6.6: Connect */
 .panel.conn{display:flex;flex-direction:column;gap:8px;margin-top:14px}
 .panel.conn h3{margin:6px 0 0}
@@ -508,6 +522,11 @@ const INTERVENTION_LIBRARY = [
     states:["anxious","low","distraction","alone"], intensityRange:[0,10], needsMobility:false,
     steps:["Breathe in for 4, out for 6.","Press your feet into the floor.","Find one thing that's blue.","Listen for the farthest sound."],
     completion:"tap_done" },
+  { id:"zags_snuggle", name:"Snuggle Zags", tryLabel:"Snuggle with Zags",
+    description:"Zags curls up and breathes slowly. Match his breathing for a few minutes.", durationSec:180,
+    states:["anxious","low","distraction","alone"], intensityRange:[0,10], needsMobility:false,
+    steps:["Hold your phone close.","Breathe in as Zags breathes in, out as he breathes out."],
+    completion:"tap_done" },
   /* 6.5 Change the scene: the person picks one of CHANGE_SCENE; it's shown full-screen with Done. */
   { id:"change_scene", name:"Change the scene", tryLabel:"Change the scene",
     description:"Sometimes your brain needs a different place, not another question.", durationSec:300,
@@ -559,12 +578,18 @@ const ZAGS_LINES = {
   better:"I'm glad. Want to let someone know how you're doing?",
   again:"That's okay. Hard feelings take a while. We can do one more round.",
   stillHard:"Thank you for doing this. This is a good moment to reach a real person.",
-  bye:"Bye for now. Go be with your people."
+  bye:"Bye for now. Go be with your people.",
+  snuggleHello:"Hi, I'm Zags. I'm not a person, just a little guide. Let's get cozy and breathe slowly.",
+  snuggleTip:"Hold me close. Rest your phone on your chest and breathe with me.",
+  snuggleEnd:"Feeling a bit more settled? I'm here if you need me, and so are your people."
 };
 const ZAGS_STEPS = ["feet","blue","sound","doing"];
 const ZAGS_MAX_ROUNDS = 2;          // breathing rounds per session, at most
 const ZAGS_IN_MS = 4000, ZAGS_OUT_MS = 6000;
 const ZAGS_NOTE = "Zags is a scripted guide, not a person and not AI.";
+/* 6.7b Snuggle Zags: a short comfort mode. Fixed lengths, no endless mode. */
+const SNUGGLE_MINUTES = [2, 3, 5];
+const SNUGGLE_BEAT_MS = 1000;      // heartbeat glow, about 60 a minute
 
 /* 6.5 Change the scene. [key, button, full-screen line]. */
 const CHANGE_SCENE = [
@@ -735,7 +760,8 @@ function clearSaved(){
 const getPlan = () => store.sensitive.plan;
 function logActivity(type){ store.sensitive.activity.push({ type, ts:Date.now() }); saveStore(); }
 
-const prefs = { reduce:false, haptics:false, homeTipDismissed:false, onboarded:false, country:"auto" };
+const prefs = { reduce:false, haptics:false, homeTipDismissed:false, onboarded:false, country:"auto",
+  snuggleMin:3, snuggleBuzz:false, snuggleSound:false };   // Snuggle Zags settings: the only thing it stores
 function finishOnboarding(){ prefs.onboarded = true; savePrefs(); }   // remembered in prefs only
 
 /* Outside the US? Only ever ADDS "Find a helpline in your country" next to 988; never hides 911 or 988.
@@ -1057,6 +1083,7 @@ function startIntervention(interventionId, opts = {}){
   let route = opts.route;
   if (GAME_ROUTES[interventionId]){ resetGame(interventionId); if (!route) route = GAME_ROUTES[interventionId]; }
   if (interventionId === "change_scene" && !route) route = "scene";
+  if (interventionId === "zags_snuggle"){ route = "snuggle"; ui.snuggle = { phase:"setup", endsAt:0, half:null }; }
   if (interventionId === "zags"){ route = "zags"; if (!ui.zags || ui.zags.phase !== "hello") ui.zags = { phase:"hello", step:0, rounds:0, hard:0, breath:0, half:null }; }
   if (!route) route = interventionId === "thought_parking" ? "spiral-input"
     : interventionId === "craving_delay" ? "craving-delay"
@@ -1250,6 +1277,7 @@ const SCREENS = {
       ${title("Let's slow things down.")}
       <p class="sub">Pick one. You can stop any time.</p>
       <button class="card wide zcard" data-act="zags" data-arg="calm">${zagsFace()}<span>Calm down with Zags<span class="meta">Breathe together for a few minutes</span></span></button>
+      <button class="card wide zcard" data-act="snuggleStart" data-arg="calm">${zagsFace()}<span>Snuggle Zags<span class="meta">Hold him close and breathe slowly</span></span></button>
       <div class="list">${opts.map(([arg, ic, t, m]) =>
         `<button class="card" data-act="calmPick" data-arg="${arg}">${icon(ic)}<span>${t}<span class="meta">${m}</span></span></button>`).join("")}
       </div>`,
@@ -1660,6 +1688,7 @@ const SCREENS = {
     switch (z.phase){
       case "hello":
         actions = `<button class="btn btn-primary" data-act="zagsBreathe">Okay, Zags</button>
+          <button class="btn btn-secondary" data-act="snuggleStart" data-arg="zags">Just snuggle</button>
           <button class="link" data-act="zagsBye">Not right now</button>`; break;
       case "breathe":
         sub = z.half ? `Breath ${z.breath + 1} of ${zagsBreaths()}` : "";
@@ -1692,6 +1721,47 @@ const SCREENS = {
         <p class="zsub" id="zagsSub" aria-live="polite">${sub}</p>
       </div>`,
       actions:`${actions}<p class="note znote">${ZAGS_NOTE}</p>` };
+  },
+
+  /* 6.7b: Snuggle Zags. setup → snuggle (fixed length) → his closing line → the usual check-in. */
+  snuggle(){
+    const sn = ui.snuggle || { phase:"setup" };
+    const canBuzz = "vibrate" in navigator, canSound = !!(window.AudioContext || window.webkitAudioContext);
+    if (sn.phase === "setup"){
+      return { close:true, body:`
+        <div class="zstage idle compact">
+          ${zagsSvg(null, false, true)}
+          <p id="screen-title" tabindex="-1" class="bubble">${ZAGS_LINES.snuggleHello}</p>
+          <p class="zsub">${ZAGS_LINES.snuggleTip}</p>
+        </div>
+        <p class="lbl" id="snLenLbl">How long</p>
+        <div class="seg snlen" role="group" aria-labelledby="snLenLbl">${SNUGGLE_MINUTES.map(m =>
+          `<button data-act="snuggleLen" data-arg="${m}" aria-pressed="${prefs.snuggleMin === m}">${m} min</button>`).join("")}</div>
+        ${canBuzz ? `<button class="toggle-row" data-act="snuggleBuzz" aria-pressed="${!!prefs.snuggleBuzz}"><span>Gentle heartbeat buzz</span><span class="tg" aria-hidden="true">${prefs.snuggleBuzz ? "On" : "Off"}</span></button>` : ""}
+        ${canSound ? `<button class="toggle-row" data-act="snuggleSound" aria-pressed="${!!prefs.snuggleSound}"><span>Soft sound</span><span class="tg" aria-hidden="true">${prefs.snuggleSound ? "On" : "Off"}</span></button>` : ""}`,
+        actions:`<button class="btn btn-primary" data-act="snuggleGo">Snuggle</button>
+          <button class="link" data-act="home">Not right now</button>
+          <p class="note znote">${ZAGS_NOTE}</p>` };
+    }
+    if (sn.phase === "end"){
+      return { close:true, body:`
+        <div class="zstage idle">
+          ${zagsSvg(null, true, true)}
+          <p id="screen-title" tabindex="-1" class="bubble">${ZAGS_LINES.snuggleEnd}</p>
+        </div>`,
+        actions:`<button class="btn btn-primary" data-act="snuggleNext">Next</button>
+          <button class="btn btn-secondary" data-act="route" data-arg="connect">Reach someone</button>
+          <p class="note znote">${ZAGS_NOTE}</p>` };
+    }
+    return { close:true, body:`
+      <div class="zstage snuggling">
+        <div class="snglow" id="snGlow" aria-hidden="true"></div>
+        ${zagsSvg(sn.half, sn.half === "out", true)}
+        <p id="screen-title" tabindex="-1" class="bubble">${sn.half ? ZAGS_LINES[sn.half] : ZAGS_LINES.quiet}</p>
+        <p class="zsub" id="zagsSub">${ZAGS_LINES.snuggleTip}</p>
+      </div>`,
+      actions:`<button class="btn btn-secondary" data-act="snuggleStop">I'm done</button>
+        <p class="note znote">${ZAGS_NOTE}</p>` };
   },
 
   /* 6.6: Connect (I just feel alone). Zags (6.7) and the code word (6.8) join this screen when they're built. */
@@ -2377,8 +2447,8 @@ function zagsFade(toLight, ms){
   };
   zagsFadeRaf = requestAnimationFrame(step);
 }
-function zagsSvg(half, calm){
-  return `<svg class="zags" viewBox="0 0 220 220" role="img" aria-label="Zags, a small calm guide character">
+function zagsSvg(half, calm, blanket){
+  return `<svg class="zags" viewBox="0 0 220 220" role="img" aria-label="${blanket ? "Zags, curled up in a blanket" : "Zags, a small calm guide character"}">
     <g class="zbody${half === "in" ? " zin" : half === "out" ? " zout" : ""}" id="zbody">
       <path d="M92 52 L102 30 L110 46 L120 24 L128 52" fill="none" stroke="var(--zag-dark)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
       <path id="zfill" d="M110 48 C160 48 186 84 186 128 C186 170 154 196 110 196 C66 196 34 170 34 128 C34 84 60 48 110 48 Z" fill="var(--zag)"/>
@@ -2395,8 +2465,66 @@ function zagsSvg(half, calm){
       <ellipse cx="70" cy="138" rx="10" ry="6" fill="var(--zag-cheek)" opacity=".55"/>
       <ellipse cx="150" cy="138" rx="10" ry="6" fill="var(--zag-cheek)" opacity=".55"/>
       <path d="M100 140 Q110 148 120 140" fill="none" stroke="var(--zag-eye)" stroke-width="4" stroke-linecap="round"/>
+      ${blanket ? `<path class="zblanket" d="M26 150 C60 132 92 146 110 156 C128 146 160 132 194 150 L196 182 C170 206 50 206 24 182 Z" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M58 168 L70 180 M96 170 L108 182 M134 170 L146 182 M168 166 L178 176" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" opacity=".6"/>` : ""}
     </g></svg>`;
 }
+/* 6.7b Snuggle runtime: slow breathing (in 4s, out 6s), a heartbeat glow at about 60 a minute,
+   optional buzz (only where navigator.vibrate exists) and optional soft sound (Web Audio, on the device). */
+let snugTimer = null, snugBeat = null, snugRaf = null, snugAudio = null;
+function snuggleStopAll(){
+  clearTimeout(snugTimer); clearInterval(snugBeat); cancelAnimationFrame(snugRaf);
+  snugTimer = snugBeat = snugRaf = null;
+  try { if (prefs.snuggleBuzz && "vibrate" in navigator) navigator.vibrate(0); } catch (_){}
+  try { if (snugAudio){ snugAudio.close(); } } catch (_){}
+  snugAudio = null;
+}
+function snuggleBeat(){
+  if (prefs.snuggleBuzz && "vibrate" in navigator){ try { navigator.vibrate([24, 120, 18]); } catch (_){} }
+  if (prefs.snuggleSound && snugAudio){
+    try {
+      const t = snugAudio.currentTime, o = snugAudio.createOscillator(), g = snugAudio.createGain();
+      o.type = "sine"; o.frequency.value = 96;
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.05, t + 0.06); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.5);
+      o.connect(g); g.connect(snugAudio.destination); o.start(t); o.stop(t + 0.55);
+    } catch (_){}
+  }
+  const glow = document.getElementById("snGlow");
+  if (glow && !reducedMotion()){ glow.classList.remove("beat"); void glow.offsetWidth; glow.classList.add("beat"); }
+}
+function snuggleStart(){
+  snuggleStopAll();
+  const sn = ui.snuggle;
+  if (prefs.snuggleSound){ try { const AC = window.AudioContext || window.webkitAudioContext; if (AC) snugAudio = new AC(); } catch (_){ snugAudio = null; } }
+  snugBeat = setInterval(() => {
+    if (session.screen !== "snuggle" || session.safetyLevel === "RED" || !ui.snuggle || ui.snuggle.phase !== "run"){ snuggleStopAll(); return; }
+    snuggleBeat();
+  }, SNUGGLE_BEAT_MS);
+  if (reducedMotion()){   // Zags stays still; the glow fades slowly instead
+    const t0 = performance.now();
+    const fade = now => {
+      const g = document.getElementById("snGlow");
+      if (!g || session.screen !== "snuggle"){ snugRaf = null; return; }
+      g.style.opacity = (0.35 + 0.25 * Math.sin((now - t0) / 8000 * 2 * Math.PI)).toFixed(3);
+      snugRaf = requestAnimationFrame(fade);
+    };
+    snugRaf = requestAnimationFrame(fade);
+  }
+  const tick = () => {
+    if (session.screen !== "snuggle" || session.safetyLevel === "RED" || !ui.snuggle || ui.snuggle.phase !== "run"){ snuggleStopAll(); return; }
+    if (Date.now() >= sn.endsAt && sn.half === "out"){ snuggleStopAll(); sn.phase = "end"; sn.half = null; lastRendered = null; render(); return; }
+    sn.half = sn.half === "in" ? "out" : "in";
+    const b = document.getElementById("screen-title"), body = document.getElementById("zbody");
+    if (b) b.textContent = ZAGS_LINES[sn.half];
+    const open = document.getElementById("zEyesOpen"), calm = document.getElementById("zEyesCalm");
+    if (open) open.style.display = sn.half === "out" ? "none" : "";
+    if (calm) calm.style.display = sn.half === "out" ? "" : "none";
+    if (body && !reducedMotion()){ body.classList.toggle("zin", sn.half === "in"); body.classList.toggle("zout", sn.half === "out"); }
+    snugTimer = setTimeout(tick, sn.half === "in" ? ZAGS_IN_MS : ZAGS_OUT_MS);
+  };
+  snugTimer = setTimeout(tick, 1500);
+}
+
 /* Small face for the entry cards. */
 function zagsFace(){
   return `<span class="zface" aria-hidden="true"><svg viewBox="0 0 220 220">
@@ -2526,6 +2654,8 @@ function render(){
     if (focusRaf){ cancelAnimationFrame(focusRaf); focusRaf = null; }
     clearTimeout(memTimer); memTimer = null;
     zagsStopBreathing();
+    snuggleStopAll();
+    if (s === "snuggle" && ui.snuggle && ui.snuggle.phase === "run") snuggleStart();
     if (s !== "zags") zagsHush();
     if (s === "zags" && ui.zags && ui.zags.phase === "breathe") zagsStartBreathing();
     if (s !== "g-pattern"){ clearTimeout(patTimer); patTimer = null; }
@@ -2727,6 +2857,22 @@ const ACTIONS = {
     const state = arg === "connect" ? "alone" : arg === "head" ? "distraction" : arg === "calm" ? "anxious" : null;
     startZags(state);
   },
+  snuggleStart(arg){
+    if (blockIfRed()) return;
+    if (arg === "calm") dispatch({ type:"SET_CURRENT_STATE", state:"anxious" });
+    startIntervention("zags_snuggle");
+  },
+  snuggleLen(arg){ const m = Number(arg); if (!SNUGGLE_MINUTES.includes(m)) return; prefs.snuggleMin = m; savePrefs(); render(); },
+  snuggleBuzz(){ if (!("vibrate" in navigator)) return; prefs.snuggleBuzz = !prefs.snuggleBuzz; savePrefs(); render(); },
+  snuggleSound(){ prefs.snuggleSound = !prefs.snuggleSound; savePrefs(); render(); },
+  snuggleGo(){
+    if (blockIfRed()) return;
+    const m = SNUGGLE_MINUTES.includes(prefs.snuggleMin) ? prefs.snuggleMin : 3;
+    ui.snuggle = { phase:"run", endsAt:Date.now() + m * 60000, half:null };
+    lastRendered = null; render();
+  },
+  snuggleStop(){ if (blockIfRed()) return; snuggleStopAll(); ui.snuggle.phase = "end"; lastRendered = null; render(); },
+  snuggleNext(){ if (blockIfRed()) return; snuggleStopAll(); go("checkin"); },
   zagsVoice(){
     ui.zagsVoice = !ui.zagsVoice;
     render();
