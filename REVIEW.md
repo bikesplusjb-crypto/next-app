@@ -13,7 +13,7 @@ Safety level lives only for the current visit and is **never saved**. Levels: GR
 - **Free-text check.** Every free-text box (except My Plan fields, which are exempt) is checked when submitted. Text is lowercased, apostrophes removed, and everything that isn't a letter or number becomes a space. If it contains any RED phrase → RED. Otherwise, any YELLOW phrase → YELLOW. Otherwise GREEN. Matching is on whole words/phrases.
 - **RED** stops everything (flows, games, check-ins) and opens the crisis screen immediately. Nothing from that moment is saved.
 - **YELLOW** shows the support bar ("You don't have to handle this alone." · Call 988 · Talk to someone) on every non-crisis screen for the rest of the visit, and the suggestion engine offers connection, the person's own plan, grounding, or a change of space first.
-- **Automatic YELLOW:** tapping "I still feel bad" twice in a visit, or giving a 9 or 10 rating (before or after) twice in a visit.
+- **Automatic YELLOW:** tapping "I still feel bad" twice in a visit (a game answered "No" counts as one), or giving a 9 or 10 rating (before or after) twice in a visit.
 - **Tapping Help** (top right of every screen) or **"I don't feel safe"** → RED crisis screen. One tap, no confirmation.
 - **Crisis question:** "Are you in danger of hurting yourself or someone else right now?" Yes or I'm not sure → full crisis screen (RED). No → YELLOW, "What would help right now?" (talk to someone / open my plan / do something grounding), then "Do you feel safer than a few minutes ago?" Yes → Home (YELLOW). No or Not sure → full crisis screen (RED).
 - **Leaving RED** is only possible through "That's not what I meant — go back", No on the danger question, or Yes on "Do you feel safer". Each leads to YELLOW. Nothing ever returns to GREEN in the same visit.
@@ -488,7 +488,7 @@ Changed for review: the craving button now reads "I have an urge to use (drink o
 
 ### Get out of my head: every game screen, in play order
 
-No points, no levels, no scores. Each game ends with "Did the intensity change?" Yes / A little / No (or Skip). Yes and A little record the change; No records it and the next suggestion is a different step. No is not counted as "I still feel bad".
+No points, no levels, no scores. Each game ends with "Did the intensity change?" Yes / A little / No (or Skip). Yes and A little record the change; No records it, counts like "I still feel bad" (twice in a visit turns on the support bar), and the next suggestion is a different step.
 
 _Color hunt, part 1_
 
@@ -807,7 +807,7 @@ _Bye_
 
 Worse → straight to the crisis screen (`openCrisis()`, RED).
 
-### Proposed, not built yet: 6.7b Snuggle Zags, 6.7c Zags listens, 6.7d Safe place
+### On hold, not built: 6.7b Snuggle Zags, 6.7c Zags listens, 6.7d Safe place (need owner + clinician sign-off)
 
 Copy from STAGE6-SPEC.md for early review. These lines are not in the app yet.
 - 6.7b ending: "Feeling a bit more settled? I'm here if you need me, and so are your people." (Check against Zags rule 3: never "I'm always here for you".)

@@ -44,7 +44,7 @@ function stepsThrough(a){ for(let i=0;i<4;i++) a.click(act('zagsNext')); }
  r.push(['...and starts fresh: no rounds or answers carried over', JSON.stringify(a.Z())===JSON.stringify({phase:'hello',step:0,rounds:0,hard:0,breath:0,half:null})]);}
 
 // ---- the lines ----
-const BANNED=/love you|miss(ed)? you|always here|special to me|you're special|welcome back|friend|partner|boyfriend|girlfriend|need you|don'?t (go|leave)|stay with me|please stay|come back|last time|remember you|i('| a)m (a )?(real|human)/i;
+const BANNED=/love you|miss(ed)? you|always here|special to me|you're special|welcome back|friend|partner|boyfriend|girlfriend|need you|don'?t (go|leave)|stay with me|please stay|come back|last time|remember you|i('| a)m (a )?(real|human)|here if you need|hold me|cozy|cosy|snuggl|cuddl/i;
 const vals=Object.values(L);
 r.push(['ZAGS_LINES has none of the banned phrases', vals.every(v=>!BANNED.test(v)), vals.filter(v=>BANNED.test(v)).join(' | ')]);
 r.push(['no placeholders: never the person\'s name or generated text', vals.every(v=>!/\$\{|\{|\}|%s|name/i.test(v))]);
@@ -96,7 +96,8 @@ const toCheck=a=>{ a.click(act('zagsBreathe')); a.click(act('zagsSkip')); stepsT
  a.G('ACTIONS.zagsBreathe()');
  r.push(['at most two breathing rounds per session', a.Z().rounds===2 && a.Z().phase!=='breathe']);}
 {const a=fromCalm(); toCheck(a); a.click(act('zagsFeel','worse'));
- r.push(['Worse → openCrisis(): RED, crisis screen', a.S().screen==='crisis' && a.S().safetyLevel==='RED' && a.S().sessionHistory.at(-1).feeling==='worse']);}
+ r.push(['Worse → openCrisis(): RED, crisis screen', a.S().screen==='crisis' && a.S().safetyLevel==='RED']);
+ r.push(['Worse saves nothing (RED saves nothing)', a.S().sessionHistory.length===0 && !Object.values(a.dump()).join('').includes('"zags"')]);}
 {const a=fromCalm(); a.G('openCrisis = (() => { const f = openCrisis; return () => { window.__oc = 1; f(); }; })()'); toCheck(a); a.click(act('zagsFeel','worse'));
  r.push(['Worse calls openCrisis() itself (one crisis path)', a.G('window.__oc')===1]);}
 

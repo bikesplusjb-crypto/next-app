@@ -96,7 +96,9 @@ function played(arg, change){ const a=menu(); a.click(act('game',arg)); a.G('sto
 {const a=played('cats','a_little'); r.push(['A little → recorded as a_little', a.S().sessionHistory.at(-1).change==='a_little' && a.S().screen==='recommendation']);}
 {const a=played('color','no');
  r.push(['No → "Let\'s try something different", never the same game again', a.S().screen==='recommendation' && a.S().lastEnginePick!=='distraction_color_hunt' && a.T().includes("Let's try something different.")]);
- r.push(['No is not "I still feel bad" (no automatic YELLOW from games)', a.S().stillBadCount===0]);}
+ r.push(['No counts like "I still feel bad"', a.S().stillBadCount===1 && a.S().yellow===false]);}
+{const a=played('color','no'); a.G('startIntervention("distraction_around_me")'); a.G('ACTIONS.gDone()'); a.click(act('gameChange','no'));
+ r.push(['two "No" answers in a visit → YELLOW (988 support bar), like "I still feel bad" twice', a.S().stillBadCount===2 && a.S().yellow===true && !!a.doc.querySelector('header .ybar')]);}
 {const a=menu(); a.click(act('game','memory')); a.G('memHide()'); a.click(act('memReveal')); a.click(act('gDone')); a.click(act('ciSkip'));
  r.push(['Skip → recorded with no change, then the next step', a.S().sessionHistory.at(-1).change===undefined && a.S().screen==='recommendation']);}
 {const a=played('around','yes'); a.G('ui.engine={interventionId:"distraction_pattern",reason:"x"}'); a.click(act('recTry'));

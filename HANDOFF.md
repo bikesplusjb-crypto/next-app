@@ -26,7 +26,7 @@ Stages 1–5 are built and working in one file: `index.html` (vanilla JS, no bui
 | 4 | Editable My Plan (8 sections), Progress (no streaks), Settings, Export, Delete everything, About page |
 | 5 | On-device saving (localStorage), Save-on-this-device toggle |
 
-Tests: `npm install && npm test` runs 76 automated checks (jsdom). Test files live in the repo root (`stage*.test.js`, run by `run-all.js`). **All must stay green.** Run them before and after every change, and add tests for everything new.
+Tests: `npm install && npm test` runs the automated checks (jsdom, plus one real-browser check of the Home layout). On a new computer, run `npx playwright install chromium` once so the Home layout test (`home-viewport.test.js`) can start its browser; GitHub's CI does this itself. Test files live in the repo root (`stage*.test.js`, run by `run-all.js`). **All must stay green.** Run them before and after every change, and add tests for everything new.
 
 Dev panel: tap the big ZigZag Mind wordmark on Home 5 times.
 

@@ -50,9 +50,9 @@ ZigZag Mind is comfortable with people leaving. That is the goal, not a failure.
 | 1 Core | 6.5 | Change the scene |
 | 1 Core | 6.6 | Connect (I just feel alone) + Human First |
 | 2 Zags | 6.7 | Zags, the calm-down guide |
-| 2 Zags | 6.7b | Snuggle Zags (proposed) |
-| 2 Zags | 6.7c | Zags listens (proposed) |
-| 2 Zags | 6.7d | Safe place (proposed) |
+| 2 Zags | 6.7b | Snuggle Zags (on hold: needs owner + clinician sign-off) |
+| 2 Zags | 6.7c | Zags listens (on hold: needs owner + clinician sign-off) |
+| 2 Zags | 6.7d | Safe place (on hold: needs owner + clinician sign-off) |
 | 2 Zags | 6.16 | Turn it into a song |
 | 3 People & safety | 6.8 | Code word |
 | 3 People & safety | 6.9 | Supporter guide page |
@@ -200,7 +200,9 @@ Record a normal check-in outcome with `interventionId: "zags"` (add `zags` to th
 
 **Legal note:** scripted, non-adaptive, and memory-free should keep Zags outside companion chatbot laws (for example California SB 243). A lawyer must confirm before public launch.
 
-### 6.7b Snuggle Zags (proposed — spec only, build after 6.7 when its turn comes)
+### 6.7b Snuggle Zags (ON HOLD — do not build until the owner and a clinician sign off)
+
+> **Review findings (why it's on hold).** A first build was removed. Its closing line ("I'm here if you need me…") is close to the banned "I'm always here for you" (Zags rule 3); "Hold me close", "get cozy" and "Snuggle" frame Zags as something to cuddle, which cuts against the attachment warning and the not-a-companion-chatbot position (e.g. California SB 243); and 2–5 minutes of continuous breathing breaks Zags rule 8 (at most two breathing rounds). Any future version must fix all three. The Zags wording test now bans "here if you need", "hold me", "cozy", "snuggle" and "cuddle".
 
 A short comfort mode. Zags curls up in a blanket and breathes slowly (about 4 seconds in, 6 out); the person matches it.
 
@@ -217,7 +219,9 @@ A short comfort mode. Zags curls up in a blanket and breathes slowly (about 4 se
 
 **Tests (when built):** vibration and sound off by default; vibration only when `navigator.vibrate` exists; ends at the check-in; no endless mode; RED stops it; only settings stored.
 
-### 6.7c Zags listens (proposed — spec only, build after 6.7 when its turn comes)
+### 6.7c Zags listens (ON HOLD — do not build until the owner and a clinician sign off)
+
+> **Review findings (why it's on hold).** A first build was removed. A text box that Zags answers is the closest thing here to the "chat" the HANDOFF forbids, even with a fixed reply.
 
 Zags: "I'm listening. Go ahead." over a large text box. **No AI; Zags never replies to the content.**
 
@@ -234,7 +238,9 @@ Zags: "I'm listening. Go ahead." over a large text box. **No AI; Zags never repl
 
 **Tests (when built):** RED text on Done and on Keep opens the crisis screen; nothing stored unless Keep; Let it go deletes the text; the acknowledgment never quotes or reacts to the content.
 
-### 6.7d Safe place (proposed — spec only, build after 6.7 when its turn comes)
+### 6.7d Safe place (ON HOLD — do not build until the owner and a clinician sign off)
+
+> **Review findings (why it's on hold).** Guided imagery carries a trauma risk. Not built.
 
 **Part A — "My safe place":** built once by the person: where it is, what they see, what they hear, what they smell or feel, who's there (or nobody), and optional words of their own. Saved in `store.sensitive`; editable and deletable.
 

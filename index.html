@@ -1083,7 +1083,7 @@ function completeCheckIn({ after, action, change }){
   const ended = session.currentInterventionId;
   dispatch({ type:"ADD_OUTCOME", outcome });
   if (typeof afterVal === "number" && afterVal >= 9) recordHighRating();
-  if (action === "still_bad") recordStillBad();
+  if (action === "still_bad" || change === "no") recordStillBad();   // a game's "No" counts like "I still feel bad"
   ui.justStillBad = action === "still_bad" || change === "no";
   ui.rating = null; ui.exclude = []; ui.checkinNote = ""; ui.suggestIdx = 0; ui.checkinVariant = null;
   if (change === "no" && ended) ui.exclude = [ended];   // didn't change anything: offer something else
@@ -2749,9 +2749,9 @@ const ACTIONS = {
   zagsFeel(arg){
     if (blockIfRed()) return;
     const z = ui.zags;
+    if (arg === "worse"){ zagsStopBreathing(); openCrisis(); return; }   // RED saves nothing (HANDOFF safety rule 2)
     dispatch({ type:"ADD_OUTCOME", outcome:{ source:"session", state:session.currentState, interventionId:"zags",
       before:session.currentBeforeRating, after:null, feeling:arg === "hard" ? "still_hard" : arg, timestamp:Date.now() } });
-    if (arg === "worse"){ zagsStopBreathing(); openCrisis(); return; }
     if (arg === "better"){ zagsPhase("better"); return; }
     z.hard++;
     zagsPhase(z.hard >= 2 || z.rounds >= ZAGS_MAX_ROUNDS ? "hard" : "again");
