@@ -169,6 +169,17 @@ P('Pattern break messages: "Watch." while it plays, "Your turn." after, "Let\'s 
 P('');
 P('60-second challenge, when the minute is up: "You beat the timer."');
 
+H(3,'Getting help (HELP_IS_STRENGTH) and Helping others (HELPING_OTHERS)');
+P('About shows both in full. My Plan (professionals section) shows the first sentence + "Read more". Never on Home, crisis/Help screens or Calm.');
+P(''); P(`"${G('HELP_IS_STRENGTH')}"`); P(''); P(`"${G('HELPING_OTHERS')}"`);
+H(3,'"Do something kind" (optional step in I feel low; never first or only)');
+P('Messages opens only when the person taps; they send it. Nothing is kept about who was messaged or what was said, and kind acts are never counted. "Thank you for ___" goes through the safety check.');
+list([`Messages to choose from: ${G('KIND_WORDS').map(x=>`"${x}"`).join(' · ')}`, `Without a phone: ${G('KIND_OFFLINE').map(x=>`"${x}"`).join(' · ')}`]);
+for(const [label,screen,extra] of [['Start','kind',''],['Who comes to mind?','kind-person',''],['What would you like to say?','kind-word','ui.kindPerson=0; ui.kindWord=3;'],['Ready to send','kind-send','ui.kindPerson=0; ui.kindText="Thinking of you";'],['Without my phone','kind-offline','']]){
+  P(''); P(`_${label}_`); P('');
+  md.push(...screenText(w, `${withPerson}; session.currentState="low"; session.currentInterventionId="kind_act"; ${extra} session.screen=${JSON.stringify(screen)}`));
+}
+
 H(3,'Zags: every line he can say (ZAGS_LINES)');
 P('Scripted, not AI. Taps only. Says he is not a person in every session\'s first line. No relationship language, no pressure to stay, no memory between sessions, never the person\'s name. Every session ends at a person. RED stops Zags. At most two breathing rounds per session (4 breaths each: in 4 seconds, out 6; 3 breaths with reduced motion). Voice is off by default and uses the device\'s own speech only.');
 list(Object.entries(G('ZAGS_LINES')).map(([k,v])=>`${code(k)}: "${v}"`));

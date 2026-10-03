@@ -284,6 +284,15 @@ span.dot.on{background:var(--accent)}
 .pad.p0.lit{background:var(--primary)}.pad.p1.lit{background:var(--accent)}.pad.p2.lit{background:#3F6FC4}.pad.p3.lit{background:var(--text-muted)}
 .pat-msg{min-height:24px;text-align:center;font-weight:600;color:var(--text-muted);margin-top:14px}
 
+/* Helping others: Do something kind */
+.kind-preview{font-size:22px;font-weight:600;line-height:1.3;margin:18px 0 8px;padding:16px 18px;border-radius:18px;background:var(--surface);border:1px solid var(--line)}
+a.kind-open{text-decoration:none;display:flex;align-items:center;justify-content:center;margin-top:12px}
+.list .card.kind-word{min-height:60px}
+.card.kind-word[aria-pressed="true"]{border-color:var(--primary);background:var(--primary-soft)}
+.kind-list{margin:16px 0 0;padding-left:22px;font-size:19px;line-height:1.5}
+.link.inline{display:inline;min-height:0;padding:0;font-size:inherit}
+.strength-short{line-height:1.5}
+
 /* Stage 6.7: Zags */
 :root{--zag:#7BC4BB;--zag-dark:#2F6F6A;--zag-cheek:#F2A98F;--zag-eye:#1E2329}
 .zstage{display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:8px;position:relative}
@@ -391,6 +400,16 @@ const WARMLINE = {
   elsewhere:"After 10pm or outside Florida: find a warmline near you",
   elsewhereUrl:"https://findahelpline.com"
 };
+/* Anti-stigma note (About in full; My Plan's professionals section shows the first sentence + Read more).
+   Never on Home, crisis screens or Calm. Clinician-reviewable. */
+const HELP_IS_STRENGTH = "Getting help is a strength, not a weakness. Seeing a psychiatrist, therapist or counselor is care for your mind, the same way you'd see a doctor for your body. It doesn't mean you're 'crazy', broken or weak. Lots of people get help at some point, and many feel better for it. If medication is suggested, that's a choice you make together with a professional, and it's okay either way.";
+const HELP_IS_STRENGTH_SHORT = "Getting help is a strength, not a weakness.";
+/* Helping others (About). The optional "Do something kind" step lives in the I feel low flow only. */
+const HELPING_OTHERS = "Helping someone else can help you too. Small acts of kindness can lift your mood and make you feel less alone. It doesn't have to be big: a kind text, a thank-you, checking on a friend. Only if you have the energy. Taking care of yourself comes first.";
+/* "Do something kind": the person picks someone and the words; ZigZag Mind only opens Messages on tap.
+   Nothing about who was messaged is kept, and kind acts are never counted. */
+const KIND_WORDS = ["Thinking of you","Thanks for being in my life","Hey, how are you doing lately?","Thank you for ___"];
+const KIND_OFFLINE = ["Hold a door for someone.","Give someone a compliment.","Help a neighbor with something small."];
 const MESSAGE_IDEAS = ["Can't sleep, you up?","Rough night. Can you talk for 5 minutes?","Want to catch up this week?"];
 /* Human First (session only, never saved): after 2 taps on "Something else", or 2 finished steps without
    "That helped", ask once per visit whether a person would help more. */
@@ -1407,7 +1426,67 @@ const SCREENS = {
         <button class="card" data-act="lowPick" data-arg="hydration"><span class="em" aria-hidden="true">💧</span><span>Body<span class="meta">Drink water.</span></span></button>
         <button class="card" data-act="lowPick" data-arg="environment_change"><span class="em" aria-hidden="true">🪟</span><span>Space<span class="meta">Open a window or step outside.</span></span></button>
         <button class="card" data-act="lowPick" data-arg="connection"><span class="em" aria-hidden="true">💬</span><span>Connection<span class="meta">Text someone: hey</span></span></button>
+        <button class="card" data-act="kindStart"><span class="em" aria-hidden="true">🌱</span><span>Something kind<span class="meta">Only if you have the energy.</span></span></button>
       </div>` };
+  },
+
+  /* Optional "Do something kind" (I feel low only). choose_person → choose_word → compose_sms, or a no-phone list. */
+  "kind"(){
+    return { close:true, body:`
+      ${stepTitle("Something small and kind.", true)}
+      <p class="sub">Only if you have the energy. Taking care of yourself comes first.</p>
+      <div class="list">
+        <button class="card" data-act="kindPhone">${icon("people")}<span>Send someone a kind text<span class="meta">You choose who and what. You send it.</span></span></button>
+        <button class="card" data-act="kindOffline">${icon("leaf")}<span>Something without my phone<span class="meta">Hold a door, a compliment, a neighbor</span></span></button>
+      </div>`,
+      actions:`<button class="link" data-act="kindBack">Not right now</button>` };
+  },
+  "kind-person"(){
+    const people = getPlan().trustedPeople || [];
+    return { close:true, body:`
+      <p class="step-count">Something kind</p>
+      ${stepTitle("Who comes to mind?", true)}
+      ${people.length ? `<div class="list">${people.map((p, i) =>
+        `<button class="card" data-act="kindPerson" data-arg="${i}">${icon("people")}<span>${esc(p.name)}${p.relationship ? `<span class="meta">${esc(p.relationship)}</span>` : ""}</span></button>`).join("")}</div>`
+        : `<p class="sub">There's nobody in My Plan yet. You can add someone there, or do something without your phone.</p>
+          <button class="btn btn-secondary" data-act="kindOffline">Something without my phone</button>`}`,
+      actions:`<button class="link" data-act="kindBack">Not right now</button>` };
+  },
+  "kind-word"(){
+    const p = (getPlan().trustedPeople || [])[ui.kindPerson];
+    const blank = ui.kindWord === KIND_WORDS.length - 1;
+    return { close:true, body:`
+      <p class="step-count">Something kind</p>
+      ${stepTitle(`What would you like to say${p ? ` to ${esc(p.name)}` : ""}?`, true)}
+      <div class="list">${KIND_WORDS.map((w, i) =>
+        `<button class="card kind-word" data-act="kindWord" data-arg="${i}" aria-pressed="${ui.kindWord === i}"><span>${esc(w)}</span></button>`).join("")}</div>
+      ${blank ? `<label for="kindThanks" class="small" style="display:block;margin-top:14px">Thank you for…</label>
+        <input class="field" id="kindThanks" maxlength="80" autocomplete="off" value="${esc(ui.kindThanks || "")}">` : ""}
+      ${ui.msg ? `<p class="err" role="alert">${esc(ui.msg)}</p>` : ""}`,
+      actions:`<button class="btn btn-primary" data-act="kindWordNext"${typeof ui.kindWord === "number" ? "" : " disabled"}>Next</button>
+        <button class="link" data-act="kindBack">Not right now</button>` };
+  },
+  "kind-send"(){
+    const p = (getPlan().trustedPeople || [])[ui.kindPerson];
+    const text = ui.kindText || "";
+    if (!p) return SCREENS.kind();
+    return { close:true, body:`
+      <p class="step-count">Something kind</p>
+      ${stepTitle(`Your message to ${esc(p.name)}`, true)}
+      <p class="kind-preview">${esc(text)}</p>
+      <p class="sub">Tap below to open Messages with this ready. You decide whether to send it.</p>
+      <a class="btn btn-primary kind-open" href="${smsLink(p.phone, text)}" data-kind="1">Open Messages</a>`,
+      actions:`<button class="btn btn-secondary" data-act="kindDone">Done</button>
+        <button class="link" data-act="kindBack">Not right now</button>` };
+  },
+  "kind-offline"(){
+    return { close:true, body:`
+      <p class="step-count">Something kind</p>
+      ${stepTitle("Something small, without your phone.", true)}
+      <ul class="kind-list">${KIND_OFFLINE.map(t => `<li>${esc(t)}</li>`).join("")}</ul>
+      <p class="sub">Any one is plenty. None is fine too.</p>`,
+      actions:`<button class="btn btn-primary" data-act="kindDone">Done</button>
+        <button class="link" data-act="kindBack">Not right now</button>` };
   },
 
   "spiral-input"(){
@@ -1878,7 +1957,8 @@ const SCREENS = {
         <p class="note" style="margin-top:6px">ZigZag Mind will never contact these people for you. These buttons only open your phone's call or text app.</p>
         ${people}</div>
       <div class="panel">${head("professional", "Professional and crisis support")}
-        <p class="small" style="margin-top:6px">988 Suicide &amp; Crisis Lifeline, free and 24/7. Always in your plan.</p>${row988()}${pro}</div>
+        <p class="small" style="margin-top:6px">988 Suicide &amp; Crisis Lifeline, free and 24/7. Always in your plan.</p>${row988()}${pro}
+        ${editable ? `<p class="small strength-short" style="margin:14px 0 0">${HELP_IS_STRENGTH_SHORT} <button class="link inline" data-act="readStrength">Read more</button></p>` : ""}</div>
       <div class="panel">${head("saferSpace", "Making my space safer")}
         ${pb.saferSpace ? `<p style="margin-top:6px">${esc(pb.saferSpace)}</p>` : `<p class="empty">Nothing here yet.</p>`}</div>
       <div class="panel">${head("avoid", "Things to avoid when I'm struggling")}${ul(pb.avoid)}</div>
@@ -2093,6 +2173,10 @@ const SCREENS = {
         <li><span><b>Check</b><span class="small">Notice whether it helped. Rating is optional.</span></span></li>
         <li><span><b>Next</b><span class="small">Try another step, or stop. Both are fine.</span></span></li>
       </ol>
+      <h2 id="strength" tabindex="-1">Getting help</h2>
+      <div class="panel" style="margin-top:0"><p style="margin:0">${HELP_IS_STRENGTH}</p></div>
+      <h2>Helping others</h2>
+      <div class="panel" style="margin-top:0"><p style="margin:0">${HELPING_OTHERS}</p></div>
       <h2>Your privacy</h2>
       <div class="panel" style="margin-top:0"><p style="margin:0">What you write stays on your phone. We don't sell or share it. You can delete everything with one tap.</p>
         <p class="small" style="margin:8px 0 0">In this prototype, data is saved only in your browser on this device. Turn saving off in Settings for a shared phone.</p></div>
@@ -2546,6 +2630,42 @@ const ACTIONS = {
     go("checkin");
   },
   lowPick(arg){ startIntervention(arg); },
+  kindStart(){
+    if (blockIfRed()) return;
+    if (session.currentState !== "low") return;   // offered in the I feel low flow only
+    dispatch({ type:"SET_CURRENT_INTERVENTION", id:"kind_act" });
+    ui.kindPerson = null; ui.kindWord = null; ui.kindThanks = ""; ui.kindText = ""; ui.msg = "";
+    go("kind");
+  },
+  kindPhone(){ if (blockIfRed()) return; go("kind-person"); },
+  kindOffline(){ if (blockIfRed()) return; go("kind-offline"); },
+  kindPerson(arg){ if (blockIfRed()) return; ui.kindPerson = Number(arg); ui.kindWord = null; ui.msg = ""; go("kind-word"); },
+  kindWord(arg){
+    if (blockIfRed()) return;
+    const box = document.getElementById("kindThanks"); if (box) ui.kindThanks = box.value;
+    ui.kindWord = Number(arg); ui.msg = ""; render();
+    if (ui.kindWord === KIND_WORDS.length - 1){ const b = document.getElementById("kindThanks"); if (b) b.focus(); }
+  },
+  kindWordNext(){
+    if (blockIfRed()) return;
+    if (typeof ui.kindWord !== "number") return;
+    if (ui.kindWord < KIND_WORDS.length - 1){ ui.kindText = KIND_WORDS[ui.kindWord]; go("kind-send"); return; }
+    const box = document.getElementById("kindThanks");
+    const text = ((box && box.value) || "").trim();
+    ui.kindThanks = text;
+    if (!text){ ui.msg = "Add what you're thankful for, or pick another message."; render(); return; }
+    handleSafeTextSubmit({ text,
+      onRed(){ ui.kindThanks = ""; applySafetyResult("RED"); },
+      onYellow(){ applySafetyResult("YELLOW"); ui.kindText = `Thank you for ${text}`; go("kind-send"); },
+      onGreen(){ ui.kindText = `Thank you for ${text}`; go("kind-send"); } });
+  },
+  kindDone(){ if (blockIfRed()) return; ui.kindPerson = null; ui.kindText = ""; ui.kindThanks = ""; go("checkin"); },
+  kindBack(){ if (blockIfRed()) return; ui.kindPerson = null; ui.kindText = ""; ui.kindThanks = ""; dispatch({ type:"SET_CURRENT_INTERVENTION", id:null }); go("low-choose"); },
+  readStrength(){
+    go("about");
+    const h = document.getElementById("strength");
+    if (h){ h.scrollIntoView({ block:"start" }); h.focus({ preventScroll:true }); }
+  },
 
   spMake(){
     if (blockIfRed()) return;
@@ -2830,7 +2950,7 @@ const ACTIONS = {
 
 document.addEventListener("click", e => {
   const link = e.target.closest("a[href]");
-  if (link && /^(tel:|sms:|https:\/\/988lifeline)/.test(link.getAttribute("href"))) logActivity("reach");
+  if (link && !link.hasAttribute("data-kind") && /^(tel:|sms:|https:\/\/988lifeline)/.test(link.getAttribute("href"))) logActivity("reach");
   if (session.screen === "zags" && ui.zagsVoice) zagsHush();   // Zags's voice stops the moment the person taps anything
   const el = e.target.closest("[data-act]");
   if (!el) return;

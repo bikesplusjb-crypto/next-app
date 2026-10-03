@@ -145,6 +145,18 @@ Reached from the Connect route and the "I feel alone" chip.
 
 **Tests:** warmline link; message ideas prepare the right SMS body; Human First appears at most once per visit and is never written to storage.
 
+**Also include on Connect (added after 6.6 was built):**
+- The anti-stigma note `HELP_IS_STRENGTH` ("Getting help is a strength, not a weakness. …"), from its one constant. Not built into Connect yet.
+- "Do something kind" (`KIND_WORDS`, `KIND_OFFLINE`; see *Anti-stigma note and helping others* below) as an optional, never-first step. Not built into Connect yet.
+
+
+### Anti-stigma note and helping others (built after 6.6)
+
+- **`HELP_IS_STRENGTH`** (Text A, anti-stigma): full text in About; My Plan's professionals section shows the first sentence + "Read more" (opens About at the full text). To add to Connect (6.6) and After the ER (6.13).
+- **`HELPING_OTHERS`** (Text B): About, next to Text A.
+- **"Do something kind"** (optional): offered in the I feel low flow as one tiny step, last, never first or only (not in the engine's library). choose_person → choose_word (`KIND_WORDS`: "Thinking of you" / "Thanks for being in my life" / "Hey, how are you doing lately?" / "Thank you for ___") → compose_sms (Messages opens only on tap; the person sends). Or the no-phone list (`KIND_OFFLINE`). Ends at the usual check-in as `kind_act`. To add to Connect (6.6).
+- **Never** on Home, crisis/Help screens, Calm, or the plan opened from a crisis screen, and never when RED. Never framed as a duty; kind acts are never counted; nothing stored about who was messaged or what was said; "Thank you for ___" goes through `handleSafeTextSubmit`.
+
 ---
 
 ## Phase 2 — Zags
@@ -287,6 +299,8 @@ Do **not** create a second plan or a separate "When things get really bad" data 
 
 **Tests:** survives reload; expires at 30 days; bar hidden on crisis screens; ICS correct.
 
+
+**Also include:** the anti-stigma note `HELP_IS_STRENGTH` ("Getting help is a strength, not a weakness. …"), from its one constant.
 ---
 
 ## Phase 4 — Tech check

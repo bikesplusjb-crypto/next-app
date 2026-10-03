@@ -631,6 +631,79 @@ Pattern break messages: "Watch." while it plays, "Your turn." after, "Let's watc
 
 60-second challenge, when the minute is up: "You beat the timer."
 
+### Getting help (HELP_IS_STRENGTH) and Helping others (HELPING_OTHERS)
+
+About shows both in full. My Plan (professionals section) shows the first sentence + "Read more". Never on Home, crisis/Help screens or Calm.
+
+"Getting help is a strength, not a weakness. Seeing a psychiatrist, therapist or counselor is care for your mind, the same way you'd see a doctor for your body. It doesn't mean you're 'crazy', broken or weak. Lots of people get help at some point, and many feel better for it. If medication is suggested, that's a choice you make together with a professional, and it's okay either way."
+
+"Helping someone else can help you too. Small acts of kindness can lift your mood and make you feel less alone. It doesn't have to be big: a kind text, a thank-you, checking on a friend. Only if you have the energy. Taking care of yourself comes first."
+
+### "Do something kind" (optional step in I feel low; never first or only)
+
+Messages opens only when the person taps; they send it. Nothing is kept about who was messaged or what was said, and kind acts are never counted. "Thank you for ___" goes through the safety check.
+- Messages to choose from: "Thinking of you" · "Thanks for being in my life" · "Hey, how are you doing lately?" · "Thank you for ___"
+- Without a phone: "Hold a door for someone." · "Give someone a compliment." · "Help a neighbor with something small."
+
+_Start_
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Something small and kind.
+- Only if you have the energy. Taking care of yourself comes first.
+- **Button:** Send someone a kind text — You choose who and what. You send it.
+- **Button:** Something without my phone — Hold a door, a compliment, a neighbor
+- **Button:** Not right now
+
+_Who comes to mind?_
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Something kind
+- **Heading:** Who comes to mind?
+- **Button:** Jordan — friend
+- **Button:** Not right now
+
+_What would you like to say?_
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Something kind
+- **Heading:** What would you like to say to Jordan?
+- **Button:** Thinking of you
+- **Button:** Thanks for being in my life
+- **Button:** Hey, how are you doing lately?
+- **Button:** Thank you for ___
+- Thank you for…
+- **Text box**
+- **Button:** Next
+- **Button:** Not right now
+
+_Ready to send_
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Something kind
+- **Heading:** Your message to Jordan
+- Thinking of you
+- Tap below to open Messages with this ready. You decide whether to send it.
+- **Link → `sms:5550142?&body=Thinking of you`:** Open Messages
+- **Button:** Done
+- **Button:** Not right now
+
+_Without my phone_
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Something kind
+- **Heading:** Something small, without your phone.
+- Hold a door for someone.
+- Give someone a compliment.
+- Help a neighbor with something small.
+- Any one is plenty. None is fine too.
+- **Button:** Done
+- **Button:** Not right now
+
 ### Zags: every line he can say (ZAGS_LINES)
 
 Scripted, not AI. Taps only. Says he is not a person in every session's first line. No relationship language, no pressure to stay, no memory between sessions, never the person's name. Every session ends at a person. RED stops Zags. At most two breathing rounds per session (4 breaths each: in 4 seconds, out 6; 3 breaths with reduced motion). Voice is off by default and uses the device's own speech only.
@@ -1027,6 +1100,62 @@ _When: distraction_
 - **Button:** Body — Drink water.
 - **Button:** Space — Open a window or step outside.
 - **Button:** Connection — Text someone: hey
+- **Button:** Something kind — Only if you have the energy.
+
+### `kind`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Something small and kind.
+- Only if you have the energy. Taking care of yourself comes first.
+- **Button:** Send someone a kind text — You choose who and what. You send it.
+- **Button:** Something without my phone — Hold a door, a compliment, a neighbor
+- **Button:** Not right now
+
+### `kind-person`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Something kind
+- **Heading:** Who comes to mind?
+- **Button:** Jordan — friend
+- **Button:** Not right now
+
+### `kind-word`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Something kind
+- **Heading:** What would you like to say?
+- **Button:** Thinking of you
+- **Button:** Thanks for being in my life
+- **Button:** Hey, how are you doing lately?
+- **Button:** Thank you for ___
+- **Button:** Next
+- **Button:** Not right now
+
+### `kind-send`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Something small and kind.
+- Only if you have the energy. Taking care of yourself comes first.
+- **Button:** Send someone a kind text — You choose who and what. You send it.
+- **Button:** Something without my phone — Hold a door, a compliment, a neighbor
+- **Button:** Not right now
+
+### `kind-offline`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Something kind
+- **Heading:** Something small, without your phone.
+- Hold a door for someone.
+- Give someone a compliment.
+- Help a neighbor with something small.
+- Any one is plenty. None is fine too.
+- **Button:** Done
+- **Button:** Not right now
 
 ### `spiral-input`
 
@@ -1307,6 +1436,7 @@ _When: distraction_
 - 988 Suicide & Crisis Lifeline, free and 24/7. Always in your plan.
 - **Link → `tel:988`:** Call 988 _(screen reader: "Call 988, the Suicide and Crisis Lifeline")_
 - **Link → `sms:988`:** Text 988 _(screen reader: "Text 988, the Suicide and Crisis Lifeline")_
+- Getting help is a strength, not a weakness. Read more
 - **Heading:** Making my space safer
 - **Button:** Edit _(screen reader: "Edit: Making my space safer")_
 - Nothing here yet.
@@ -1497,6 +1627,10 @@ _When: distraction_
 - Do one small, concrete thing.
 - Notice whether it helped. Rating is optional.
 - Try another step, or stop. Both are fine.
+- **Heading:** Getting help
+- Getting help is a strength, not a weakness. Seeing a psychiatrist, therapist or counselor is care for your mind, the same way you'd see a doctor for your body. It doesn't mean you're 'crazy', broken or weak. Lots of people get help at some point, and many feel better for it. If medication is suggested, that's a choice you make together with a professional, and it's okay either way.
+- **Heading:** Helping others
+- Helping someone else can help you too. Small acts of kindness can lift your mood and make you feel less alone. It doesn't have to be big: a kind text, a thank-you, checking on a friend. Only if you have the energy. Taking care of yourself comes first.
 - **Heading:** Your privacy
 - What you write stays on your phone. We don't sell or share it. You can delete everything with one tap.
 - In this prototype, data is saved only in your browser on this device. Turn saving off in Settings for a shared phone.
