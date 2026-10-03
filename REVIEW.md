@@ -11,22 +11,24 @@ How to read screen text: each screen is listed top to bottom as it appears on a 
 Safety level lives only for the current visit and is **never saved**. Levels: GREEN (default), YELLOW (elevated), RED (crisis).
 
 - **Free-text check.** Every free-text box (except My Plan fields, which are exempt) is checked when submitted. Text is lowercased, apostrophes removed, and everything that isn't a letter or number becomes a space. If it contains any RED phrase → RED. Otherwise, any YELLOW phrase → YELLOW. Otherwise GREEN. Matching is on whole words/phrases.
-- **RED** stops everything (flows, games, check-ins) and opens the crisis screen immediately. Nothing from that moment is saved.
+- **RED** stops everything (flows, games, check-ins) and opens the crisis screen immediately. Nothing from that moment is saved: no outcome, and no activity entry (no "hard moment", "reached out" or "used my plan") is recorded from any crisis screen or while RED. The one exception is required by design: grounding from "What would help right now?" saves `{state:"crisis-no", interventionId:"grounding", before:null, after:null}`.
 - **YELLOW** shows the support bar ("You don't have to handle this alone." · Call 988 · Talk to someone) on every non-crisis screen for the rest of the visit, and the suggestion engine offers connection, the person's own plan, grounding, or a change of space first.
 - **Automatic YELLOW:** tapping "I still feel bad" twice in a visit (a game answered "No" counts as one), or giving a 9 or 10 rating (before or after) twice in a visit.
 - **Tapping Help** (top right of every screen) or **"I don't feel safe"** → RED crisis screen. One tap, no confirmation.
 - **Crisis question:** "Are you in danger of hurting yourself or someone else right now?" Yes or I'm not sure → full crisis screen (RED). No → YELLOW, "What would help right now?" (talk to someone / open my plan / do something grounding), then "Do you feel safer than a few minutes ago?" Yes → Home (YELLOW). No or Not sure → full crisis screen (RED).
-- **Leaving RED** is only possible through "That's not what I meant — go back", No on the danger question, or Yes on "Do you feel safer". Each leads to YELLOW. Nothing ever returns to GREEN in the same visit.
+- **Leaving RED** is only possible through "That's not what I meant — go back" on the first crisis screen, No on the danger question, or Yes on "Do you feel safer". Each leads to YELLOW. Nothing ever returns to GREEN in the same visit (a reload starts a new visit at GREEN).
+- **OWNER-APPROVED INTERIM, pending clinician:** on the full crisis screen (after Yes / I'm not sure), "That's not what I meant — go back" goes to "Do you feel safer than a few minutes ago?" instead of Home.
 - **Calling or texting** from the "What would help" screen moves straight to "Do you feel safer" in the same tap, before the phone app opens.
 - **Human First** (this visit only, never saved): after 2 taps on "Something else", or 2 finished steps without "That helped" (a game answered "No" counts), ask once: "Would talking to a person help more than another answer?" Call someone · Text someone · Be around people (→ Change the scene, Somewhere to go) · Not right now. Never shown over a crisis screen.
-- **Warm line** (Connect): Florida Warm Line, `tel:18009451355`. "Every day, 4pm–10pm. Not a crisis line. Just real people who've been through it." Hours are display text only; the button is never disabled by the clock. "After 10pm or outside Florida: find a warmline near you" → `https://findahelpline.com`.
+- **Warm line** (Connect): Florida Warm Line, `tel:18009451355`. "Every day, 4pm–10pm Eastern. Not a crisis line. Just real people who've been through it." Hours are display text only; the button is never disabled by the clock. "After 10pm or outside Florida: find a warmline near you" → `https://findahelpline.com`.
 - **First launch:** onboarding never blocks the crisis screens. Leaving a crisis screen during onboarding returns to onboarding at YELLOW.
 - **Outside the US** (guessed from the phone's time zone, then language; can be set in Settings): adds "Find a helpline in your country" (findahelpline.com) under 988. 911 and 988 are never hidden.
 
 ## 2. Safety phrase lists
 
-### RED phrases (23) → crisis screen
+### RED phrases (36) → crisis screen
 
+The last 13 (from "kms" to "hurt somebody", including harm-to-others phrases) are **OWNER-APPROVED INTERIM, pending clinician**. Full results: docs/SAFETY_TEST_MATRIX.md.
 - "kill myself"
 - "killing myself"
 - "want to die"
@@ -50,6 +52,19 @@ Safety level lives only for the current visit and is **never saved**. Levels: GR
 - "don't want to live"
 - "don't want to be alive"
 - "don't want to be here anymore"
+- "kms"
+- "unalive myself"
+- "unaliving myself"
+- "don't want to wake up"
+- "took all my pills"
+- "want to disappear"
+- "took too much"
+- "kill him"
+- "kill her"
+- "kill them"
+- "kill someone"
+- "hurt someone"
+- "hurt somebody"
 
 ### YELLOW phrases (10) → support bar for the rest of the visit
 
@@ -874,7 +889,7 @@ _A bit better_
 - **Button:** × _(screen reader: "Close and go to home")_
 - **Button:** Help _(screen reader: "Get help now")_
 - **Heading:** I'm glad. Want to let someone know how you're doing?
-- Florida Warm Line: Every day, 4pm–10pm.
+- Florida Warm Line: Every day, 4pm–10pm Eastern.
 - **Link → `sms:5550142`:** Text Jordan
 - **Link → `tel:5550142`:** Call Jordan
 - **Link → `tel:18009451355`:** Call the Warm Line
@@ -898,7 +913,7 @@ _Still hard, second time_
 - **Button:** × _(screen reader: "Close and go to home")_
 - **Button:** Help _(screen reader: "Get help now")_
 - **Heading:** Thank you for doing this. This is a good moment to reach a real person.
-- Florida Warm Line: Every day, 4pm–10pm.
+- Florida Warm Line: Every day, 4pm–10pm Eastern.
 - **Link → `sms:5550142`:** Text Jordan
 - **Link → `tel:5550142`:** Call Jordan
 - **Link → `tel:18009451355`:** Call the Warm Line
@@ -1202,7 +1217,7 @@ _When: craving_
 - **Heading:** Move to another room.
 - **Link → `tel:911`:** Already used, or took too much? Call 911.
 - Shaking, sweating, confused, or seeing things? Withdrawal can be a medical emergency. Get medical help.
-- **Link → `tel:988`:** Call or text 988 for support.
+- For support: Call 988 · Text 988
 - **Button:** Next
 
 _When: distraction_
@@ -1342,7 +1357,7 @@ _When: distraction_
 - **Button:** Ride the wave
 - **Link → `tel:911`:** Already used, or took too much? Call 911.
 - Shaking, sweating, confused, or seeing things? Withdrawal can be a medical emergency. Get medical help.
-- **Link → `tel:988`:** Call or text 988 for support.
+- For support: Call 988 · Text 988
 - **Button:** I already used
 - **Button:** Check in early
 
@@ -1354,7 +1369,7 @@ _When: distraction_
 - No judgment here. What matters is the next few minutes.
 - **Link → `tel:911`:** Took too much, or feel unwell? Call 911.
 - Shaking, sweating, confused, or seeing things? Withdrawal can be a medical emergency. Get medical help.
-- **Link → `tel:988`:** Call or text 988 for support.
+- For support: Call 988 · Text 988
 - **Heading:** Want to do one small thing for the next 10 minutes?
 - **Button:** Yes
 - **Button:** Not right now
@@ -1404,6 +1419,17 @@ _When: distraction_
 - **Button:** Jordan — friend
 - **Button:** Back to My Plan
 
+### `ci-name`
+
+- **Button:** Help _(screen reader: "Get help now")_
+- Set up with your people · Check-in reminders
+- **Heading:** What name should their reminders show?
+- Your first name, so their calendar says "Check in on [your name]". Optional. If you leave it blank, it says "your friend".
+- Your first name (saved in your plan)
+- **Text box**
+- **Button:** Next
+- **Button:** Back to My Plan
+
 ### `ci-person`
 
 - **Button:** Help _(screen reader: "Get help now")_
@@ -1450,7 +1476,7 @@ _When: distraction_
 - **Heading:** You don't have to sit with this alone.
 - Talk to someone who's been there
 - **Heading:** Florida Warm Line
-- Every day, 4pm–10pm. Not a crisis line. Just real people who've been through it.
+- Every day, 4pm–10pm Eastern. Not a crisis line. Just real people who've been through it.
 - **Link → `tel:18009451355`:** Call the Warm Line
 - **Link → `https://findahelpline.com`:** After 10pm or outside Florida: find a warmline near you
 - Reach one of your people
@@ -1800,7 +1826,6 @@ _When: distraction_
 - **Link → `sms:988`:** Text 988 _(screen reader: "Text 988, the Suicide and Crisis Lifeline")_
 - You can also talk to an adult you trust: a parent, a teacher, a school counselor, or a doctor.
 - Call 911 if someone is hurt or in danger.
-- **Button:** Back
 
 ### `ob-plan`
 
@@ -1985,7 +2010,7 @@ _When: distraction_
 - **Heading:** Move to another room.
 - **Link → `tel:911`:** Already used, or took too much? Call 911.
 - Shaking, sweating, confused, or seeing things? Withdrawal can be a medical emergency. Get medical help.
-- **Link → `tel:988`:** Call or text 988 for support.
+- For support: Call 988 · Text 988
 - **Button:** Next
 
 #### What's still true

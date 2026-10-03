@@ -56,7 +56,9 @@ const r=[];
  // reach logging + plan usage counters
  const before=G('store.sensitive.activity.filter(a=>a.type==="reach").length');
  click(act('crisis')); w.document.querySelector('a[href="tel:988"]').addEventListener('click',e=>e.preventDefault()); w.document.querySelector('a[href="tel:988"]').dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true}));
- r.push(['reach logged', G('store.sensitive.activity.filter(a=>a.type==="reach").length')===before+1]);
+ r.push(['reach NOT logged from a crisis screen (F3)', G('store.sensitive.activity.filter(a=>a.type==="reach").length')===before]);
+ G('ACTIONS.cBack(); ACTIONS.talk()'); w.document.querySelector('#app a[href="tel:988"]').addEventListener('click',e=>e.preventDefault()); w.document.querySelector('#app a[href="tel:988"]').dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true}));
+ r.push(['reach still logged from Talk to someone (not a crisis screen)', G('store.sensitive.activity.filter(a=>a.type==="reach").length')===before+1]);
  // engine uses edited plan: YELLOW + helps
 }
 console.log(r.map(x=>(x[1]?'PASS ':'FAIL ')+x[0]+(x[2]?'  ('+x[2]+')':'')).join('\n'));

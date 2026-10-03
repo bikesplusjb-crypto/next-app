@@ -25,8 +25,14 @@ const r=[];
  helpEverywhere.push(a.has('.help-pill[data-act="crisis"]'));
  a.click(act('obNext')); r.push(['screen 2 asks 18+', a.S().screen==='ob-age' && a.T().includes('18 or older')]); helpEverywhere.push(a.has('.help-pill[data-act="crisis"]'));
  a.click(act('obMinor')); r.push(['under 18 shows 988 and a trusted adult', a.S().screen==='ob-minor' && a.hrefs().includes('tel:988') && a.T().includes('adult you trust')]); helpEverywhere.push(a.has('.help-pill[data-act="crisis"]'));
- r.push(['under 18 saves nothing', !(prefsOf(a.dump())||{prefs:{}}).prefs.onboarded]);
- a.click(act('obAgeBack')); r.push(['under 18 can go back to the question', a.S().screen==='ob-age']);
+ r.push(['under 18 does not finish onboarding', !(prefsOf(a.dump())||{prefs:{}}).prefs.onboarded]);
+ r.push(['F6: "under 18" is remembered on this device', (prefsOf(a.dump())||{prefs:{}}).prefs.under18===true]);
+ r.push(['F6: no Back button to the question', !a.has(act('obAgeBack'))]);
+ a.w.eval('ACTIONS.obAgeBack(); ACTIONS.obAdult()'); r.push(['F6: Back then "Yes, I\'m 18" does not get in', a.S().screen==='ob-minor']);
+ a.w.eval('go("ob-about")'); r.push(['F6: any onboarding screen returns to the under-18 screen', a.S().screen==='ob-minor']);
+ { const b=boot(a.dump()); r.push(['F6: still under 18 after a reload', b.S().screen==='ob-minor' && b.has('.help-pill[data-act="crisis"]')]);
+   b.click('.help-pill[data-act="crisis"]'); r.push(['F6: the crisis screen is never gated', b.S().screen==='crisis']); }
+ a.w.eval('prefs.under18=false; go("ob-age")');   // continue the adult path in this test
  a.click(act('obAdult')); r.push(['screen 3 offers My Plan now or later', a.S().screen==='ob-plan' && a.has(act('obPlanNow')) && a.has(act('obLater'))]); helpEverywhere.push(a.has('.help-pill[data-act="crisis"]'));
  r.push(['Help is on every onboarding screen', helpEverywhere.length===4 && helpEverywhere.every(Boolean)]);
  r.push(['nothing remembered before the last step', !(prefsOf(a.dump())||{prefs:{}}).prefs.onboarded]);

@@ -35,7 +35,7 @@ s=pick('scene'); r.push(['Get out of where I am → Change the scene (6.5)', s.s
  const hrefs=[...a.doc.querySelectorAll('#app a[href]')].map(x=>x.getAttribute('href'));
  r.push(['Get help now → RED crisis screen at once', a.S().screen==='crisis' && a.S().safetyLevel==='RED']);
  r.push(['...with Call and Text 988 and the danger question', hrefs.includes('tel:988') && hrefs.includes('sms:988') && a.doc.body.textContent.includes('Are you in danger of hurting yourself or someone else right now?')]);
- r.push(['...counted as a hard moment, like Help', a.w.eval('store.sensitive.activity.filter(x=>x.type==="moment").length')===1]);}
+ r.push(['...and, like Help, nothing is saved from the crisis screen (F3)', a.w.eval('store.sensitive.activity.length')===0]);}
 // YELLOW: the support bar shows here too.
 {const a=boot(); a.click(act('getHelpNow')); a.click(act('cBack')); a.click(act('dontKnow'));
  r.push(['YELLOW bar shows on this screen', a.S().screen==='dont-know' && !!a.doc.querySelector('header .ybar')]);}

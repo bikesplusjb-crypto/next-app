@@ -35,7 +35,7 @@ const r=[];
  const seen=[];
  a.click('.help-pill[data-act="crisis"]'); seen.push(a.S().screen+':'+!!a.tip());
  a.click(act('cYes')); seen.push(a.S().screen+':'+!!a.tip());
- a.click(act('cBack')); a.click('.help-pill[data-act="crisis"]'); a.click(act('cNo')); seen.push(a.S().screen+':'+!!a.tip());
+ a.click(act('cFullBack')); a.w.eval('ACTIONS.safeYes()'); a.click('.help-pill[data-act="crisis"]'); a.click(act('cNo')); seen.push(a.S().screen+':'+!!a.tip());
  a.click(act('noPlan')); a.click(act('planDone')); seen.push(a.S().screen+':'+!!a.tip());
  r.push(['never on crisis screens', seen.join(',')==='crisis:false,crisis-full:false,crisis-no:false,safety-check:false']);
  a.click(act('safeYes'));

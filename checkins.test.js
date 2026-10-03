@@ -53,7 +53,7 @@ const gap=(a,b)=>Math.round((day(b)-day(a))/86400000);
  const long=validICS(Z.build('close','Ünïcødé-Name Ok',start,stamp));
  r.push(['long and non-ASCII names fold correctly', long.errs.length===0, long.errs.join('; ')]);}
 {const w=guide('https://zigzagmind.com/support/'); const Z=w.zzCheckins; const ics=Z.build('gentle','',new w.Date(2026,5,1));
- r.push(['no name: still works ("Check in on your person")', validICS(ics).errs.length===0 && /SUMMARY:Check in on your person/.test(ics) && w.document.getElementById('askLine').hidden]);}
+ r.push(['no name: still works ("Check in on your friend")', validICS(ics).errs.length===0 && /SUMMARY:Check in on your friend/.test(ics) && w.document.getElementById('askLine').hidden]);}
 
 // ---- ?for= sanitized ----
 {const w=guide('https://zigzagmind.com/support/'); const c=w.zzCheckins.cleanName;
@@ -85,26 +85,36 @@ const ASK="Would you check in on me now and then? This sets up reminders on your
  a.G('ACTIONS.loadSample(); getPlan().trustedPeople[0].name="Jordan Lee"; getPlan().codeWord={personIndex:0,word:"lighthouse",setAt:1,phone:"5550142"}');
  a.click('[data-act="tab"][data-arg="plan"]');
  r.push(['My Plan → Set up with your people → Check-in reminders', a.T().includes('Check-in reminders') && !!a.doc.querySelector('[data-act="ciStart"]')]);
- a.click('[data-act="ciStart"]'); a.click('[data-act="ciPerson"][data-arg="0"]');
+ a.click('[data-act="ciStart"]');
+ r.push(['F1: first asks for MY first name (optional, saved in my plan)', a.S().screen==='ci-name' && !!a.doc.querySelector('label[for="ciNameBox"]') && a.T().includes('your friend')]);
+ a.doc.getElementById('ciNameBox').value='Alex Rivera'; a.click('[data-act="ciName"]');
+ r.push(['F1: saved in the plan', a.G('getPlan().myName')==='Alex Rivera' && JSON.parse(a.dump()['next.v1.sensitive']).plan.myName==='Alex Rivera']);
+ a.click('[data-act="ciPerson"][data-arg="0"]');
  const link=a.doc.querySelector('a.ci-open'); const body=decodeURIComponent(link.getAttribute('href').split('body=')[1]);
- r.push(['the message: the ask + the guide link with only a first name', body===`${ASK} https://zigzagmind.com/support/?for=Jordan#checkins`]);
+ r.push(['F1: the message links with MY first name, not the supporter\'s', body===`${ASK} https://zigzagmind.com/support/?for=Alex#checkins`]);
  a.click('[data-act="ciShare"]');
- r.push(['share_link: the same link and ask', !!shared && shared.url==='https://zigzagmind.com/support/?for=Jordan#checkins' && shared.text===ASK]);
+ r.push(['share_link: the same link and ask', !!shared && shared.url==='https://zigzagmind.com/support/?for=Alex#checkins' && shared.text===ASK]);
  const all=body+' '+JSON.stringify(shared);
- r.push(['nothing sensitive in the link: no surname, phone, code word or plan', !/Lee|555|0142|lighthouse|walking|Coffee/i.test(new URL('https://zigzagmind.com/support/?for=Jordan#checkins').href) && !/Lee|lighthouse|5550142/.test(all.replace('sms:5550142',''))]);
+ r.push(['nothing sensitive in the link: no surname, supporter name, phone, code word or plan', !/Rivera|Jordan|Lee|555|0142|lighthouse|walking|Coffee/i.test(all.replace('sms:5550142',''))]);
  r.push(['nothing saved before "Yes, I sent it"', !a.G('getPlan().checkinCircle')]);
  a.click('[data-act="ciSaved"]');
  const c=a.G('getPlan().checkinCircle');
  r.push(['confirm → plan.checkinCircle = [{ personIndex, at }]', c.length===1 && c[0].personIndex===0 && typeof c[0].at==='number']);
  r.push(['My Plan shows who was asked', a.S().screen==='plan' && a.T().includes('Asked: Jordan Lee')]);
- a.click('[data-act="ciStart"]'); a.click('[data-act="ciPerson"][data-arg="0"]'); a.click('[data-act="ciSaved"]');
+ a.click('[data-act="ciStart"]');
+ r.push(['F1: the name is remembered next time', a.doc.getElementById('ciNameBox').value==='Alex Rivera']);
+ a.click('[data-act="ciName"]'); a.click('[data-act="ciPerson"][data-arg="0"]'); a.click('[data-act="ciSaved"]');
  r.push(['asking the same person again doesn\'t duplicate them', a.G('getPlan().checkinCircle.length')===1]);
  a.G('ACTIONS.tab("settings")'); a.click('[data-act="askDelete"]'); a.click('[data-act="deleteAll"]');
  r.push(['Delete everything clears it', !a.G('getPlan().checkinCircle') && !Object.values(a.dump()).join('').includes('checkinCircle')]);}
-{const a=boot(); a.G('ACTIONS.loadSample(); getPlan().trustedPeople[0].name="<b>Ann-Marie</b> 555"'); a.click('[data-act="tab"][data-arg="plan"]'); a.click('[data-act="ciStart"]'); a.click('[data-act="ciPerson"][data-arg="0"]');
+{const a=boot(); a.G('ACTIONS.loadSample()'); a.click('[data-act="tab"][data-arg="plan"]'); a.click('[data-act="ciStart"]');
+ a.doc.getElementById('ciNameBox').value='<b>Ann-Marie</b> 555'; a.click('[data-act="ciName"]'); a.click('[data-act="ciPerson"][data-arg="0"]');
  const href=a.doc.querySelector('a.ci-open').getAttribute('href');
- r.push(['the app sanitizes the name the same way before it goes in the link', decodeURIComponent(href).includes('?for=bAnn-Marieb#checkins')]);}
-{const a=boot(); a.click('[data-act="tab"][data-arg="plan"]'); a.click('[data-act="ciStart"]');
+ r.push(['the app sanitizes my name the same way before it goes in the link', decodeURIComponent(href).includes('?for=bAnn-Marieb#checkins')]);}
+{const a=boot(); a.G('ACTIONS.loadSample()'); a.click('[data-act="tab"][data-arg="plan"]'); a.click('[data-act="ciStart"]'); a.click('[data-act="ciName"]'); a.click('[data-act="ciPerson"][data-arg="0"]');
+ const href=decodeURIComponent(a.doc.querySelector('a.ci-open').getAttribute('href'));
+ r.push(['F1: name left blank → no name in the link (reminders say "your friend")', href.includes('/support/#checkins') && !/for=/.test(href) && a.T().includes('your friend')]);}
+{const a=boot(); a.click('[data-act="tab"][data-arg="plan"]'); a.click('[data-act="ciStart"]'); a.click('[data-act="ciName"]');
  r.push(['nobody in the plan: add someone first', !a.doc.querySelector('[data-act="ciPerson"]') && !!a.doc.querySelector('[data-act="planEdit"][data-arg="trustedPeople"]')]);}
 r.push(['no reminders or notifications from ZigZag Mind itself', !/Notification\.|showNotification|PushManager/.test(HTML)]);
 

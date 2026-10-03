@@ -14,6 +14,6 @@ r.push(['service worker: fetches only this site\'s files, never reads user data'
 const KNOWN=['https://988lifeline.org/chat','https://findahelpline.com','https://ko-fi.com/zigzagmind','https://maps.apple.com/?q=','https://www.google.com/maps/search/','https://'];
 const found=[...new Set((APP.match(/https?:\/\/[A-Za-z0-9./_?=&%#-]*/g)||[]))];
 r.push(['every external address in the app is on the known list (update PRIVACY_DATA_FLOW.md first)', found.every(u=>KNOWN.includes(u)), found.filter(u=>!KNOWN.includes(u)).join()]);
-r.push(['CURRENT (F7): index.html sets no referrer policy; the supporter guide does', !/name="referrer"/.test(APP) && /name="referrer" content="no-referrer"/.test(GUIDE)]);
+r.push(['F7: the app and the supporter guide both set no-referrer (links don\'t send the app\'s address)', /<meta name="referrer" content="no-referrer">/.test(APP) && /name="referrer" content="no-referrer"/.test(GUIDE)]);
 console.log(r.map(x=>(x[1]?'PASS ':'FAIL ')+x[0]+(x[1]||!x[2]?'':' — '+x[2])).join('\n'));
 process.exit(0);

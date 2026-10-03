@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#F6F4EF">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
@@ -419,7 +420,11 @@ const RED_PHRASES = [
   "kill myself","killing myself","want to die","wanna die","wish i was dead","wish i were dead",
   "end my life","end it all","suicide","suicidal","overdose","overdosed","hurt myself","hurting myself",
   "cut myself","cutting myself","no reason to live","better off without me","better off dead",
-  "can't go on","don't want to live","don't want to be alive","don't want to be here anymore"
+  "can't go on","don't want to live","don't want to be alive","don't want to be here anymore",
+  // OWNER-APPROVED INTERIM (2026-10-03), pending clinician confirmation. Each only increases escalation.
+  "kms","unalive myself","unaliving myself","don't want to wake up","took all my pills","want to disappear","took too much",
+  // Harm to others, OWNER-APPROVED INTERIM, pending clinician. The danger question already asks about "someone else".
+  "kill him","kill her","kill them","kill someone","hurt someone","hurt somebody"
 ];
 const YELLOW_PHRASES = [
   "hopeless","can't take it","can't take this","give up","giving up","nobody cares","no one cares",
@@ -456,7 +461,7 @@ const HARD_TIME_MSG = "I'm having a really hard time. Can you call me?";
 const WARMLINE = {
   name:"Florida Warm Line",
   tel:"tel:18009451355",
-  hours:"Every day, 4pm–10pm.",
+  hours:"Every day, 4pm–10pm Eastern.",
   about:"Not a crisis line. Just real people who've been through it.",
   elsewhere:"After 10pm or outside Florida: find a warmline near you",
   elsewhereUrl:"https://findahelpline.com"
@@ -479,7 +484,8 @@ const SUPPORT_URL_TEXT = "zigzagmind.com/support";
 /* 6.10 Check-in reminders: ask a trusted person to set reminders on THEIR phone. Only a first name goes in the link. */
 const CHECKIN_ASK = "Would you check in on me now and then? This sets up reminders on your phone. No need to say anything special.";
 const firstName = n => String(n || "").normalize("NFC").replace(/[^\p{L} -]/gu, "").replace(/\s+/g, " ").trim().split(" ")[0].slice(0, 20);
-function checkinUrl(name){
+/* F1: the check-in link carries the PERSON'S OWN first name (optional, saved in the plan), never the supporter's. */
+function checkinUrl(name = getPlan().myName){
   const u = new URL(supportUrl());
   const f = firstName(name);
   if (f) u.searchParams.set("for", f);
@@ -758,7 +764,7 @@ function helpLabel(h){
    Prototype: in memory only. Swap loadStore/saveStore for IndexedDB later.
    "sensitive" (plan, check-ins, activity) is kept apart from "product" data. */
 function emptyPlan(){
-  return { warningSigns:[], helps:[], places:[], trustedPeople:[], professional:{ name:"", phone:"" },
+  return { myName:"", warningSigns:[], helps:[], places:[], trustedPeople:[], professional:{ name:"", phone:"" },
     timeDistance:{ keepAway:"", holder:"", getBack:"" }, avoid:[], reminders:[] };
 }
 /* 6.11: "Making my space safer" became the time and distance plan. Old text moves into the first field. */
@@ -785,7 +791,7 @@ function seedActivity(){
 }
 const store = {
   sensitive:{ plan:emptyPlan(), baseHistory:[], activity:[] },   // real users start empty; Settings → Load sample data for demos
-  product:{ appVersion:"0.4-prototype" }
+  product:{ appVersion:"0.5.0" }   // keep in step with package.json "version"
 };
 /* On-device saving (browser localStorage, this device only, never sent anywhere).
    Safety state (GREEN/YELLOW/RED, counts) is NEVER saved: it lives for one session. */
@@ -835,9 +841,17 @@ function clearSaved(){
   try { localStorage.removeItem(STORE_KEY); } catch (_){}
 }
 const getPlan = () => store.sensitive.plan;
-function logActivity(type){ store.sensitive.activity.push({ type, ts:Date.now() }); saveStore(); }
+/* Nothing is saved from crisis screens or while RED (no "moment", "reach" or "plan" entries): HANDOFF safety rule. */
+function inCrisisMoment(){
+  return session.safetyLevel === "RED" || CRISIS_SCREENS.includes(session.screen) ||
+    (session.screen === "plan-now" && ui && ui.planFrom !== "tab");
+}
+function logActivity(type){
+  if (inCrisisMoment()) return;
+  store.sensitive.activity.push({ type, ts:Date.now() }); saveStore();
+}
 
-const prefs = { reduce:false, haptics:false, homeTipDismissed:false, onboarded:false, country:"auto" };
+const prefs = { reduce:false, haptics:false, homeTipDismissed:false, onboarded:false, country:"auto", under18:false };   // under18: remembered on this device
 function finishOnboarding(){ prefs.onboarded = true; savePrefs(); }   // remembered in prefs only
 
 /* Outside the US? Only ever ADDS "Find a helpline in your country" next to 988; never hides 911 or 988.
@@ -949,7 +963,6 @@ function freshUi(){
 
 /* ---------- SAFETY HELPERS ---------- */
 function openCrisis(){
-  if (session.safetyLevel !== "RED") logActivity("moment");
   dispatch({ type:"SET_SAFETY_LEVEL", level:"RED" });
   dispatch({ type:"SET_SCREEN", screen:"crisis" });
   render();
@@ -1537,7 +1550,7 @@ const SCREENS = {
       extra += `<div class="safety-row" role="note">
         <a href="${LINKS.call911}">Already used, or took too much? Call 911.</a>
         <span>Shaking, sweating, confused, or seeing things? Withdrawal can be a medical emergency. Get medical help.</span>
-        <a href="${LINKS.call988}">Call or text 988 for support.</a>
+        <span>For support: <a href="${LINKS.call988}">Call 988</a> · <a href="${LINKS.text988}">Text 988</a></span>
       </div>`;
     }
     return { close:true, body:`
@@ -1731,7 +1744,7 @@ const SCREENS = {
       <div class="safety-row" role="note">
         <a href="${LINKS.call911}">Already used, or took too much? Call 911.</a>
         <span>Shaking, sweating, confused, or seeing things? Withdrawal can be a medical emergency. Get medical help.</span>
-        <a href="${LINKS.call988}">Call or text 988 for support.</a>
+        <span>For support: <a href="${LINKS.call988}">Call 988</a> · <a href="${LINKS.text988}">Text 988</a></span>
       </div>
       <div style="display:flex;justify-content:center;margin-top:8px"><button class="link" data-act="crvUsed">I already used</button></div>`,
       actions: done ? `<button class="btn btn-primary" data-act="crvCheck">Check in</button>`
@@ -1745,7 +1758,7 @@ const SCREENS = {
       <div class="safety-row" role="note">
         <a href="${LINKS.call911}">Took too much, or feel unwell? Call 911.</a>
         <span>Shaking, sweating, confused, or seeing things? Withdrawal can be a medical emergency. Get medical help.</span>
-        <a href="${LINKS.call988}">Call or text 988 for support.</a>
+        <span>For support: <a href="${LINKS.call988}">Call 988</a> · <a href="${LINKS.text988}">Text 988</a></span>
       </div>
       <h2>Want to do one small thing for the next 10 minutes?</h2>`,
       actions:`<button class="btn btn-primary" data-act="usedYes">Yes</button>
@@ -1863,6 +1876,16 @@ const SCREENS = {
   },
 
   /* 6.10: Check-in reminders. choose_person → share_link (or text it) → confirm. */
+  "ci-name"(){
+    return { close:false, body:`
+      <p class="lbl">Set up with your people · Check-in reminders</p>
+      ${title("What name should their reminders show?")}
+      <p class="sub">Your first name, so their calendar says "Check in on [your name]". Optional. If you leave it blank, it says "your friend".</p>
+      <label for="ciNameBox" class="small" style="display:block;margin-top:12px">Your first name (saved in your plan)</label>
+      <input class="field" id="ciNameBox" maxlength="40" autocomplete="given-name" value="${esc(getPlan().myName || "")}">`,
+      actions:`<button class="btn btn-primary" data-act="ciName">Next</button>
+        <button class="btn btn-secondary" data-act="ciCancel">Back to My Plan</button>` };
+  },
   "ci-person"(){
     const people = getPlan().trustedPeople || [];
     return { close:false, body:`
@@ -1878,7 +1901,7 @@ const SCREENS = {
   "ci-send"(){
     const p = (getPlan().trustedPeople || [])[ui.ciPerson];
     if (!p) return SCREENS["ci-person"]();
-    const url = checkinUrl(p.name), text = `${CHECKIN_ASK} ${url}`;
+    const url = checkinUrl(), text = `${CHECKIN_ASK} ${url}`;
     return { close:false, body:`
       <p class="lbl">Set up with your people · Check-in reminders</p>
       ${title(`Your message to ${esc(p.name)}`)}
@@ -1886,7 +1909,7 @@ const SCREENS = {
       <a class="btn btn-primary ci-open" href="${smsLink(p.phone, text)}">Text it to ${esc(p.name)}</a>
       <button class="btn btn-secondary" style="margin-top:10px" data-act="ciShare">Share another way</button>
       ${ui.flash ? `<p class="flash" role="status">${esc(ui.flash)}</p>` : ""}
-      <p class="note">ZigZag Mind never sends anything for you. The link has only ${esc(firstName(p.name) || "no name")}, nothing else from your plan.</p>
+      <p class="note">ZigZag Mind never sends anything for you. ${firstName(getPlan().myName) ? `The link has only your first name, ${esc(firstName(getPlan().myName))}, nothing else from your plan.` : "The link has no name and nothing from your plan. Their reminders will say \"your friend\"."}</p>
       <h2>Did you send it?</h2>`,
       actions:`<button class="btn btn-primary" data-act="ciSaved">Yes, I sent it</button>
         <button class="btn btn-secondary" data-act="ciCancel">Not yet</button>` };
@@ -2142,7 +2165,7 @@ const SCREENS = {
       </div>
       <p class="note">If you can, put distance between yourself and anything you could use to hurt yourself.</p>
       <p class="disclaimer">ZigZag Mind is not an emergency service.</p>
-      <div style="display:flex;justify-content:center"><button class="link" data-act="cBack">That's not what I meant — go back</button></div>` };
+      <div style="display:flex;justify-content:center"><button class="link" data-act="cFullBack">That's not what I meant — go back</button></div>` };
   },
 
   "crisis-no"(){
@@ -2399,7 +2422,7 @@ const SCREENS = {
       ${row988()}
       <p style="margin-top:16px">You can also talk to an adult you trust: a parent, a teacher, a school counselor, or a doctor.</p>
       <p class="disclaimer">Call 911 if someone is hurt or in danger.</p>`,
-      actions:`<button class="btn btn-secondary" data-act="obAgeBack">Back</button>` };
+      actions:"" };
   },
 
   "ob-plan"(){
@@ -2761,6 +2784,8 @@ function render(){
   // Until onboarding is done, anything that would land on Home (first launch, leaving a crisis
   // screen, "I feel safer") starts onboarding instead. Crisis screens are never gated.
   if (session.screen === "home" && !prefs.onboarded) dispatch({ type:"SET_SCREEN", screen:"ob-about" });
+  // F6: once someone says they're under 18, onboarding stays on the under-18 screen on this device. Crisis screens are never gated.
+  if (prefs.under18 && !prefs.onboarded && /^ob-/.test(session.screen) && session.screen !== "ob-minor") dispatch({ type:"SET_SCREEN", screen:"ob-minor" });
   const s = session.screen;
   const def = (SCREENS[s] || SCREENS.home)();
   const changed = s !== lastRendered;
@@ -2819,9 +2844,9 @@ const ACTIONS = {
   dismissHomeTip(){ prefs.homeTipDismissed = true; savePrefs(); render(); },
   obNext(){ go("ob-age"); },
   obBack(){ go("ob-about"); },
-  obAdult(){ go("ob-plan"); },
-  obMinor(){ go("ob-minor"); },
-  obAgeBack(){ go("ob-age"); },
+  obAdult(){ if (prefs.under18){ go("ob-minor"); return; } go("ob-plan"); },
+  obMinor(){ prefs.under18 = true; savePrefs(); go("ob-minor"); },
+  obAgeBack(){ go(prefs.under18 ? "ob-minor" : "ob-age"); },
   obPlanNow(){ finishOnboarding(); ui.planFrom = "tab"; go("plan"); },
   obLater(){ finishOnboarding(); go("home"); },
   dontKnow(){ if (blockIfRed()) return; go("dont-know"); },
@@ -3031,12 +3056,18 @@ const ACTIONS = {
     }
     done(`Copy this link: ${url}`);
   },
-  ciStart(){ ui.flash = ""; ui.ciPerson = null; go("ci-person"); },
+  ciStart(){ ui.flash = ""; ui.ciPerson = null; ui.msg = ""; go("ci-name"); },
+  ciName(){
+    const box = document.getElementById("ciNameBox");
+    getPlan().myName = ((box && box.value) || "").trim().slice(0, 40);   // plan field: exempt from safetyCheck
+    saveStore();
+    go("ci-person");
+  },
   ciPerson(arg){ ui.ciPerson = Number(arg); ui.flash = ""; go("ci-send"); },
   ciShare(){
     const p = (getPlan().trustedPeople || [])[ui.ciPerson];
     if (!p) return;
-    const url = checkinUrl(p.name);
+    const url = checkinUrl();
     if (navigator.share){ navigator.share({ title:"Check in on me", text:CHECKIN_ASK, url }).catch(() => {}); return; }
     const done = m => { ui.flash = m; render(); };
     if (navigator.clipboard && navigator.clipboard.writeText){
@@ -3170,6 +3201,9 @@ const ACTIONS = {
   cNotSure(){ dispatch({ type:"SET_SAFETY_LEVEL", level:"RED" }); ui.placesOpen = false; go("crisis-full"); },
   cNo(){ dispatch({ type:"SET_SAFETY_LEVEL", level:"YELLOW" }); ui.talkOpen = false; go("crisis-no"); },
   cBack(){ exitCrisis(); },
+  /* OWNER-APPROVED INTERIM, pending clinician: from the full crisis screen (after "Yes"/"I'm not sure"),
+     "That's not what I meant" asks "Do you feel safer?" instead of going Home. */
+  cFullBack(){ go("safety-check"); },
   cPlaces(){ ui.placesOpen = !ui.placesOpen; render(); },
   cPlan(){ ui.planFrom = "crisis"; logActivity("plan"); go("plan-now"); },
 

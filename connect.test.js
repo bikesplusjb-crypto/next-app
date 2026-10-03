@@ -25,7 +25,7 @@ const r=[];
 // ---- the warm line ----
 {const a=boot(); a.click(act('route','connect')); const t=a.T(); const call=[...a.doc.querySelectorAll('#app a')].find(x=>x.textContent.trim()==='Call the Warm Line');
  r.push(['warm line: Florida Warm Line, tel:18009451355', !!call && call.getAttribute('href')==='tel:18009451355' && t.includes('Florida Warm Line') && t.includes("Talk to someone who's been there")]);
- r.push(['warm line: hours and "not a crisis line" text', t.includes("Every day, 4pm–10pm. Not a crisis line. Just real people who've been through it.")]);
+ r.push(['warm line: hours and "not a crisis line" text', t.includes("Every day, 4pm–10pm Eastern. Not a crisis line. Just real people who've been through it.")]);
  const more=[...a.doc.querySelectorAll('#app a')].find(x=>x.textContent.trim()==='After 10pm or outside Florida: find a warmline near you');
  r.push(['after 10pm or outside Florida → findahelpline.com', !!more && more.getAttribute('href')==='https://findahelpline.com']);
  r.push(['number and hours live in one constant', (HTML.match(/18009451355/g)||[]).length===1 && (HTML.match(/4pm–10pm/g)||[]).length===1 && a.G('WARMLINE.tel')==='tel:18009451355']);
