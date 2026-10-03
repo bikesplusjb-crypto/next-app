@@ -51,7 +51,7 @@ ZigZag Mind is comfortable with people leaving. That is the goal, not a failure.
 | 1 Core | 6.6 | Connect (I just feel alone) + Human First |
 | 2 Zags | 6.7 | Zags, the calm-down guide |
 | 2 Zags | 6.7b | Snuggle Zags |
-| 2 Zags | 6.7c | Zags listens |
+| 2 Zags | 6.7c | Zags listens (proposed) |
 | 2 Zags | 6.7d | Safe place (proposed) |
 | 2 Zags | 6.16 | Turn it into a song |
 | 3 People & safety | 6.8 | Code word |
@@ -218,7 +218,7 @@ A short comfort mode. Zags curls up in a blanket and breathes slowly (about 4 se
 
 **Tests (when built):** vibration and sound off by default; vibration only when `navigator.vibrate` exists; ends at the check-in; no endless mode; RED stops it; only settings stored.
 
-### 6.7c Zags listens (built)
+### 6.7c Zags listens (proposed — spec only, build after 6.7 when its turn comes)
 
 Zags: "I'm listening. Go ahead." over a large text box. **No AI; Zags never replies to the content.**
 
@@ -231,8 +231,7 @@ Zags: "I'm listening. Go ahead." over a large text box. **No AI; Zags never repl
   - "I want a real person" (Connect, or `openCrisis()`)
 - All text goes through `handleSafeTextSubmit` / `safetyCheck` on **Done** and on **Keep**; RED opens the existing crisis flow.
 - Never saved unless the person taps Keep. No reminders, no counts.
-- **For clinician review:** the acknowledgment must stay the same whatever the person writes (it never reflects the content). Confirm wording.
-- **As built:** entry from Zags's start screen ("I need to get something out"). "I want a real person" opens Connect (Help stays one tap away). After Let it go: "It's gone. You don't have to carry it here." After Keep: "Kept on this phone, just for you. You can delete it in Settings." Kept words are listed in Settings with Delete, included in Export my data, and removed by Delete everything.
+- **For clinician review:** the acknowledgment must stay the same whatever the person writes (it never reflects the content). Confirm wording, and where "I want a real person" goes (Connect vs. crisis).
 
 **Tests (when built):** RED text on Done and on Keep opens the crisis screen; nothing stored unless Keep; Let it go deletes the text; the acknowledgment never quotes or reacts to the content.
 
