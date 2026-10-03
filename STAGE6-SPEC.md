@@ -50,7 +50,7 @@ ZigZag Mind is comfortable with people leaving. That is the goal, not a failure.
 | 1 Core | 6.5 | Change the scene |
 | 1 Core | 6.6 | Connect (I just feel alone) + Human First |
 | 2 Zags | 6.7 | Zags, the calm-down guide |
-| 2 Zags | 6.7b | Snuggle Zags |
+| 2 Zags | 6.7b | Snuggle Zags (proposed) |
 | 2 Zags | 6.7c | Zags listens (proposed) |
 | 2 Zags | 6.7d | Safe place (proposed) |
 | 2 Zags | 6.16 | Turn it into a song |
@@ -200,7 +200,7 @@ Record a normal check-in outcome with `interventionId: "zags"` (add `zags` to th
 
 **Legal note:** scripted, non-adaptive, and memory-free should keep Zags outside companion chatbot laws (for example California SB 243). A lawyer must confirm before public launch.
 
-### 6.7b Snuggle Zags (built)
+### 6.7b Snuggle Zags (proposed — spec only, build after 6.7 when its turn comes)
 
 A short comfort mode. Zags curls up in a blanket and breathes slowly (about 4 seconds in, 6 out); the person matches it.
 
@@ -213,8 +213,7 @@ A short comfort mode. Zags curls up in a blanket and breathes slowly (about 4 se
 - **Ending:** one scripted line, "Feeling a bit more settled? I'm here if you need me, and so are your people.", then the normal check-in step and the NO-branch / safety flow.
 - **Entry:** Calm and Zags's own start screen.
 - **Rules:** `blockIfRed()` first; Help one tap away; no reminders, no "Zags misses you", no counts. Only settings are stored (length, vibration, sound). All lines in `ZAGS_LINES`.
-- **For clinician review:** "I'm here if you need me" sits close to the banned "I'm always here for you" (Zags rule 3). Built as written; confirm it's acceptable or reword.
-- **As built:** first line "Hi, I'm Zags. I'm not a person, just a little guide. Let's get cozy and breathe slowly."; tip "Hold me close. Rest your phone on your chest and breathe with me."; the buzz is a soft lub-dub with each heartbeat; the sound is a quiet low tone with each heartbeat (Web Audio, no files).
+- **For clinician review:** "I'm here if you need me" sits close to the banned "I'm always here for you" (Zags rule 3). Confirm it's acceptable or reword before building.
 
 **Tests (when built):** vibration and sound off by default; vibration only when `navigator.vibrate` exists; ends at the check-in; no endless mode; RED stops it; only settings stored.
 

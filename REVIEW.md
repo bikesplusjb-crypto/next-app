@@ -353,16 +353,6 @@ Steps:
 3. Find one thing that's blue.
 4. Listen for the farthest sound.
 
-### Snuggle Zags (`zags_snuggle`)
-
-- Button: "Snuggle with Zags"
-- Description: "Zags curls up and breathes slowly. Match his breathing for a few minutes."
-- For: anxious, low, distraction, alone · about 3 min
-
-Steps:
-1. Hold your phone close.
-2. Breathe in as Zags breathes in, out as he breathes out.
-
 ### Change the scene (`change_scene`)
 
 - Button: "Change the scene"
@@ -730,9 +720,6 @@ Scripted, not AI. Taps only. Says he is not a person in every session's first li
 - `again`: "That's okay. Hard feelings take a while. We can do one more round."
 - `stillHard`: "Thank you for doing this. This is a good moment to reach a real person."
 - `bye`: "Bye for now. Go be with your people."
-- `snuggleHello`: "Hi, I'm Zags. I'm not a person, just a little guide. Let's get cozy and breathe slowly."
-- `snuggleTip`: "Hold me close. Rest your phone on your chest and breathe with me."
-- `snuggleEnd`: "Feeling a bit more settled? I'm here if you need me, and so are your people."
 
 Under every Zags screen: "Zags is a scripted guide, not a person and not AI."
 
@@ -742,7 +729,6 @@ _Hello_
 - **Button:** Help _(screen reader: "Get help now")_
 - **Heading:** Hi, I'm Zags. I'm not a person, just a little guide. I can stay with you for a few minutes.
 - **Button:** Okay, Zags
-- **Button:** Just snuggle
 - **Button:** Not right now
 - Zags is a scripted guide, not a person and not AI.
 
@@ -821,45 +807,11 @@ _Bye_
 
 Worse → straight to the crisis screen (`openCrisis()`, RED).
 
-### Snuggle Zags (6.7b)
-
-A short comfort mode from Calm or Zags's start screen. Slow breathing (in 4, out 6) with a heartbeat glow about 60 a minute. Length 2, 3 or 5 minutes (default 3), no endless mode. Buzz (only on phones that support vibration) and soft sound (made on the device) are both off by default. Reduced motion: Zags stays still and the glow fades slowly. Ends with his line, then the usual check-in. Only the three settings are stored.
-
-_Start_
-
-- **Button:** × _(screen reader: "Close and go to home")_
-- **Button:** Help _(screen reader: "Get help now")_
-- **Heading:** Hi, I'm Zags. I'm not a person, just a little guide. Let's get cozy and breathe slowly.
-- Hold me close. Rest your phone on your chest and breathe with me.
-- How long
-- **Button:** 2 min
-- **Button:** 3 min
-- **Button:** 5 min
-- **Button:** Snuggle
-- **Button:** Not right now
-- Zags is a scripted guide, not a person and not AI.
-
-_Snuggling_
-
-- **Button:** × _(screen reader: "Close and go to home")_
-- **Button:** Help _(screen reader: "Get help now")_
-- **Heading:** Breathe in…
-- Hold me close. Rest your phone on your chest and breathe with me.
-- **Button:** I'm done
-- Zags is a scripted guide, not a person and not AI.
-
-_End_
-
-- **Button:** × _(screen reader: "Close and go to home")_
-- **Button:** Help _(screen reader: "Get help now")_
-- **Heading:** Feeling a bit more settled? I'm here if you need me, and so are your people.
-- **Button:** Next
-- **Button:** Reach someone
-- Zags is a scripted guide, not a person and not AI.
-
-### Proposed, not built yet: 6.7c Zags listens, 6.7d Safe place
+### Proposed, not built yet: 6.7b Snuggle Zags, 6.7c Zags listens, 6.7d Safe place
 
 Copy from STAGE6-SPEC.md for early review. These lines are not in the app yet.
+- 6.7b ending: "Feeling a bit more settled? I'm here if you need me, and so are your people." (Check against Zags rule 3: never "I'm always here for you".)
+- 6.7b tip: "Hold me close"
 - 6.7c prompt: "I'm listening. Go ahead."
 - 6.7c acknowledgment (example): "Thank you for getting that out. That sounds heavy to carry."
 - 6.7c: "I'm not a person, but I'm here while you get it out."
@@ -900,7 +852,6 @@ Rendered for each state where the screen changes by state. Identical renders are
 - **Heading:** Let's slow things down.
 - Pick one. You can stop any time.
 - **Button:** Calm down with Zags — Breathe together for a few minutes
-- **Button:** Snuggle Zags — Hold him close and breathe slowly
 - **Button:** Breathe for 1 minute — In for 4, out for 6
 - **Button:** 5-4-3-2-1 grounding — Notice what's around you
 - **Button:** Feet on the floor — Three tiny steps, 2 minutes
@@ -1313,21 +1264,6 @@ _When: distraction_
 - **Button:** Help _(screen reader: "Get help now")_
 - **Heading:** Hi, I'm Zags. I'm not a person, just a little guide. I can stay with you for a few minutes.
 - **Button:** Okay, Zags
-- **Button:** Just snuggle
-- **Button:** Not right now
-- Zags is a scripted guide, not a person and not AI.
-
-### `snuggle`
-
-- **Button:** × _(screen reader: "Close and go to home")_
-- **Button:** Help _(screen reader: "Get help now")_
-- **Heading:** Hi, I'm Zags. I'm not a person, just a little guide. Let's get cozy and breathe slowly.
-- Hold me close. Rest your phone on your chest and breathe with me.
-- How long
-- **Button:** 2 min
-- **Button:** 3 min
-- **Button:** 5 min
-- **Button:** Snuggle
 - **Button:** Not right now
 - Zags is a scripted guide, not a person and not AI.
 
@@ -1838,14 +1774,6 @@ _When: distraction_
 - **Button:** Help _(screen reader: "Get help now")_
 - Calm down with Zags · Step 1 of 4
 - **Heading:** Breathe in for 4, out for 6.
-- **Button:** Next
-
-#### Snuggle Zags
-
-- **Button:** × _(screen reader: "Close and go to home")_
-- **Button:** Help _(screen reader: "Get help now")_
-- Snuggle Zags · Step 1 of 2
-- **Heading:** Hold your phone close.
 - **Button:** Next
 
 #### Change the scene
