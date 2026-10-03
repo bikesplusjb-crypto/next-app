@@ -3,14 +3,15 @@
 // It caches nothing else. Plan, history and prefs live only in localStorage and never
 // pass through here. tel: and sms: links never reach a service worker, so they work offline.
 // Bump CACHE whenever a shell file other than index.html changes.
-const CACHE = "zz-shell-v2";
-const SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icon.svg", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
+const CACHE = "zz-shell-v3";
+const SHELL = ["./", "./index.html", "./support/", "./manifest.webmanifest", "./icon.svg", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
 const NETWORK_TIMEOUT_MS = 3000;
 
 const abs = p => new URL(p, self.location).href;
 const SHELL_URLS = SHELL.map(abs);
 const INDEX = abs("./index.html");
 const PAGE_URLS = [abs("./"), INDEX];
+const SUPPORT = abs("./support/");   // 6.9 supporter guide: its own page, offline too
 
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
@@ -39,9 +40,13 @@ async function openPage(req){
   try {
     const res = await withTimeout(fetch(req), NETWORK_TIMEOUT_MS);
     const url = new URL(req.url);
-    if (res.ok && !url.search && PAGE_URLS.includes(url.origin + url.pathname)) await cache.put(INDEX, res.clone());
+    const path = url.origin + url.pathname;
+    if (res.ok && !url.search && PAGE_URLS.includes(path)) await cache.put(INDEX, res.clone());
+    if (res.ok && !url.search && path === SUPPORT) await cache.put(SUPPORT, res.clone());
     return res;
   } catch (_){
+    const path = new URL(req.url).origin + new URL(req.url).pathname;
+    if (path === SUPPORT || path === abs("./support")) return (await cache.match(SUPPORT)) || Response.error();
     return (await cache.match(INDEX)) || (await cache.match(abs("./"))) || Response.error();
   }
 }

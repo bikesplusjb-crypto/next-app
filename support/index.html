@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F6F4EF">
+<meta name="referrer" content="no-referrer">
+<link rel="icon" href="../icon.svg" type="image/svg+xml">
+<title>Supporter guide — ZigZag Mind</title>
+<meta name="description" content="Someone you care about trusted you. What to do if you got their code word, what to say, and how to get help together.">
+<!-- 6.9 Supporter guide. Static: no scripts, no storage, no tracking, nothing loaded from anywhere else. -->
+<style>
+:root{
+  --bg:#F6F4EF;--surface:#FFFFFF;--text:#1E2329;--text-muted:#5E6670;
+  --primary:#2F6F6A;--primary-soft:#E3EFEC;
+  --safety:#B5562E;--on-safety:#FFFFFF;--safety-soft:#F7E6DD;
+  --line:#E3DFD6;--focus:#6C63C7;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#12151A;--surface:#1B2027;--text:#ECEAE4;--text-muted:#A3A9B1;
+    --primary:#7BC4BB;--primary-soft:#1F3634;
+    --safety:#F09A6E;--on-safety:#12151A;--safety-soft:#3A2219;
+    --line:#2A313A;--focus:#A59EF0;
+    color-scheme:dark;
+  }
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
+main{max-width:640px;margin:0 auto;padding:0 20px 32px}
+header{display:flex;justify-content:space-between;align-items:center;min-height:64px;max-width:640px;margin:0 auto;padding:8px 20px}
+.brand{font-family:ui-rounded,"SF Pro Rounded","Nunito",-apple-system,system-ui,sans-serif;font-weight:800;font-size:20px;color:var(--primary)}
+.help{min-height:44px;padding:0 16px;border-radius:22px;border:1.5px solid var(--safety);background:var(--safety-soft);color:var(--text);font-weight:600;font-size:15px;text-decoration:none;display:inline-flex;align-items:center}
+.lbl{font-size:13px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted);margin:12px 0 4px}
+h1{font-size:28px;line-height:1.2;margin:4px 0 16px}
+h2{font-size:20px;line-height:1.25;margin:0}
+section{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px 18px;margin-top:12px}
+section.first{background:var(--safety-soft);border-color:var(--safety)}
+section p{margin:6px 0 0}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.btn{min-height:56px;border-radius:16px;font-weight:600;font-size:17px;display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;padding:8px 16px;background:var(--safety);color:var(--on-safety)}
+.btn.wide{margin-top:10px}
+.ideas{color:var(--text-muted);font-size:15px}
+footer{max-width:640px;margin:0 auto;padding:0 20px 40px;color:var(--text-muted);font-size:13px;text-align:center}
+a:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+</style>
+</head>
+<body>
+<header>
+  <span class="brand">ZigZag Mind</span>
+  <a class="help" href="tel:988" aria-label="Call 988, the Suicide and Crisis Lifeline">Call 988</a>
+</header>
+<main>
+  <p class="lbl">Supporter guide</p>
+  <h1>Someone you care about trusted you.</h1>
+
+  <section class="first" aria-labelledby="h-code">
+    <h2 id="h-code">If you got a code word</h2>
+    <p>It means they're struggling. Call them now. If they don't answer, keep trying, then go to them if you can. You don't have to fix anything.</p>
+  </section>
+
+  <section aria-labelledby="h-say">
+    <h2 id="h-say">What to say</h2>
+    <p>Ask directly: "Are you thinking about suicide?" Asking doesn't put the idea in someone's head. Listen more than you talk. "I'm here" and "I'm glad you told me" are enough.</p>
+  </section>
+
+  <section aria-labelledby="h-help">
+    <h2 id="h-help">Get help together</h2>
+    <p>Call or text 988 together. 988 helps people who are supporting someone, too. It's free and open 24/7.</p>
+    <div class="pair">
+      <a class="btn" href="tel:988">Call 988</a>
+      <a class="btn" href="sms:988">Text 988</a>
+    </div>
+    <a class="btn wide" href="tel:911">Call 911 if they're in danger or took something</a>
+  </section>
+
+  <section aria-labelledby="h-time">
+    <h2 id="h-time">Time and distance</h2>
+    <p>Offer to hold onto things for a while, or help them get somewhere safer.</p>
+  </section>
+
+  <section aria-labelledby="h-check">
+    <h2 id="h-check">Check in now and then</h2>
+    <p>Short, no-pressure messages help, even weeks later.</p>
+    <p class="ideas">Ideas: "Thinking of you. No need to reply." · "Want to grab food this week?"</p>
+  </section>
+
+  <section aria-labelledby="h-you">
+    <h2 id="h-you">Look after yourself</h2>
+    <p>This is heavy. You can call or text 988 for yourself, too.</p>
+  </section>
+</main>
+<footer>ZigZag Mind is a self-help support tool, not an emergency service.</footer>
+</body>
+</html>

@@ -327,6 +327,8 @@ The person writes three short lines in their own words, and ZigZag Mind turns th
 
 ### 6.9 Supporter guide page (mockup: Support)
 
+> **As built:** `support/index.html`, so `zigzagmind.com/support` works on a plain static host (check the live address once it ships). No scripts at all. The service worker keeps it available offline (cache v3). The "Check in now and then" section has its text and message ideas; the calendar reminders (Gentle / Close) are added with 6.10. "Share the supporter guide" shares only the address, never a name, the code word or plan content.
+
 New static page `support.html` at `zigzagmind.com/support`, same design tokens, readable in 3 minutes, no storage, no tracking. Sections: If you got a code word · What to say (ask directly: "Are you thinking about suicide?"; asking doesn't put the idea in someone's head; listen; "I'm here" is enough) · Get help together (988, including for supporters; 911 if in danger or they took something) · Time and distance (offer to hold onto things; no specifics) · Check in now and then (6.10) · Look after yourself. Footer: "ZigZag Mind is a self-help support tool, not an emergency service."
 
 Add "Share the supporter guide" next to each trusted person in My Plan (`share_link`).

@@ -330,6 +330,9 @@ a.cw-open{text-decoration:none;display:flex;align-items:center;justify-content:c
 .cw-words{margin-top:14px}
 .cw-words .sit[aria-pressed="true"]{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
 
+/* Stage 6.9: share the supporter guide */
+.link.share-guide{display:block;min-height:44px;margin-top:4px;padding:0 4px;text-align:left}
+
 /* Stage 6.6: Connect */
 .panel.conn{display:flex;flex-direction:column;gap:8px;margin-top:14px}
 .panel.conn h3{margin:6px 0 0}
@@ -435,6 +438,8 @@ const KIND_OFFLINE = ["Hold a door for someone.","Give someone a compliment.","H
 const CODE_WORDS = ["lighthouse","blue kite","pineapple","paper boat","sunflower","red balloon","penguin","maple leaf",
   "teacup","snow globe","cactus","marigold","kayak","honeybee","harbor"];
 const SUPPORT_URL_TEXT = "zigzagmind.com/support";
+/* 6.9 The supporter guide lives at support/ next to the app (zigzagmind.com/support). */
+function supportUrl(){ try { return new URL("support/", location.href).href; } catch (_){ return "https://" + SUPPORT_URL_TEXT; } }
 const codeWordSetupMsg = (name, word) => `Hey ${name}, I'm making a plan for hard days. If I ever text you "${word}", it means I'm struggling and need you to call me or come be with me. You don't have to fix anything. Here's a short guide: ${SUPPORT_URL_TEXT}`;
 const MESSAGE_IDEAS = ["Can't sleep, you up?","Rough night. Can you talk for 5 minutes?","Want to catch up this week?"];
 /* Human First (session only, never saved): after 2 taps on "Something else", or 2 finished steps without
@@ -2037,7 +2042,8 @@ const SCREENS = {
         <div class="pair">
           <a class="btn btn-outline" href="${telLink(p.phone)}" aria-label="Call ${esc(p.name)}">Call</a>
           <a class="btn btn-outline" href="${smsLink(p.phone, HARD_TIME_MSG)}" aria-label="Text ${esc(p.name)}">Text</a>
-        </div>`).join("") : `<p class="empty">Nobody added yet.</p>`;
+        </div>
+        ${editable ? `<button class="link share-guide" data-act="shareGuide" aria-label="Share the supporter guide with ${esc(p.name)}">Share the supporter guide</button>` : ""}`).join("") : `<p class="empty">Nobody added yet.</p>`;
     const pro = pb.professional && pb.professional.name ? `<p style="margin:14px 0 8px"><strong>${esc(pb.professional.name)}</strong>${pb.professional.phone ? ` · ${esc(pb.professional.phone)}` : ""}</p>
         ${pb.professional.phone ? `<a class="btn btn-secondary" href="${telLink(pb.professional.phone)}">Call ${esc(pb.professional.name)}</a>` : ""}` : "";
     return { nav:editable, close:false, body:`
@@ -2855,6 +2861,20 @@ const ACTIONS = {
     zagsPhase(z.hard >= 2 || z.rounds >= ZAGS_MAX_ROUNDS ? "hard" : "again");
   },
   zagsBye(){ if (blockIfRed()) return; zagsStopBreathing(); zagsPhase("bye"); },
+  /* 6.9: share_link. Shares only the guide's address; never a name, the code word or anything from the plan. */
+  shareGuide(){
+    const url = supportUrl();
+    const done = msg => { ui.flash = msg; render(); };
+    if (navigator.share){
+      navigator.share({ title:"Supporter guide", text:"A short guide for helping me on hard days.", url }).catch(() => {});
+      return;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(url).then(() => done("Link copied. Paste it in a message."), () => done(`Copy this link: ${url}`));
+      return;
+    }
+    done(`Copy this link: ${url}`);
+  },
   cwStart(){ ui.msg = ""; ui.cwPerson = null; ui.cwWord = null; ui.cwOwn = false; ui.cwOwnText = ""; ui.cwFinal = null; go("cw-person"); },
   cwPerson(arg){ ui.cwPerson = Number(arg); ui.cwOptions = pickCodeWords(); ui.cwWord = ui.cwOptions[0]; ui.cwOwn = false; ui.msg = ""; go("cw-word"); },
   cwWord(arg){ ui.cwWord = arg; ui.cwOwn = false; ui.msg = ""; render(); },

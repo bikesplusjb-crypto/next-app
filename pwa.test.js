@@ -41,11 +41,12 @@ for(const f of ['icon-512.png','icon-192.png','apple-touch-icon.png']){
     if(Math.hypot(x+.5-c,y+.5-c)>R){ if(!paper) ok=false; } else if(!paper) inside=true; }
   r.push([`${f}: Zags fits the maskable safe zone`, ok && inside]);
 }
-r.push(['cache version bumped for the new icons', /const CACHE = "zz-shell-v2";/.test(read('sw.js').toString('utf8'))]);
+r.push(['cache version bumped when the shell changes (v3: supporter guide)', /const CACHE = "zz-shell-v3";/.test(read('sw.js').toString('utf8'))]);
 
 // ---- service worker harness ----
 const FILES={}; ['index.html','manifest.webmanifest','icon.svg','icon-192.png','icon-512.png','apple-touch-icon.png'].forEach(f=>FILES['/'+f]=read(f));
 FILES['/']=FILES['/index.html']; FILES['/data.json']=Buffer.from('{}');
+FILES['/support/']=read('support/index.html');
 function swEnv(){
   const net={mode:'online'};
   const fetch=async req=>{ const u=new URL(typeof req==='string'?req:req.url, ORIGIN);
@@ -83,6 +84,8 @@ const bootOpts=(url,extra)=>({url,runScripts:'dangerously',pretendToBeVisual:tru
   r.push(['offline: any page address still opens the app', !!offlineQ && offlineQ.equals(FILES['/index.html'])]);
   const icon=await body(sw.req('/icon-192.png'));
   r.push(['offline: icons load from the cache', !!icon && icon.equals(FILES['/icon-192.png'])]);
+  const guide=await body(sw.req('/support/',{mode:'navigate'}));
+  r.push(['offline: the supporter guide opens from the cache (not the app)', !!guide && guide.equals(FILES['/support/'])]);
 
   // The cached page boots and the crisis screen works with no network.
   { const dom=new JSDOM(offline.toString('utf8'),bootOpts(ORIGIN+'/'));

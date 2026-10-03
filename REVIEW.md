@@ -751,6 +751,36 @@ _Your message_
 - **Button:** Yes, I sent it
 - **Button:** Not yet
 
+### Supporter guide (6.9, zigzagmind.com/support)
+
+A static page for the people in someone's plan: no scripts, no storage, no tracking. Shared from My Plan ("Share the supporter guide" next to each trusted person; only the address is shared). Word for word:
+
+**Heading:** Someone you care about trusted you.
+
+**If you got a code word**
+- It means they're struggling. Call them now. If they don't answer, keep trying, then go to them if you can. You don't have to fix anything.
+
+**What to say**
+- Ask directly: "Are you thinking about suicide?" Asking doesn't put the idea in someone's head. Listen more than you talk. "I'm here" and "I'm glad you told me" are enough.
+
+**Get help together**
+- Call or text 988 together. 988 helps people who are supporting someone, too. It's free and open 24/7.
+- **Link → `tel:988`:** Call 988
+- **Link → `sms:988`:** Text 988
+- **Link → `tel:911`:** Call 911 if they're in danger or took something
+
+**Time and distance**
+- Offer to hold onto things for a while, or help them get somewhere safer.
+
+**Check in now and then**
+- Short, no-pressure messages help, even weeks later.
+- Ideas: "Thinking of you. No need to reply." · "Want to grab food this week?"
+
+**Look after yourself**
+- This is heavy. You can call or text 988 for yourself, too.
+
+Footer: "ZigZag Mind is a self-help support tool, not an emergency service."
+
 ### Zags: every line he can say (ZAGS_LINES)
 
 Scripted, not AI. Taps only. Says he is not a person in every session's first line. No relationship language, no pressure to stay, no memory between sessions, never the person's name. Every session ends at a person. RED stops Zags. At most two breathing rounds per session (4 breaths each: in 4 seconds, out 6; 3 breaths with reduced motion). Voice is off by default and uses the device's own speech only.
@@ -1517,6 +1547,7 @@ _When: distraction_
 - Jordan · friend · 555-0142
 - **Link → `tel:5550142`:** Call _(screen reader: "Call Jordan")_
 - **Link → `sms:5550142?&body=I'm having a really hard time. Can you call me?`:** Text _(screen reader: "Text Jordan")_
+- **Button:** Share the supporter guide _(screen reader: "Share the supporter guide with Jordan")_
 - **Heading:** Professional and crisis support
 - **Button:** Edit _(screen reader: "Edit: Professional and crisis support")_
 - 988 Suicide & Crisis Lifeline, free and 24/7. Always in your plan.

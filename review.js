@@ -190,6 +190,17 @@ for(const [label,screen,extra] of [['Who should get your code word?','cw-person'
   md.push(...screenText(w, `${withPerson}; ${extra} session.screen=${JSON.stringify(screen)}`));
 }
 
+H(3,'Supporter guide (6.9, zigzagmind.com/support)');
+P('A static page for the people in someone\'s plan: no scripts, no storage, no tracking. Shared from My Plan ("Share the supporter guide" next to each trusted person; only the address is shared). Word for word:');
+{ const g=new JSDOM(fs.readFileSync(path.join(__dirname,'support','index.html'),'utf8')).window.document;
+  P(''); P(`**Heading:** ${g.querySelector('h1').textContent}`);
+  for(const sec of g.querySelectorAll('main section')){
+    P(''); P(`**${sec.querySelector('h2').textContent}**`);
+    sec.querySelectorAll('p').forEach(x=>P(`- ${x.textContent.replace(/\s+/g,' ').trim()}`));
+    sec.querySelectorAll('a[href]').forEach(x=>P(`- **Link → \`${x.getAttribute('href')}\`:** ${x.textContent.trim()}`));
+  }
+  P(''); P(`Footer: "${g.querySelector('footer').textContent.trim()}"`); }
+
 H(3,'Zags: every line he can say (ZAGS_LINES)');
 P('Scripted, not AI. Taps only. Says he is not a person in every session\'s first line. No relationship language, no pressure to stay, no memory between sessions, never the person\'s name. Every session ends at a person. RED stops Zags. At most two breathing rounds per session (4 breaths each: in 4 seconds, out 6; 3 breaths with reduced motion). Voice is off by default and uses the device\'s own speech only.');
 list(Object.entries(G('ZAGS_LINES')).map(([k,v])=>`${code(k)}: "${v}"`));
