@@ -50,6 +50,9 @@ ZigZag Mind is comfortable with people leaving. That is the goal, not a failure.
 | 1 Core | 6.5 | Change the scene |
 | 1 Core | 6.6 | Connect (I just feel alone) + Human First |
 | 2 Zags | 6.7 | Zags, the calm-down guide |
+| 2 Zags | 6.7b | Snuggle Zags (proposed) |
+| 2 Zags | 6.7c | Zags listens (proposed) |
+| 2 Zags | 6.7d | Safe place (proposed) |
 | 2 Zags | 6.16 | Turn it into a song |
 | 3 People & safety | 6.8 | Code word |
 | 3 People & safety | 6.9 | Supporter guide page |
@@ -196,6 +199,59 @@ Record a normal check-in outcome with `interventionId: "zags"` (add `zags` to th
 **Tests:** first line contains "not a person"; `ZAGS_LINES` contains none of the banned phrases; Worse calls `openCrisis()`; second Still hard shows 988; voice off by default.
 
 **Legal note:** scripted, non-adaptive, and memory-free should keep Zags outside companion chatbot laws (for example California SB 243). A lawyer must confirm before public launch.
+
+### 6.7b Snuggle Zags (proposed — spec only, build after 6.7 when its turn comes)
+
+A short comfort mode. Zags curls up in a blanket and breathes slowly (about 4 seconds in, 6 out); the person matches it.
+
+- **Heartbeat glow:** a soft glow at about 60 per minute.
+- **Vibration (Android only):** optional vibration in time with the breathing (`navigator.vibrate`), **off by default** and feature-detected. iPhone shows the glow instead.
+- **"Hold me close" tip:** e.g. hold the phone against your chest.
+- **Sound:** optional soft sound, **off by default**, on the device only.
+- **Reduced motion:** Zags stays still; a slow fading glow only.
+- **Length:** 2 / 3 / 5 minutes (default 3). No endless mode.
+- **Ending:** one scripted line, "Feeling a bit more settled? I'm here if you need me, and so are your people.", then the normal check-in step and the NO-branch / safety flow.
+- **Entry:** Calm and Zags's own start screen.
+- **Rules:** `blockIfRed()` first; Help one tap away; no reminders, no "Zags misses you", no counts. Only settings are stored (length, vibration, sound). All lines in `ZAGS_LINES`.
+- **For clinician review:** "I'm here if you need me" sits close to the banned "I'm always here for you" (Zags rule 3). Confirm it's acceptable or reword before building.
+
+**Tests (when built):** vibration and sound off by default; vibration only when `navigator.vibrate` exists; ends at the check-in; no endless mode; RED stops it; only settings stored.
+
+### 6.7c Zags listens (proposed — spec only, build after 6.7 when its turn comes)
+
+Zags: "I'm listening. Go ahead." over a large text box. **No AI; Zags never replies to the content.**
+
+- After **Done**: one scripted acknowledgment from `ZAGS_LINES` (for example "Thank you for getting that out. That sounds heavy to carry."), plus "I'm not a person, but I'm here while you get it out."
+- Then tap choices:
+  - "I'm not done — keep listening" (back to the text box)
+  - "Let it go" (the text fades and is deleted)
+  - "Keep it private" (saved on the device in `store.sensitive`, deletable in Settings)
+  - "Help me calm down" (Calm, or Snuggle Zags once built)
+  - "I want a real person" (Connect, or `openCrisis()`)
+- All text goes through `handleSafeTextSubmit` / `safetyCheck` on **Done** and on **Keep**; RED opens the existing crisis flow.
+- Never saved unless the person taps Keep. No reminders, no counts.
+- **For clinician review:** the acknowledgment must stay the same whatever the person writes (it never reflects the content). Confirm wording, and where "I want a real person" goes (Connect vs. crisis).
+
+**Tests (when built):** RED text on Done and on Keep opens the crisis screen; nothing stored unless Keep; Let it go deletes the text; the acknowledgment never quotes or reacts to the content.
+
+### 6.7d Safe place (proposed — spec only, build after 6.7 when its turn comes)
+
+**Part A — "My safe place":** built once by the person: where it is, what they see, what they hear, what they smell or feel, who's there (or nobody), and optional words of their own. Saved in `store.sensitive`; editable and deletable.
+
+- "Go to my safe place" reads their choices back, one slow step per screen, with a breathing cue.
+- **Every** step has "Stop — I want to come back" → 5-4-3-2-1 grounding, and Help.
+- Ends with the check-in step and the safety flow.
+- Free text through `handleSafeTextSubmit`.
+- **Trauma caution for clinician review:** guided imagery can bring up distressing memories for some people. Confirm the wording, the "Stop" path, and whether to add a note before starting.
+
+**Part B — "Safe places I can go"** (My Plan): a list the person types (name and optional phone).
+
+- No geolocation, no maps API.
+- "Call first" (`tel:`) and "Directions" (opens their own Maps app with exactly what **they** typed) only on tap.
+- Copy: "This is a safe space. Nothing you type here leaves your phone."
+- Note: My Plan already has "People and places that take my mind off things". Decide whether Part B replaces, extends, or sits beside it.
+
+**Tests (when built):** "Stop" on every step goes to grounding; Help on every step; Directions uses only the typed text and no location; nothing leaves the device.
 
 ### 6.16 Turn it into a song (reference: song-preview.html)
 

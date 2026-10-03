@@ -807,6 +807,18 @@ _Bye_
 
 Worse → straight to the crisis screen (`openCrisis()`, RED).
 
+### Proposed, not built yet: 6.7b Snuggle Zags, 6.7c Zags listens, 6.7d Safe place
+
+Copy from STAGE6-SPEC.md for early review. These lines are not in the app yet.
+- 6.7b ending: "Feeling a bit more settled? I'm here if you need me, and so are your people." (Check against Zags rule 3: never "I'm always here for you".)
+- 6.7b tip: "Hold me close"
+- 6.7c prompt: "I'm listening. Go ahead."
+- 6.7c acknowledgment (example): "Thank you for getting that out. That sounds heavy to carry."
+- 6.7c: "I'm not a person, but I'm here while you get it out."
+- 6.7c choices: "I'm not done — keep listening" · "Let it go" · "Keep it private" · "Help me calm down" · "I want a real person"
+- 6.7d on every step: "Stop — I want to come back" (→ 5-4-3-2-1 grounding). Trauma caution: guided imagery can bring up distressing memories.
+- 6.7d Part B: "This is a safe space. Nothing you type here leaves your phone." · "Call first" · "Directions"
+
 ## 7. Every other screen
 
 Rendered for each state where the screen changes by state. Identical renders are listed once.
