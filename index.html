@@ -326,7 +326,7 @@ a.codeword{text-decoration:none;display:flex;align-items:center;justify-content:
 .setup-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:10px}
 .setup-row > span{display:flex;flex-direction:column}
 .msg-preview{margin:8px 0 12px;padding:14px 16px;border-radius:18px 18px 4px 18px;background:var(--primary-soft);line-height:1.4}
-a.cw-open{text-decoration:none;display:flex;align-items:center;justify-content:center}
+a.cw-open,a.ci-open{text-decoration:none;display:flex;align-items:center;justify-content:center}
 .cw-words{margin-top:14px}
 .cw-words .sit[aria-pressed="true"]{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
 
@@ -438,6 +438,22 @@ const KIND_OFFLINE = ["Hold a door for someone.","Give someone a compliment.","H
 const CODE_WORDS = ["lighthouse","blue kite","pineapple","paper boat","sunflower","red balloon","penguin","maple leaf",
   "teacup","snow globe","cactus","marigold","kayak","honeybee","harbor"];
 const SUPPORT_URL_TEXT = "zigzagmind.com/support";
+/* 6.10 Check-in reminders: ask a trusted person to set reminders on THEIR phone. Only a first name goes in the link. */
+const CHECKIN_ASK = "Would you check in on me now and then? This sets up reminders on your phone. No need to say anything special.";
+const firstName = n => String(n || "").normalize("NFC").replace(/[^\p{L} -]/gu, "").replace(/\s+/g, " ").trim().split(" ")[0].slice(0, 20);
+function checkinUrl(name){
+  const u = new URL(supportUrl());
+  const f = firstName(name);
+  if (f) u.searchParams.set("for", f);
+  u.hash = "checkins";
+  return u.href;
+}
+/* People already asked (matched by phone, like the code word). */
+function checkinAsked(){
+  const digits = x => String(x || "").replace(/\D/g, "");
+  const people = getPlan().trustedPeople || [];
+  return (getPlan().checkinCircle || []).map(c => people.find(p => digits(p.phone) && digits(p.phone) === c.phone)).filter(Boolean);
+}
 /* 6.9 The supporter guide lives at support/ next to the app (zigzagmind.com/support). */
 function supportUrl(){ try { return new URL("support/", location.href).href; } catch (_){ return "https://" + SUPPORT_URL_TEXT; } }
 const codeWordSetupMsg = (name, word) => `Hey ${name}, I'm making a plan for hard days. If I ever text you "${word}", it means I'm struggling and need you to call me or come be with me. You don't have to fix anything. Here's a short guide: ${SUPPORT_URL_TEXT}`;
@@ -1779,6 +1795,36 @@ const SCREENS = {
         <button class="btn btn-secondary" data-act="cwCancel">Not yet</button>` };
   },
 
+  /* 6.10: Check-in reminders. choose_person → share_link (or text it) → confirm. */
+  "ci-person"(){
+    const people = getPlan().trustedPeople || [];
+    return { close:false, body:`
+      <p class="lbl">Set up with your people · Check-in reminders</p>
+      ${title("Who would you like to check in on you?")}
+      <p class="sub">They'll get a link that adds gentle reminders to their own calendar. Nothing is sent by ZigZag Mind.</p>
+      ${people.length ? `<div class="list">${people.map((p, i) =>
+        `<button class="card" data-act="ciPerson" data-arg="${i}">${icon("people")}<span>${esc(p.name)}${p.relationship ? `<span class="meta">${esc(p.relationship)}</span>` : ""}</span></button>`).join("")}</div>`
+        : `<p class="note">Add someone you trust first. Then come back here.</p>
+          <button class="btn btn-secondary" data-act="planEdit" data-arg="trustedPeople">Add someone</button>`}`,
+      actions:`<button class="btn btn-secondary" data-act="ciCancel">Back to My Plan</button>` };
+  },
+  "ci-send"(){
+    const p = (getPlan().trustedPeople || [])[ui.ciPerson];
+    if (!p) return SCREENS["ci-person"]();
+    const url = checkinUrl(p.name), text = `${CHECKIN_ASK} ${url}`;
+    return { close:false, body:`
+      <p class="lbl">Set up with your people · Check-in reminders</p>
+      ${title(`Your message to ${esc(p.name)}`)}
+      <p class="msg-preview">${esc(text)}</p>
+      <a class="btn btn-primary ci-open" href="${smsLink(p.phone, text)}">Text it to ${esc(p.name)}</a>
+      <button class="btn btn-secondary" style="margin-top:10px" data-act="ciShare">Share another way</button>
+      ${ui.flash ? `<p class="flash" role="status">${esc(ui.flash)}</p>` : ""}
+      <p class="note">ZigZag Mind never sends anything for you. The link has only ${esc(firstName(p.name) || "no name")}, nothing else from your plan.</p>
+      <h2>Did you send it?</h2>`,
+      actions:`<button class="btn btn-primary" data-act="ciSaved">Yes, I sent it</button>
+        <button class="btn btn-secondary" data-act="ciCancel">Not yet</button>` };
+  },
+
   /* 6.6: Connect (I just feel alone). Zags (6.7) and the code word (6.8) join this screen when they're built. */
   connect(){
     const people = getPlan().trustedPeople || [];
@@ -2062,7 +2108,9 @@ const SCREENS = {
       ${editable ? `<div class="panel" id="setupPeople"><h3>Set up with your people</h3>
         <div class="setup-row"><span><b>Code word</b><span class="small">${codeWord() ? `${esc(codeWord().word)} · with ${esc(codeWord().person.name)}` : "One word that means: I'm struggling, call me."}</span></span>
           <button class="edit-btn" data-act="cwStart">${codeWord() ? "Change" : "Set up"}</button></div>
-        ${codeWord() ? `<button class="link" data-act="cwRemove" style="margin-top:4px">Remove code word</button>` : ""}</div>` : ""}
+        ${codeWord() ? `<button class="link" data-act="cwRemove" style="margin-top:4px">Remove code word</button>` : ""}
+        <div class="setup-row"><span><b>Check-in reminders</b><span class="small">${checkinAsked().length ? `Asked: ${checkinAsked().map(p => esc(p.name)).join(", ")}` : "Ask someone to check in on you now and then."}</span></span>
+          <button class="edit-btn" data-act="ciStart">${checkinAsked().length ? "Ask someone" : "Set up"}</button></div></div>` : ""}
       <div class="panel">${head("saferSpace", "Making my space safer")}
         ${pb.saferSpace ? `<p style="margin-top:6px">${esc(pb.saferSpace)}</p>` : `<p class="empty">Nothing here yet.</p>`}</div>
       <div class="panel">${head("avoid", "Things to avoid when I'm struggling")}${ul(pb.avoid)}</div>
@@ -2875,6 +2923,32 @@ const ACTIONS = {
     }
     done(`Copy this link: ${url}`);
   },
+  ciStart(){ ui.flash = ""; ui.ciPerson = null; go("ci-person"); },
+  ciPerson(arg){ ui.ciPerson = Number(arg); ui.flash = ""; go("ci-send"); },
+  ciShare(){
+    const p = (getPlan().trustedPeople || [])[ui.ciPerson];
+    if (!p) return;
+    const url = checkinUrl(p.name);
+    if (navigator.share){ navigator.share({ title:"Check in on me", text:CHECKIN_ASK, url }).catch(() => {}); return; }
+    const done = m => { ui.flash = m; render(); };
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(`${CHECKIN_ASK} ${url}`).then(() => done("Copied. Paste it in a message."), () => done(`Copy this link: ${url}`));
+      return;
+    }
+    done(`Copy this link: ${url}`);
+  },
+  ciSaved(){
+    const p = (getPlan().trustedPeople || [])[ui.ciPerson];
+    if (!p) return;
+    const phone = String(p.phone).replace(/\D/g, "");
+    const list = (getPlan().checkinCircle || []).filter(c => c.phone !== phone);
+    list.push({ personIndex:ui.ciPerson, at:Date.now(), phone });
+    getPlan().checkinCircle = list;
+    saveStore();
+    ui.flash = "Saved. Thank you for asking."; ui.planFrom = "tab";
+    go("plan");
+  },
+  ciCancel(){ ui.flash = ""; ui.planFrom = "tab"; go("plan"); },
   cwStart(){ ui.msg = ""; ui.cwPerson = null; ui.cwWord = null; ui.cwOwn = false; ui.cwOwnText = ""; ui.cwFinal = null; go("cw-person"); },
   cwPerson(arg){ ui.cwPerson = Number(arg); ui.cwOptions = pickCodeWords(); ui.cwWord = ui.cwOptions[0]; ui.cwOwn = false; ui.msg = ""; go("cw-word"); },
   cwWord(arg){ ui.cwWord = arg; ui.cwOwn = false; ui.msg = ""; render(); },

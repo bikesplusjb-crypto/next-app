@@ -337,6 +337,8 @@ Add "Share the supporter guide" next to each trusted person in My Plan (`share_l
 
 ### 6.10 Check-in reminders
 
+> **As built:** the guide (`support/index.html#checkins`) has one small inline script that only builds the `.ics` (no network, no storage). Gentle = 9 reminders (days 7, 14, 21, 28, then the same date each month for 5 months, clamped to month ends); Close = 10 (days 3, 6, 9, 12, then weekly for 6 weeks). Each is 6pm local time, 15 minutes, with an alert. The app sanitizes the first name the same way before it goes in the link, and offers "Text it to [name]" plus "Share another way" (Web Share, then copy). `plan.checkinCircle` also stores the phone digits so the right person is shown if the list is reordered.
+
 **Supporter side** (`support.html#checkins`): pick **Gentle** (weekly for 4 weeks, then monthly for 5 months) or **Close** (every 3 days for 2 weeks, then weekly for 6 weeks). The page builds an `.ics` file on their phone: events "Check in on [name]," each with 3 message ideas ("Thinking of you. No need to reply." · "Want to grab food this week?" · "How's your week going?"). `[name]` comes from `?for=`: letters, spaces, hyphens only, 20 characters max, optional. Nothing else ever goes in the URL.
 
 **User side** (My Plan → Set up with your people → Check-in reminders): `share_link` with `zigzagmind.com/support?for=[first name]#checkins` and "Would you check in on me now and then? This sets up reminders on your phone. No need to say anything special." Then `confirm` → `plan.checkinCircle = [{ personIndex, at }]`.

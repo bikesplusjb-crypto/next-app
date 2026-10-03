@@ -773,13 +773,27 @@ A static page for the people in someone's plan: no scripts, no storage, no track
 - Offer to hold onto things for a while, or help them get somewhere safer.
 
 **Check in now and then**
-- Short, no-pressure messages help, even weeks later.
-- Ideas: "Thinking of you. No need to reply." · "Want to grab food this week?"
+- Short, no-pressure messages help, even weeks later. Add reminders to your own calendar:
+- **Button:** GentleWeekly for a month, then monthly for 5 months
+- **Button:** CloseEvery 3 days for 2 weeks, then weekly for 6 weeks
+- Reminders need JavaScript turned on. You can still add a few to your calendar yourself.
+- Ideas: "Thinking of you. No need to reply." · "Want to grab food this week?" · "How's your week going?"
+- The calendar file is made on your phone. Nothing is sent anywhere.
 
 **Look after yourself**
 - This is heavy. You can call or text 988 for yourself, too.
 
 Footer: "ZigZag Mind is a self-help support tool, not an emergency service."
+
+### Check-in reminders (6.10)
+
+The person asks someone (My Plan → Set up with your people → Check-in reminders). Messages or the share sheet opens with the ask and a link to the guide with only their first name (`?for=`; letters, spaces and hyphens, 20 characters max). Saved after "Yes, I sent it" as who was asked. On the guide, the supporter picks Gentle (weekly for 4 weeks, then monthly for 5 months: 9 reminders) or Close (every 3 days for 2 weeks, then weekly for 6 weeks: 10 reminders). Their phone builds a calendar file; nothing is sent or stored.
+
+The ask: "Would you check in on me now and then? This sets up reminders on your phone. No need to say anything special."
+
+Each reminder: "Check in on [first name]" (or "Check in on your person"), 6pm, with: "A short, no-pressure message is enough. Ideas: Thinking of you. No need to reply. · Want to grab food this week? · How's your week going?"
+
+On the guide when a name is given: "[name] would like you to check in now and then." After a choice: "[Gentle/Close] reminders are ready. Open the file to add them to your calendar."
 
 ### Zags: every line he can say (ZAGS_LINES)
 
@@ -1371,6 +1385,24 @@ _When: distraction_
 - **Button:** Jordan — friend
 - **Button:** Back to My Plan
 
+### `ci-person`
+
+- **Button:** Help _(screen reader: "Get help now")_
+- Set up with your people · Check-in reminders
+- **Heading:** Who would you like to check in on you?
+- They'll get a link that adds gentle reminders to their own calendar. Nothing is sent by ZigZag Mind.
+- **Button:** Jordan — friend
+- **Button:** Back to My Plan
+
+### `ci-send`
+
+- **Button:** Help _(screen reader: "Get help now")_
+- Set up with your people · Check-in reminders
+- **Heading:** Who would you like to check in on you?
+- They'll get a link that adds gentle reminders to their own calendar. Nothing is sent by ZigZag Mind.
+- **Button:** Jordan — friend
+- **Button:** Back to My Plan
+
 ### `connect`
 
 - **Button:** × _(screen reader: "Close and go to home")_
@@ -1556,6 +1588,8 @@ _When: distraction_
 - Getting help is a strength, not a weakness. Read more
 - **Heading:** Set up with your people
 - One word that means: I'm struggling, call me.
+- **Button:** Set up
+- Ask someone to check in on you now and then.
 - **Button:** Set up
 - **Heading:** Making my space safer
 - **Button:** Edit _(screen reader: "Edit: Making my space safer")_

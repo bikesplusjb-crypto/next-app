@@ -196,10 +196,16 @@ P('A static page for the people in someone\'s plan: no scripts, no storage, no t
   P(''); P(`**Heading:** ${g.querySelector('h1').textContent}`);
   for(const sec of g.querySelectorAll('main section')){
     P(''); P(`**${sec.querySelector('h2').textContent}**`);
-    sec.querySelectorAll('p').forEach(x=>P(`- ${x.textContent.replace(/\s+/g,' ').trim()}`));
+    sec.querySelectorAll('p, button').forEach(x=>{ const t=x.textContent.replace(/\s+/g,' ').trim(); if(t) P(`- ${x.tagName==='BUTTON'?'**Button:** ':''}${t}`); });
     sec.querySelectorAll('a[href]').forEach(x=>P(`- **Link → \`${x.getAttribute('href')}\`:** ${x.textContent.trim()}`));
   }
   P(''); P(`Footer: "${g.querySelector('footer').textContent.trim()}"`); }
+
+H(3,'Check-in reminders (6.10)');
+P('The person asks someone (My Plan → Set up with your people → Check-in reminders). Messages or the share sheet opens with the ask and a link to the guide with only their first name (`?for=`; letters, spaces and hyphens, 20 characters max). Saved after "Yes, I sent it" as who was asked. On the guide, the supporter picks Gentle (weekly for 4 weeks, then monthly for 5 months: 9 reminders) or Close (every 3 days for 2 weeks, then weekly for 6 weeks: 10 reminders). Their phone builds a calendar file; nothing is sent or stored.');
+P(''); P(`The ask: "${G('CHECKIN_ASK')}"`);
+P(''); P('Each reminder: "Check in on [first name]" (or "Check in on your person"), 6pm, with: "A short, no-pressure message is enough. Ideas: Thinking of you. No need to reply. · Want to grab food this week? · How\'s your week going?"');
+P(''); P('On the guide when a name is given: "[name] would like you to check in now and then." After a choice: "[Gentle/Close] reminders are ready. Open the file to add them to your calendar."');
 
 H(3,'Zags: every line he can say (ZAGS_LINES)');
 P('Scripted, not AI. Taps only. Says he is not a person in every session\'s first line. No relationship language, no pressure to stay, no memory between sessions, never the person\'s name. Every session ends at a person. RED stops Zags. At most two breathing rounds per session (4 breaths each: in 4 seconds, out 6; 3 breaths with reduced motion). Voice is off by default and uses the device\'s own speech only.');

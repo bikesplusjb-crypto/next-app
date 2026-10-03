@@ -10,8 +10,9 @@ const g=new JSDOM(PAGE,{url:'https://zigzagmind.com/support/'}).window.document;
 const text=g.body.textContent.replace(/\s+/g,' ');
 const hrefs=[...g.querySelectorAll('a[href]')].map(a=>a.getAttribute('href'));
 r.push(['the guide lives at support/ (zigzagmind.com/support)', fs.existsSync(path.join(__dirname,'support','index.html')) && /Here's a short guide: \$\{SUPPORT_URL_TEXT\}/.test(HTML) && /SUPPORT_URL_TEXT = "zigzagmind\.com\/support"/.test(HTML)]);
-r.push(['no scripts at all', !/<script/i.test(PAGE) && !/\son[a-z]+=/i.test(PAGE)]);
-r.push(['no network calls: nothing loaded from anywhere else', !/fetch\(|XMLHttpRequest|sendBeacon|WebSocket|EventSource|@import|url\(/i.test(PAGE)
+r.push(['one small inline script only (6.10 calendar file); nothing loaded, no inline handlers', (PAGE.match(/<script/gi)||[]).length===1 && !/<script[^>]*src=/i.test(PAGE) && !/\son[a-z]+=/i.test(PAGE)]);
+const CSS=(PAGE.match(/<style>([\s\S]*?)<\/style>/)||[])[1]||'';
+r.push(['no network calls: nothing loaded from anywhere else', !/fetch\(|XMLHttpRequest|sendBeacon|WebSocket|EventSource|import\(|navigator\.share|window\.open/.test(PAGE) && !/@import|url\(/i.test(CSS)
   && [...g.querySelectorAll('[src], link[href]')].every(e=>!/^(https?:)?\/\//.test(e.getAttribute('src')||e.getAttribute('href')))]);
 r.push(['no storage APIs', !/localStorage|sessionStorage|indexedDB|document\.cookie|caches\./.test(PAGE)]);
 r.push(['no tracking: no analytics, pixels or third-party links', !/analytics|gtag|pixel|facebook|google|plausible|segment/i.test(PAGE) && hrefs.every(h=>/^(tel|sms):/.test(h))]);
