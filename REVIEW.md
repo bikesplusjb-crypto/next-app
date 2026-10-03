@@ -341,6 +341,18 @@ Steps:
 1. For the next 60 seconds, your only job is to beat the timer.
 2. Tap when the dot is inside the ring.
 
+### Calm down with Zags (`zags`)
+
+- Button: "Calm down with Zags"
+- Description: "Breathe together for a few minutes, then three small grounding steps."
+- For: anxious, low, distraction, alone · about 4 min
+
+Steps:
+1. Breathe in for 4, out for 6.
+2. Press your feet into the floor.
+3. Find one thing that's blue.
+4. Listen for the farthest sound.
+
 ### Change the scene (`change_scene`)
 
 - Button: "Change the scene"
@@ -619,6 +631,109 @@ Pattern break messages: "Watch." while it plays, "Your turn." after, "Let's watc
 
 60-second challenge, when the minute is up: "You beat the timer."
 
+### Zags: every line he can say (ZAGS_LINES)
+
+Scripted, not AI. Taps only. Says he is not a person in every session's first line. No relationship language, no pressure to stay, no memory between sessions, never the person's name. Every session ends at a person. RED stops Zags. At most two breathing rounds per session (4 breaths each: in 4 seconds, out 6; 3 breaths with reduced motion). Voice is off by default and uses the device's own speech only.
+- `hello`: "Hi, I'm Zags. I'm not a person, just a little guide. I can stay with you for a few minutes."
+- `quiet`: "You don't have to say anything. Just breathe with me."
+- `in`: "Breathe in…"
+- `out`: "And out, slowly…"
+- `feet`: "Nice. Now press your feet into the floor."
+- `blue`: "Look around. Find one thing that's blue."
+- `sound`: "Now listen. What's the farthest sound you can hear?"
+- `doing`: "You're doing it. One small thing at a time."
+- `check`: "How are you feeling now?"
+- `better`: "I'm glad. Want to let someone know how you're doing?"
+- `again`: "That's okay. Hard feelings take a while. We can do one more round."
+- `stillHard`: "Thank you for doing this. This is a good moment to reach a real person."
+- `bye`: "Bye for now. Go be with your people."
+
+Under every Zags screen: "Zags is a scripted guide, not a person and not AI."
+
+_Hello_
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Hi, I'm Zags. I'm not a person, just a little guide. I can stay with you for a few minutes.
+- **Button:** Okay, Zags
+- **Button:** Not right now
+- Zags is a scripted guide, not a person and not AI.
+
+_Breathing (in)_
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Breathe in…
+- Breath 2 of 4
+- **Button:** Skip breathing
+- Zags is a scripted guide, not a person and not AI.
+
+_Grounding step_
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Nice. Now press your feet into the floor.
+- **Button:** Done
+- Zags is a scripted guide, not a person and not AI.
+
+_How are you feeling now?_
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** How are you feeling now?
+- **Button:** A bit better
+- **Button:** Still hard
+- **Button:** Worse
+- Zags is a scripted guide, not a person and not AI.
+
+_A bit better_
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** I'm glad. Want to let someone know how you're doing?
+- Florida Warm Line: Every day, 4pm–10pm.
+- **Link → `sms:5550142`:** Text Jordan
+- **Link → `tel:5550142`:** Call Jordan
+- **Link → `tel:18009451355`:** Call the Warm Line
+- **Button:** I'm okay for now
+- Zags is a scripted guide, not a person and not AI.
+
+_Still hard, first time_
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** That's okay. Hard feelings take a while. We can do one more round.
+- **Button:** One more round
+- **Link → `sms:5550142`:** Text Jordan
+- **Link → `tel:5550142`:** Call Jordan
+- **Link → `tel:18009451355`:** Call the Warm Line
+- **Button:** Not right now
+- Zags is a scripted guide, not a person and not AI.
+
+_Still hard, second time_
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Thank you for doing this. This is a good moment to reach a real person.
+- Florida Warm Line: Every day, 4pm–10pm.
+- **Link → `sms:5550142`:** Text Jordan
+- **Link → `tel:5550142`:** Call Jordan
+- **Link → `tel:18009451355`:** Call the Warm Line
+- **Link → `tel:988`:** Call 988 _(screen reader: "Call 988, the Suicide and Crisis Lifeline")_
+- **Link → `sms:988`:** Text 988 _(screen reader: "Text 988, the Suicide and Crisis Lifeline")_
+- Zags is a scripted guide, not a person and not AI.
+
+_Bye_
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Bye for now. Go be with your people.
+- **Button:** Reach someone
+- **Button:** Done
+- Zags is a scripted guide, not a person and not AI.
+
+Worse → straight to the crisis screen (`openCrisis()`, RED).
+
 ## 7. Every other screen
 
 Rendered for each state where the screen changes by state. Identical renders are listed once.
@@ -651,6 +766,7 @@ Rendered for each state where the screen changes by state. Identical renders are
 - **Button:** Help _(screen reader: "Get help now")_
 - **Heading:** Let's slow things down.
 - Pick one. You can stop any time.
+- **Button:** Calm down with Zags — Breathe together for a few minutes
 - **Button:** Breathe for 1 minute — In for 4, out for 6
 - **Button:** 5-4-3-2-1 grounding — Notice what's around you
 - **Button:** Feet on the floor — Three tiny steps, 2 minutes
@@ -1001,6 +1117,15 @@ _When: distraction_
 - 1:00
 - **Button:** Done
 
+### `zags`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Hi, I'm Zags. I'm not a person, just a little guide. I can stay with you for a few minutes.
+- **Button:** Okay, Zags
+- **Button:** Not right now
+- Zags is a scripted guide, not a person and not AI.
+
 ### `connect`
 
 - **Button:** × _(screen reader: "Close and go to home")_
@@ -1019,6 +1144,7 @@ _When: distraction_
 - **Link → `sms:5550142?&body=Can't sleep, you up?`:** Can't sleep, you up?
 - **Link → `sms:5550142?&body=Rough night. Can you talk for 5 minutes?`:** Rough night. Can you talk for 5 minutes?
 - **Link → `sms:5550142?&body=Want to catch up this week?`:** Want to catch up this week?
+- **Button:** Stay with Zags for a few minutes — Until someone calls back
 - If it gets heavier
 - **Link → `tel:988`:** Call 988 _(screen reader: "Call 988, the Suicide and Crisis Lifeline")_
 - **Link → `sms:988`:** Text 988 _(screen reader: "Text 988, the Suicide and Crisis Lifeline")_
@@ -1077,6 +1203,7 @@ _When: distraction_
 - **Button:** Pattern break — Watch a pattern, tap it back
 - **Button:** 60-second challenge — Your only job: beat the timer
 - **Button:** Focus — Tap when the dot reaches the ring. One minute.
+- **Button:** Calm down with Zags — Breathe together for a few minutes
 
 ### `g-color`
 
@@ -1490,6 +1617,14 @@ _When: distraction_
 - **Button:** Help _(screen reader: "Get help now")_
 - 60-second challenge · Step 1 of 2
 - **Heading:** For the next 60 seconds, your only job is to beat the timer.
+- **Button:** Next
+
+#### Calm down with Zags
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Calm down with Zags · Step 1 of 4
+- **Heading:** Breathe in for 4, out for 6.
 - **Button:** Next
 
 #### Change the scene

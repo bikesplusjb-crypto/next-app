@@ -30,7 +30,8 @@ const r=[];
  r.push(['after 10pm or outside Florida → findahelpline.com', !!more && more.getAttribute('href')==='https://findahelpline.com']);
  r.push(['number and hours live in one constant', (HTML.match(/18009451355/g)||[]).length===1 && (HTML.match(/4pm–10pm/g)||[]).length===1 && a.G('WARMLINE.tel')==='tel:18009451355']);
  r.push(['988 call and text under "If it gets heavier"', t.includes('If it gets heavier') && hrefs(a).includes('tel:988') && hrefs(a).includes('sms:988')]);
- r.push(['Zags and code word wait for 6.7 and 6.8', !/Zags|code word/i.test(t)]);
+ r.push(['"Stay with Zags for a few minutes · Until someone calls back" (6.7)', t.includes('Stay with Zags for a few minutes') && t.includes('Until someone calls back') && !!a.doc.querySelector('[data-act="zags"][data-arg="connect"]')]);
+ r.push(['code word waits for 6.8', !/code word/i.test(t)]);
  r.push(['no emoji; Help in the top bar', !/\p{Extended_Pictographic}/u.test(t) && !!a.doc.querySelector('header .help-pill[data-act="crisis"]')]);}
 for(const hour of [3,23]){
   const a=boot(); a.G(`Date.prototype.getHours=function(){return ${hour}}`); a.click(act('route','connect'));

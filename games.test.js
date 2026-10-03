@@ -115,7 +115,7 @@ for(const [arg,screen] of [['color','g-color'],['around','g-around'],['cats','g-
 
 // ---- reduced motion ----
 {const CSS=(HTML.match(/<style>([\s\S]*?)<\/style>/)||[])[1]||'';
- const block=(CSS.match(/\/\* Stage 6\.4[\s\S]*?\/\* Large text/)||[''])[0];
+ const block=(CSS.match(/\/\* Stage 6\.4[\s\S]*?(?=\/\* (Stage|Large text))/)||[''])[0];
  r.push(['game styles: no animations, nothing moves (color and opacity only)', block.length>0 && !/animation|transform|translate/.test(block)]);
  const a=boot(); const n=a.G('patGap()'); a.G('prefs.reduce=true'); const rm=a.G('patGap()');
  r.push(['Pattern break plays slower with reduced motion', rm>n]);

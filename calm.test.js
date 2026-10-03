@@ -18,7 +18,7 @@ const r=[];
  r.push(['short menu: breathe, 5-4-3-2-1, feet on the floor, what\'s still true', [...a.doc.querySelectorAll('[data-act="calmPick"]')].map(b=>b.dataset.arg).join()==='breathe,ground,feet,true']);
  r.push(['"I\'d rather talk to someone" goes to Connect', !!a.doc.querySelector('.actions [data-act="route"][data-arg="connect"]') && t.includes("I'd rather talk to someone")]);
  r.push(['no emoji; Help in the top bar', !/\p{Extended_Pictographic}/u.test(t) && !!a.doc.querySelector('header .help-pill')]);
- r.push(['Zags card waits for 6.7', !/Zags/.test(t)]);
+ r.push(['Zags is the featured card, first on the menu (6.7)', /^Calm down with Zags/.test(a.doc.querySelector('#app .zcard').textContent.trim()) && a.doc.querySelector('#app .zcard').compareDocumentPosition(a.doc.querySelector('[data-act="calmPick"]'))===4]);
  r.push(['opening Calm counts as a hard moment', a.G('store.sensitive.activity.filter(x=>x.type==="moment").length')===1]);
  a.click(act('route','connect')); r.push(['talk to someone → Connect screen', a.S().screen==='connect']);}
 {const a=boot(); a.click(act('dontKnow')); a.click(act('route','calm')); r.push(['"I don\'t know" → Calm down → Calm menu', a.S().screen==='calm']);}

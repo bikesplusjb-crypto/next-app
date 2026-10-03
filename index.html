@@ -27,7 +27,7 @@
     --primary:#7BC4BB;--on-primary:#12151A;--primary-soft:#1F3634;
     --accent:#A59EF0;--accent-soft:#25233D;
     --safety:#F09A6E;--on-safety:#12151A;--safety-soft:#3A2219;
-    --line:#2A313A;--focus:#A59EF0;
+    --line:#2A313A;--focus:#A59EF0;--zag-dark:#BFE6E0;--zag-eye:#12151A;--zag-cheek:#E59A80;
     color-scheme:dark;
   }
 }
@@ -36,7 +36,7 @@
   --primary:#7BC4BB;--on-primary:#12151A;--primary-soft:#1F3634;
   --accent:#A59EF0;--accent-soft:#25233D;
   --safety:#F09A6E;--on-safety:#12151A;--safety-soft:#3A2219;
-  --line:#2A313A;--focus:#A59EF0;
+  --line:#2A313A;--focus:#A59EF0;--zag-dark:#BFE6E0;--zag-eye:#12151A;--zag-cheek:#E59A80;
   color-scheme:dark;
 }
 :root.crisis-mode{--bg:var(--safety-soft)}
@@ -284,6 +284,28 @@ span.dot.on{background:var(--accent)}
 .pad.p0.lit{background:var(--primary)}.pad.p1.lit{background:var(--accent)}.pad.p2.lit{background:#3F6FC4}.pad.p3.lit{background:var(--text-muted)}
 .pat-msg{min-height:24px;text-align:center;font-weight:600;color:var(--text-muted);margin-top:14px}
 
+/* Stage 6.7: Zags */
+:root{--zag:#7BC4BB;--zag-dark:#2F6F6A;--zag-cheek:#F2A98F;--zag-eye:#1E2329}
+.zstage{display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:8px;position:relative}
+.zvoice{position:absolute;top:0;right:0;min-height:44px;padding:0 14px;border-radius:22px}
+.zags{width:200px;height:200px;display:block;margin-top:28px}
+.zbody{transform-origin:110px 140px;transition:transform 4s ease-in-out}
+.zbody.zin{transform:scale(1.08)}
+.zbody.zout{transform:scale(.96);transition-duration:6s}
+.zstage.idle .zbody{animation:zbob 3.2s ease-in-out infinite}
+@keyframes zbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.zeye{transform-box:fill-box;transform-origin:center;animation:zblink 5s infinite}
+@keyframes zblink{0%,94%,100%{transform:scaleY(1)}96%{transform:scaleY(.1)}}
+p.bubble{margin:14px 0 0;background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:16px 18px;width:100%;font-size:22px;line-height:1.3;font-weight:600;position:relative}
+p.bubble::before{content:"";position:absolute;top:-9px;left:50%;margin-left:-9px;width:16px;height:16px;background:var(--surface);border-left:1px solid var(--line);border-top:1px solid var(--line);transform:rotate(45deg)}
+.zsub{color:var(--text-muted);font-size:15px;margin:10px 0 0;min-height:22px}
+.znote{text-align:center;font-size:13px;margin:4px 0 0}
+.actions .btn[href]{text-decoration:none;display:flex;align-items:center;justify-content:center}
+.card.zcard{background:var(--primary-soft);border-color:var(--primary-soft);margin-bottom:10px}
+.list .card.zcard{margin-bottom:0}
+.zface{width:44px;height:44px;flex:none;display:block}
+.zface svg{width:44px;height:44px;display:block}
+
 /* Stage 6.6: Connect */
 .panel.conn{display:flex;flex-direction:column;gap:8px;margin-top:14px}
 .panel.conn h3{margin:6px 0 0}
@@ -452,6 +474,12 @@ const INTERVENTION_LIBRARY = [
     states:["distraction","spiraling","craving"], intensityRange:[0,10], needsMobility:false,
     steps:["For the next 60 seconds, your only job is to beat the timer.","Tap when the dot is inside the ring."],
     completion:"tap_done" },
+  /* 6.7 Zags: a scripted calm-down guide (not a person, not AI). */
+  { id:"zags", name:"Calm down with Zags", tryLabel:"Calm down with Zags",
+    description:"Breathe together for a few minutes, then three small grounding steps.", durationSec:240,
+    states:["anxious","low","distraction","alone"], intensityRange:[0,10], needsMobility:false,
+    steps:["Breathe in for 4, out for 6.","Press your feet into the floor.","Find one thing that's blue.","Listen for the farthest sound."],
+    completion:"tap_done" },
   /* 6.5 Change the scene: the person picks one of CHANGE_SCENE; it's shown full-screen with Done. */
   { id:"change_scene", name:"Change the scene", tryLabel:"Change the scene",
     description:"Sometimes your brain needs a different place, not another question.", durationSec:300,
@@ -486,6 +514,29 @@ const STILL_TRUE = [
   "I can ask someone to stay with me."
 ];
 const STILL_TRUE_ENOUGH = 3;
+
+/* 6.7 Zags. Every line Zags can say, for clinician review. Never generated or combined.
+   Rules: says he's not a person every session; no relationship language; no pressure to stay;
+   no memory between sessions (never "welcome back", never the person's name); every session ends at a person. */
+const ZAGS_LINES = {
+  hello:"Hi, I'm Zags. I'm not a person, just a little guide. I can stay with you for a few minutes.",
+  quiet:"You don't have to say anything. Just breathe with me.",
+  in:"Breathe in…",
+  out:"And out, slowly…",
+  feet:"Nice. Now press your feet into the floor.",
+  blue:"Look around. Find one thing that's blue.",
+  sound:"Now listen. What's the farthest sound you can hear?",
+  doing:"You're doing it. One small thing at a time.",
+  check:"How are you feeling now?",
+  better:"I'm glad. Want to let someone know how you're doing?",
+  again:"That's okay. Hard feelings take a while. We can do one more round.",
+  stillHard:"Thank you for doing this. This is a good moment to reach a real person.",
+  bye:"Bye for now. Go be with your people."
+};
+const ZAGS_STEPS = ["feet","blue","sound","doing"];
+const ZAGS_MAX_ROUNDS = 2;          // breathing rounds per session, at most
+const ZAGS_IN_MS = 4000, ZAGS_OUT_MS = 6000;
+const ZAGS_NOTE = "Zags is a scripted guide, not a person and not AI.";
 
 /* 6.5 Change the scene. [key, button, full-screen line]. */
 const CHANGE_SCENE = [
@@ -923,6 +974,14 @@ function openScene(){
   go("scene");
 }
 
+/* 6.7 Zags. A fresh session every time: nothing carries over. */
+function startZags(state){
+  if (blockIfRed()) return;
+  if (state) dispatch({ type:"SET_CURRENT_STATE", state });
+  ui.zags = { phase:"hello", step:0, rounds:0, hard:0, breath:0, half:null };
+  startIntervention("zags", { route:"zags" });
+}
+
 /* 6.6 Connect: people first. */
 function openConnect(){
   if (blockIfRed()) return;
@@ -970,6 +1029,7 @@ function startIntervention(interventionId, opts = {}){
   let route = opts.route;
   if (GAME_ROUTES[interventionId]){ resetGame(interventionId); if (!route) route = GAME_ROUTES[interventionId]; }
   if (interventionId === "change_scene" && !route) route = "scene";
+  if (interventionId === "zags"){ route = "zags"; if (!ui.zags || ui.zags.phase !== "hello") ui.zags = { phase:"hello", step:0, rounds:0, hard:0, breath:0, half:null }; }
   if (!route) route = interventionId === "thought_parking" ? "spiral-input"
     : interventionId === "craving_delay" ? "craving-delay"
     : interventionId === "still_true" ? "still-true" : "intervention";
@@ -1161,6 +1221,7 @@ const SCREENS = {
     return { close:true, body:`
       ${title("Let's slow things down.")}
       <p class="sub">Pick one. You can stop any time.</p>
+      <button class="card wide zcard" data-act="zags" data-arg="calm">${zagsFace()}<span>Calm down with Zags<span class="meta">Breathe together for a few minutes</span></span></button>
       <div class="list">${opts.map(([arg, ic, t, m]) =>
         `<button class="card" data-act="calmPick" data-arg="${arg}">${icon(ic)}<span>${t}<span class="meta">${m}</span></span></button>`).join("")}
       </div>`,
@@ -1495,6 +1556,56 @@ const SCREENS = {
       actions:`<button class="btn btn-primary" data-act="focusDone">Done</button>` };
   },
 
+  /* 6.7: Zags. One screen; the phase decides what he says. */
+  zags(){
+    const z = ui.zags || { phase:"hello", step:0, rounds:0, hard:0 };
+    const line = zagsLine(z);
+    const voice = ("speechSynthesis" in window)
+      ? `<button class="chip zvoice" data-act="zagsVoice" aria-pressed="${!!ui.zagsVoice}">${ui.zagsVoice ? "Voice on" : "Voice off"}</button>` : "";
+    const p = person();
+    const people = `${p ? `<div class="pair">
+        <a class="btn btn-secondary" href="${smsLink(p.phone)}">Text ${esc(p.name)}</a>
+        <a class="btn btn-secondary" href="${telLink(p.phone)}">Call ${esc(p.name)}</a></div>` : ""}
+      <a class="btn btn-secondary" href="${WARMLINE.tel}">Call the Warm Line</a>
+      ${p ? "" : `<button class="btn btn-secondary" data-act="route" data-arg="connect">Find someone to talk to</button>`}`;
+    let sub = "", actions = "";
+    switch (z.phase){
+      case "hello":
+        actions = `<button class="btn btn-primary" data-act="zagsBreathe">Okay, Zags</button>
+          <button class="link" data-act="zagsBye">Not right now</button>`; break;
+      case "breathe":
+        sub = z.half ? `Breath ${z.breath + 1} of ${zagsBreaths()}` : "";
+        actions = `<button class="btn btn-secondary" data-act="zagsSkip">Skip breathing</button>`; break;
+      case "steps":
+        actions = `<button class="btn btn-primary" data-act="zagsNext">${z.step === ZAGS_STEPS.length - 1 ? "Okay" : "Done"}</button>`; break;
+      case "check":
+        actions = `<button class="btn btn-primary" data-act="zagsFeel" data-arg="better">A bit better</button>
+          <button class="btn btn-secondary" data-act="zagsFeel" data-arg="hard">Still hard</button>
+          <button class="btn btn-secondary" data-act="zagsFeel" data-arg="worse">Worse</button>`; break;
+      case "better":
+        sub = `${WARMLINE.name}: ${WARMLINE.hours}`;
+        actions = `${people}<button class="btn btn-secondary" data-act="zagsBye">I'm okay for now</button>`; break;
+      case "again":
+        actions = `<button class="btn btn-primary" data-act="zagsBreathe">One more round</button>${people}
+          <button class="link" data-act="zagsBye">Not right now</button>`; break;
+      case "hard":
+        sub = `${WARMLINE.name}: ${WARMLINE.hours}`;
+        actions = `${people}${row988()}`; break;
+      default:   // bye: still ends at a person
+        actions = `<button class="btn btn-primary" data-act="route" data-arg="connect">Reach someone</button>
+          <button class="btn btn-secondary" data-act="home">Done</button>`;
+    }
+    const calm = z.phase === "breathe" && z.half === "out";
+    return { close:true, body:`
+      <div class="zstage${z.phase === "breathe" ? "" : " idle"}">
+        ${voice}
+        ${zagsSvg(z.half, calm)}
+        <p id="screen-title" tabindex="-1" class="bubble">${line}</p>
+        <p class="zsub" id="zagsSub" aria-live="polite">${sub}</p>
+      </div>`,
+      actions:`${actions}<p class="note znote">${ZAGS_NOTE}</p>` };
+  },
+
   /* 6.6: Connect (I just feel alone). Zags (6.7) and the code word (6.8) join this screen when they're built. */
   connect(){
     const people = getPlan().trustedPeople || [];
@@ -1520,6 +1631,7 @@ const SCREENS = {
         : `<p class="small">Add someone you trust, and they'll be here with Text and Call.</p>
           <button class="btn btn-secondary" data-act="planFromConnect">Add someone to My Plan</button>`}
       </div>
+      <button class="card wide zcard" data-act="zags" data-arg="connect" style="margin-top:14px">${zagsFace()}<span>Stay with Zags for a few minutes<span class="meta">Until someone calls back</span></span></button>
       <p class="lbl">If it gets heavier</p>
       ${row988()}` };
   },
@@ -1573,6 +1685,7 @@ const SCREENS = {
       <div class="list">${GAMES.map(([arg, , t, m]) =>
         `<button class="card" data-act="game" data-arg="${arg}">${icon("head", true)}<span>${t}<span class="meta">${m}</span></span></button>`).join("")}
         <button class="card" data-act="distFocus">${icon("head", true)}<span>Focus<span class="meta">Tap when the dot reaches the ring. One minute.</span></span></button>
+        <button class="card zcard" data-act="zags" data-arg="head">${zagsFace()}<span>Calm down with Zags<span class="meta">Breathe together for a few minutes</span></span></button>
       </div>` };
   },
 
@@ -2098,6 +2211,105 @@ function focusTap(){
   }
 }
 
+/* 6.7 Zags runtime: breathing timer, the drawing, and optional on-device voice. */
+let zagsTimer = null, zagsFadeRaf = null;
+function zagsBreaths(){ return reducedMotion() ? 3 : 4; }
+function zagsLine(z){
+  z = z || { phase:"hello" };
+  if (z.phase === "breathe") return z.half ? ZAGS_LINES[z.half] : ZAGS_LINES.quiet;
+  if (z.phase === "steps") return ZAGS_LINES[ZAGS_STEPS[z.step || 0]];
+  return ZAGS_LINES[{ hello:"hello", check:"check", better:"better", again:"again", hard:"stillHard", bye:"bye" }[z.phase] || "hello"];
+}
+function zagsPhase(phase){
+  if (phase !== "breathe") zagsStopBreathing();
+  ui.zags.phase = phase;
+  if (phase === "steps" && ui.zags.step >= ZAGS_STEPS.length) ui.zags.step = 0;
+  lastRendered = null; render();
+  zagsSpeak(zagsLine(ui.zags));
+}
+function zagsSpeak(text){
+  if (!ui.zagsVoice || !("speechSynthesis" in window)) return;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = 0.88; u.pitch = 1.15;
+    speechSynthesis.speak(u);
+  } catch (_){}
+}
+function zagsHush(){ try { if ("speechSynthesis" in window) speechSynthesis.cancel(); } catch (_){} }
+function zagsStopBreathing(){ clearTimeout(zagsTimer); zagsTimer = null; cancelAnimationFrame(zagsFadeRaf); zagsFadeRaf = null; }
+function zagsStartBreathing(){
+  zagsStopBreathing();
+  const z = ui.zags;
+  const tick = () => {
+    if (session.screen !== "zags" || session.safetyLevel === "RED" || !ui.zags || ui.zags.phase !== "breathe"){ zagsStopBreathing(); return; }
+    if (z.half === "in"){ z.half = "out"; }
+    else { if (z.half === "out") z.breath++; z.half = "in"; }
+    if (z.breath >= zagsBreaths()){ z.half = null; z.step = 0; zagsPhase("steps"); return; }
+    zagsShowBreath(z);
+    zagsSpeak(ZAGS_LINES[z.half]);
+    zagsTimer = setTimeout(tick, z.half === "in" ? ZAGS_IN_MS : ZAGS_OUT_MS);
+  };
+  zagsTimer = setTimeout(tick, 2600);
+}
+/* Update in place (no re-render) so focus stays put; the sub-line is a polite live region. */
+function zagsShowBreath(z){
+  const b = document.getElementById("screen-title"), sub = document.getElementById("zagsSub"), body = document.getElementById("zbody");
+  if (b) b.textContent = ZAGS_LINES[z.half];
+  if (sub) sub.textContent = `Breath ${z.breath + 1} of ${zagsBreaths()}`;
+  const eyesOpen = document.getElementById("zEyesOpen"), eyesCalm = document.getElementById("zEyesCalm");
+  if (eyesOpen) eyesOpen.style.display = z.half === "out" ? "none" : "";
+  if (eyesCalm) eyesCalm.style.display = z.half === "out" ? "" : "none";
+  if (!body) return;
+  if (reducedMotion()){ zagsFade(z.half === "in", z.half === "in" ? ZAGS_IN_MS : ZAGS_OUT_MS); return; }   // color fade, no scaling
+  body.classList.toggle("zin", z.half === "in");
+  body.classList.toggle("zout", z.half === "out");
+}
+/* Reduced motion: Zags gets lighter as you breathe in and deeper as you breathe out. Color only, nothing moves. */
+const ZAGS_DEEP = [123,196,187], ZAGS_LIGHT = [184,226,220];
+function zagsFade(toLight, ms){
+  cancelAnimationFrame(zagsFadeRaf);
+  const el = document.getElementById("zfill");
+  if (!el) return;
+  const from = (el.getAttribute("data-rgb") || ZAGS_DEEP.join(",")).split(",").map(Number), to = toLight ? ZAGS_LIGHT : ZAGS_DEEP;
+  const t0 = performance.now();
+  const step = now => {
+    const k = Math.min(1, (now - t0) / ms);
+    const c = from.map((v, i) => Math.round(v + (to[i] - v) * k));
+    el.setAttribute("fill", `rgb(${c.join(",")})`); el.setAttribute("data-rgb", c.join(","));
+    if (k < 1 && session.screen === "zags") zagsFadeRaf = requestAnimationFrame(step);
+  };
+  zagsFadeRaf = requestAnimationFrame(step);
+}
+function zagsSvg(half, calm){
+  return `<svg class="zags" viewBox="0 0 220 220" role="img" aria-label="Zags, a small calm guide character">
+    <g class="zbody${half === "in" ? " zin" : half === "out" ? " zout" : ""}" id="zbody">
+      <path d="M92 52 L102 30 L110 46 L120 24 L128 52" fill="none" stroke="var(--zag-dark)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+      <path id="zfill" d="M110 48 C160 48 186 84 186 128 C186 170 154 196 110 196 C66 196 34 170 34 128 C34 84 60 48 110 48 Z" fill="var(--zag)"/>
+      <ellipse cx="110" cy="160" rx="44" ry="26" fill="#FFFFFF" opacity=".28"/>
+      <g id="zEyesOpen" style="${calm ? "display:none" : ""}">
+        <ellipse class="zeye" cx="86" cy="118" rx="8" ry="10" fill="var(--zag-eye)"/>
+        <ellipse class="zeye" cx="134" cy="118" rx="8" ry="10" fill="var(--zag-eye)"/>
+        <circle cx="89" cy="114" r="2.6" fill="#fff"/><circle cx="137" cy="114" r="2.6" fill="#fff"/>
+      </g>
+      <g id="zEyesCalm" style="${calm ? "" : "display:none"}">
+        <path d="M77 120 Q86 112 95 120" fill="none" stroke="var(--zag-eye)" stroke-width="4" stroke-linecap="round"/>
+        <path d="M125 120 Q134 112 143 120" fill="none" stroke="var(--zag-eye)" stroke-width="4" stroke-linecap="round"/>
+      </g>
+      <ellipse cx="70" cy="138" rx="10" ry="6" fill="var(--zag-cheek)" opacity=".55"/>
+      <ellipse cx="150" cy="138" rx="10" ry="6" fill="var(--zag-cheek)" opacity=".55"/>
+      <path d="M100 140 Q110 148 120 140" fill="none" stroke="var(--zag-eye)" stroke-width="4" stroke-linecap="round"/>
+    </g></svg>`;
+}
+/* Small face for the entry cards. */
+function zagsFace(){
+  return `<span class="zface" aria-hidden="true"><svg viewBox="0 0 220 220">
+    <path d="M92 52 L102 30 L110 46 L120 24 L128 52" fill="none" stroke="var(--zag-dark)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M110 48 C160 48 186 84 186 128 C186 170 154 196 110 196 C66 196 34 170 34 128 C34 84 60 48 110 48 Z" fill="var(--zag)"/>
+    <ellipse cx="86" cy="118" rx="10" ry="12" fill="var(--zag-eye)"/><ellipse cx="134" cy="118" rx="10" ry="12" fill="var(--zag-eye)"/>
+    <path d="M100 142 Q110 152 120 142" fill="none" stroke="var(--zag-eye)" stroke-width="6" stroke-linecap="round"/></svg></span>`;
+}
+
 /* 6.4 timers: Memory snap hides its shapes after a few seconds; Pattern break plays its sequence. */
 let memTimer = null, patTimer = null, patLitTimer = null;
 function stopGameTimers(){ clearTimeout(memTimer); clearTimeout(patTimer); clearTimeout(patLitTimer); memTimer = patTimer = patLitTimer = null; ui.patPlaying = false; }
@@ -2217,6 +2429,9 @@ function render(){
     clearInterval(cravingTimer); cravingTimer = null;
     if (focusRaf){ cancelAnimationFrame(focusRaf); focusRaf = null; }
     clearTimeout(memTimer); memTimer = null;
+    zagsStopBreathing();
+    if (s !== "zags") zagsHush();
+    if (s === "zags" && ui.zags && ui.zags.phase === "breathe") zagsStartBreathing();
     if (s !== "g-pattern"){ clearTimeout(patTimer); patTimer = null; }
     if (s === "craving-delay") cravingTimer = setInterval(cravingTick, 1000);
     if (s === "g-memory" && ui.memPhase === "show") memTimer = setTimeout(memHide, MEMORY_SHOW_MS);
@@ -2376,6 +2591,40 @@ const ACTIONS = {
   spNone(){ if (blockIfRed()) return; ui.nextStep = "Let the rest wait for now."; ui.nextFor = ""; go("spiral-next"); },
   spNextDone(){ if (blockIfRed()) return; go("checkin"); },
 
+  zags(arg){
+    const state = arg === "connect" ? "alone" : arg === "head" ? "distraction" : arg === "calm" ? "anxious" : null;
+    startZags(state);
+  },
+  zagsVoice(){
+    ui.zagsVoice = !ui.zagsVoice;
+    render();
+    if (ui.zagsVoice) zagsSpeak(zagsLine(ui.zags));
+  },
+  zagsBreathe(){
+    if (blockIfRed()) return;
+    const z = ui.zags;
+    if (z.rounds >= ZAGS_MAX_ROUNDS){ zagsPhase("steps"); return; }
+    z.rounds++; z.breath = 0; z.half = null;
+    zagsPhase("breathe");
+  },
+  zagsSkip(){ if (blockIfRed()) return; zagsStopBreathing(); ui.zags.step = 0; zagsPhase("steps"); },
+  zagsNext(){
+    if (blockIfRed()) return;
+    const z = ui.zags;
+    if (z.step >= ZAGS_STEPS.length - 1){ zagsPhase("check"); return; }
+    z.step++; zagsPhase("steps");
+  },
+  zagsFeel(arg){
+    if (blockIfRed()) return;
+    const z = ui.zags;
+    dispatch({ type:"ADD_OUTCOME", outcome:{ source:"session", state:session.currentState, interventionId:"zags",
+      before:session.currentBeforeRating, after:null, feeling:arg === "hard" ? "still_hard" : arg, timestamp:Date.now() } });
+    if (arg === "worse"){ zagsStopBreathing(); openCrisis(); return; }
+    if (arg === "better"){ zagsPhase("better"); return; }
+    z.hard++;
+    zagsPhase(z.hard >= 2 || z.rounds >= ZAGS_MAX_ROUNDS ? "hard" : "again");
+  },
+  zagsBye(){ if (blockIfRed()) return; zagsStopBreathing(); zagsPhase("bye"); },
   planFromConnect(){ ui.planFrom = "tab"; go("plan"); },
   hfNotNow(){ if (blockIfRed()) return; go("recommendation"); },
   hfPeople(){
@@ -2582,6 +2831,7 @@ const ACTIONS = {
 document.addEventListener("click", e => {
   const link = e.target.closest("a[href]");
   if (link && /^(tel:|sms:|https:\/\/988lifeline)/.test(link.getAttribute("href"))) logActivity("reach");
+  if (session.screen === "zags" && ui.zagsVoice) zagsHush();   // Zags's voice stops the moment the person taps anything
   const el = e.target.closest("[data-act]");
   if (!el) return;
   const act = el.getAttribute("data-act");

@@ -169,6 +169,21 @@ P('Pattern break messages: "Watch." while it plays, "Your turn." after, "Let\'s 
 P('');
 P('60-second challenge, when the minute is up: "You beat the timer."');
 
+H(3,'Zags: every line he can say (ZAGS_LINES)');
+P('Scripted, not AI. Taps only. Says he is not a person in every session\'s first line. No relationship language, no pressure to stay, no memory between sessions, never the person\'s name. Every session ends at a person. RED stops Zags. At most two breathing rounds per session (4 breaths each: in 4 seconds, out 6; 3 breaths with reduced motion). Voice is off by default and uses the device\'s own speech only.');
+list(Object.entries(G('ZAGS_LINES')).map(([k,v])=>`${code(k)}: "${v}"`));
+P('');
+P(`Under every Zags screen: "${G('ZAGS_NOTE')}"`);
+const zShots=[['Hello','hello',''],['Breathing (in)','breathe','ui.zags.half="in"; ui.zags.breath=1;'],['Grounding step','steps',''],['How are you feeling now?','check',''],
+  ['A bit better','better',''],['Still hard, first time','again','ui.zags.hard=1; ui.zags.rounds=1;'],['Still hard, second time','hard','ui.zags.hard=2; ui.zags.rounds=2;'],['Bye','bye','']];
+for(const [label,phase,extra] of zShots){
+  P(''); P(`_${label}_`); P('');
+  md.push(...screenText(w, `${withPerson}; session.currentState="anxious"; session.currentInterventionId="zags"; ui.zags={phase:${JSON.stringify(phase)},step:0,rounds:0,hard:0,breath:0,half:null}; ${extra} session.screen="zags"`));
+  w.eval('zagsStopBreathing()');
+}
+P('');
+P('Worse → straight to the crisis screen (`openCrisis()`, RED).');
+
 H(2,'7. Every other screen');
 P('Rendered for each state where the screen changes by state. Identical renders are listed once.');
 const crisis=new Set(G('CRISIS_SCREENS').concat(['talk']));
