@@ -5,7 +5,8 @@
   "description": "NEXT — get through what's happening right now. Deterministic support-tool prototype.",
   "scripts": {
     "test": "node run-all.js",
-    "review": "node review.js"
+    "review": "node review.js",
+    "safety-audit": "node safety-audit.js"
   },
   "devDependencies": {
     "jsdom": "^24.0.0",
