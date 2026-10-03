@@ -20,7 +20,7 @@ const r=[];
  r.push(['no emoji; Help in the top bar', !/\p{Extended_Pictographic}/u.test(t) && !!a.doc.querySelector('header .help-pill')]);
  r.push(['Zags card waits for 6.7', !/Zags/.test(t)]);
  r.push(['opening Calm counts as a hard moment', a.G('store.sensitive.activity.filter(x=>x.type==="moment").length')===1]);
- a.click(act('route','connect')); r.push(['talk to someone → Talk screen', a.S().screen==='talk']);}
+ a.click(act('route','connect')); r.push(['talk to someone → Connect screen', a.S().screen==='connect']);}
 {const a=boot(); a.click(act('dontKnow')); a.click(act('route','calm')); r.push(['"I don\'t know" → Calm down → Calm menu', a.S().screen==='calm']);}
 
 // Each option ends at the check-in, and the outcome is recorded like any other.

@@ -18,6 +18,8 @@ Safety level lives only for the current visit and is **never saved**. Levels: GR
 - **Crisis question:** "Are you in danger of hurting yourself or someone else right now?" Yes or I'm not sure → full crisis screen (RED). No → YELLOW, "What would help right now?" (talk to someone / open my plan / do something grounding), then "Do you feel safer than a few minutes ago?" Yes → Home (YELLOW). No or Not sure → full crisis screen (RED).
 - **Leaving RED** is only possible through "That's not what I meant — go back", No on the danger question, or Yes on "Do you feel safer". Each leads to YELLOW. Nothing ever returns to GREEN in the same visit.
 - **Calling or texting** from the "What would help" screen moves straight to "Do you feel safer" in the same tap, before the phone app opens.
+- **Human First** (this visit only, never saved): after 2 taps on "Something else", or 2 finished steps without "That helped" (a game answered "No" counts), ask once: "Would talking to a person help more than another answer?" Call someone · Text someone · Be around people (→ Change the scene, Somewhere to go) · Not right now. Never shown over a crisis screen.
+- **Warm line** (Connect): Florida Warm Line, `tel:18009451355`. "Every day, 4pm–10pm. Not a crisis line. Just real people who've been through it." Hours are display text only; the button is never disabled by the clock. "After 10pm or outside Florida: find a warmline near you" → `https://findahelpline.com`.
 - **First launch:** onboarding never blocks the crisis screens. Leaving a crisis screen during onboarding returns to onboarding at YELLOW.
 - **Outside the US** (guessed from the phone's time zone, then language; can be set in Settings): adds "Find a helpline in your country" (findahelpline.com) under 988. 911 and 988 are never hidden.
 
@@ -998,6 +1000,39 @@ _When: distraction_
 - No score. Just follow it.
 - 1:00
 - **Button:** Done
+
+### `connect`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** You don't have to sit with this alone.
+- Talk to someone who's been there
+- **Heading:** Florida Warm Line
+- Every day, 4pm–10pm. Not a crisis line. Just real people who've been through it.
+- **Link → `tel:18009451355`:** Call the Warm Line
+- **Link → `https://findahelpline.com`:** After 10pm or outside Florida: find a warmline near you
+- Reach one of your people
+- **Heading:** Jordan · friend
+- **Link → `sms:5550142`:** Text _(screen reader: "Text Jordan")_
+- **Link → `tel:5550142`:** Call _(screen reader: "Call Jordan")_
+- Don't know what to say? Tap one:
+- **Link → `sms:5550142?&body=Can't sleep, you up?`:** Can't sleep, you up?
+- **Link → `sms:5550142?&body=Rough night. Can you talk for 5 minutes?`:** Rough night. Can you talk for 5 minutes?
+- **Link → `sms:5550142?&body=Want to catch up this week?`:** Want to catch up this week?
+- If it gets heavier
+- **Link → `tel:988`:** Call 988 _(screen reader: "Call 988, the Suicide and Crisis Lifeline")_
+- **Link → `sms:988`:** Text 988 _(screen reader: "Text 988, the Suicide and Crisis Lifeline")_
+
+### `human-first`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Would talking to a person help more than another answer?
+- Jordan is in your plan.
+- **Link → `tel:5550142`:** Call someone
+- **Link → `sms:5550142`:** Text someone
+- **Button:** Be around people
+- **Button:** Not right now
 
 ### `scene`
 

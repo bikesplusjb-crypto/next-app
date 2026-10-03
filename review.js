@@ -83,6 +83,8 @@ list([
   `**Crisis question:** "Are you in danger of hurting yourself or someone else right now?" Yes or I'm not sure → full crisis screen (RED). No → YELLOW, "What would help right now?" (talk to someone / open my plan / do something grounding), then "Do you feel safer than a few minutes ago?" Yes → Home (YELLOW). No or Not sure → full crisis screen (RED).`,
   `**Leaving RED** is only possible through "That's not what I meant — go back", No on the danger question, or Yes on "Do you feel safer". Each leads to YELLOW. Nothing ever returns to GREEN in the same visit.`,
   `**Calling or texting** from the "What would help" screen moves straight to "Do you feel safer" in the same tap, before the phone app opens.`,
+  `**Human First** (this visit only, never saved): after 2 taps on "Something else", or 2 finished steps without "That helped" (a game answered "No" counts), ask once: "Would talking to a person help more than another answer?" Call someone · Text someone · Be around people (→ Change the scene, Somewhere to go) · Not right now. Never shown over a crisis screen.`,
+  `**Warm line** (Connect): ${G('WARMLINE.name')}, ${code(G('WARMLINE.tel'))}. "${G('WARMLINE.hours')} ${G('WARMLINE.about')}" Hours are display text only; the button is never disabled by the clock. "${G('WARMLINE.elsewhere')}" → ${code(G('WARMLINE.elsewhereUrl'))}.`,
   `**First launch:** onboarding never blocks the crisis screens. Leaving a crisis screen during onboarding returns to onboarding at YELLOW.`,
   `**Outside the US** (guessed from the phone's time zone, then language; can be set in Settings): adds "Find a helpline in your country" (findahelpline.com) under 988. 911 and 988 are never hidden.`,
 ]);

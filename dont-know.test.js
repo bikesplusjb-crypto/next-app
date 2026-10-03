@@ -28,7 +28,7 @@ const pick=(arg,then)=>{ const a=boot(); a.click(act('route',arg)); if(then) the
 let s;
 s=pick('calm'); r.push(['Calm down → the Calm menu (6.3)', s.screen==='calm']);
 s=pick('head'); r.push(['Get distracted → the games menu (6.4)', s.currentState==='distraction' && s.screen==='distract']);
-s=pick('connect'); r.push(['Connect with someone → Talk to someone (6.6 later)', s.screen==='talk']);
+s=pick('connect'); r.push(['Connect with someone → the Connect screen (6.6)', s.screen==='connect']);
 s=pick('scene'); r.push(['Get out of where I am → Change the scene (6.5)', s.screen==='scene']);
 // Get help now: RED and the crisis screen immediately, no extra screen.
 {const a=boot(); a.click(act('getHelpNow'));

@@ -27,8 +27,9 @@ let s;
 s=go(act('dontKnow')); r.push(['I don\'t know what I need → its one-question screen (6.2)', s.screen==='dont-know']);
 s=go(act('route','calm')); r.push(['Calm down → the Calm menu (6.3)', s.screen==='calm']);
 s=go(act('route','head')); r.push(['Get out of my head → the games menu (6.4)', s.currentState==='distraction' && s.screen==='distract']);
-s=go(act('route','connect')); r.push(['Connect → Talk to someone (6.6 later)', s.screen==='talk']);
-{const a=boot(); a.click(act('route','connect')); a.click(act('talkBack')); r.push(['Talk to someone → Back returns Home', a.S().screen==='home']);}
+s=go(act('route','connect')); r.push(['Connect → the Connect screen (6.6)', s.screen==='connect']);
+{const a=boot(); a.click(act('route','connect')); a.click(act('home')); r.push(['Connect → close returns Home', a.S().screen==='home']);}
+{const a=boot(); a.w.eval('ACTIONS.talk()'); a.click(act('talkBack')); r.push(['Talk to someone (YELLOW bar) → Back returns Home', a.S().screen==='home']);}
 s=go(act('route','scene')); r.push(['Change the scene → its menu (6.5)', s.screen==='scene']);
 for(const [arg,label] of [['anxious',"I'm anxious"],['spiraling',"I'm spiraling"],['low','I feel low']]){
   const a=boot(); const b=[...a.doc.querySelectorAll('.sit')].find(x=>x.textContent===label); b.dispatchEvent(new a.w.MouseEvent('click',{bubbles:true}));
@@ -36,7 +37,7 @@ for(const [arg,label] of [['anxious',"I'm anxious"],['spiraling',"I'm spiraling"
 }
 s=go(act('flow','craving'),a=>a.click(act('beforeSkip'))); r.push(['"I have an urge to use (drink or drugs)" still reaches the craving delay', s.screen==='craving-delay' && s.currentInterventionId==='craving_delay']);
 {const a=boot(); const b=[...a.doc.querySelectorAll('.sit')].find(x=>x.textContent==='I feel alone'); b.dispatchEvent(new a.w.MouseEvent('click',{bubbles:true}));
- r.push(['"I feel alone" → Talk to someone (6.6 later)', a.S().screen==='talk']);}
+ r.push(['"I feel alone" → the Connect screen (6.6)', a.S().screen==='connect']);}
 s=go('.card.safety[data-act="crisis"]'); r.push(['"I don\'t feel safe" calls openCrisis (RED, crisis screen)', s.screen==='crisis' && s.safetyLevel==='RED']);
 {const a=boot(); for(let i=0;i<5;i++) a.click('.brand[data-act="wordmark"]'); r.push(['5 taps on the wordmark opens the dev panel', a.S().devPanelOpen===true]);}
 // YELLOW: the support bar still shows above Home.

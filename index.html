@@ -284,6 +284,15 @@ span.dot.on{background:var(--accent)}
 .pad.p0.lit{background:var(--primary)}.pad.p1.lit{background:var(--accent)}.pad.p2.lit{background:#3F6FC4}.pad.p3.lit{background:var(--text-muted)}
 .pat-msg{min-height:24px;text-align:center;font-weight:600;color:var(--text-muted);margin-top:14px}
 
+/* Stage 6.6: Connect */
+.panel.conn{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.panel.conn h3{margin:6px 0 0}
+.panel.conn .lbl{margin:0}
+.panel.conn .small{margin:0}
+.panel.conn .btn{text-decoration:none;display:flex;align-items:center;justify-content:center}
+.conn-more{color:var(--text-muted);font-size:15px;min-height:44px;display:flex;align-items:center}
+.sit.idea{display:inline-flex;align-items:center;text-decoration:none;color:var(--text);text-align:left;line-height:1.25;padding:8px 16px}
+
 /* Stage 6.5: Change the scene */
 .list .card.scene-opt{min-height:60px}
 .places{margin-top:8px}
@@ -351,6 +360,19 @@ const LINKS = {
   findHelpline: "https://findahelpline.com"
 };
 const HARD_TIME_MSG = "I'm having a really hard time. Can you call me?";
+/* 6.6 Connect. Warmline number and hours live only here. Hours are display text: the button is never disabled by clock. */
+const WARMLINE = {
+  name:"Florida Warm Line",
+  tel:"tel:18009451355",
+  hours:"Every day, 4pm–10pm.",
+  about:"Not a crisis line. Just real people who've been through it.",
+  elsewhere:"After 10pm or outside Florida: find a warmline near you",
+  elsewhereUrl:"https://findahelpline.com"
+};
+const MESSAGE_IDEAS = ["Can't sleep, you up?","Rough night. Can you talk for 5 minutes?","Want to catch up this week?"];
+/* Human First (session only, never saved): after 2 taps on "Something else", or 2 finished steps without
+   "That helped", ask once per visit whether a person would help more. */
+const HUMAN_FIRST_AFTER = 2;
 function smsLink(phone, body){
   const digits = String(phone).replace(/\D/g, "");
   return body ? `sms:${digits}?&body=${encodeURIComponent(body)}` : `sms:${digits}`;
@@ -679,7 +701,10 @@ const initialSession = {
   currentIntensity:null,
   currentBeforeRating:null,
   currentFlowStep:0,
-  devPanelOpen:false
+  devPanelOpen:false,
+  elseTaps:0,            // Human First counters: this visit only, never saved
+  unhelpedCount:0,
+  humanFirstShown:false
 };
 
 function promoteYellow(s){
@@ -696,6 +721,9 @@ function reducer(s, a){
       if (a.level === "RED") return { ...s, safetyLevel:"RED" };
       return s;
     case "SET_CURRENT_STATE": return { ...s, currentState:a.state };
+    case "COUNT_ELSE": return { ...s, elseTaps:s.elseTaps + 1 };
+    case "COUNT_UNHELPED": return { ...s, unhelpedCount:s.unhelpedCount + 1 };
+    case "HUMAN_FIRST_SHOWN": return { ...s, humanFirstShown:true };
     case "SET_CURRENT_INTERVENTION": return { ...s, currentInterventionId:a.id };
     case "SET_CURRENT_INTENSITY": return { ...s, currentIntensity:a.value };
     case "SET_BEFORE_RATING": return { ...s, currentBeforeRating:a.value, currentIntensity:a.value };
@@ -895,6 +923,22 @@ function openScene(){
   go("scene");
 }
 
+/* 6.6 Connect: people first. */
+function openConnect(){
+  if (blockIfRed()) return;
+  logActivity("moment");
+  go("connect");
+}
+function humanFirstDue(){
+  return !session.humanFirstShown && session.safetyLevel !== "RED" &&
+    (session.elseTaps >= HUMAN_FIRST_AFTER || session.unhelpedCount >= HUMAN_FIRST_AFTER);
+}
+/* Go to the next suggestion, unless it's time to ask (once) whether a person would help more. */
+function toRecommendation(){
+  if (humanFirstDue()){ dispatch({ type:"HUMAN_FIRST_SHOWN" }); go("human-first"); return; }
+  go("recommendation");
+}
+
 function resetGame(id){
   const n = gamePlays++;
   ui.gamePart = 0; ui.gameDots = []; ui.gameFound = {};
@@ -957,8 +1001,9 @@ function completeCheckIn({ after, action, change }){
   if (change === "no" && ended) ui.exclude = [ended];   // didn't change anything: offer something else
   // the next step starts from where this one ended (null if skipped — never invented)
   dispatch({ type:"SET_BEFORE_RATING", value:afterVal });
+  if (action !== "helped") dispatch({ type:"COUNT_UNHELPED" });
   runEngine();
-  go("recommendation");
+  toRecommendation();
 }
 
 function somethingElse(){
@@ -971,6 +1016,8 @@ function somethingElse(){
     r = runEngine();
   }
   ui.suggestIdx++;
+  dispatch({ type:"COUNT_ELSE" });
+  if (humanFirstDue()){ dispatch({ type:"HUMAN_FIRST_SHOWN" }); go("human-first"); return; }
   render();
 }
 
@@ -1448,6 +1495,47 @@ const SCREENS = {
       actions:`<button class="btn btn-primary" data-act="focusDone">Done</button>` };
   },
 
+  /* 6.6: Connect (I just feel alone). Zags (6.7) and the code word (6.8) join this screen when they're built. */
+  connect(){
+    const people = getPlan().trustedPeople || [];
+    const first = people[0];
+    return { close:true, body:`
+      ${title("You don't have to sit with this alone.")}
+      <div class="panel conn">
+        <p class="lbl">Talk to someone who's been there</p>
+        <h3>${WARMLINE.name}</h3>
+        <p class="small">${WARMLINE.hours} ${WARMLINE.about}</p>
+        <a class="btn btn-primary" href="${WARMLINE.tel}">Call the Warm Line</a>
+        <a class="conn-more" href="${WARMLINE.elsewhereUrl}" target="_blank" rel="noopener">${WARMLINE.elsewhere}</a>
+      </div>
+      <div class="panel conn" id="connPeople">
+        <p class="lbl">Reach one of your people</p>
+        ${people.length ? people.map(p => `<h3>${esc(p.name)}${p.relationship ? ` <span class="small">· ${esc(p.relationship)}</span>` : ""}</h3>
+          <div class="pair">
+            <a class="btn btn-secondary" href="${smsLink(p.phone)}" aria-label="Text ${esc(p.name)}">Text</a>
+            <a class="btn btn-secondary" href="${telLink(p.phone)}" aria-label="Call ${esc(p.name)}">Call</a>
+          </div>`).join("") + `
+          <p class="small" style="margin:14px 0 8px">Don't know what to say${people.length > 1 ? ` to ${esc(first.name)}` : ""}? Tap one:</p>
+          <div class="sits">${MESSAGE_IDEAS.map(m => `<a class="sit idea" href="${smsLink(first.phone, m)}">${esc(m)}</a>`).join("")}</div>`
+        : `<p class="small">Add someone you trust, and they'll be here with Text and Call.</p>
+          <button class="btn btn-secondary" data-act="planFromConnect">Add someone to My Plan</button>`}
+      </div>
+      <p class="lbl">If it gets heavier</p>
+      ${row988()}` };
+  },
+
+  "human-first"(){
+    const p = person();
+    const call = p ? `<a class="btn btn-primary" href="${telLink(p.phone)}">Call someone</a>` : `<button class="btn btn-primary" data-act="route" data-arg="connect">Call someone</button>`;
+    const text = p ? `<a class="btn btn-secondary" href="${smsLink(p.phone)}">Text someone</a>` : `<button class="btn btn-secondary" data-act="route" data-arg="connect">Text someone</button>`;
+    return { close:true, body:`
+      ${title("Would talking to a person help more than another answer?")}
+      ${p ? `<p class="sub">${esc(p.name)} is in your plan.</p>` : ""}`,
+      actions:`${call}${text}
+        <button class="btn btn-secondary" data-act="hfPeople">Be around people</button>
+        <button class="link" data-act="hfNotNow">Not right now</button>` };
+  },
+
   /* 6.5: Change the scene. */
   scene(){
     return { close:true, body:`
@@ -1456,7 +1544,7 @@ const SCREENS = {
       <div class="list">${CHANGE_SCENE.map(([k, t]) =>
         `<button class="card scene-opt" data-act="scenePick" data-arg="${k}">${icon("door")}<span>${t}</span></button>`).join("")}
       </div>
-      <h2>Somewhere to go</h2>
+      <h2 id="placesHead" tabindex="-1">Somewhere to go</h2>
       <p class="sub">Opens your phone's Maps. ZigZag Mind never sees your location.</p>
       <div class="sits places">${SCENE_PLACES.map(([label, q]) =>
         `<a class="sit" href="${mapsLink(q)}" target="_blank" rel="noopener">${label}</a>`).join("")}
@@ -2183,7 +2271,7 @@ const ACTIONS = {
     if (blockIfRed()) return;
     if (arg === "calm") openCalm();
     else if (arg === "head") openDistract();
-    else if (arg === "connect") ACTIONS.talk();
+    else if (arg === "connect") openConnect();
     else if (arg === "scene") openScene();
   },
   rate(arg){ const v = Number(arg); ui.rating = ui.rating === v ? null : v; render(); },
@@ -2234,7 +2322,7 @@ const ACTIONS = {
     dispatch({ type:"SET_CURRENT_INTERVENTION", id:"playbook:" + ui.sugg });
     go("checkin");
   },
-  suggElse(){ ui.suggestIdx++; go("recommendation"); },
+  suggElse(){ ui.suggestIdx++; dispatch({ type:"COUNT_ELSE" }); toRecommendation(); },
 
   ivNext(){ if (blockIfRed()) return; buzz(); ui.step++; lastRendered = null; render(); },
   ivDone(){
@@ -2288,6 +2376,14 @@ const ACTIONS = {
   spNone(){ if (blockIfRed()) return; ui.nextStep = "Let the rest wait for now."; ui.nextFor = ""; go("spiral-next"); },
   spNextDone(){ if (blockIfRed()) return; go("checkin"); },
 
+  planFromConnect(){ ui.planFrom = "tab"; go("plan"); },
+  hfNotNow(){ if (blockIfRed()) return; go("recommendation"); },
+  hfPeople(){
+    if (blockIfRed()) return;
+    go("scene");
+    const h = document.getElementById("placesHead");
+    if (h){ h.scrollIntoView({ block:"start" }); h.focus({ preventScroll:true }); }
+  },
   scenePick(arg){
     if (blockIfRed()) return;
     if (!CHANGE_SCENE.some(x => x[0] === arg)) return;
