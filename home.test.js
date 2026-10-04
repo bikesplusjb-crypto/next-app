@@ -12,7 +12,7 @@ const act=(a,arg)=>arg!==undefined?`[data-act="${a}"][data-arg="${arg}"]`:`[data
 const r=[];
 
 {const a=boot(); const t=a.app().textContent;
- r.push(['wordmark and tagline', !!a.doc.querySelector('.brand[data-act="wordmark"]') && a.doc.getElementById('screen-title').textContent==="Get through what's happening right now."]);
+ r.push(['wordmark and tagline', !!a.doc.querySelector('.brand[data-act="wordmark"]') && a.doc.getElementById('screen-title').textContent==="It's okay not to be okay." && a.doc.querySelector('.home-sub').textContent==="You don't have to figure everything out right now."]);
  const order=["I don't feel safe","I don't know what I need","Calm down","Get out of my head","Connect","Change the scene","Or tell me what's happening","I'm anxious","I'm spiraling","I have an urge to use (drink or drugs)","I feel low","I feel alone"];
  r.push(['Home items in the spec order', order.every((x,i)=>t.indexOf(x)>-1 && (i===0 || t.indexOf(x)>t.indexOf(order[i-1])))]);
  r.push(['four escape routes in a 2x2 grid, each with a stroke icon', a.doc.querySelectorAll('.routes .route').length===4 && [...a.doc.querySelectorAll('.routes .route')].every(b=>b.querySelector('.ico[aria-hidden="true"] svg'))]);

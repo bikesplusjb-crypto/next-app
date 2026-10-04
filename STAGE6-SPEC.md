@@ -465,7 +465,9 @@ Store verse text in one constant for review. **Clinician or chaplain review requ
 
 **Part A (built): visual pass, styling only.** New palette (light and dark), a quiet system serif for page titles (nothing downloaded), softer cards (shadow instead of borders in light mode), the ZigZag mark (a thin, soft line drawn once on Home, About and the first welcome screen; static with reduced motion), crisis screens kept plain (no serif, no shadows, no motion). No flow, copy or safety changes. `layout.test.js` checks every screen at 375, 390 and 430px.
 
-**Part B (needs the owner's decision): Home redesign.** The proposal (hero "It's okay not to be okay.", "Find my next step", a quieter "I'm stuck") would replace the 6.1 Home. Whatever is chosen must keep **"I don't feel safe" and Help on the first screen** in normal and large text (`home-viewport.test.js`) and a way into the existing flows (including "I have an urge to use (drink or drugs)"). "I'm stuck" overlaps "I don't know what I need" (6.2): pick one.
+**Part B (first step built, owner said continue): Home tagline.** Only the line under the wordmark changed: "It's okay not to be okay." (serif) with "You don't have to figure everything out right now." Everything else on Home is unchanged; in large text the second line and the zigzag are hidden so "I don't feel safe" stays on the first screen. The rest of the proposal below still needs the owner's decision.
+
+**Part B (original proposal): Home redesign.** The proposal (hero "It's okay not to be okay.", "Find my next step", a quieter "I'm stuck") would replace the 6.1 Home. Whatever is chosen must keep **"I don't feel safe" and Help on the first screen** in normal and large text (`home-viewport.test.js`) and a way into the existing flows (including "I have an urge to use (drink or drugs)"). "I'm stuck" overlaps "I don't know what I need" (6.2): pick one.
 
 **Part C (ON HOLD — new experiences, need owner + clinician sign-off before building).** All person-initiated, local-only, no scores/streaks/feeds, Help one tap away, `blockIfRed()` first, at most five items where a list is involved, and never on crisis screens.
 

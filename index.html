@@ -248,7 +248,10 @@ textarea.field{min-height:150px;resize:vertical}
 /* Stage 6.1: Home */
 .home-hero{padding:4px 0 0}
 .home-hero .brand{font-size:34px}
-h1.home-tag{font-size:16px;font-weight:400;line-height:1.35;letter-spacing:0;color:var(--text-muted);margin:4px 0 0}
+h1.home-tag{font-size:22px;font-weight:500;line-height:1.25;letter-spacing:-.01em;color:var(--text);margin:4px 0 0}
+.home-sub{font-size:15px;line-height:1.4;color:var(--text-muted);margin:2px 0 0}
+/* Large text (about 200%): keep "I don't feel safe" on the first screen. */
+@media (max-width:320px){.home-sub,.home-hero .zz{display:none}h1.home-tag{font-size:18px}}
 .btn-big{min-height:72px;font-size:19px;border-radius:20px;margin-top:10px}
 .routes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
 .route{min-height:80px;border-radius:18px;background:var(--surface);border:1px solid var(--line);padding:10px 14px;
@@ -1468,7 +1471,8 @@ const SCREENS = {
       <div class="home-hero">
         <button class="brand" data-act="wordmark" aria-label="ZigZag Mind">ZigZag Mind</button>
         ${zigzag()}
-        <h1 id="screen-title" tabindex="-1" class="home-tag">Get through what's happening right now.</h1>
+        <h1 id="screen-title" tabindex="-1" class="home-tag">It's okay not to be okay.</h1>
+        <p class="home-sub">You don't have to figure everything out right now.</p>
       </div>
       <button class="card wide safety home-safe" data-act="crisis">${icon("shield", "safety")}<span>I don't feel safe<span class="meta">Get to a real person fast</span></span></button>
       <button class="btn btn-primary btn-big" data-act="dontKnow">I don't know what I need</button>

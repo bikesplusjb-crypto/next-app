@@ -1039,7 +1039,8 @@ Rendered for each state where the screen changes by state. Identical renders are
 
 - **Button:** Help _(screen reader: "Get help now")_
 - **Button:** ZigZag Mind
-- **Heading:** Get through what's happening right now.
+- **Heading:** It's okay not to be okay.
+- You don't have to figure everything out right now.
 - **Button:** I don't feel safe — Get to a real person fast
 - **Button:** I don't know what I need
 - **Button:** Calm down
