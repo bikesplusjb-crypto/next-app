@@ -15,10 +15,11 @@ r.push(['covers the handoff matrix and every Amendment 3 case', ["I want to kill
 const {JSDOM}=require('jsdom');
 const w=new JSDOM(fs.readFileSync(path.join(__dirname,'index.html'),'utf8'),{runScripts:'dangerously',pretendToBeVisual:true,beforeParse(w){ w.scrollTo=()=>{}; }}).window;
 const RED=w.eval('RED_PHRASES');
-r.push(['the owner-approved interim RED additions are in the code exactly', JSON.stringify(INTERIM)===JSON.stringify(["kms","unalive myself","unaliving myself","don't want to wake up","took all my pills","want to disappear","took too much","kill him","kill her","kill them","kill someone","hurt someone","hurt somebody"])
+r.push(['the owner-approved interim RED additions are in the code exactly', JSON.stringify(INTERIM)===JSON.stringify(["kms","unalive myself","unaliving myself","don't want to wake up","took all my pills","want to disappear","took too much","kill him","kill her","kill them","kill someone","hurt someone","hurt somebody",
+  "quiero morir","me quiero morir","quiero matarme","me voy a matar","quitarme la vida","suicidarme","no quiero vivir"])
   && INTERIM.every(p=>RED.includes(p)) && RED.length===23+INTERIM.length]);
 r.push(['every interim phrase now returns RED; YELLOW list unchanged', INTERIM.every(p=>w.eval(`safetyCheck(${JSON.stringify("I "+p)})`)==='RED') && w.eval('YELLOW_PHRASES.length')===10]);
 r.push(['the confirmed misses from the audit are now RED (incl. harm to others)', ["kms","unalive myself","I don't want to wake up","I took all my pills","I want to disappear","I'm going to kill him","I want to hurt someone"].every(t=>w.eval(`safetyCheck(${JSON.stringify(t)})`)==='RED')]);
-r.push(['still not detected (documented for the clinician): Spanish', w.eval('safetyCheck("quiero morir")')==='GREEN']);
+r.push(['Spanish now detected (6.18 C, interim); other languages still not (documented for the clinician)', w.eval('safetyCheck("quiero morir")')==='RED' && w.eval('safetyCheck("je veux mourir")')==='GREEN']);
 console.log(r.map(x=>(x[1]?'PASS ':'FAIL ')+x[0]).join('\n'));
 process.exit(0);

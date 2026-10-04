@@ -26,7 +26,7 @@ Safety level lives only for the current visit and is **never saved**. Levels: GR
 
 ## 2. Safety phrase lists
 
-### RED phrases (36) → crisis screen
+### RED phrases (43) → crisis screen
 
 The last 13 (from "kms" to "hurt somebody", including harm-to-others phrases) are **OWNER-APPROVED INTERIM, pending clinician**. Full results: docs/SAFETY_TEST_MATRIX.md.
 - "kill myself"
@@ -65,6 +65,13 @@ The last 13 (from "kms" to "hurt somebody", including harm-to-others phrases) ar
 - "kill someone"
 - "hurt someone"
 - "hurt somebody"
+- "quiero morir"
+- "me quiero morir"
+- "quiero matarme"
+- "me voy a matar"
+- "quitarme la vida"
+- "suicidarme"
+- "no quiero vivir"
 
 ### YELLOW phrases (10) → support bar for the rest of the visit
 

@@ -521,7 +521,9 @@ const RED_PHRASES = [
   // OWNER-APPROVED INTERIM (2026-10-03), pending clinician confirmation. Each only increases escalation.
   "kms","unalive myself","unaliving myself","don't want to wake up","took all my pills","want to disappear","took too much",
   // Harm to others, OWNER-APPROVED INTERIM, pending clinician. The danger question already asks about "someone else".
-  "kill him","kill her","kill them","kill someone","hurt someone","hurt somebody"
+  "kill him","kill her","kill them","kill someone","hurt someone","hurt somebody",
+  // 6.18 C, Spanish, OWNER-APPROVED INTERIM, pending clinician (a reviewed Spanish YELLOW list is still to come).
+  "quiero morir","me quiero morir","quiero matarme","me voy a matar","quitarme la vida","suicidarme","no quiero vivir"
 ];
 const YELLOW_PHRASES = [
   "hopeless","can't take it","can't take this","give up","giving up","nobody cares","no one cares",
@@ -530,6 +532,7 @@ const YELLOW_PHRASES = [
 
 function normalizeText(t){
   return " " + String(t || "").toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")   // 6.18 C: fold accents (é → e, ñ → n) so they match with or without them
     .replace(/[\u2018\u2019']/g, "")
     .replace(/[^a-z0-9]+/g, " ")
     .trim() + " ";
