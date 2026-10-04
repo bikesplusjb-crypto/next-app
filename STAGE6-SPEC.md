@@ -503,3 +503,13 @@ Phone stays the priority. Only when the device is clearly a desktop or laptop (d
 - **7B Home:** keep "I don't know what I need" on Home. No further 7B changes ("Find my next step" / "I'm stuck" are not built).
 - **Tech check:** no Keep button for now. Nothing typed or tapped in Tech check is saved.
 - **Still on hold:** 6.7b Snuggle Zags, 6.7c Zags listens, 6.7d Safe place, Tech check option 6 (`ai_reality`), and 7C new experiences.
+
+## 6.18 Owner-approved updates (as built, 2026-10-04)
+
+Built from STAGE6-18-ADDENDUM.md, parts A–E, on `build`. Items marked OWNER-APPROVED INTERIM are in the code and listed in `docs/CLINICIAN_REVIEW.md` (D5, D16–D22, status OPEN) and REVIEW.md. Notes where the build differs in form from the text:
+- B: the supporter page can't load the app's script (one inline script, nothing loaded), so `sync-support.js` (`npm run sync-support`) writes the Warm Line block from `WARMLINE` in index.html; a test fails if it drifts.
+- D2: "Can't sleep, you up?" was already the first message idea (existing wording kept); at night it is forced first.
+- D6: the gun-storage line is the only exception to the "no means named" tests, matched exactly.
+- E3: "Something else" opens the five directions; the direction pick is the new suggestion and counts toward Human First as before.
+- E5: `be_around_people` (PEOPLE) is opened from Connect only (no states, so it is never suggested elsewhere). E6 is a Change the scene option (SPACE).
+Tests: `stage618.test.js`; `home-viewport.test.js` also runs at night.

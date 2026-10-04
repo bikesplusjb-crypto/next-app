@@ -15,12 +15,12 @@ function boot(ua){const dom=new JSDOM(HTML,{url:'https://next.example/',runScrip
 const act=(a,arg)=>arg!==undefined?`[data-act="${a}"][data-arg="${arg}"]`:`[data-act="${a}"]`;
 const scene=ua=>{ const a=boot(ua); a.click(act('route','scene')); return a; };
 const r=[];
-const OPTS=[['outside','Step outside for 5 minutes'],['walk','Take a short walk'],['sit','Sit somewhere different'],['shower','Take a shower'],['drink','Get something to drink']];
+const OPTS=[['outside','Step outside for 5 minutes'],['walk','Take a short walk'],['sit','Sit somewhere different'],['shower','Take a shower'],['drink','Get something to drink'],['window','Go to a window']];   // window: 6.18 E6
 
 {const a=scene(); const t=a.T();
  r.push(['Change the scene opens its menu, no before-rating', a.S().screen==='scene' && a.doc.getElementById('screen-title').textContent==='Change the scene.']);
  r.push(['opening line', t.includes('Sometimes your brain needs a different place, not another question. Pick one.')]);
- r.push(['five options in spec order', [...a.doc.querySelectorAll('[data-act="scenePick"]')].map(b=>b.dataset.arg+'|'+b.textContent.trim()).join()===OPTS.map(([k,l])=>k+'|'+l).join()]);
+ r.push(['six options in spec order (6.18 E6 added the window)', [...a.doc.querySelectorAll('[data-act="scenePick"]')].map(b=>b.dataset.arg+'|'+b.textContent.trim()).join()===OPTS.map(([k,l])=>k+'|'+l).join()]);
  r.push(['no emoji; Help in the top bar', !/\p{Extended_Pictographic}/u.test(t) && !!a.doc.querySelector('header .help-pill[data-act="crisis"]')]);
  r.push(['opening it counts as a hard moment', a.G('store.sensitive.activity.filter(x=>x.type==="moment").length')===1]);}
 {const a=boot(); a.click(act('dontKnow')); a.click(act('route','scene')); r.push(['"I don\'t know" → Get out of where I am → Change the scene', a.S().screen==='scene']);}
@@ -28,7 +28,7 @@ const OPTS=[['outside','Step outside for 5 minutes'],['walk','Take a short walk'
 // Each option: full-screen with Done, then the usual check-in, recorded as change_scene.
 for(const [k,label] of OPTS){
   const a=scene(); a.click(act('scenePick',k));
-  const full=a.S().screen==='scene-step' && a.doc.getElementById('screen-title').textContent.startsWith(label) && !!a.doc.querySelector(act('sceneDone'))
+  const full=a.S().screen==='scene-step' && a.doc.getElementById('screen-title').textContent===a.G('CHANGE_SCENE').find(x=>x[0]===k)[2] && !!a.doc.querySelector(act('sceneDone'))
     && a.doc.querySelectorAll('#app .card, #app a.sit').length===0;
   a.click(act('sceneDone'));
   const ci=a.S().screen==='checkin';

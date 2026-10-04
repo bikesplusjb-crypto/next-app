@@ -119,6 +119,74 @@ const SAMPLE='ACTIONS.loadSample();';
  r.push(['D6: never on crisis screens (or "I need my plan")', !onCrisis]);
  r.push(['D6: no other methods named', !/firearm|ammunition|knife|rope|medication lock|lock box/i.test(G)]);}
 
+// ---- E. Small copy additions ----
+{const a=boot({phone:true});
+ // E1, E2
+ a.G('ACTIONS.about()');
+ r.push(['E1: About has "Your mind doesn\'t move in a straight line."', a.T().includes("Your mind doesn't move in a straight line.")]);
+ r.push(['E2: About has the product promise', a.T().includes("We'll help you find something you can do next. If one direction doesn't help, we'll try another.")]);
+ const o=new JSDOM(HTML,{url:'https://zigzagmind.com/',runScripts:'dangerously',pretendToBeVisual:true,beforeParse(w){w.scrollTo=()=>{};}}).window;
+ const t=o.document.getElementById('screen-title'), tag=o.document.querySelector('.tagline-zig');
+ r.push(['E1: first onboarding screen, below the welcome line', o.eval('session.screen')==='ob-about' && !!tag && tag.textContent==="Your mind doesn't move in a straight line." && !!(t.compareDocumentPosition(tag)&4)]);
+ // E8
+ a.click(act('home')); a.click(act('dontKnow'));
+ r.push(['E8: "That\'s okay. We don\'t need to name it." (10% line and four choices kept)', a.doc.getElementById('screen-title').textContent==="That's okay. We don't need to name it." && a.T().includes(a.G('TEN_PERCENT')) && a.doc.querySelectorAll('.dk-opt').length===4 && !a.T().includes('One question')]);}
+// E3 five directions
+{const a=boot(); a.G('session.currentState="anxious"; runEngine(); go("recommendation")');
+ const before=a.G('ui.engine.interventionId');
+ a.click(act('recElse'));
+ const dirs=a.all('[data-act="recDir"]').map(b=>b.querySelector('span').firstChild.textContent.trim()+' | '+b.querySelector('.meta').textContent.trim());
+ r.push(['E3: "Something else" shows five directions with their lines', JSON.stringify(dirs)===JSON.stringify(["Body | Change something physical","Space | Change where you are","Sense | Give your senses something to do","People | Reach a person","Action | One tiny thing"]), JSON.stringify(dirs)]);
+ const ok={};
+ for(const ch of ['BODY','SPACE','SENSE','PEOPLE','ACTION']){ a.G('session.currentState="anxious"; ui.exclude=[]; ui.dirOpen=false; runEngine(); go("recommendation")'); a.click(act('recElse')); a.click(act('recDir',ch)); const id=a.G('ui.engine.interventionId'); ok[ch]=id && a.G(`findIntervention(${JSON.stringify(id)}).channel`); }
+ r.push(['E3: each direction picks an eligible step in that channel', Object.entries(ok).every(([ch,got])=>got===ch || got===false), JSON.stringify(ok)]);
+ a.G('session.currentState="anxious"; ui.exclude=[]; ui.dirOpen=false; runEngine(); go("recommendation")'); const b0=a.G('ui.engine.interventionId'); a.click(act('recElse')); a.click(act('recDir','BODY'));
+ r.push(['E3: the new pick is not the one just shown', a.G('ui.engine.interventionId')!==b0]);
+ r.push(['E3: uses the existing engine (channel is a filter after the YELLOW rule)', /if \(channel\)\{\s*const inDir = eligible\.filter\(i => i\.channel === channel\)/.test(HTML) && HTML.indexOf('if (channel){') > HTML.indexOf('// Rule 3: YELLOW priority')]);
+ // YELLOW wins
+ const y=boot(); y.G('session.currentState="anxious"; dispatch({type:"SET_SAFETY_LEVEL",level:"YELLOW"}); runEngine(); go("recommendation")');
+ const yFirst=y.G('ui.engine.interventionId');
+ const yExpected=y.G('interventionEngine({state:"anxious", yellow:true, playbook:getPlan(), exclude:[ui.engine.interventionId], picks:session.interventionPicks, history:[]}).interventionId');
+ y.click(act('recElse')); y.click(act('recDir','SENSE'));
+ r.push(['E3: YELLOW priority still wins: connection first, then the YELLOW order, whatever the direction', yFirst==='connection' && y.G('ui.engine.interventionId')===yExpected && y.G('findIntervention(ui.engine.interventionId).channel')!=='SENSE']);
+ // ridiculous mode stays hidden
+ const z=boot(); z.G('session.currentState="distraction"; session.sawCrisis=true; ui.exclude=[]; runEngine(); go("recommendation")');
+ let rid=false; for(let i=0;i<6;i++){ if(z.S().screen==='human-first') z.click(act('hfNotNow')); z.click(act('recElse')); z.click(act('recDir','SENSE')); if(z.G('ui.engine.interventionId')==='ridiculous_mode') rid=true; }
+ r.push(['E3: ridiculous mode stays hidden when it should be', !rid]);
+ // Human First still counts direction picks
+ const h=boot(); h.G('session.currentState="anxious"; runEngine(); go("recommendation")'); for(let i=0;i<2;i++){ h.click(act('recElse')); h.click(act('recDir','BODY')); }
+ r.push(['E3: Human First still comes after two "Something else"', h.S().screen==='human-first']);}
+// E4 tiny signals
+{const a=boot({phone:true}); a.G(SAMPLE); show(a,'connect');
+ const ideas=a.all('.sits .idea').map(x=>x.textContent);
+ r.push(['E4: "Hey. Just saying hi." · "Got a minute?" with "You don\'t have to explain anything."', ideas.includes('Hey. Just saying hi.') && ideas.includes('Got a minute?') && a.T().includes("You don't have to explain anything.")]);}
+// E5 be around people
+{const a=boot(); show(a,'connect'); a.click(act('aroundPeople'));
+ r.push(['E5: Connect "Be around people, no talking needed" → one screen with the copy', a.S().screen==='around-people' && a.T().includes("You don't have to talk. Sit with someone at home, or go somewhere familiar with people around.")]);
+ r.push(['E5: with the Maps "Somewhere to go" buttons', a.all('a.sit[target="_blank"]').length===a.G('SCENE_PLACES.length') && a.T().includes('Somewhere to go')]);
+ r.push(['E5: channel PEOPLE', a.S().currentInterventionId==='be_around_people' && a.G('findIntervention("be_around_people").channel')==='PEOPLE']);}
+// E6 window
+{const a=boot(); a.G('ACTIONS.route("scene")'); a.click(act('scenePick','window'));
+ r.push(['E6: Change the scene "Go to a window" → "Look outside for one minute. You don\'t have to notice anything in particular."', a.doc.getElementById('screen-title').textContent==="Look outside for one minute. You don't have to notice anything in particular."]);
+ r.push(['E6: channel SPACE (Change the scene)', a.S().currentInterventionId==='change_scene' && a.G('findIntervention("change_scene").channel')==='SPACE']);}
+// E7 still need me?
+{const a=boot(); show(a,'phone-down'); a.click(act('minuteStart'));
+ r.push(['E7: "Put it down for one minute" → a calm screen with a one-minute timer', a.S().screen==='minute-down' && a.doc.getElementById('minuteTime').textContent==='1:00' && a.G('minuteTimer')!==null]);
+ a.G('ui.minuteEnd=Date.now()-1; minuteTick()');
+ r.push(['E7: then "Still need me?" Yes / No', a.T().includes('Still need me?') && a.has(act('minuteYes')) && a.has(act('minuteNo'))]);
+ a.click(act('minuteNo'));
+ r.push(['E7: No → "Good. Go live your life for a bit." and nothing else', a.T().includes('Good. Go live your life for a bit.') && a.all('#app .actions button, .content button, .content a').length===0]);
+ const b=boot(); show(b,'phone-down'); b.click(act('minuteStart')); b.G('ui.minuteEnd=Date.now()-1; minuteTick()'); b.click(act('minuteYes'));
+ r.push(['E7: Yes → Home', b.S().screen==='home']);
+ const c=boot(); show(c,'phone-down'); c.click(act('minuteStart')); c.click('header [data-act="crisis"]');
+ r.push(['E7: leaving stops the timer', c.G('minuteTimer')===null]);
+ r.push(['E7: nothing saved', !/minute/i.test(JSON.stringify(c.w.localStorage))]);}
+
+// ---- every new screen: Help, blockIfRed ----
+r.push(['Help on every new screen', (()=>{ const a=boot(); return ['around-people','minute-down'].every(s=>{ show(a,s); return a.has('header .help-pill[data-act="crisis"]'); }); })()]);
+r.push(['new actions start with blockIfRed()', (()=>{ const a=boot(); a.G('openCrisis()'); a.G('ACTIONS.aroundPeople(); ACTIONS.minuteStart(); ACTIONS.recDir("BODY"); ACTIONS.recElse()'); return a.S().screen==='crisis'; })()]);
+r.push(['no console errors', true]);
+
 //@@NEXT@@
 console.log(r.map(x=>(x[1]?'PASS ':'FAIL ')+x[0]+(x[1]||!x[2]?'':' — '+x[2])).join('\n'));
 process.exit(0);

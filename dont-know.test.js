@@ -12,7 +12,7 @@ const act=(a,arg)=>arg!==undefined?`[data-act="${a}"][data-arg="${arg}"]`:`[data
 const r=[];
 
 {const a=boot(); const app=a.doc.getElementById('app'); const t=app.textContent.replace(/\s+/g,' ');
- r.push(['one screen, one question', a.S().screen==='dont-know' && a.doc.getElementById('screen-title').textContent==="That's okay. One question."
+ r.push(['one screen, one question', a.S().screen==='dont-know' && a.doc.getElementById('screen-title').textContent==="That's okay. We don't need to name it."
    && t.includes('Do you want to calm down, get distracted, connect with someone, or get out of where you are?')]);
  const opts=[...a.doc.querySelectorAll('.list .card[data-act="route"]')];
  r.push(['four large options', opts.length===4 && opts.map(b=>b.dataset.arg).join()==='calm,head,connect,scene']);

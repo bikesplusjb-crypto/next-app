@@ -383,6 +383,10 @@ html.reduce .zmark-wave .zmark-body{animation:none}
 .faith-next a.sit{display:inline-flex;align-items:center;text-decoration:none;color:var(--text)}
 
 /* Stage 6.18 */
+.tagline-zig{margin-top:6px}
+.dir-lbl{margin:4px 0 0}
+.dirs{gap:8px}
+.card.dir{min-height:56px}
 .vet-line{margin:10px 0 0;font-weight:600}
 .using-line{margin-top:12px}
 .not-police .btn{width:100%}
@@ -627,8 +631,15 @@ function firstStep(){
   if (!h) return FIRST_STEP_DEFAULT;
   return FIRST_STEP[h] || SUGGESTION_TEXT[h] || `${helpLabel(h)}.`;
 }
-const MESSAGE_IDEAS = ["Can't sleep, you up?","Rough night. Can you talk for 5 minutes?","Want to catch up this week?"];
+const MESSAGE_IDEAS = ["Can't sleep, you up?","Rough night. Can you talk for 5 minutes?","Want to catch up this week?","Hey. Just saying hi.","Got a minute?"];   // last two: 6.18 E4 tiny signals
 /* 6.18 D: research-backed additions. OWNER-APPROVED INTERIM, pending clinician. Nothing here is saved or tracked. */
+/* 6.18 E: small copy additions. */
+const TAGLINE_ZIG = "Your mind doesn't move in a straight line.";
+const PROMISE = "We'll help you find something you can do next. If one direction doesn't help, we'll try another.";
+const DIRECTIONS = [["BODY","Body","Change something physical"],["SPACE","Space","Change where you are"],["SENSE","Sense","Give your senses something to do"],["PEOPLE","People","Reach a person"],["ACTION","Action","One tiny thing"]];
+const IDEAS_NOTE = "You don't have to explain anything.";
+const AROUND_PEOPLE = "You don't have to talk. Sit with someone at home, or go somewhere familiar with people around.";
+const MINUTE_MS = 60 * 1000;
 const NIGHT_IDEA = MESSAGE_IDEAS[0];   // "Can't sleep, you up?" (already a message idea): first at night
 const VETERAN_LINE = "Veteran or service member? Call 988 and press 1.";
 const NIGHT_HOME_LINE = "It's late. Everything feels heavier at night. You don't have to decide anything before morning.";
@@ -831,6 +842,11 @@ INTERVENTION_LIBRARY.push(
     states:["anxious","low","spiraling","distraction","alone"], intensityRange:[0,10], needsMobility:false,
     steps:["Pick how it feels.","Write three short lines.","Listen to your song."], completion:"tap_done" }
 );
+// 6.18 E5: "Be around people, no talking needed" (PEOPLE), opened from Connect only.
+INTERVENTION_LIBRARY.push(
+  { id:"be_around_people", name:"Be around people", tryLabel:"Be around people", description:"No talking needed.", durationSec:900, states:[], intensityRange:[0,10], needsMobility:true,
+    steps:["You don't have to talk. Sit with someone at home, or go somewhere familiar with people around."], completion:"tap_done" }
+);
 // 6.14 Tech check: opened from Tech check only (no states, so the engine never suggests them elsewhere).
 INTERVENTION_LIBRARY.push(
   { id:"ai_reliance_check", name:"Asking AI again", tryLabel:"Step out of the loop", description:"Stop, decide, act: one real-world step.", durationSec:600, states:[], intensityRange:[0,10], needsMobility:false, steps:["Stop.","Decide.","Act."], completion:"tap_done" },
@@ -843,7 +859,7 @@ const CHANNEL_OF = {
   grounding:"BODY", breathing:"BODY", hydration:"BODY", walking:"BODY", touch_real_world:"BODY",
   change_scene:"SPACE", environment_change:"SPACE", find_alive:"SPACE", craving_delay:"SPACE",
   distraction_game:"SENSE", distraction_color_hunt:"SENSE", distraction_around_me:"SENSE", distraction_categories:"SENSE",
-  distraction_memory:"SENSE", distraction_pattern:"SENSE", distraction_60_second:"SENSE", ridiculous_mode:"SENSE", zags:"SENSE", song:"SENSE", break_the_loop:"SPACE", ai_relationship_check:"PEOPLE", ai_loss:"PEOPLE", ai_reliance_check:"ACTION", ai_fomo:"ACTION",
+  distraction_memory:"SENSE", distraction_pattern:"SENSE", distraction_60_second:"SENSE", ridiculous_mode:"SENSE", zags:"SENSE", song:"SENSE", break_the_loop:"SPACE", ai_relationship_check:"PEOPLE", be_around_people:"PEOPLE", ai_loss:"PEOPLE", ai_reliance_check:"ACTION", ai_fomo:"ACTION",
   connection:"PEOPLE",
   thought_parking:"ACTION", still_true:"ACTION", true_sentence:"ACTION", kind_stranger:"ACTION", borrow_ten:"ACTION", behavioral_activation:"ACTION"
 };
@@ -951,6 +967,13 @@ const TC_LOSS_GROUND = "Before anything else: press your feet into the floor, an
 const TC_LOSS_MSG = "Something hard happened and I could use someone to talk to. Got a few minutes?";
 const TC_REFLECT = ["AI is a tool for me","It's becoming a way to cope","It's time to step away for a bit"];
 let tcTimer = null;
+let minuteTimer = null;
+function minuteTick(){
+  if (session.screen !== "minute-down" || ui.minutePhase !== "wait"){ clearInterval(minuteTimer); minuteTimer = null; return; }
+  const left = ui.minuteEnd - Date.now(), el = document.getElementById("minuteTime");
+  if (left <= 0){ clearInterval(minuteTimer); minuteTimer = null; ui.minutePhase = "ask"; lastRendered = null; render(); return; }
+  if (el) el.textContent = fmtTime(left);
+}
 function tcTick(){
   if (session.screen !== "tc-loop" || !ui.tcLoopEnd){ clearInterval(tcTimer); tcTimer = null; return; }
   const left = ui.tcLoopEnd - Date.now(), el = document.getElementById("tcTime");
@@ -1301,7 +1324,8 @@ const CHANGE_SCENE = [
   ["walk","Take a short walk","Take a short walk. Anywhere is fine."],
   ["sit","Sit somewhere different","Sit somewhere different. Another room, another chair."],
   ["shower","Take a shower","Take a shower. Warm or cool, whatever feels right."],
-  ["drink","Get something to drink","Get something to drink, and drink it slowly."]
+  ["drink","Get something to drink","Get something to drink, and drink it slowly."],
+  ["window","Go to a window","Look outside for one minute. You don't have to notice anything in particular."]   // 6.18 E6 (SPACE)
 ];
 /* "Somewhere to go": opens the phone's own Maps app with a plain search. No location is read or sent,
    and these places are never presented as crisis services. */
@@ -1632,7 +1656,7 @@ function recordHighRating(){ dispatch({ type:"INCREMENT_HIGH_RATING" }); }
 function recordStillBad(){ dispatch({ type:"INCREMENT_STILL_BAD" }); }
 
 /* ---------- INTERVENTION ENGINE ---------- */
-function interventionEngine({ state, intensity, history = [], yellow = false, playbook = {}, picks = [], interventionCount = 0, exclude = [], zigFrom = null, hidden = [], recentHigh = false }){
+function interventionEngine({ state, intensity, history = [], yellow = false, playbook = {}, picks = [], interventionCount = 0, exclude = [], zigFrom = null, hidden = [], recentHigh = false, channel = null }){
   // Rule 1: filter by state (and leave out anything hidden right now, e.g. Ridiculous mode during YELLOW)
   let pool = INTERVENTION_LIBRARY.filter(i => i.states.includes(state) && !hidden.includes(i.id));
   // Rule 2: filter by intensity range
@@ -1663,6 +1687,12 @@ function interventionEngine({ state, intensity, history = [], yellow = false, pl
     return out(eligible[0], "One small step to try.");
   }
 
+  // 6.18 E3: the person picked a direction after "Something else" (YELLOW priority already returned above).
+  if (channel){
+    const inDir = eligible.filter(i => i.channel === channel);
+    if (!inDir.length) return { interventionId:null, reason:"Nothing in that direction right now." };
+    eligible = inDir;
+  }
   // 6.17 Let's Zig (YELLOW priority already returned above; RED never reaches the engine)
   // Rule 2: after "didn't help", a different channel whenever an eligible alternative exists.
   if (zigFrom){
@@ -1723,7 +1753,8 @@ function runEngine(){
     exclude:ui.exclude,
     zigFrom:ui.zigFrom || null,
     recentHigh:latestRating() >= 8,
-    hidden:ridiculousAvailable() ? [] : ["ridiculous_mode"]
+    hidden:ridiculousAvailable() ? [] : ["ridiculous_mode"],
+    channel:ui.dirChannel || null
   });
   ui.engine = r;
   dispatch({ type:"SET_ENGINE_RESULT", pick:r.interventionId, reason:r.reason });
@@ -2109,7 +2140,7 @@ const SCREENS = {
       ["scene","door",false,"Get out of where I am","Change the scene"]
     ];
     return { close:true, body:`
-      ${title("That's okay. One question.")}
+      ${title("That's okay. We don't need to name it.")}
       <p class="sub">${TEN_PERCENT} Do you want to calm down, get distracted, connect with someone, or get out of where you are?</p>
       <div class="list">${opts.map(([arg, ic, alt, t, m]) =>
         `<button class="card dk-opt" data-act="route" data-arg="${arg}">${icon(ic, alt)}<span>${t}<span class="meta">${m}</span></span></button>`).join("")}
@@ -2204,7 +2235,8 @@ const SCREENS = {
     }
     const it = findIntervention(r.interventionId);
     const zig = ui.justStillBad && ui.zigFrom && it.channel && it.channel !== ui.zigFrom;
-    const lead = zig ? `<p class="zig-lead">Okay. That wasn't it.<br>Let's Zig.</p><p class="sub">${CHANNEL_LINE[it.channel]}</p>`
+    const lead = ui.dirNote ? `<p class="sub">${esc(ui.dirNote)}</p>`
+      : zig ? `<p class="zig-lead">Okay. That wasn't it.<br>Let's Zig.</p><p class="sub">${CHANNEL_LINE[it.channel]}</p>`
       : ui.justStillBad ? `<p class="sub">Let's try something different.</p>` : `<p class="sub ten">${TEN_PERCENT}</p>`;
     const head = r.isPreviouslyHelpful
       ? `${title(esc(r.reason))}<p class="sub">Want to try it first?</p>`
@@ -2213,9 +2245,33 @@ const SCREENS = {
       ${change}${lead}${head}
       ${sugg ? `<div class="panel"><h3>Something that helped you before: ${esc(helpLabel(sugg))}.</h3>
         <button class="btn btn-secondary" style="margin-top:10px" data-act="sugg" data-arg="${esc(sugg)}">I'll do that</button></div>` : ""}`,
-      actions:`<button class="btn btn-primary" data-act="recTry">${esc(it.tryLabel)}</button>
+      actions: ui.dirOpen ? `<p class="lbl dir-lbl" id="dirLbl">Try a different direction</p>
+        <div class="list dirs" role="group" aria-labelledby="dirLbl">${DIRECTIONS.map(([k, t, m]) => `<button class="card dir" data-act="recDir" data-arg="${k}"><span>${t}<span class="meta">${m}</span></span></button>`).join("")}</div>
+        <button class="link" data-act="recDirClose">Never mind</button>`
+      : `<button class="btn btn-primary" data-act="recTry">${esc(it.tryLabel)}</button>
         <button class="btn btn-secondary" data-act="recElse">Something else</button>
         <button class="link" data-act="phoneDown">I'm good for now</button>` };
+  },
+
+  /* 6.18 E5: be around people, no talking needed. */
+  "around-people"(){
+    return { close:true, body:`
+      ${stepTitle(AROUND_PEOPLE, true)}
+      <h2>Somewhere to go</h2>
+      <p class="sub">Opens your phone's Maps. ZigZag Mind never sees your location.</p>
+      <div class="sits places">${SCENE_PLACES.map(([label, q]) => `<a class="sit" href="${mapsLink(q)}" target="_blank" rel="noopener">${label}</a>`).join("")}</div>`,
+      actions:endActions() };
+  },
+  /* 6.18 E7: put it down for one minute, then "Still need me?". Nothing is saved or tracked. */
+  "minute-down"(){
+    if (ui.minutePhase === "done") return { close:true, body:`${stepTitle("Good. Go live your life for a bit.")}` };
+    if (ui.minutePhase === "ask") return { close:true, body:`${stepTitle("Still need me?")}`,
+      actions:`<button class="btn btn-secondary" data-act="minuteYes">Yes</button><button class="btn btn-secondary" data-act="minuteNo">No</button>` };
+    const left = ui.minuteEnd ? Math.max(0, ui.minuteEnd - Date.now()) : MINUTE_MS;
+    return { close:true, body:`
+      ${stepTitle("Put it down for one minute.", true)}
+      <p class="borrow-time minute-time" id="minuteTime" role="timer" aria-label="Time left">${fmtTime(left)}</p>
+      <p class="sub" style="text-align:center">Pick it up again when it's done, or don't.</p>` };
   },
 
   /* 6.17 B: a calm ending. Never suggests or starts anything else. */
@@ -2225,6 +2281,7 @@ const SCREENS = {
       ${stepTitle("You're ready.", true)}
       <p class="sub" style="font-size:19px">You can put me away for a few minutes.</p>`,
       actions:`<button class="btn btn-primary" data-act="putDown">Put the phone down</button>
+        <button class="btn btn-secondary" data-act="minuteStart">Put it down for one minute</button>
         ${ui.engine && ui.engine.interventionId && session.screen === "phone-down" && ui.fromHelped ? `<button class="link" data-act="phoneDownElse">Something else</button>` : ""}` };
   },
 
@@ -2676,12 +2733,14 @@ const SCREENS = {
             `<a class="btn btn-secondary" href="${telLink(p.phone)}" aria-label="${callText(`Call ${esc(p.name)}`, p.phone)}">${callText("Call", p.phone)}</a>`)}`).join("") + `
           ${codeWordButton(false)}
           <p class="small" style="margin:14px 0 8px">Don't know what to say${people.length > 1 ? ` to ${esc(first.name)}` : ""}? ${canPhone() ? "Tap one:" : "Tap one to copy it:"}</p>
+          <p class="small ideas-note" style="margin:0 0 8px">${IDEAS_NOTE}</p>
           <div class="sits">${ideas.map(m => canPhone() ? `<a class="sit idea" href="${smsLink(first.phone, m)}">${esc(m)}</a>` : copyButton(m, "sit idea", esc(m))).join("")}</div>`
         : `<p class="small">Add someone you trust, and they'll be here with Text and Call.</p>
           <button class="btn btn-secondary" data-act="planFromConnect">Add someone to My Plan</button>`}
       </div>
       ${night ? warm : ""}
-      <button class="card wide zcard" data-act="zags" data-arg="connect" style="margin-top:14px">${zagsFace()}<span>Calm down with Zags while you wait</span></button>
+      <button class="card wide around-card" data-act="aroundPeople" style="margin-top:14px">${icon("people")}<span>Be around people, no talking needed</span></button>
+      <button class="card wide zcard" data-act="zags" data-arg="connect" style="margin-top:10px">${zagsFace()}<span>Calm down with Zags while you wait</span></button>
       <button class="link" data-act="songStart" data-arg="connect">Make a song while you wait</button>
       ${faithOn() ? `<button class="link faith-link" data-act="faith">Need a little hope?</button>` : ""}
       ${night ? "" : crisis988}` };
@@ -3491,6 +3550,7 @@ const SCREENS = {
   "ob-about"(){
     return { close:false, body:`
       <div class="ob-hello">${zagsMark("zmark-lg")}${title("Welcome to ZigZag Mind.")}</div>
+      <p class="sub tagline-zig">${TAGLINE_ZIG}</p>
       ${zigzag()}
       <p class="sub">Help for hard moments, one small step at a time.</p>
       <p class="small" style="margin:16px 0 0">In danger or thinking about suicide? Call or text 988. It's free and open 24/7.</p>
@@ -3542,6 +3602,8 @@ const SCREENS = {
         ${zigzag()}
         <p class="tag" id="screen-title" tabindex="-1">Get through what's happening right now.</p>
         <p class="sub" style="font-size:17px">Small actions. Real support. One moment at a time.</p>
+        <p class="sub tagline-zig">${TAGLINE_ZIG}</p>
+        <p class="sub promise">${PROMISE}</p>
       </div>
       <div class="crisis-bar"><span>In crisis right now?</span>${canPhone() ? `<a href="${LINKS.call988}">Call or text 988</a>` : `<a href="${LINKS.call988}">Call 988</a> · <a href="${LINKS.chat988}" target="_blank" rel="noopener">Chat with 988 online</a>`}</div>
       <div class="stack" style="margin-top:20px">
@@ -3953,6 +4015,8 @@ function render(){
     if (s !== "zags") zagsHush();
     if (s !== "song-play") songStop();
     clearInterval(tcTimer); tcTimer = null;
+    clearInterval(minuteTimer); minuteTimer = null;
+    if (s === "minute-down" && ui.minutePhase === "wait") minuteTimer = setInterval(minuteTick, 1000);
     if (s === "tc-loop" && ui.tcLoopEnd) tcTimer = setInterval(tcTick, 1000);   // leaving the player (Help, X, RED) stops the song at once
     if (s === "zags" && ui.zags && ui.zags.phase === "breathe") zagsStartBreathing();
     if (s !== "g-pattern"){ clearTimeout(patTimer); patTimer = null; }
@@ -4054,7 +4118,23 @@ const ACTIONS = {
   ciSkip(){ completeCheckIn({ after:null, action:"skip" }); },
 
   recTry(){ if (!ui.engine || !ui.engine.interventionId) return; ui.justStillBad = false; startIntervention(ui.engine.interventionId); },
-  recElse(){ somethingElse(); },
+  recElse(){ if (blockIfRed()) return; ui.dirOpen = true; ui.dirNote = ""; render(); },   // 6.18 E3: five directions
+  recDirClose(){ ui.dirOpen = false; render(); },
+  recDir(arg){
+    if (blockIfRed()) return;
+    if (!DIRECTIONS.some(d => d[0] === arg)) return;
+    ui.dirOpen = false; ui.dirNote = "";
+    const prev = ui.engine && ui.engine.interventionId;
+    if (prev && !ui.exclude.includes(prev)) ui.exclude.push(prev);
+    ui.dirChannel = arg;
+    let r = runEngine();
+    ui.dirChannel = null;
+    if (!r.interventionId){ ui.dirNote = "Nothing new in that direction right now. Here's something else."; somethingElse(); return; }
+    ui.suggestIdx++;
+    dispatch({ type:"COUNT_ELSE" });
+    if (humanFirstDue()){ dispatch({ type:"HUMAN_FIRST_SHOWN" }); go("human-first"); return; }
+    render();
+  },
   sugg(arg){ if (blockIfRed()) return; ui.sugg = arg; go("suggestion"); },
   suggDone(){
     if (blockIfRed()) return;
@@ -4445,6 +4525,10 @@ const ACTIONS = {
   /* ---- 6.17 ---- */
   phoneDown(){ if (blockIfRed()) return; ui.fromHelped = false; go("phone-down"); },
   putDown(){ ui.fromHelped = false; clearInterval(borrowTimer); go("home"); },   // quiet; never starts anything
+  aroundPeople(){ if (blockIfRed()) return; dispatch({ type:"SET_CURRENT_STATE", state:"alone" }); startIntervention("be_around_people", { route:"around-people" }); },
+  minuteStart(){ if (blockIfRed()) return; ui.minutePhase = "wait"; ui.minuteEnd = Date.now() + MINUTE_MS; go("minute-down"); },
+  minuteYes(){ if (blockIfRed()) return; ui.minutePhase = null; go("home"); },
+  minuteNo(){ ui.minutePhase = "done"; lastRendered = null; render(); },
   phoneDownElse(){ if (blockIfRed()) return; ui.fromHelped = false; go("recommendation"); },
   stepCheckin(){ if (blockIfRed()) return; clearInterval(borrowTimer); go("checkin"); },
   ridiculousStart(){ if (blockIfRed()) return; if (ridiculousAvailable()) startIntervention("ridiculous_mode"); },

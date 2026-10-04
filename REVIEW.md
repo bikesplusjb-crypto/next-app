@@ -501,6 +501,15 @@ Steps:
 2. Write three short lines.
 3. Listen to your song.
 
+### Be around people (`be_around_people`)
+
+- Button: "Be around people"
+- Description: "No talking needed."
+- For:  · about 15 min · needs moving around
+
+Steps:
+1. You don't have to talk. Sit with someone at home, or go somewhere familiar with people around.
+
 ### Asking AI again (`ai_reliance_check`)
 
 - Button: "Step out of the loop"
@@ -563,6 +572,7 @@ Steps:
 - "A grounding step can help steady things."
 - "A change of space can help."
 - "One small step to try."
+- "Nothing in that direction right now."
 - "Something you haven't tried today."
 - "[name] helped you before."
 
@@ -982,7 +992,7 @@ On the guide when a name is given: "[name] would like you to check in now and th
 - `BODY`: grounding, breathing, hydration, walking, touch_real_world
 - `SPACE`: change_scene, environment_change, find_alive, craving_delay, break_the_loop
 - `SENSE`: distraction_game, distraction_color_hunt, distraction_around_me, distraction_categories, distraction_memory, distraction_pattern, distraction_60_second, ridiculous_mode, zags, song
-- `PEOPLE`: ai_relationship_check, ai_loss, connection
+- `PEOPLE`: ai_relationship_check, be_around_people, ai_loss, connection
 - `ACTION`: ai_reliance_check, ai_fomo, thought_parking, still_true, true_sentence, kind_stranger, borrow_ten, behavioral_activation
 
 After "didn't help": "Okay. That wasn't it. / Let's Zig." then one of: "Let's try something with your body." · "Let's change the space." · "Let's give your senses something to do." · "Let's reach a person." · "Let's do one tiny thing."
@@ -1024,6 +1034,20 @@ D4. Full crisis screen, below 988 and the veteran line: "Want someone to come to
 D5. My Plan "Reasons to stay" (hint: "People, plans, things you're looking forward to, songs, anything."; "Your songs are here too."). Shown on "I need my plan" and as "Your reasons to stay" on the full crisis screen when filled in.
 
 D6. Time-and-distance help text and supporter guide: "If there's a gun at home: the safest step during hard times is to store it away from the person for a while — with someone you trust, or at a gun shop, range, or police department that offers temporary storage. It's temporary, and it's yours."
+
+E1. About and the first onboarding screen: "Your mind doesn't move in a straight line." E2. About: "We'll help you find something you can do next. If one direction doesn't help, we'll try another."
+
+E3. "Something else" on the recommendation shows five directions: Body ("Change something physical") · Space ("Change where you are") · Sense ("Give your senses something to do") · People ("Reach a person") · Action ("One tiny thing"). Tapping one picks the best eligible step in that channel; YELLOW priority still wins; "Never mind" closes it. If nothing fits: "Nothing new in that direction right now. Here's something else."
+
+E4. Connect message ideas add "Hey. Just saying hi." · "Got a minute?" with "You don't have to explain anything."
+
+E5. Connect: "Be around people, no talking needed" → "You don't have to talk. Sit with someone at home, or go somewhere familiar with people around." + Somewhere to go (Maps).
+
+E6. Change the scene: "Go to a window" → "Look outside for one minute. You don't have to notice anything in particular."
+
+E7. "You're ready": [Put it down for one minute] → "Put it down for one minute." (1:00 timer, "Pick it up again when it's done, or don't.") → "Still need me?" Yes → Home; No → "Good. Go live your life for a bit."
+
+E8. I don't know what I need: "That's okay. We don't need to name it."
 
 ### Desktop support (no phone or SMS)
 
@@ -1290,7 +1314,7 @@ Rendered for each state where the screen changes by state. Identical renders are
 
 - **Button:** × _(screen reader: "Close and go to home")_
 - **Button:** Help _(screen reader: "Get help now")_
-- **Heading:** That's okay. One question.
+- **Heading:** That's okay. We don't need to name it.
 - What would make this 10% easier? Do you want to calm down, get distracted, connect with someone, or get out of where you are?
 - **Button:** Calm down — Slow my body down
 - **Button:** Get distracted — Interrupt the loop for a few minutes
@@ -1470,6 +1494,28 @@ _When: distraction_
 - **Button:** Something else
 - **Button:** I'm good for now
 
+### `around-people`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** You don't have to talk. Sit with someone at home, or go somewhere familiar with people around.
+- **Heading:** Somewhere to go
+- Opens your phone's Maps. ZigZag Mind never sees your location.
+- **Link → `https://www.google.com/maps/search/library`:** Library
+- **Link → `https://www.google.com/maps/search/park`:** Park
+- **Link → `https://www.google.com/maps/search/coffee+shop`:** Coffee shop
+- **Link → `https://www.google.com/maps/search/community+center`:** Community center
+- **Button:** Next
+- **Button:** Put the phone down
+
+### `minute-down`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Put it down for one minute.
+- 1:00
+- Pick it up again when it's done, or don't.
+
 ### `phone-down`
 
 - **Button:** × _(screen reader: "Close and go to home")_
@@ -1477,6 +1523,7 @@ _When: distraction_
 - **Heading:** You're ready.
 - You can put me away for a few minutes.
 - **Button:** Put the phone down
+- **Button:** Put it down for one minute
 
 ### `suggestion`
 
@@ -1793,9 +1840,13 @@ _When: distraction_
 - **Link → `sms:5550142`:** Text _(screen reader: "Text Jordan")_
 - **Link → `tel:5550142`:** Call _(screen reader: "Call Jordan")_
 - Don't know what to say? Tap one:
+- You don't have to explain anything.
 - **Link → `sms:5550142?&body=Can't sleep, you up?`:** Can't sleep, you up?
 - **Link → `sms:5550142?&body=Rough night. Can you talk for 5 minutes?`:** Rough night. Can you talk for 5 minutes?
 - **Link → `sms:5550142?&body=Want to catch up this week?`:** Want to catch up this week?
+- **Link → `sms:5550142?&body=Hey. Just saying hi.`:** Hey. Just saying hi.
+- **Link → `sms:5550142?&body=Got a minute?`:** Got a minute?
+- **Button:** Be around people, no talking needed
 - **Button:** Calm down with Zags while you wait
 - **Button:** Make a song while you wait
 - If it gets heavier
@@ -2228,6 +2279,7 @@ _When: distraction_
 - **Button:** Sit somewhere different
 - **Button:** Take a shower
 - **Button:** Get something to drink
+- **Button:** Go to a window
 - **Button:** Find something alive
 - **Heading:** Somewhere to go
 - Opens your phone's Maps. ZigZag Mind never sees your location.
@@ -2526,6 +2578,7 @@ _When: distraction_
 
 - **Button:** Help _(screen reader: "Get help now")_
 - **Heading:** Welcome to ZigZag Mind.
+- Your mind doesn't move in a straight line.
 - Help for hard moments, one small step at a time.
 - In danger or thinking about suicide? Call or text 988. It's free and open 24/7.
 - **Link → `tel:988`:** Call 988 _(screen reader: "Call 988, the Suicide and Crisis Lifeline")_
@@ -2576,6 +2629,8 @@ _When: distraction_
 - ZigZag Mind
 - **Heading:** Get through what's happening right now.
 - Small actions. Real support. One moment at a time.
+- Your mind doesn't move in a straight line.
+- We'll help you find something you can do next. If one direction doesn't help, we'll try another.
 - In crisis right now?
 - **Link → `tel:988`:** Call or text 988
 - **Button:** Try ZigZag Mind
@@ -2818,6 +2873,14 @@ _When: distraction_
 - Turn it into a song · Step 1 of 3
 - **Heading:** Pick how it feels.
 - **Button:** Next
+
+#### Be around people
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Be around people
+- **Heading:** You don't have to talk. Sit with someone at home, or go somewhere familiar with people around.
+- **Button:** Done
 
 #### Asking AI again
 

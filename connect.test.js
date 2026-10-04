@@ -40,12 +40,12 @@ for(const hour of [3,23]){
 }
 
 // ---- your people and message ideas ----
-const IDEAS=["Can't sleep, you up?","Rough night. Can you talk for 5 minutes?","Want to catch up this week?"];
+const IDEAS=["Can't sleep, you up?","Rough night. Can you talk for 5 minutes?","Want to catch up this week?","Hey. Just saying hi.","Got a minute?"];   // last two: 6.18 E4
 {const a=boot(); a.G('ACTIONS.loadSample()'); a.click(act('route','connect')); const box=a.doc.getElementById('connPeople');
  r.push(['your person, with Text and Call', box.textContent.includes('Jordan') && box.textContent.includes('friend')
    && !!box.querySelector('a[href="sms:5550142"][aria-label="Text Jordan"]') && !!box.querySelector('a[href="tel:5550142"][aria-label="Call Jordan"]')]);
  const ideas=[...box.querySelectorAll('a.idea')];
- r.push(['three message ideas, in order', ideas.map(x=>x.textContent).join('|')===IDEAS.join('|')]);
+ r.push(['five message ideas, in order (6.18 E4 added two)', ideas.map(x=>x.textContent).join('|')===IDEAS.join('|')]);
  r.push(['each idea prepares exactly that text message (sms: with the body)', ideas.every((x,i)=>x.getAttribute('href')==='sms:5550142?&body='+encodeURIComponent(IDEAS[i]))]);
  r.push(['prepare, never send: these are links that open Messages', ideas.every(x=>x.tagName==='A' && !x.dataset.act)]);}
 {const a=boot(); a.G('ACTIONS.loadSample(); getPlan().trustedPeople.push({name:"Sam",relationship:"sister",phone:"555-0199"})'); a.click(act('route','connect'));
@@ -60,23 +60,25 @@ const IDEAS=["Can't sleep, you up?","Rough night. Can you talk for 5 minutes?","
 
 // ---- Human First ----
 const atRec=a=>a.G('session.currentState="anxious"; runEngine(); go("recommendation")');
+// 6.18 E3: "Something else" opens five directions; picking one is the new suggestion (and counts toward Human First).
+const elseTap=x=>{ x.click(act('recElse')); x.click('[data-act="recDir"]'); };
 const finishStep=(a,how)=>{ a.G('startIntervention("breathing"); go("checkin")'); a.click(act(how)); };
 const HF="Would talking to a person help more than another answer?";
-{const a=boot(); atRec(a); a.click(act('recElse'));
+{const a=boot(); atRec(a); elseTap(a);
  r.push(['one "Something else" is not enough', a.S().screen==='recommendation']);
- a.click(act('recElse'));
+ elseTap(a);
  r.push(['two "Something else" taps → Human First', a.S().screen==='human-first' && a.doc.getElementById('screen-title').textContent===HF]);
  const labels=[...a.doc.querySelectorAll('.actions a, .actions button')].map(x=>x.textContent.trim());
  r.push(['Call someone · Text someone · Be around people · Not right now', labels.join('|')==='Call someone|Text someone|Be around people|Not right now']);
  a.click(act('hfNotNow')); r.push(['Not right now → back to the suggestion', a.S().screen==='recommendation']);
- for(let i=0;i<4;i++) a.click(act('recElse'));
+ for(let i=0;i<4;i++) elseTap(a);
  finishStep(a,'ciSkip'); finishStep(a,'ciBad');
  r.push(['at most once a visit', a.S().screen==='recommendation' && a.S().humanFirstShown===true]);
  const all=JSON.stringify(a.dump());
  r.push(['never written to storage', !/humanFirst|elseTaps|unhelped/i.test(all) && !all.includes(HF)]);
  const b=boot(a.dump());
  r.push(['a new visit starts fresh (counts and the once-flag are not carried over)', b.S().humanFirstShown===false && b.S().elseTaps===0 && b.S().unhelpedCount===0]);
- atRec(b); b.click(act('recElse')); b.click(act('recElse')); r.push(['...so it can show once in the next visit', b.S().screen==='human-first']);}
+ atRec(b); elseTap(b); elseTap(b); r.push(['...so it can show once in the next visit', b.S().screen==='human-first']);}
 {const a=boot(); a.G('ACTIONS.loadSample()'); a.click(act('route','calm')); a.click(act('calmPick','breathe'));
  let n=0; while(a.doc.querySelector(act('ivNext')) && n<6){ a.click(act('ivNext')); n++; } a.click(act('ivDone')); a.click(act('ciBad'));
  r.push(['one step without "That helped" is not enough', a.S().screen==='recommendation']);
@@ -90,11 +92,11 @@ const HF="Would talking to a person help more than another answer?";
 {const a=boot(); a.G('session.currentState="distraction"; startIntervention("distraction_around_me")'); a.G('ACTIONS.gDone()'); a.click(act('gameChange','no'));
  a.G('startIntervention("distraction_color_hunt")'); a.G('ACTIONS.gDone()'); a.click(act('gameChange','no'));
  r.push(['two games answered "No" also count', a.S().screen==='human-first']);}
-{const a=boot(); atRec(a); a.click(act('recElse')); a.click(act('recElse'));
+{const a=boot(); atRec(a); elseTap(a); elseTap(a);
  r.push(['nobody in the plan: Call someone → Connect', !!a.doc.querySelector('.actions [data-act="route"][data-arg="connect"]')]);
  a.click(act('hfPeople'));
  r.push(['Be around people → Change the scene, at "Somewhere to go"', a.S().screen==='scene' && a.doc.activeElement && a.doc.activeElement.id==='placesHead']);}
-{const a=boot(); atRec(a); a.click(act('recElse')); a.G('dispatch({type:"SET_SAFETY_LEVEL",level:"RED"})'); a.G('ACTIONS.recElse()');
+{const a=boot(); atRec(a); elseTap(a); a.G('dispatch({type:"SET_SAFETY_LEVEL",level:"RED"})'); a.G('ACTIONS.recElse()');
  r.push(['never shown over a crisis (RED goes to the crisis screen)', a.S().screen==='crisis' && a.S().humanFirstShown===false]);}
 
 console.log(r.map(x=>(x[1]?'PASS ':'FAIL ')+x[0]+(x[1]||!x[2]?'':' — '+x[2])).join('\n'));

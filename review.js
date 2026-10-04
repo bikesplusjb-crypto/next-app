@@ -242,7 +242,13 @@ P(''); P('D3. crisis-no and full crisis screen, below the options: "'+G('USING_L
 P(''); P('D4. Full crisis screen, below 988 and the veteran line: "'+G('NOT_POLICE_HEAD')+' '+G('NOT_POLICE_TEXT')+'" [Call 211]');
 P(''); P('D5. My Plan "Reasons to stay" (hint: "'+G('REASONS_HINT')+'"; "Your songs are here too."). Shown on "I need my plan" and as "Your reasons to stay" on the full crisis screen when filled in.');
 P(''); P('D6. Time-and-distance help text and supporter guide: "'+G('GUN_LINE')+'"');
-//@@E618@@
+P(''); P('E1. About and the first onboarding screen: "'+G('TAGLINE_ZIG')+'" E2. About: "'+G('PROMISE')+'"');
+P(''); P('E3. "Something else" on the recommendation shows five directions: '+G('DIRECTIONS').map(([,t,m])=>`${t} ("${m}")`).join(' · ')+'. Tapping one picks the best eligible step in that channel; YELLOW priority still wins; "Never mind" closes it. If nothing fits: "Nothing new in that direction right now. Here\'s something else."');
+P(''); P('E4. Connect message ideas add "Hey. Just saying hi." · "Got a minute?" with "'+G('IDEAS_NOTE')+'"');
+P(''); P('E5. Connect: "Be around people, no talking needed" → "'+G('AROUND_PEOPLE')+'" + Somewhere to go (Maps).');
+P(''); P('E6. Change the scene: "Go to a window" → "Look outside for one minute. You don\'t have to notice anything in particular."');
+P(''); P('E7. "You\'re ready": [Put it down for one minute] → "Put it down for one minute." (1:00 timer, "Pick it up again when it\'s done, or don\'t.") → "Still need me?" Yes → Home; No → "Good. Go live your life for a bit."');
+P(''); P('E8. I don\'t know what I need: "That\'s okay. We don\'t need to name it."');
 
 H(3,'Desktop support (no phone or SMS)');
 P('Phone stays the priority: links stay as they are unless the device is clearly a desktop or laptop (desktop browser, no touch). Unsure means phone. The crisis flow and the NO-branch safety-check rule are unchanged; a Copy button from the NO branch still sets "Do you feel safer?" in the same tap.');
