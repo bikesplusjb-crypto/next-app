@@ -19,7 +19,7 @@ const r=[];
  r.push(['no emoji on Home', !/\p{Extended_Pictographic}/u.test(t)]);
  r.push(['bottom tabs: Home, My Plan, Progress, Settings', [...a.doc.querySelectorAll('.tabbar .tab')].map(b=>b.textContent.trim()).join('|')==='Home|My Plan|Progress|Settings']);
  r.push(['Help in the top bar', !!a.doc.querySelector('header .help-pill[data-act="crisis"]')]);
- r.push(['not built yet, so hidden: Tech check, Just out of the ER', !t.includes('Tech check') && !t.includes('Just out of the ER')]);
+ r.push(['not built yet, so hidden: Tech check (6.13 "Just out of the ER" is now a chip)', !t.includes('Tech check') && t.includes('Just out of the ER')]);
 }
 // Routing
 const go=(sel,after)=>{ const a=boot(); a.click(sel); if(after) after(a); return a.S(); };

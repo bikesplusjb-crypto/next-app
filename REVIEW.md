@@ -545,6 +545,7 @@ Filter by state → filter by intensity → never repeat the last pick → if YE
 - "I have an urge to use (drink or drugs)" → `flow:craving`
 - "I feel low" → `flow:low`
 - "I feel alone" → `route:connect`
+- "Just out of the ER" → `afterStart`
 
 Changed for review: the craving button now reads "I have an urge to use (drink or drugs)" (was "I want to use"). It still opens the same craving flow (`flow:craving`).
 
@@ -916,6 +917,24 @@ About: "When something isn't helping, ZigZag doesn't tell you to try harder. It 
 
 **Find something real** (Calm): "Find something you can hold." · "Find something cooler." · "Find something warmer." · "Put both feet on the floor." · "Change your position." · "Wash your hands." · "Turn on a light.". Optional textures: smooth, rough, warm, cool, soft, hard, heavy, light. With an anchor in My Plan: "Do you have your anchor nearby?" Yes: "Hold it for a moment." No: "Find something else you can safely hold." Ends: "You found something real."
 
+### After the ER or hospital: first 30 days (6.13)
+
+A mode the person turns on from Home ("Just out of the ER"); nothing prompts it. Saved on the phone because the person chose it (not safety state). Ends by itself after 30 days, or from Settings ("End the first 30 days mode") or Delete everything. Never shown on crisis screens. No counting, no streaks, no celebration; every item is optional.
+
+Setup: "When did you leave?" "Today" · "Yesterday" · "A few days ago"
+
+Checklist: "Welcome home. One small thing at a time." / "All optional. Any order." Items: "Tell one person you're home" · "Set up your code word" · "Add your follow-up appointment" · "Ask your people to check in" · "Daily reminders for 2 weeks"
+
+Prepared text to one person: "I'm home now. It would mean a lot to hear from you this week."
+
+Under the appointment: "No appointment yet? Ask the place you were seen to help schedule one." The calendar file has one event ("Follow-up appointment", 60 minutes) with a reminder the day before. Made on the phone; nothing is sent.
+
+Daily reminders: 14 calendar events, one a day from tomorrow at 10am, titled "One small thing today" with: "One small thing is enough today. Your plan is in ZigZag Mind if you need it, and 988 is there any time."
+
+Home bar while active (below "I don't feel safe"): "First 30 days · support is close" with Call 988 and the code word button when one is set. Also on the checklist: "Getting help is a strength, not a weakness."
+
+At 30 days, once, on Home: "Your first 30 days are over. Your plan and your people are still here whenever you need them." [Okay]
+
 ### Zags: every line he can say (ZAGS_LINES)
 
 Scripted, not AI. Taps only. Says he is not a person in every session's first line. No relationship language, no pressure to stay, no memory between sessions, never the person's name. Every session ends at a person. RED stops Zags. At most two breathing rounds per session (4 breaths each: in 4 seconds, out 6; 3 breaths with reduced motion). Voice is off by default and uses the device's own speech only.
@@ -1053,6 +1072,7 @@ Rendered for each state where the screen changes by state. Identical renders are
 - **Button:** I have an urge to use (drink or drugs)
 - **Button:** I feel low
 - **Button:** I feel alone
+- **Button:** Just out of the ER
 - **Button:** Home
 - **Button:** My Plan
 - **Button:** Progress
@@ -1608,6 +1628,40 @@ _When: distraction_
 - **Link → `sms:5550142`:** Text someone
 - **Button:** Be around people
 - **Button:** Not right now
+
+### `after-setup`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** When did you leave?
+- For the next 30 days, ZigZag Mind keeps a few things close: 988, your people, and a short, optional checklist. You can end this any time in Settings.
+- **Button:** Today
+- **Button:** Yesterday
+- **Button:** A few days ago
+
+### `after`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Welcome home. One small thing at a time.
+- All optional. Any order.
+- **Button:** Mark as done: Tell one person you're home
+- **Link → `sms:5550142?&body=I'm home now. It would mean a lot to hear from you this week.`:** Text Jordan
+- **Button:** Mark as done: Set up your code word
+- **Button:** Set it up
+- **Button:** Mark as done: Add your follow-up appointment
+- No appointment yet? Ask the place you were seen to help schedule one.
+- Date
+- **Text box**
+- Time (optional)
+- **Text box**
+- **Button:** Add it to my calendar
+- **Button:** Mark as done: Ask your people to check in
+- **Button:** Ask someone
+- **Button:** Mark as done: Daily reminders for 2 weeks
+- Adds them to your own calendar.
+- **Button:** Add daily reminders
+- Getting help is a strength, not a weakness. Seeing a psychiatrist, therapist or counselor is care for your mind, the same way you'd see a doctor for your body. It doesn't mean you're 'crazy', broken or weak. Lots of people get help at some point, and many feel better for it. If medication is suggested, that's a choice you make together with a professional, and it's okay either way.
 
 ### `borrow`
 

@@ -336,6 +336,19 @@ a.cw-open,a.ci-open{text-decoration:none;display:flex;align-items:center;justify
 .cw-words{margin-top:14px}
 .cw-words .sit[aria-pressed="true"]{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
 
+/* Stage 6.13: After the ER or hospital */
+.after-bar{margin-top:12px;padding:12px 14px;border-radius:16px;background:var(--primary-soft);display:flex;flex-direction:column;gap:8px}
+.after-open{background:none;border:none;padding:0;text-align:left;font-weight:650;min-height:44px;color:var(--text)}
+.after-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.after-row a.chip{text-decoration:none}
+.after-item{display:flex;gap:12px;align-items:flex-start;padding:14px 0;border-top:1px solid var(--line)}
+.after-box{width:44px;height:44px;flex:none;border-radius:12px;border:2px solid var(--primary);background:var(--surface);color:var(--on-primary);font-weight:700;font-size:18px}
+.after-box[aria-pressed="true"]{background:var(--primary)}
+.after-txt{flex:1;display:flex;flex-direction:column;gap:6px}
+.after-btn{margin-top:4px;text-decoration:none}
+.after-appt{display:grid;grid-template-columns:1fr;gap:2px}
+.after-appt .field{margin-top:2px}
+
 /* Stage 6.17: Let's Zig + real-world steps */
 .zig-lead{font-family:var(--serif);font-size:24px;line-height:1.25;margin:10px 0 2px}
 .borrow-opts{margin-top:18px}
@@ -719,6 +732,76 @@ const ZAGS_MAX_ROUNDS = 2;          // breathing rounds per session, at most
 const ZAGS_IN_MS = 4000, ZAGS_OUT_MS = 6000;
 const ZAGS_NOTE = "Zags is a scripted guide, not a person and not AI.";
 
+/* 6.13 After the ER or hospital: a 30-day mode the PERSON chooses (not safety state), so it may be saved.
+   No counting, no celebration; everything is optional. All copy is for clinician review. */
+const AFTER_DAYS = 30;
+const DAY_MS = 86400000;
+const AFTER_LEFT = [["today","Today",0],["yesterday","Yesterday",1],["few","A few days ago",3]];
+const AFTER_HOME_MSG = "I'm home now. It would mean a lot to hear from you this week.";
+const AFTER_ITEMS = [
+  ["tell","Tell one person you're home"], ["code","Set up your code word"], ["appt","Add your follow-up appointment"],
+  ["checkin","Ask your people to check in"], ["daily","Daily reminders for 2 weeks"]
+];
+const AFTER_NO_APPT = "No appointment yet? Ask the place you were seen to help schedule one.";
+const AFTER_DAILY_TITLE = "One small thing today";
+const AFTER_DAILY_TEXT = "One small thing is enough today. Your plan is in ZigZag Mind if you need it, and 988 is there any time.";
+const AFTER_END_NOTE = "Your first 30 days are over. Your plan and your people are still here whenever you need them.";
+function startOfDay(t){ const d = new Date(t); d.setHours(0, 0, 0, 0); return d.getTime(); }
+function validAfterCrisis(a){
+  if (!a || typeof a.start !== "number" || typeof a.until !== "number" || a.until <= a.start) return null;
+  return { start:a.start, until:a.until, done:(a.done && typeof a.done === "object") ? a.done : {} };
+}
+function afterCrisis(){ return store.sensitive.afterCrisis || null; }
+function afterActive(){ const a = afterCrisis(); return !!a && Date.now() < a.until; }
+function afterEnded(){ const a = afterCrisis(); return !!a && Date.now() >= a.until; }
+/* RFC 5545 calendar file, built on the phone (same rules as the supporter guide's). */
+function icsBuild(events, stamp = new Date()){
+  const pad = n => String(n).padStart(2, "0");
+  const local = d => `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
+  const utc = d => `${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}${pad(d.getUTCSeconds())}Z`;
+  const escT = t => String(t).replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
+  const enc = new TextEncoder();
+  const fold = line => {
+    if (enc.encode(line).length <= 75) return line;
+    const parts = []; let cur = "", limit = 75;
+    for (const ch of line){ if (enc.encode(cur + ch).length > limit){ parts.push(cur); cur = ch; limit = 74; } else cur += ch; }
+    parts.push(cur); return parts.join("\r\n ");
+  };
+  const lines = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//ZigZag Mind//First 30 days//EN","CALSCALE:GREGORIAN","METHOD:PUBLISH"];
+  events.forEach((e, i) => {
+    lines.push("BEGIN:VEVENT", `UID:zz-${e.kind}-${utc(stamp)}-${i + 1}@zigzagmind.com`, `DTSTAMP:${utc(stamp)}`,
+      `DTSTART:${local(e.start)}`, `DTEND:${local(new Date(e.start.getTime() + (e.minutes || 15) * 60000))}`,
+      `SUMMARY:${escT(e.title)}`, ...(e.text ? [`DESCRIPTION:${escT(e.text)}`] : []),
+      "BEGIN:VALARM","ACTION:DISPLAY",`DESCRIPTION:${escT(e.title)}`,`TRIGGER:${e.alarm || "PT0M"}`,"END:VALARM","END:VEVENT");
+  });
+  lines.push("END:VCALENDAR");
+  return lines.map(fold).join("\r\n") + "\r\n";
+}
+function afterApptEvents(dateStr, timeStr){
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateStr || ""); if (!m) return null;
+  const t = /^(\d{2}):(\d{2})$/.exec(timeStr || "") || [null, "09", "00"];
+  return [{ kind:"followup", title:"Follow-up appointment", start:new Date(+m[1], +m[2] - 1, +m[3], +t[1], +t[2]), minutes:60, alarm:"-P1D" }];
+}
+function afterDailyEvents(from = Date.now()){
+  const d0 = new Date(startOfDay(from));
+  return Array.from({ length:14 }, (_, k) => ({ kind:"daily", title:AFTER_DAILY_TITLE, text:AFTER_DAILY_TEXT,
+    start:new Date(d0.getFullYear(), d0.getMonth(), d0.getDate() + 1 + k, 10, 0) }));
+}
+function downloadIcs(name, ics){
+  try {
+    const url = URL.createObjectURL(new Blob([ics], { type:"text/calendar;charset=utf-8" }));
+    const a = document.createElement("a"); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+  } catch (_){}
+}
+/* The calm bar (Home only, never on crisis screens). */
+function afterBar(){
+  if (!afterActive() || CRISIS_SCREENS.includes(session.screen)) return "";
+  return `<div class="after-bar" role="region" aria-label="First 30 days">
+    <button class="after-open" data-act="afterOpen">First 30 days · support is close</button>
+    <div class="after-row"><a class="chip safety" href="${LINKS.call988}" aria-label="Call 988">Call 988</a>${codeWordButton(false, "chip")}</div></div>`;
+}
+
 /* 6.17 real-world steps: all copy, for clinician review. */
 const BORROW_OPTIONS = [
   ["walk","Walk","Take a walk. Anywhere is fine."], ["shower","Shower","Take a shower."], ["outside","Sit outside","Sit outside for a while."],
@@ -902,7 +985,8 @@ function loadStore(){
       store.sensitive = {
         plan:migratePlan({ ...emptyPlan(), ...(d.plan || {}) }),
         baseHistory:Array.isArray(d.history) ? d.history : [],
-        activity:Array.isArray(d.activity) ? d.activity : []
+        activity:Array.isArray(d.activity) ? d.activity : [],
+        afterCrisis:validAfterCrisis(d.afterCrisis)
       };
     }
   } catch (_){ /* corrupted data: keep defaults */ }
@@ -912,7 +996,8 @@ function saveStore(){
   try {
     const history = [ ...store.sensitive.baseHistory, ...session.sessionHistory ].slice(-HISTORY_CAP);
     const activity = store.sensitive.activity.slice(-HISTORY_CAP);
-    localStorage.setItem(STORE_KEY, JSON.stringify({ v:1, plan:store.sensitive.plan, history, activity }));
+    const ac = store.sensitive.afterCrisis;
+    localStorage.setItem(STORE_KEY, JSON.stringify({ v:1, plan:store.sensitive.plan, history, activity, ...(ac ? { afterCrisis:ac } : {}) }));
   } catch (_){}
 }
 function savePrefs(){
@@ -1475,6 +1560,9 @@ const SCREENS = {
         <p class="home-sub">You don't have to figure everything out right now.</p>
       </div>
       <button class="card wide safety home-safe" data-act="crisis">${icon("shield", "safety")}<span>I don't feel safe<span class="meta">Get to a real person fast</span></span></button>
+      ${afterBar()}
+      ${afterEnded() ? `<div class="panel after-end" role="note"><p style="margin:0">${AFTER_END_NOTE}</p>
+        <div style="display:flex;justify-content:flex-end"><button class="link" data-act="afterEndOk">Okay</button></div></div>` : ""}
       <button class="btn btn-primary btn-big" data-act="dontKnow">I don't know what I need</button>
       <div class="routes">
         <button class="route" data-act="route" data-arg="calm">${icon("calm")}Calm down</button>
@@ -1489,6 +1577,7 @@ const SCREENS = {
         <button class="sit" data-act="flow" data-arg="craving">I have an urge to use (drink or drugs)</button>
         <button class="sit" data-act="flow" data-arg="low">I feel low</button>
         <button class="sit" data-act="route" data-arg="connect">I feel alone</button>
+        <button class="sit" data-act="afterStart">Just out of the ER</button>
       </div>
       ${showHomeTip() ? `<div class="panel" id="homeTip" role="note">
         <p style="margin:0">Add ZigZag Mind to your home screen so your plan stays with you. Tap Share, then Add to Home Screen.</p>
@@ -2130,6 +2219,36 @@ const SCREENS = {
         <button class="link" data-act="hfNotNow">Not right now</button>` };
   },
 
+  /* 6.13: After the ER or hospital. */
+  "after-setup"(){
+    return { close:true, body:`
+      ${title("When did you leave?")}
+      <p class="sub">For the next 30 days, ZigZag Mind keeps a few things close: 988, your people, and a short, optional checklist. You can end this any time in Settings.</p>
+      <div class="list">${AFTER_LEFT.map(([k, t]) => `<button class="card" data-act="afterLeft" data-arg="${k}"><span>${t}</span></button>`).join("")}</div>` };
+  },
+  after(){
+    const a = afterCrisis() || { done:{} };
+    const p = person();
+    const done = k => k === "code" ? !!codeWord() || !!a.done.code : k === "checkin" ? checkinAsked().length > 0 || !!a.done.checkin : !!a.done[k];
+    const box = k => `<button class="after-box" data-act="afterToggle" data-arg="${k}" aria-pressed="${done(k)}" aria-label="Mark as done: ${esc(AFTER_ITEMS.find(x => x[0] === k)[1])}">${done(k) ? "✓" : ""}</button>`;
+    const item = (k, extra) => `<div class="after-item">${box(k)}<div class="after-txt"><b>${AFTER_ITEMS.find(x => x[0] === k)[1]}</b>${extra || ""}</div></div>`;
+    return { close:true, body:`
+      ${afterBar()}
+      ${title("Welcome home. One small thing at a time.")}
+      <p class="sub">All optional. Any order.</p>
+      ${item("tell", p ? `<a class="btn btn-secondary after-btn" href="${smsLink(p.phone, AFTER_HOME_MSG)}">Text ${esc(p.name)}</a>`
+        : `<button class="btn btn-secondary after-btn" data-act="planEdit" data-arg="trustedPeople">Add someone to My Plan</button>`)}
+      ${item("code", codeWord() ? `<span class="small">Done · ${esc(codeWord().word)} with ${esc(codeWord().person.name)}</span>` : `<button class="btn btn-secondary after-btn" data-act="cwStart">Set it up</button>`)}
+      ${item("appt", `<span class="small">${AFTER_NO_APPT}</span>
+        <div class="after-appt"><label for="apptDate" class="small">Date</label><input class="field" type="date" id="apptDate">
+        <label for="apptTime" class="small">Time (optional)</label><input class="field" type="time" id="apptTime"></div>
+        <button class="btn btn-secondary after-btn" data-act="afterAppt">Add it to my calendar</button>`)}
+      ${item("checkin", checkinAsked().length ? `<span class="small">Asked: ${checkinAsked().map(x => esc(x.name)).join(", ")}</span>` : `<button class="btn btn-secondary after-btn" data-act="ciStart">Ask someone</button>`)}
+      ${item("daily", `<span class="small">Adds them to your own calendar.</span><button class="btn btn-secondary after-btn" data-act="afterDaily">Add daily reminders</button>`)}
+      ${ui.flash ? `<p class="flash" role="status">${esc(ui.flash)}</p>` : ""}
+      <p class="small" style="margin-top:18px">${HELP_IS_STRENGTH}</p>` };
+  },
+
   /* 6.17 C: Borrow ten minutes. Leaving early is never failing. */
   borrow(){
     return { close:true, body:`
@@ -2605,6 +2724,7 @@ const SCREENS = {
         <button class="btn btn-secondary" data-act="exportData">Export my data</button>
         <button class="btn btn-secondary" data-act="loadSample">Load sample data</button>
         <button class="btn btn-outline" data-act="askDelete">Delete everything</button>
+        ${afterActive() ? `<button class="btn btn-secondary" data-act="afterEnd">End the first 30 days mode</button>` : ""}
       </div>
       <h2>About</h2>
       <button class="btn btn-secondary" data-act="about">About ZigZag Mind</button>
@@ -2761,7 +2881,8 @@ function buildExport(){
     app:store.product.appVersion,
     plan:getPlan(),
     checkIns:[ ...store.sensitive.baseHistory, ...session.sessionHistory ].map(strip),
-    activity:store.sensitive.activity.map(a => ({ type:a.type, date:new Date(a.ts).toISOString(), sample:a.sample || undefined }))
+    activity:store.sensitive.activity.map(a => ({ type:a.type, date:new Date(a.ts).toISOString(), sample:a.sample || undefined })),
+    first30Days:store.sensitive.afterCrisis ? { start:new Date(store.sensitive.afterCrisis.start).toISOString(), until:new Date(store.sensitive.afterCrisis.until).toISOString(), done:store.sensitive.afterCrisis.done } : undefined
   };
 }
 
@@ -3387,6 +3508,38 @@ const ACTIONS = {
     const h = document.getElementById("placesHead");
     if (h){ h.scrollIntoView({ block:"start" }); h.focus({ preventScroll:true }); }
   },
+  /* ---- 6.13 ---- */
+  afterStart(){ if (blockIfRed()) return; ui.flash = ""; go(afterActive() ? "after" : "after-setup"); },
+  afterOpen(){ if (blockIfRed()) return; ui.flash = ""; go("after"); },
+  afterLeft(arg){
+    if (blockIfRed()) return;
+    const o = AFTER_LEFT.find(x => x[0] === arg); if (!o) return;
+    const start = startOfDay(Date.now()) - o[2] * DAY_MS;
+    store.sensitive.afterCrisis = { start, until:start + AFTER_DAYS * DAY_MS, done:{} };
+    saveStore(); ui.flash = ""; go("after");
+  },
+  afterToggle(arg){
+    if (blockIfRed()) return;
+    const a = afterCrisis(); if (!a || !AFTER_ITEMS.some(x => x[0] === arg)) return;
+    a.done[arg] = !a.done[arg]; saveStore(); render();
+  },
+  afterAppt(){
+    if (blockIfRed()) return;
+    const d = (document.getElementById("apptDate") || {}).value, t = (document.getElementById("apptTime") || {}).value;
+    const ev = afterApptEvents(d, t);
+    if (!ev){ ui.flash = "Pick the date first."; render(); return; }
+    downloadIcs("follow-up-appointment.ics", icsBuild(ev));
+    const a = afterCrisis(); if (a){ a.done.appt = true; saveStore(); }
+    ui.flash = "Open the file to add it to your calendar."; render();
+  },
+  afterDaily(){
+    if (blockIfRed()) return;
+    downloadIcs("daily-reminders.ics", icsBuild(afterDailyEvents()));
+    const a = afterCrisis(); if (a){ a.done.daily = true; saveStore(); }
+    ui.flash = "Open the file to add 14 daily reminders to your calendar."; render();
+  },
+  afterEnd(){ store.sensitive.afterCrisis = null; saveStore(); ui.flash = "The first 30 days mode has ended."; render(); },
+  afterEndOk(){ store.sensitive.afterCrisis = null; saveStore(); render(); },
   /* ---- 6.17 ---- */
   phoneDown(){ if (blockIfRed()) return; ui.fromHelped = false; go("phone-down"); },
   putDown(){ ui.fromHelped = false; clearInterval(borrowTimer); go("home"); },   // quiet; never starts anything
@@ -3599,7 +3752,7 @@ const ACTIONS = {
   toSettings(){ ui.flash = ""; go("settings"); },
   askDelete(){ ui.flash = ""; go("confirm-delete"); },
   deleteAll(){
-    store.sensitive = { plan:emptyPlan(), baseHistory:[], activity:[] };
+    store.sensitive = { plan:emptyPlan(), baseHistory:[], activity:[], afterCrisis:null };
     saveStore();
     dispatch({ type:"DELETE_DATA" });
     ui.engine = null;
@@ -3607,7 +3760,7 @@ const ACTIONS = {
     go("settings");
   },
   loadSample(){
-    store.sensitive = { plan:samplePlan(), baseHistory:seedHistory(), activity:seedActivity() };
+    store.sensitive = { plan:samplePlan(), baseHistory:seedHistory(), activity:seedActivity(), afterCrisis:store.sensitive.afterCrisis || null };
     saveStore();
     ui.flash = "Sample data loaded.";
     render();

@@ -380,6 +380,8 @@ Do **not** create a second plan or a separate "When things get really bad" data 
 
 
 **Also include:** the anti-stigma note `HELP_IS_STRENGTH` ("Getting help is a strength, not a weakness. …"), from its one constant.
+
+**As built (2026-10-04):** as above. The bar sits below "I don't feel safe" on Home (never above the critical items) and on the checklist; never on crisis screens; the mode cannot open while RED. Calendar files are made on the phone (`icsBuild`, RFC 5545): the appointment is one 60-minute event with a reminder the day before; daily reminders are 14 events from tomorrow at 10am ("One small thing today"). Ticks are stored with the mode; Delete everything and Settings end it; Export includes it as `first30Days`. Tests: `after.test.js`. All copy is in REVIEW.md for clinician review.
 ---
 
 ## Phase 4 — Tech check

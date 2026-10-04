@@ -17,7 +17,7 @@ Method: read the code in `index.html`, `support/index.html` and `sw.js` at the c
 | Store | Used? | Key / name | Contents |
 |---|---|---|---|
 | `localStorage` | Yes | `next.v1.prefs` | Settings: reduce motion, haptics, home-screen tip dismissed, onboarded (true/false), country, theme, saving on/off, and since F6 **`under18` (true once someone answers "No, I'm under 18")**. |
-| `localStorage` | Yes | `next.v1.sensitive` | **My Plan** (warning signs, things that help, places, trusted people: names, relationships, phone numbers; professional; time and distance plan; things to avoid; reminders; code word with the person's phone digits; who was asked for check-ins, with phone digits) · **check-in outcomes** (state, intervention id, before/after ratings, game/Zags/scene answers, timestamp; last 500) · **activity** (type `moment` / `plan` / `reach`, timestamp; last 500; never from crisis screens or while RED, since F3) · **your first name** for check-in reminders (optional, `myName`, since F1) |
+| `localStorage` | Yes | `next.v1.sensitive` | **My Plan** (warning signs, things that help, places, trusted people: names, relationships, phone numbers; professional; time and distance plan; things to avoid; reminders; code word with the person's phone digits; who was asked for check-ins, with phone digits) · **check-in outcomes** (state, intervention id, before/after ratings, game/Zags/scene answers, timestamp; last 500) · **activity** (type `moment` / `plan` / `reach`, timestamp; last 500; never from crisis screens or while RED, since F3) · **your first name** for check-in reminders (optional, `myName`, since F1) · **first 30 days mode** when the person turns it on (6.13: start date, end date, which optional items are ticked; nothing about the hospital visit itself) |
 | `sessionStorage` | No | | |
 | IndexedDB | No | | |
 | Cookies | No | | |
@@ -60,8 +60,10 @@ Everything below happens only when the person taps something:
 
 ## 4. Export and delete
 
-- **Export my data:** shows a JSON copy of the plan, check-ins (state, intervention, ratings, date) and activity (type, date). Nothing leaves unless the person copies it.
-- **Delete everything:** empties the plan, history and activity in memory and in `localStorage` (verified: storage history and activity are 0 afterwards). **Kept:** settings (`next.v1.prefs`, including "onboarded"), and the current visit's safety level (by design: "safety level is never reset").
+- **Export my data:** shows a JSON copy of the plan, check-ins (state, intervention, ratings, date) and activity (type, date), and the first 30 days mode if on (`first30Days`). Nothing leaves unless the person copies it.
+- **Delete everything:** empties the plan, history, activity and the first 30 days mode in memory and in `localStorage` (verified: storage history and activity are 0 afterwards). **Kept:** settings (`next.v1.prefs`, including "onboarded"), and the current visit's safety level (by design: "safety level is never reset").
+
+- **Calendar files (6.13 and check-ins):** built on the phone and handed to the phone's own calendar. Nothing is sent by the app.
 
 ## 5. Not verified here (need a person or the host)
 

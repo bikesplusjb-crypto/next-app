@@ -141,7 +141,7 @@ H(3,'Suggestions from My Plan'); list(Object.entries(G('SUGGESTION_TEXT')).map((
 H(3,'"Things that help me" choices'); list(G('HELP_CHIPS').map(([,l])=>`"${l}"`));
 H(3,'Home: "Or tell me what\'s happening" buttons (label → flow it opens)');
 G('ui=freshUi(); session={...initialSession, screen:"home"}; render();');
-list([...w.document.querySelectorAll('.sits .sit')].map(b=>`"${b.textContent}" → ${code(b.dataset.act+':'+b.dataset.arg)}`));
+list([...w.document.querySelectorAll('.sits .sit')].map(b=>`"${b.textContent}" → ${code(b.dataset.arg===undefined?b.dataset.act:b.dataset.act+':'+b.dataset.arg)}`));
 P('');
 P('Changed for review: the craving button now reads "I have an urge to use (drink or drugs)" (was "I want to use"). It still opens the same craving flow (`flow:craving`).');
 H(3,'My Plan sections'); list(G('PLAN_SECTIONS').map(([,t,,hint])=>`"${t}"${hint?` (hint: "${hint}")`:''}`));
@@ -231,6 +231,16 @@ P(''); P('**A kinder voice**: "If someone you cared about felt like this, what w
 P(''); P(`**Find something alive**: "Find something alive." / "Do you have a pet nearby?" Yes: "${G('ALIVE_PET')}" No: "${G('ALIVE_OUTSIDE')}" → "You spent a moment noticing something outside yourself."`);
 P(''); P('**Ridiculous mode** (Get out of my head only; hidden in YELLOW and after any crisis screen this visit; two per visit): "Make this less serious. Just for a moment." '+G('RIDICULOUS_LINES').map(x=>`"${x}"`).join(' · ')+' → "Okay. Back to reality."');
 P(''); P('**Find something real** (Calm): '+G('TOUCH_PROMPTS').map(x=>`"${x}"`).join(' · ')+'. Optional textures: '+G('TEXTURES').join(', ')+'. With an anchor in My Plan: "Do you have your anchor nearby?" Yes: "Hold it for a moment." No: "Find something else you can safely hold." Ends: "You found something real."');
+
+H(3,'After the ER or hospital: first 30 days (6.13)');
+P('A mode the person turns on from Home ("Just out of the ER"); nothing prompts it. Saved on the phone because the person chose it (not safety state). Ends by itself after 30 days, or from Settings ("End the first 30 days mode") or Delete everything. Never shown on crisis screens. No counting, no streaks, no celebration; every item is optional.');
+P(''); P('Setup: "When did you leave?" '+G('AFTER_LEFT').map(([,l])=>`"${l}"`).join(' · '));
+P(''); P('Checklist: "Welcome home. One small thing at a time." / "All optional. Any order." Items: '+G('AFTER_ITEMS').map(([,l])=>`"${l}"`).join(' · '));
+P(''); P(`Prepared text to one person: "${G('AFTER_HOME_MSG')}"`);
+P(''); P(`Under the appointment: "${G('AFTER_NO_APPT')}" The calendar file has one event ("Follow-up appointment", 60 minutes) with a reminder the day before. Made on the phone; nothing is sent.`);
+P(''); P(`Daily reminders: 14 calendar events, one a day from tomorrow at 10am, titled "${G('AFTER_DAILY_TITLE')}" with: "${G('AFTER_DAILY_TEXT')}"`);
+P(''); P('Home bar while active (below "I don\'t feel safe"): "First 30 days · support is close" with Call 988 and the code word button when one is set. Also on the checklist: "Getting help is a strength, not a weakness."');
+P(''); P(`At 30 days, once, on Home: "${G('AFTER_END_NOTE')}" [Okay]`);
 
 H(3,'Zags: every line he can say (ZAGS_LINES)');
 P('Scripted, not AI. Taps only. Says he is not a person in every session\'s first line. No relationship language, no pressure to stay, no memory between sessions, never the person\'s name. Every session ends at a person. RED stops Zags. At most two breathing rounds per session (4 breaths each: in 4 seconds, out 6; 3 breaths with reduced motion). Voice is off by default and uses the device\'s own speech only.');
