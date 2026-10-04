@@ -518,6 +518,17 @@ Steps:
 2. Take a photo if you want.
 3. Put the phone down.
 
+### Doodle (`doodle`)
+
+- Button: "Doodle"
+- Description: "Draw anything for a few minutes. No skill needed, and nobody has to see it."
+- For: anxious, spiraling, low, distraction · about 5 min
+
+Steps:
+1. Draw anything.
+2. Keep it or let it go.
+3. Put the phone down.
+
 ### Is this helping? (`social_zig`)
 
 - Button: "Is this helping?"
@@ -1060,7 +1071,7 @@ On the guide when a name is given: "[name] would like you to check in now and th
 **Let's Zig** is a simple product rule, not a clinical method: after "I still feel bad" or a game's "No", the next suggestion comes from a different channel when one is available. After a recent rating of 8 or more, BODY, SPACE and PEOPLE steps come first. Safety routing always comes first: RED stops everything, and the YELLOW order (connection, own plan, grounding, fresh air) still wins.
 - `BODY`: grounding, breathing, hydration, walking, touch_real_world
 - `SPACE`: change_scene, environment_change, find_alive, craving_delay, break_the_loop
-- `SENSE`: distraction_game, distraction_color_hunt, distraction_around_me, distraction_categories, distraction_memory, distraction_pattern, distraction_60_second, ridiculous_mode, zags, song, find_something, warm_comfort, cozy_up, coffee_with_zigzag
+- `SENSE`: distraction_game, distraction_color_hunt, distraction_around_me, distraction_categories, distraction_memory, distraction_pattern, distraction_60_second, ridiculous_mode, zags, song, find_something, doodle, warm_comfort, cozy_up, coffee_with_zigzag
 - `PEOPLE`: ai_relationship_check, be_around_people, ai_loss, connection
 - `ACTION`: social_zig, ai_reliance_check, ai_fomo, thought_parking, still_true, true_sentence, kind_stranger, borrow_ten, behavioral_activation
 
@@ -1161,8 +1172,8 @@ B. My Plan: "Print my plan" / "A full page and a wallet card to cut out. Printed
 
 C. **Privacy & terms — DRAFT, lawyer review required** (the page itself does not say "draft"). Linked from Settings, About and the first onboarding screen. Every paragraph, with the PRIVACY_DATA_FLOW.md sentence that supports it:
 - **What's saved, and where:** "Your plan, check-ins and settings are saved only in this browser on this phone. The optional diary lock encrypts diary entries on the phone; everything else is not encrypted: anyone who can use your unlocked phone, or its backups, may be able to read it." — source: "Not encrypted. Anyone with access to the unlocked phone and browser, or its backups, can read localStorage."
-- "Most things you type are checked and then thrown away. Song lines, photos from Find something with their notes, and what you write to someone you lost, are saved only if you tap Keep." — source: "Free text is never stored (except song lines, Find something photo notes and "Remembering" notes, and only when the person taps Keep)."
-- "Photos never leave this phone through ZigZag Mind. Nothing looks at them or analyzes them." — source: "No image analysis, no AI, nothing uploaded."
+- "Most things you type are checked and then thrown away. Song lines, photos from Find something with their notes, doodles, and what you write to someone you lost, are saved only if you tap Keep." — source: "Free text is never stored (except song lines, Find something photo notes and "Remembering" notes, and only when the person taps Keep)."
+- "Photos and doodles never leave this phone through ZigZag Mind. Nothing looks at them or analyzes them." — source: "No image analysis, no AI, nothing uploaded."
 - **What leaves your phone:** "ZigZag Mind doesn't send anything anywhere. There are no accounts, ads or analytics." — source: "The app makes no network requests of its own."
 - "When you tap a link, like calling or texting 988, opening Maps, or the donation page, that app or website gets what you send it. Texts you prepare go to whoever you send them to." — source: "Everything below happens only when the person taps something:"
 - "When this site loads, the web host receives standard request information, like your IP address, browser type, time and the page. How long the host keeps it is up to the host." — source: "The host (Render) receives normal request data: IP address, user agent, time, path. What Render logs and keeps was not checked."
@@ -1185,6 +1196,15 @@ G. "Help near me (Treasure Coast)" (**hidden until the owner verifies at least o
 - Local recovery meetings: "Meetings for people working on drinking or drug use." (verified: false)
 
 H. Simplicity audit: report only, nothing applied (docs/SIMPLICITY_AUDIT.md).
+
+### Stage 6.22: Doodle
+
+Get out of my head → "Doodle" ("Draw anything. No skill needed."). SENSE, real world; Let's Zig may pick it ("Draw anything for a few minutes. No skill needed, and nobody has to see it."). Nothing analyzed or sent; kept only on Keep.
+- Prompts, one at a time ("Another idea"): "Scribble as hard as you want." · "Draw today as weather." · "Fill the page with one color." · "Draw something that's still true." · "Draw the view from where you're sitting."
+- Tools: colors teal, sea, lavender, sky, clay, ink · Thin / Thick · "Eraser" · "Undo" · "Clear" → "Clear the page?" Clear it / Cancel
+- "Done" → "Keep it, or let it go?" (empty page: "Nothing on the page. That's okay too.") → "Keep" / "Let it go" ("Some things are just for now.") / "Keep drawing"
+- Ending: "Kept in Things I noticed." (if kept) · "That's enough. You can put the phone down." → I'm done · How do I feel now?
+- Things I noticed labels it "Doodle". Privacy & terms: "doodles" added to what is saved only on Keep; "Photos and doodles never leave this phone through ZigZag Mind."
 
 ### Stage 6.21: A line for today
 
@@ -2026,6 +2046,42 @@ _When: distraction_
 - Nothing here yet.
 - **Button:** Find something
 
+### `doodle`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Doodle
+- Scribble as hard as you want.
+- **Button:** Another idea
+- **Button:** teal
+- **Button:** sea
+- **Button:** lavender
+- **Button:** sky
+- **Button:** clay
+- **Button:** ink
+- **Button:** Thin
+- **Button:** Thick
+- **Button:** Eraser
+- **Button:** Undo
+- **Button:** Clear
+- **Button:** Done
+
+### `doodle-done`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Nothing on the page. That's okay too.
+- **Button:** Let it go
+- **Button:** Keep drawing
+
+### `doodle-end`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** That's enough. You can put the phone down.
+- **Button:** I'm done
+- **Button:** How do I feel now?
+
 ### `diary`
 
 - **Button:** × _(screen reader: "Close and go to home")_
@@ -2285,8 +2341,8 @@ _When: distraction_
 - **Heading:** Privacy & terms
 - **Heading:** What's saved, and where
 - Your plan, check-ins and settings are saved only in this browser on this phone. The optional diary lock encrypts diary entries on the phone; everything else is not encrypted: anyone who can use your unlocked phone, or its backups, may be able to read it.
-- Most things you type are checked and then thrown away. Song lines, photos from Find something with their notes, and what you write to someone you lost, are saved only if you tap Keep.
-- Photos never leave this phone through ZigZag Mind. Nothing looks at them or analyzes them.
+- Most things you type are checked and then thrown away. Song lines, photos from Find something with their notes, doodles, and what you write to someone you lost, are saved only if you tap Keep.
+- Photos and doodles never leave this phone through ZigZag Mind. Nothing looks at them or analyzes them.
 - **Heading:** What leaves your phone
 - ZigZag Mind doesn't send anything anywhere. There are no accounts, ads or analytics.
 - When you tap a link, like calling or texting 988, opening Maps, or the donation page, that app or website gets what you send it. Texts you prepare go to whoever you send them to.
@@ -3119,6 +3175,7 @@ _When: distraction_
 - **Button:** Turn it into a song — Three lines in your words, made into a short song
 - **Button:** Quick games — Color hunt, around me, categories and more
 - **Button:** Focus — Tap when the dot reaches the ring. One minute.
+- **Button:** Doodle — Draw anything. No skill needed.
 - **Button:** Make this less serious — One absurd little mission
 - **Button:** Borrow ten minutes — Just the next ten minutes
 
@@ -3714,6 +3771,14 @@ _When: distraction_
 - **Button:** Help _(screen reader: "Get help now")_
 - Find something · Step 1 of 3
 - **Heading:** Find something worth looking at.
+- **Button:** Next
+
+#### Doodle
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Doodle · Step 1 of 3
+- **Heading:** Draw anything.
 - **Button:** Next
 
 #### Is this helping?

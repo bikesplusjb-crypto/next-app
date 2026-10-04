@@ -287,6 +287,17 @@ P(''); P('G. "Help near me (Treasure Coast)" (**hidden until the owner verifies 
 list(G('NEAR_ME').map(e=>`${e.name}: "${e.what}"${e.phone?' · '+e.phone:''} (verified: ${e.verified})`));
 P(''); P('H. Simplicity audit: report only, nothing applied (docs/SIMPLICITY_AUDIT.md).');
 
+H(3,'Stage 6.22: Doodle');
+P('Get out of my head → "Doodle" ("Draw anything. No skill needed."). SENSE, real world; Let\'s Zig may pick it ("'+G('findIntervention("doodle").description')+'"). Nothing analyzed or sent; kept only on Keep.');
+const DO=G('DOODLE');
+list([
+  'Prompts, one at a time ("'+DO.another+'"): '+DO.prompts.map(x=>`"${x}"`).join(' · '),
+  'Tools: colors '+DO.colors.map(c=>c[0]).join(', ')+' · '+DO.sizes.map(x=>x[0]).join(' / ')+' · "'+DO.eraser+'" · "'+DO.undo+'" · "'+DO.clear+'" → "'+DO.clearQ+'" '+DO.clearYes+' / '+DO.cancel,
+  '"'+DO.done+'" → "Keep it, or let it go?" (empty page: "Nothing on the page. That\'s okay too.") → "'+DO.keep+'" / "'+DO.letGo+'" ("'+DO.letGoLine+'") / "Keep drawing"',
+  'Ending: "'+DO.kept+'" (if kept) · "'+DO.end+'" → I\'m done · How do I feel now?',
+  'Things I noticed labels it "'+DO.label+'". Privacy & terms: "doodles" added to what is saved only on Keep; "Photos and doodles never leave this phone through ZigZag Mind."'
+]);
+
 H(3,'Stage 6.21: A line for today');
 P('Only from My Plan ("'+G('DIARY.title')+'") and a small link under "Put the phone down" ("'+G('DIARY.phoneDown')+'"). Never on crisis screens; never suggested. Only on this phone (its own key). No counts, streaks, charts or reminders.');
 const DI=G('DIARY');

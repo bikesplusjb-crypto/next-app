@@ -145,6 +145,12 @@ textarea.field{min-height:150px;resize:vertical}
 .nextcard .for{font-size:15px;color:var(--text-muted);margin-top:12px}
 
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px;margin-top:16px}
+.doodle-prompt{margin:0 0 8px;font-family:var(--serif);font-size:19px;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline}
+.doodle-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.doodle-swatch{width:44px;height:44px;border-radius:50%;border:2px solid var(--line)}
+.doodle-swatch[aria-pressed="true"]{outline:3px solid var(--focus);outline-offset:2px}
+.doodle-tools .chip[aria-pressed="true"]{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
+.doodle-canvas{display:block;width:100%;height:calc(100dvh - 330px);min-height:280px;background:#FFFFFF;border:1px solid var(--line);border-radius:16px;touch-action:none;cursor:crosshair}
 .diary-feel .sit[aria-pressed="true"]{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
 .diary-text{min-height:96px;field-sizing:content;max-height:60vh;resize:vertical}
 .diary-still{color:var(--primary);font-family:var(--serif);font-weight:600;font-size:19px;margin:8px 0 0}
@@ -581,9 +587,9 @@ const FEEDBACK_PRIVACY = ["If you use the feedback link on About, that form is a
 const PRIVACY_PAGE = [
   ["What's saved, and where", "Your plan, check-ins and settings are saved only in this browser on this phone. The optional diary lock encrypts diary entries on the phone; everything else is not encrypted: anyone who can use your unlocked phone, or its backups, may be able to read it.",
     "Not encrypted.** Anyone with access to the unlocked phone and browser, or its backups, can read `localStorage`."],
-  ["", "Most things you type are checked and then thrown away. Song lines, photos from Find something with their notes, and what you write to someone you lost, are saved only if you tap Keep.",
+  ["", "Most things you type are checked and then thrown away. Song lines, photos from Find something with their notes, doodles, and what you write to someone you lost, are saved only if you tap Keep.",
     "Free text is never stored** (except song lines, Find something photo notes and \"Remembering\" notes, and only when the person taps Keep)."],
-  ["", "Photos never leave this phone through ZigZag Mind. Nothing looks at them or analyzes them.",
+  ["", "Photos and doodles never leave this phone through ZigZag Mind. Nothing looks at them or analyzes them.",
     "No image analysis, no AI, nothing uploaded."],
   ["What leaves your phone", "ZigZag Mind doesn't send anything anywhere. There are no accounts, ads or analytics.",
     "The app makes no network requests of its own."],
@@ -1266,6 +1272,18 @@ function griefMsgs(name){
 }
 const GRIEF_MISSION = { id:"remembering", title:"Remembering", prompt:"Find something that reminds you of them — their spot, a photo, something they loved." };
 const GRIEF_NOTE_MAX = 1000;
+/* 6.22 DOODLE. A drawing canvas (pointer events, no libraries). Strokes live in memory; nothing is analyzed or sent.
+   Keep saves a shrunk PNG to Things I noticed (same storage, cap, saving-off rules, export and Delete everything). */
+const DOODLE = {
+  title:"Doodle",
+  colors:[["teal","#356F6A"],["sea","#79BDB5"],["lavender","#A9A4D6"],["sky","#91AFC0"],["clay","#E79570"],["ink","#252A2D"]],
+  sizes:[["Thin",4],["Thick",14]],
+  prompts:["Scribble as hard as you want.","Draw today as weather.","Fill the page with one color.","Draw something that's still true.","Draw the view from where you're sitting."],
+  another:"Another idea", eraser:"Eraser", undo:"Undo", clear:"Clear", clearQ:"Clear the page?", clearYes:"Clear it", cancel:"Cancel",
+  done:"Done", keep:"Keep", letGo:"Let it go", letGoLine:"Some things are just for now.",
+  kept:"Kept in Things I noticed.", end:"That's enough. You can put the phone down.", label:"Doodle"
+};
+const DOODLE_MISSION = "doodle", DOODLE_EDGE = 640;
 /* 6.20 D: grief resources. Every entry starts verified:false and is hidden; the owner identifies, verifies (date and
    initials in CRISIS_RESOURCE_VERIFICATION.md), fills in phone/url and sets verified:true. faith:true entries show
    only when Faith & hope is on. */
@@ -1409,9 +1427,9 @@ function validNoticed(a){
   if (!Array.isArray(a)) return [];
   // a kept photo, or (6.20) a written "Remembering" note with no photo
   return a.filter(n => n && typeof n.id === "string" && typeof n.date === "number"
-    && ((typeof n.img === "string" && /^data:image\/jpeg;base64,/.test(n.img) && n.text === undefined)
+    && ((typeof n.img === "string" && (/^data:image\/jpeg;base64,/.test(n.img) || (n.mission === DOODLE_MISSION && /^data:image\/png;base64,/.test(n.img))) && n.text === undefined)
       || (n.img === undefined && n.mission === GRIEF_MISSION.id && typeof n.text === "string" && n.text.length > 0 && n.text.length <= GRIEF_NOTE_MAX))
-    && (PHOTO_MISSIONS.some(m => m.id === n.mission) || n.mission === GRIEF_MISSION.id)
+    && (PHOTO_MISSIONS.some(m => m.id === n.mission) || n.mission === GRIEF_MISSION.id || n.mission === DOODLE_MISSION)
     && (n.caption === undefined || (typeof n.caption === "string" && n.caption.length <= 120))).slice(0, NOTICED_CAP);
 }
 function loadNoticed(){
@@ -1792,6 +1810,12 @@ INTERVENTION_LIBRARY.push(
     states:["anxious","spiraling","low","distraction","alone"], intensityRange:[0,10], needsMobility:true, realWorld:true,
     steps:["Find something worth looking at.","Take a photo if you want.","Put the phone down."], completion:"tap_done" }
 );
+// 6.22 DOODLE (SENSE, real world): a drawing on the phone, then the phone goes down. Let's Zig may pick it.
+INTERVENTION_LIBRARY.push(
+  { id:"doodle", name:"Doodle", tryLabel:"Doodle", description:"Draw anything for a few minutes. No skill needed, and nobody has to see it.", durationSec:300,
+    states:["anxious","spiraling","low","distraction"], intensityRange:[0,10], needsMobility:false, realWorld:true,
+    steps:["Draw anything.","Keep it or let it go.","Put the phone down."], completion:"tap_done" }
+);
 // SOCIAL ZIG: opened from Tech check only (no states, so the engine never suggests it elsewhere).
 INTERVENTION_LIBRARY.push(
   { id:"social_zig", name:"Is this helping?", tryLabel:"Is this helping?", description:"Notice whether scrolling is helping right now, and choose a different direction if it isn't.", durationSec:120,
@@ -1832,7 +1856,7 @@ const CHANNEL_OF = {
   grounding:"BODY", breathing:"BODY", hydration:"BODY", walking:"BODY", touch_real_world:"BODY",
   change_scene:"SPACE", environment_change:"SPACE", find_alive:"SPACE", craving_delay:"SPACE",
   distraction_game:"SENSE", distraction_color_hunt:"SENSE", distraction_around_me:"SENSE", distraction_categories:"SENSE",
-  distraction_memory:"SENSE", distraction_pattern:"SENSE", distraction_60_second:"SENSE", ridiculous_mode:"SENSE", zags:"SENSE", song:"SENSE", break_the_loop:"SPACE", ai_relationship_check:"PEOPLE", be_around_people:"PEOPLE", find_something:"SENSE", warm_comfort:"SENSE", cozy_up:"SENSE", social_zig:"ACTION", coffee_with_zigzag:"SENSE", ai_loss:"PEOPLE", ai_reliance_check:"ACTION", ai_fomo:"ACTION",
+  distraction_memory:"SENSE", distraction_pattern:"SENSE", distraction_60_second:"SENSE", ridiculous_mode:"SENSE", zags:"SENSE", song:"SENSE", break_the_loop:"SPACE", ai_relationship_check:"PEOPLE", be_around_people:"PEOPLE", find_something:"SENSE", doodle:"SENSE", warm_comfort:"SENSE", cozy_up:"SENSE", social_zig:"ACTION", coffee_with_zigzag:"SENSE", ai_loss:"PEOPLE", ai_reliance_check:"ACTION", ai_fomo:"ACTION",
   connection:"PEOPLE",
   thought_parking:"ACTION", still_true:"ACTION", true_sentence:"ACTION", kind_stranger:"ACTION", borrow_ten:"ACTION", behavioral_activation:"ACTION"
 };
@@ -2867,6 +2891,7 @@ function startIntervention(interventionId, opts = {}){
   if (interventionId === "coffee_with_zigzag"){ route = "coffee"; ui.warmDrink = null; ui.coffee = { phase:"intro", turns:0, talkIdx:0, randomUsed:0, line:"" }; }
   if (interventionId === "warm_comfort"){ route = "warm"; ui.warmDrink = null; ui.warmStep = 0; ui.warmSlow = false; }
   if (interventionId === "find_something"){ route = "fs"; fsDropPhoto(); ui.fsIdx = opts.mission != null ? opts.mission : 1; ui.fsYours = opts.yours || null; ui.fsCaption = ""; ui.fsKept = false; ui.msg = ""; }
+  if (interventionId === "doodle"){ route = "doodle"; ui.doodle = { strokes:[], color:0, size:0, erase:false, prompt:0, clearAsk:false, img:null, kept:false, letGo:false }; ui.msg = ""; }
   if (interventionId === "song"){ route = "song"; ui.songMood = null; ui.songIdx = 0; ui.songLines = ["", "", ""]; ui.song = null; ui.songEnded = false; ui.songKept = false; ui.songReplay = false; ui.msg = ""; }
   if (interventionId === "zags"){ route = "zags"; if (!ui.zags || ui.zags.phase !== "hello") ui.zags = { phase:"hello", step:0, rounds:0, hard:0, breath:0, half:null }; }
   if (!route) route = interventionId === "thought_parking" ? "spiral-input"
@@ -3550,7 +3575,7 @@ const SCREENS = {
       <p class="sub">Only on this phone. Not a feed, not shared.</p>
       ${ui.flash ? `<p class="flash" role="status">${esc(ui.flash)}</p>` : ""}
       ${list.length ? list.map(n => `<div class="panel noticed-item">
-          ${n.mission === GRIEF_MISSION.id ? `<p class="lbl" style="margin:0 0 6px">${GRIEF_MISSION.title}</p>` : ""}
+          ${n.mission === GRIEF_MISSION.id ? `<p class="lbl" style="margin:0 0 6px">${GRIEF_MISSION.title}</p>` : n.mission === DOODLE_MISSION ? `<p class="lbl" style="margin:0 0 6px">${DOODLE.label}</p>` : ""}
           ${n.img ? `<img class="fs-photo" src="${esc(n.img)}" alt="${esc(n.caption || "A photo you kept")}">` : ""}
           ${n.text ? `<p class="grief-note" style="margin:0;white-space:pre-wrap">${esc(n.text)}</p>` : ""}
           ${n.caption ? `<p style="margin:8px 0 0">${esc(n.caption)}</p>` : ""}
@@ -3559,6 +3584,45 @@ const SCREENS = {
             : `<button class="link" data-act="noticedDel" data-arg="${esc(n.id)}">Delete</button>`}</div>`).join("")
         : `<p class="empty">Nothing here yet.</p>`}`,
       actions:`<button class="btn btn-secondary" data-act="fsStart">Find something</button>` };
+  },
+
+  /* 6.22 DOODLE */
+  doodle(){
+    const d = ui.doodle || (ui.doodle = { strokes:[], color:0, size:0, erase:false, prompt:0, clearAsk:false });
+    return { close:true, body:`
+      <h1 id="screen-title" tabindex="-1" class="sr">${DOODLE.title}</h1>
+      <p class="doodle-prompt"><span id="doodlePrompt">${DOODLE.prompts[d.prompt % DOODLE.prompts.length]}</span>
+        <button class="link" data-act="doodleIdea">${DOODLE.another}</button></p>
+      <div class="doodle-tools" role="toolbar" aria-label="Drawing tools">
+        ${DOODLE.colors.map(([n, c], i) => `<button class="doodle-swatch" data-act="doodleColor" data-arg="${i}" aria-label="${n}" aria-pressed="${!d.erase && d.color === i}" style="background:${c}"></button>`).join("")}
+        ${DOODLE.sizes.map(([n], i) => `<button class="chip" data-act="doodleSize" data-arg="${i}" aria-pressed="${d.size === i}">${n}</button>`).join("")}
+        <button class="chip" data-act="doodleErase" aria-pressed="${!!d.erase}">${DOODLE.eraser}</button>
+        <button class="chip" data-act="doodleUndo"${d.strokes.length ? "" : " disabled"}>${DOODLE.undo}</button>
+        <button class="chip" data-act="doodleClear"${d.strokes.length ? "" : " disabled"}>${DOODLE.clear}</button>
+      </div>
+      ${d.clearAsk ? `<div class="panel" style="margin-top:8px"><p style="margin:0 0 10px"><b>${DOODLE.clearQ}</b></p>
+        <div class="pair"><button class="btn btn-outline" data-act="doodleClearYes">${DOODLE.clearYes}</button><button class="btn btn-secondary" data-act="doodleClearNo">${DOODLE.cancel}</button></div></div>` : ""}
+      <canvas id="doodleCanvas" class="doodle-canvas" aria-label="Drawing space" role="img"></canvas>`,
+      actions:`<button class="btn btn-primary" data-act="doodleDone">${DOODLE.done}</button>` };
+  },
+  "doodle-done"(){
+    const d = ui.doodle || {};
+    return { close:true, body:`
+      ${stepTitle(d.strokes && d.strokes.length ? "Keep it, or let it go?" : "Nothing on the page. That's okay too.", true)}
+      ${d.img ? `<img class="fs-photo doodle-img" src="${esc(d.img)}" alt="Your doodle">` : ""}
+      ${ui.msg ? `<p class="err" role="alert">${esc(ui.msg)}</p>` : ""}`,
+      actions:`${d.img ? `<button class="btn btn-primary" data-act="doodleKeep">${DOODLE.keep}</button>` : ""}
+        <button class="btn ${d.img ? "btn-secondary" : "btn-primary"}" data-act="doodleLetGo">${DOODLE.letGo}</button>
+        <button class="link" data-act="doodleBack">Keep drawing</button>` };
+  },
+  "doodle-end"(){
+    const d = ui.doodle || {};
+    return { close:true, body:`
+      ${d.letGo ? `<p class="sub" style="font-size:19px">${DOODLE.letGoLine}</p>` : ""}
+      ${d.kept ? `<p class="flash" role="status">${DOODLE.kept}</p>` : ""}
+      ${stepTitle(DOODLE.end, true)}`,
+      actions:`<button class="btn btn-primary" data-act="putDown">I'm done</button>
+        <button class="link" data-act="stepCheckin">How do I feel now?</button>` };
   },
 
   /* 6.21 A LINE FOR TODAY */
@@ -4718,6 +4782,7 @@ const SCREENS = {
       <div class="list">
         <button class="card" data-act="gamesOpen">${icon("head", true)}<span>Quick games<span class="meta">Color hunt, around me, categories and more</span></span></button>
         <button class="card" data-act="distFocus">${icon("head", true)}<span>Focus<span class="meta">Tap when the dot reaches the ring. One minute.</span></span></button>
+        <button class="card" data-act="doodleStart">${icon("head", true)}<span>${DOODLE.title}<span class="meta">Draw anything. No skill needed.</span></span></button>
         ${ridiculousAvailable() ? `<button class="card" data-act="ridiculousStart">${icon("head", true)}<span>Make this less serious<span class="meta">One absurd little mission</span></span></button>` : ""}
         <button class="card" data-act="lowPick" data-arg="borrow_ten">${icon("head", true)}<span>Borrow ten minutes<span class="meta">Just the next ten minutes</span></span></button>
       </div>` };
@@ -5287,6 +5352,71 @@ const NO_YBAR = [...CRISIS_SCREENS, "talk", "plan-now"];   // plan-now has its o
   SCREENS[n] = () => diaryLockedNow() ? SCREENS["diary-unlock"]() : f();
 });
 
+/* 6.22 DOODLE: drawing. Strokes are kept as points relative to the canvas (0–1), so the page redraws them after any
+   re-render or resize. No animation (reduced motion needs nothing special). */
+let doodleLive = null;   // the stroke being drawn
+function doodleCtx(){ const c = document.getElementById("doodleCanvas"); if (!c) return null; let g = null; try { g = c.getContext("2d"); } catch (_){} return g ? { c, g } : null; }
+function doodleStroke(g, st, w, h){
+  if (!st.points.length) return;
+  g.save();
+  g.globalCompositeOperation = st.erase ? "destination-out" : "source-over";
+  g.strokeStyle = st.erase ? "#000" : st.color; g.fillStyle = g.strokeStyle;
+  g.lineWidth = st.size; g.lineCap = "round"; g.lineJoin = "round";
+  g.beginPath();
+  const [x0, y0] = st.points[0]; g.moveTo(x0 * w, y0 * h);
+  if (st.points.length === 1){ g.arc(x0 * w, y0 * h, st.size / 2, 0, Math.PI * 2); g.fill(); }
+  else { for (const [x, y] of st.points.slice(1)) g.lineTo(x * w, y * h); g.stroke(); }
+  g.restore();
+}
+function doodleRedraw(){
+  const k = doodleCtx(); if (!k) return;
+  const { c, g } = k, w = c.width / (c._dpr || 1), h = c.height / (c._dpr || 1);
+  g.setTransform(c._dpr || 1, 0, 0, c._dpr || 1, 0, 0);
+  g.clearRect(0, 0, w, h);
+  for (const st of (ui.doodle && ui.doodle.strokes) || []) doodleStroke(g, st, w, h);
+}
+function doodleMount(){
+  const c = document.getElementById("doodleCanvas"); if (!c) return;
+  const r = c.getBoundingClientRect(), dpr = Math.min(window.devicePixelRatio || 1, 3);
+  c._dpr = dpr; c.width = Math.max(1, Math.round((r.width || 320) * dpr)); c.height = Math.max(1, Math.round((r.height || 400) * dpr));
+  doodleRedraw();
+}
+function doodlePoint(e, c){ const r = c.getBoundingClientRect(); const w = r.width || 1, h = r.height || 1;
+  return [Math.min(1, Math.max(0, (e.clientX - r.left) / w)), Math.min(1, Math.max(0, (e.clientY - r.top) / h))]; }
+document.addEventListener("pointerdown", e => {
+  if (!e.target || e.target.id !== "doodleCanvas") return;
+  if (blockIfRed()) return;
+  e.preventDefault();
+  const d = ui.doodle; if (!d) return;
+  try { e.target.setPointerCapture(e.pointerId); } catch (_){}
+  const [n, color] = DOODLE.colors[d.color] || DOODLE.colors[0];
+  doodleLive = { color, size:DOODLE.sizes[d.size][1] * (d.erase ? 2 : 1), erase:!!d.erase, points:[doodlePoint(e, e.target)], id:e.pointerId };
+  d.strokes.push(doodleLive);
+  doodleRedraw();
+});
+document.addEventListener("pointermove", e => {
+  if (!doodleLive || e.pointerId !== doodleLive.id || !e.target || e.target.id !== "doodleCanvas") return;
+  e.preventDefault();
+  doodleLive.points.push(doodlePoint(e, e.target));
+  doodleRedraw();
+});
+const doodleEnd = e => { if (!doodleLive || (e && e.pointerId !== doodleLive.id)) return; doodleLive = null; if (session.screen === "doodle"){ const u = document.querySelector('[data-act="doodleUndo"]'), c = document.querySelector('[data-act="doodleClear"]'); if (u) u.disabled = false; if (c) c.disabled = false; } };
+document.addEventListener("pointerup", doodleEnd);
+document.addEventListener("pointercancel", doodleEnd);
+window.addEventListener("resize", () => { if (session.screen === "doodle") doodleMount(); });
+/* A shrunk PNG on a white page (longest edge 640px). Null if the browser can't draw. */
+function doodlePng(){
+  const k = doodleCtx(); if (!k) return null;
+  try {
+    const { c } = k, s = Math.min(1, DOODLE_EDGE / Math.max(c.width, c.height));
+    const o = document.createElement("canvas"); o.width = Math.max(1, Math.round(c.width * s)); o.height = Math.max(1, Math.round(c.height * s));
+    const g = o.getContext("2d"); if (!g) return null;
+    g.fillStyle = "#FFFFFF"; g.fillRect(0, 0, o.width, o.height); g.drawImage(c, 0, 0, o.width, o.height);
+    const url = o.toDataURL("image/png");
+    return /^data:image\/png;base64,/.test(url || "") ? url : null;
+  } catch (_){ return null; }
+}
+
 /* ---------- SHELL ---------- */
 const app = document.getElementById("app");
 let lastRendered = null;
@@ -5640,7 +5770,9 @@ function render(){
     ${def.nav ? tabBar() : ""}
     ${session.devPanelOpen ? devPanel() : ""}`;
   fitChrome();
+  if (s === "doodle") doodleMount();   // 6.22: the canvas is new after every render; redraw the strokes
   if (changed){
+    if (!/^doodle/.test(s) && ui.doodle && ui.doodle.strokes){ ui.doodle.strokes = []; ui.doodle.img = null; doodleLive = null; }   // 6.22: nothing outlives the doodle
     if (s !== "grief-write-done") ui.griefNote = null;   // 6.20: a written note is deleted unless the person taps Keep
     if (!/^diary/.test(s)){ ui.diaryDraft = null; diaryRelock(false); }   // 6.21: leaving the diary drops an unsaved draft and re-locks it
     if (crisis){ ui.grief = null; ui.fsGrief = false; }    // nothing from the grief path survives a crisis screen
@@ -6349,6 +6481,28 @@ const ACTIONS = {
   warmEnough(){ if (blockIfRed()) return; go("warm-end"); },
   warmFind(){ if (blockIfRed()) return; startIntervention("find_something"); },
 
+  /* 6.22 DOODLE */
+  doodleStart(){ if (blockIfRed()) return; startIntervention("doodle"); },
+  doodleIdea(){ if (blockIfRed()) return; const d = ui.doodle; if (!d) return; d.prompt = (d.prompt + 1) % DOODLE.prompts.length; const el = document.getElementById("doodlePrompt"); if (el) el.textContent = DOODLE.prompts[d.prompt]; else render(); },
+  doodleColor(arg){ if (blockIfRed()) return; const d = ui.doodle; const i = Number(arg); if (!d || !DOODLE.colors[i]) return; d.color = i; d.erase = false; render(); },
+  doodleSize(arg){ if (blockIfRed()) return; const d = ui.doodle; const i = Number(arg); if (!d || !DOODLE.sizes[i]) return; d.size = i; render(); },
+  doodleErase(){ if (blockIfRed()) return; const d = ui.doodle; if (!d) return; d.erase = !d.erase; render(); },
+  doodleUndo(){ if (blockIfRed()) return; const d = ui.doodle; if (!d || !d.strokes.length) return; d.strokes.pop(); render(); },
+  doodleClear(){ if (blockIfRed()) return; const d = ui.doodle; if (!d || !d.strokes.length) return; d.clearAsk = true; render(); },
+  doodleClearNo(){ const d = ui.doodle; if (d) d.clearAsk = false; render(); },
+  doodleClearYes(){ if (blockIfRed()) return; const d = ui.doodle; if (!d) return; d.strokes = []; d.clearAsk = false; render(); },
+  doodleDone(){ if (blockIfRed()) return; const d = ui.doodle; if (!d) return; d.clearAsk = false; d.img = d.strokes.length ? doodlePng() : null; ui.msg = ""; go("doodle-done"); },
+  doodleBack(){ if (blockIfRed()) return; const d = ui.doodle; if (d) d.img = null; ui.msg = ""; go("doodle"); },
+  doodleKeep(){
+    if (blockIfRed()) return;
+    const d = ui.doodle; if (!d || !d.img) return;
+    const now = Date.now();
+    const item = { id:String(now), date:now, mission:DOODLE_MISSION, img:d.img };
+    store.noticed = [item, ...noticed()].slice(0, NOTICED_CAP);
+    if (!saveNoticed()){ store.noticed = noticed().filter(x => x.id !== item.id); ui.msg = "Couldn't keep it: this phone's browser storage is full."; render(); return; }
+    d.kept = true; d.letGo = false; d.strokes = []; d.img = null; go("doodle-end");
+  },
+  doodleLetGo(){ if (blockIfRed()) return; const d = ui.doodle || (ui.doodle = {}); d.strokes = []; d.img = null; d.kept = false; d.letGo = true; go("doodle-end"); },
   /* 6.21 A LINE FOR TODAY */
   diaryOpen(){ if (blockIfRed()) return; ui.flash = ""; ui.msg = ""; ui.diaryDel = false; go("diary"); },
   diaryLockStart(){ if (blockIfRed()) return; if (store.diaryLock || !diaryCryptoOk() || !persistOn) return; ui.diaryWarned = false; ui.msg = ""; go("diary-lock-warn"); },
