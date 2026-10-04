@@ -1026,6 +1026,18 @@ A. Home, below everything else: "Worried about someone? How to help →" (opens 
 
 B. My Plan: "Print my plan" / "A full page and a wallet card to cut out. Printed from this phone; nothing is uploaded." / [ ] "Include my code word" (off by default, never saved). Printed page: "My plan for hard moments", each filled-in section, then "988 Suicide & Crisis Lifeline: call or text 988. Free, 24/7." / "911 if someone is hurt or in danger." / "✂ Cut along the dashed line" and a wallet card: first trusted person and number, "988 — call or text", "911 if someone is hurt or in danger", first reason to stay.
 
+C. **Privacy & terms — DRAFT, lawyer review required** (the page itself does not say "draft"). Linked from Settings, About and the first onboarding screen. Every paragraph, with the PRIVACY_DATA_FLOW.md sentence that supports it:
+- **What's saved, and where:** "Your plan, check-ins and settings are saved only in this browser on this phone. They are not encrypted: anyone who can use your unlocked phone, or its backups, may be able to read them." — source: "Not encrypted. Anyone with access to the unlocked phone and browser, or its backups, can read localStorage."
+- "Most things you type are checked and then thrown away. Song lines are saved only if you tap Keep." — source: "Free text is never stored (except song lines, and only when the person taps Keep)."
+- **What leaves your phone:** "ZigZag Mind doesn't send anything anywhere. There are no accounts, ads or analytics." — source: "The app makes no network requests of its own."
+- "When you tap a link, like calling or texting 988, opening Maps, or the donation page, that app or website gets what you send it. Texts you prepare go to whoever you send them to." — source: "Everything below happens only when the person taps something:"
+- "When this site loads, the web host receives standard request information, like your IP address, browser type, time and the page. How long the host keeps it is up to the host." — source: "The host (Render) receives normal request data: IP address, user agent, time, path. What Render logs and keeps was not checked."
+- **Your choices:** "In Settings you can export a copy of your data, turn off saving on this device (then nothing is saved), or delete everything. Delete everything erases your plan, check-ins, songs and the first 30 days mode from this phone; display settings stay." — source: "Delete everything: empties the plan, history, activity, the first 30 days mode and kept songs in memory and in localStorage"
+- **What ZigZag Mind is:** "A self-help tool for adults 18 and over. It is not therapy, medical care or an emergency service, and it can't promise any outcome. If you're in danger, call 911 or call or text 988." — (product terms, no data claim)
+- "Donations are voluntary and don't unlock anything. Everything is free for everyone." — (product terms, no data claim)
+
+Contact line (only when CONTACT_EMAIL is set): "Questions? Email [address]."
+
 ### Stage 6.18 owner-approved updates (OWNER-APPROVED INTERIM, pending clinician)
 
 A. Zags: first line now "Hi, I'm Zags. I'm not a person, just a little guide. I can guide you through the next few minutes."; Connect: "Calm down with Zags while you wait" (no subtitle).
@@ -1505,6 +1517,25 @@ _When: distraction_
 - **Button:** Try grounding
 - **Button:** Something else
 - **Button:** I'm good for now
+
+### `privacy`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Privacy & terms
+- **Heading:** What's saved, and where
+- Your plan, check-ins and settings are saved only in this browser on this phone. They are not encrypted: anyone who can use your unlocked phone, or its backups, may be able to read them.
+- Most things you type are checked and then thrown away. Song lines are saved only if you tap Keep.
+- **Heading:** What leaves your phone
+- ZigZag Mind doesn't send anything anywhere. There are no accounts, ads or analytics.
+- When you tap a link, like calling or texting 988, opening Maps, or the donation page, that app or website gets what you send it. Texts you prepare go to whoever you send them to.
+- When this site loads, the web host receives standard request information, like your IP address, browser type, time and the page. How long the host keeps it is up to the host.
+- **Heading:** Your choices
+- In Settings you can export a copy of your data, turn off saving on this device (then nothing is saved), or delete everything. Delete everything erases your plan, check-ins, songs and the first 30 days mode from this phone; display settings stay.
+- **Heading:** What ZigZag Mind is
+- A self-help tool for adults 18 and over. It is not therapy, medical care or an emergency service, and it can't promise any outcome. If you're in danger, call 911 or call or text 988.
+- Donations are voluntary and don't unlock anything. Everything is free for everyone.
+- **Button:** Back
 
 ### `around-people`
 
@@ -2566,6 +2597,7 @@ _When: distraction_
 - **Button:** Delete everything
 - **Heading:** About
 - **Button:** About ZigZag Mind
+- **Button:** Privacy & terms
 - ZigZag Mind is a self-help support tool. It is not therapy, medical care, or an emergency service. If you're in danger, call 911 or call or text 988.
 - **Link → `https://ko-fi.com/zigzagmind`:** Support ZigZag Mind
 - Free for everyone, always. If it helped, you can help keep it running.
@@ -2608,6 +2640,7 @@ _When: distraction_
 - Not an emergency service. Call 911 if someone is hurt or in danger.
 - Not therapy, medical care, or a diagnosis.
 - Not a person. It never contacts anyone for you.
+- **Button:** Privacy & terms
 - **Button:** Next
 
 ### `ob-age`
@@ -2672,6 +2705,7 @@ _When: distraction_
 - **Heading:** Your privacy
 - What you write stays on your phone. We don't sell or share it. You can delete everything with one tap.
 - In this prototype, data is saved only in your browser on this device. Turn saving off in Settings for a shared phone.
+- **Button:** Privacy & terms
 - ZigZag Mind is a self-help support tool. It is not therapy, medical care, or an emergency service. If you're in danger, call 911 or call or text 988.
 - Free for everyone, always. Support ZigZag Mind
 

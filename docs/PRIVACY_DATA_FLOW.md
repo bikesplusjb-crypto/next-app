@@ -17,7 +17,7 @@ Method: read the code in `index.html`, `support/index.html` and `sw.js` at the c
 | Store | Used? | Key / name | Contents |
 |---|---|---|---|
 | `localStorage` | Yes | `next.v1.prefs` | Settings: reduce motion, haptics, home-screen tip dismissed, onboarded (true/false), country, theme, saving on/off, and since F6 **`under18` (true once someone answers "No, I'm under 18")**. Since 6.15, **`strength`**: the person's answer to "What gives you strength?" (for example "bible"), only if they choose one; not written while saving is off; cleared by Delete everything. |
-| `localStorage` | Yes | `next.v1.sensitive` | **My Plan** (warning signs, things that help, places, trusted people: names, relationships, phone numbers; professional; time and distance plan; things to avoid; reminders; code word with the person's phone digits; who was asked for check-ins, with phone digits) · **check-in outcomes** (state, intervention id, before/after ratings, game/Zags/scene answers, timestamp; last 500) · **activity** (type `moment` / `plan` / `reach`, timestamp; last 500; never from crisis screens or while RED, since F3) · **your first name** for check-in reminders (optional, `myName`, since F1) · **first 30 days mode** when the person turns it on (6.13: start date, end date, which optional items are ticked; nothing about the hospital visit itself) · **songs** the person chose to Keep (6.16: mood, their three lines and any added lines, date; max 50) |
+| `localStorage` | Yes | `next.v1.sensitive` | **My Plan** (warning signs, things that help, places, trusted people: names, relationships, phone numbers; professional; time and distance plan; things to avoid; reminders; reasons to stay (6.18 D5); code word with the person's phone digits; who was asked for check-ins, with phone digits) · **check-in outcomes** (state, intervention id, before/after ratings, game/Zags/scene answers, timestamp; last 500) · **activity** (type `moment` / `plan` / `reach`, timestamp; last 500; never from crisis screens or while RED, since F3) · **your first name** for check-in reminders (optional, `myName`, since F1) · **first 30 days mode** when the person turns it on (6.13: start date, end date, which optional items are ticked; nothing about the hospital visit itself) · **songs** the person chose to Keep (6.16: mood, their three lines and any added lines, date; max 50) |
 | `sessionStorage` | No | | |
 | IndexedDB | No | | |
 | Cookies | No | | |
@@ -65,7 +65,13 @@ Everything below happens only when the person taps something:
 
 - **Calendar files (6.13 and check-ins):** built on the phone and handed to the phone's own calendar. Nothing is sent by the app.
 
+- **Print my plan (6.19 B):** the print view is built in the page only when the person taps Print and is cleared afterwards; the phone's or computer's own print dialog sends it to the printer the person picks. The code word is left out unless they tick "Include my code word" (never saved). Nothing is uploaded.
+
 - **Copy buttons (desktop, no phone):** the prepared message or code word goes to the clipboard only when the person taps Copy. The clipboard may sync to their other devices. Nothing is sent by the app.
+
+## 4b. Privacy & terms page (6.19 C)
+
+The in-app "Privacy & terms" page (`PRIVACY_PAGE` in index.html) is written from this document. Each paragraph is paired with the sentence here that supports it; `stage619.test.js` fails if a supporting sentence is missing from this file or if the page uses words this document doesn't support (for example "encrypted" without "not", "secure", "anonymous"). **DRAFT: lawyer review required.**
 
 ## 5. Not verified here (need a person or the host)
 

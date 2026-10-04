@@ -144,5 +144,6 @@ These tests document **current** behavior so that any change is visible. They ar
 | D20 | "Want someone to come to you who isn't police? In many Florida counties, 211 can connect you to a mobile crisis team." [Call 211] on the full crisis screen (6.18 D4) | §7, §16 | **OPEN: OWNER-APPROVED INTERIM in the code**; owner to confirm local availability (CRISIS_RESOURCE_VERIFICATION) | | | |
 | D21 | Reasons to stay (My Plan section; shown on "I need my plan" and as a card on the full crisis screen when filled in) (6.18 D5) | §8 | **OPEN: OWNER-APPROVED INTERIM in the code** | | | |
 | D22 | Gun-storage line in the time-and-distance help text and the supporter guide (never on crisis screens) (6.18 D6) | §8, §12 | **OPEN: OWNER-APPROVED INTERIM in the code** | | | |
+| D23 | **Privacy & terms page (6.19 C): DRAFT — lawyer review required.** Plain-language page in Settings, About and onboarding, written from PRIVACY_DATA_FLOW.md | §13 | **OPEN: lawyer** (also FTC Health Breach Notification Rule, already open) | | | |
 
 Signed: ______________________ (name, credentials) Date: __________

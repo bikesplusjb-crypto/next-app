@@ -235,6 +235,9 @@ P(''); P('**Find something real** (Calm): '+G('TOUCH_PROMPTS').map(x=>`"${x}"`).
 H(3,'Stage 6.19: reach, trust and simplicity');
 P('A. Home, below everything else: "Worried about someone? How to help →" (opens the supporter guide at support/#worried). Supporter guide, very top: "Take it seriously, even if they seem fine. Listen more than you talk." Opening section, shown only when arriving that way: "Someone you care about is struggling." / "You don\'t need the right words. Being there and taking it seriously matters most." / "What to say →".');
 P(''); P('B. My Plan: "Print my plan" / "A full page and a wallet card to cut out. Printed from this phone; nothing is uploaded." / [ ] "Include my code word" (off by default, never saved). Printed page: "My plan for hard moments", each filled-in section, then "988 Suicide & Crisis Lifeline: call or text 988. Free, 24/7." / "911 if someone is hurt or in danger." / "✂ Cut along the dashed line" and a wallet card: first trusted person and number, "988 — call or text", "911 if someone is hurt or in danger", first reason to stay.');
+P(''); P('C. **Privacy & terms — DRAFT, lawyer review required** (the page itself does not say "draft"). Linked from Settings, About and the first onboarding screen. Every paragraph, with the PRIVACY_DATA_FLOW.md sentence that supports it:');
+list(G('PRIVACY_PAGE').map(([h,t,src])=>`${h?`**${h}:** `:''}"${t}"${src?` — source: "${src.replace(/\*\*/g,'').replace(/`/g,'')}"`:' — (product terms, no data claim)'}`));
+P(''); P('Contact line (only when CONTACT_EMAIL is set): "Questions? Email [address]."');
 //@@619@@
 
 H(3,'Stage 6.18 owner-approved updates (OWNER-APPROVED INTERIM, pending clinician)');

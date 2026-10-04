@@ -60,6 +60,40 @@ const r=[];
 {const a=boot(); a.G('ACTIONS.loadSample(); openCrisis(); ACTIONS.cNo(); ACTIONS.noPlan()');
  r.push(['B: no Print button on the plan opened from the crisis "No" path or "I need my plan"', !a.has(act('printPlan'))]);}
 
+// ---- C. Privacy & terms ----
+{const DOC=fs.readFileSync(path.join(__dirname,'docs','PRIVACY_DATA_FLOW.md'),'utf8');
+ const a=boot(); a.G('ACTIONS.tab("settings")');
+ r.push(['C1: linked from Settings', a.has(act('privacyOpen'))]);
+ a.click(act('privacyOpen'));
+ r.push(['C1: opens "Privacy & terms"', a.S().screen==='privacy' && a.doc.getElementById('screen-title').textContent==='Privacy & terms']);
+ const page=a.all('.privacy-p').map(p=>p.textContent);
+ const PP=a.G('PRIVACY_PAGE');
+ r.push(['C2: every paragraph on the page comes from PRIVACY_PAGE', page.length===PP.length && page.every((t,i)=>t===PP[i][1])]);
+ const missing=PP.filter(x=>x[2] && !DOC.includes(x[2])).map(x=>x[1].slice(0,40));
+ r.push(['C2: every data claim cites a sentence that is in PRIVACY_DATA_FLOW.md', missing.length===0 && PP.filter(x=>x[2]).length>=6, missing.join(' | ')]);
+ const text=page.join(' ');
+ r.push(['C2: says it is stored only in this browser on this phone, and not encrypted', text.includes('only in this browser on this phone') && text.includes('not encrypted')]);
+ r.push(['C2: "encrypted" only ever as "not encrypted"', !/(?<!not )encrypted/i.test(text)]);
+ const unsupported=/\bsecure\b|anonymous|HIPAA|end-to-end|never logged|no logs|we never store|guarantee(?!d)|100%|cannot be read|completely private/i;
+ r.push(['C2: no claims the privacy doc doesn\'t support (secure, anonymous, HIPAA, no logs…)', !unsupported.test(text), (text.match(unsupported)||[''])[0]]);
+ r.push(['C2: nothing sent by the site; links go to those services', text.includes("ZigZag Mind doesn't send anything anywhere") && /988, opening Maps, or the donation page/.test(text)]);
+ r.push(['C2: the web host receives standard request information', text.includes('the web host receives standard request information')]);
+ r.push(['C2: export, turn off saving, delete everything', /export a copy of your data, turn off saving on this device[^.]*, or delete everything/.test(text)]);
+ r.push(['C2: self-help, not therapy, medical care or an emergency service; adults 18+; no guarantee of outcomes', text.includes("A self-help tool for adults 18 and over. It is not therapy, medical care or an emergency service, and it can't promise any outcome.")]);
+ r.push(['C2: donations voluntary, unlock nothing', text.includes("Donations are voluntary and don't unlock anything.")]);
+ r.push(['C2: no contact line while CONTACT_EMAIL is empty', a.G('CONTACT_EMAIL')==='' && !a.has('.privacy-contact')]);
+ r.push(['C3: the page itself does not say "draft"', !/draft/i.test(a.T())]);
+ r.push(['C3: marked DRAFT — lawyer review required in CLINICIAN_REVIEW.md', /Privacy & terms page \(6\.19 C\): DRAFT — lawyer review required/.test(fs.readFileSync(path.join(__dirname,'docs','CLINICIAN_REVIEW.md'),'utf8'))]);
+ a.click(act('privacyBack')); r.push(['C1: Back returns to Settings', a.S().screen==='settings']);
+ a.G('ACTIONS.about()'); r.push(['C1: linked from About', a.has(act('privacyOpen'))]);
+ const ob=new JSDOM(HTML,{url:'https://zigzagmind.com/',runScripts:'dangerously',pretendToBeVisual:true,beforeParse(w){w.scrollTo=()=>{};}}).window;
+ r.push(['C1: linked from the first onboarding screen\'s small print', ob.eval('session.screen')==='ob-about' && !!ob.document.querySelector('.ob-privacy [data-act="privacyOpen"]')]);
+ const c=boot({pre:w=>{}}); c.G('lastRendered=null; session={...session,screen:"privacy"}; render()');
+ const withMail=new JSDOM(HTML.replace('const CONTACT_EMAIL = "";','const CONTACT_EMAIL = "hello@example.org";'),{url:'https://zigzagmind.com/',runScripts:'dangerously',pretendToBeVisual:true,beforeParse(w){w.scrollTo=()=>{};}}).window;
+ withMail.eval('prefs.onboarded=true; lastRendered=null; session={...session,screen:"privacy"}; render()');
+ const m=withMail.document.querySelector('.privacy-contact a');
+ r.push(['C2: contact line appears when CONTACT_EMAIL is set', !!m && m.getAttribute('href')==='mailto:hello@example.org']);}
+
 //@@NEXT@@
 console.log(r.map(x=>(x[1]?'PASS ':'FAIL ')+x[0]+(x[1]||!x[2]?'':' — '+x[2])).join('\n'));
 process.exit(0);
