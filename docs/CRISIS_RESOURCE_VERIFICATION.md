@@ -31,6 +31,17 @@ Every phone number, link, label, hour and availability claim in the code, with w
 | Trusted person | `tel:` / `sms:` built from the number the person typed in My Plan | Talk to someone, crisis screens, Connect, Zags, I need my plan, code word, check-in and time-and-distance asks | Prepared texts (see REVIEW.md) | Not a public resource. The app checks only that the number has 7+ digits |
 | Professional (optional) | `tel:` from My Plan | My Plan | "Call [name]" | Not a public resource |
 
+## Help near me, Treasure Coast (6.19 G)
+
+Every entry is **hidden** (`NEAR_ME` in index.html, `verified:false`). The screen and its links (Change the scene, Connect) appear only once at least one entry is verified. For each: confirm by phone or the official website, fill in `phone` and/or `url` (https), set `verified:true`, and record it here.
+
+| Entry | What the app would say | Phone in code | Website in code | Confirmed by (phone / official site) | Date | Initials |
+|---|---|---|---|---|---|---|
+| 211 Treasure Coast | "Local help: food, housing, mental health and support services." | 211 | (none) | | | |
+| New Horizons of the Treasure Coast — mobile response | "A mobile crisis team that can come to you." | (none: owner to add) | (none: owner to add) | | | |
+| NAMI (local affiliate) | "Support groups and classes for people and families living with mental health conditions." | (none: owner to add) | (none: owner to add) | | | |
+| Local recovery meetings | "Meetings for people working on drinking or drug use." | (none: owner to add) | (none: owner to add) | | | |
+
 ## Florida Warm Line (Amendment 4)
 
 | Field | Value |

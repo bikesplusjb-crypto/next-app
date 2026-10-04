@@ -241,6 +241,8 @@ P(''); P('Contact line (only when CONTACT_EMAIL is set): "Questions? Email [addr
 P(''); P('D. Crisis Text Line (**hidden until the owner verifies it**; CRISIS_TEXT_LINE.verified is '+G('CRISIS_TEXT_LINE.verified')+'): one line below the 988 buttons on the full crisis screen and Connect, on the printed plan, and in the supporter guide\'s "Get help together": "'+G('CTL_LINE')+'" (phones: Text HOME to 741741 is a text link; computers: shown as text).');
 P(''); P('E. Spanish interface: **scaffolding only, nothing shown**. SPANISH_ENABLED is '+G('SPANISH_ENABLED')+'. '+G('Object.keys(L10N.en).length')+' strings (onboarding, Home, crisis screens, Calm, Connect, My Plan, Help, Settings labels) now live in one table; English is unchanged. Every Spanish line is a DRAFT for a human translator and the clinician: docs/SPANISH_REVIEW.md. A draft crisis-screen line is never shown, even with Spanish on.');
 P(''); P('F. Feedback (only when FEEDBACK_URL is set; it is '+(G('FEEDBACK_URL')?'set':'empty')+'): on About only, "Did ZigZag Mind help? Tell us anonymously →" (new tab). Privacy page adds: "'+G('FEEDBACK_PRIVACY[0]')+'"');
+P(''); P('G. "Help near me (Treasure Coast)" (**hidden until the owner verifies at least one entry**; on Change the scene and Connect). Screen: "Local services can change. For a crisis, call or text 988." Entries (all verified:false today):');
+list(G('NEAR_ME').map(e=>`${e.name}: "${e.what}"${e.phone?' · '+e.phone:''} (verified: ${e.verified})`));
 //@@619@@
 
 H(3,'Stage 6.18 owner-approved updates (OWNER-APPROVED INTERIM, pending clinician)');

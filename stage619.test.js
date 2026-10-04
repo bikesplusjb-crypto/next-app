@@ -155,6 +155,27 @@ const SCREENS_ALL=w=>w.eval('Object.keys(SCREENS)');
  const bad=bootSrc(HTML.replace('const FEEDBACK_URL = "";','const FEEDBACK_URL = "javascript:alert(1)";')); bad.eval('ACTIONS.about()');
  r.push(['F1: only an https address is used', !/Tell us anonymously/.test(bad.document.getElementById('app').innerHTML)]);}
 
+// ---- G. Help near me ----
+{const w=bootSrc(HTML); const N=w.eval('NEAR_ME');
+ r.push(['G2: seeded: 211, New Horizons mobile response, NAMI, local recovery meetings', N.length===4 && /211/.test(N[0].name) && /New Horizons/.test(N[1].name) && /NAMI/.test(N[2].name) && /recovery meetings/i.test(N[3].name) && N.every(e=>['name','what','phone','url','area','verified'].every(k=>k in e))]);
+ r.push(['G2: every entry starts verified:false', N.every(e=>e.verified===false)]);
+ const seen=[]; for(const sc of SCREENS_ALL(w).filter(x=>x!=='near-me')){ try{ w.eval(`ui=freshUi(); lastRendered=null; session={...session, screen:${JSON.stringify(sc)}}; render()`); if(/Help near me|near-card/.test(w.document.getElementById('app').innerHTML)) seen.push(sc); }catch(e){} }
+ r.push(['G3: with nothing verified, the link is hidden everywhere', seen.length===0, seen.join()]);
+ w.eval('ACTIONS.nearMe()'); r.push(['G3: ...and the screen cannot be opened', w.eval('session.screen')!=='near-me']);
+ const doc=fs.readFileSync(path.join(__dirname,'docs','CRISIS_RESOURCE_VERIFICATION.md'),'utf8');
+ r.push(['G4: each entry in CRISIS_RESOURCE_VERIFICATION.md with date and initials columns', /## Help near me, Treasure Coast \(6\.19 G\)/.test(doc) && N.every(e=>doc.includes('| '+e.name+' |')) && /\| Date \| Initials \|/.test(doc)]);}
+{const ON=HTML.replace('{ name:"211 Treasure Coast", what:"Local help: food, housing, mental health and support services.", phone:"211", url:"", area:"Treasure Coast", verified:false }','{ name:"211 Treasure Coast", what:"Local help: food, housing, mental health and support services.", phone:"211", url:"", area:"Treasure Coast", verified:true }');
+ const w=bootSrc(ON,{phone:true});
+ for(const sc of ['scene','connect']){ w.eval(`lastRendered=null; session={...session, screen:${JSON.stringify(sc)}}; render()`); r.push([`G1: when one is verified, "Help near me (Treasure Coast)" is on ${sc==='scene'?'Change the scene':'Connect'}`, !!w.document.querySelector('[data-act="nearMe"]')]); }
+ w.eval('ACTIONS.nearMe()'); const items=[...w.document.querySelectorAll('.near-item')];
+ r.push(['G1: the screen shows only verified entries', w.eval('session.screen')==='near-me' && items.length===1 && items[0].textContent.includes('211 Treasure Coast') && !!items[0].querySelector('a[href="tel:211"]')]);
+ r.push(['G1: Help is on the screen; "For a crisis, call or text 988."', !!w.document.querySelector('header .help-pill[data-act="crisis"]') && w.document.getElementById('app').textContent.includes('For a crisis, call or text 988.')]);
+ w.eval('ACTIONS.nearBack()'); r.push(['G1: Back returns to where it was opened', w.eval('session.screen')==='connect']);
+ const noContact=bootSrc(HTML.replace('phone:"", url:"", area:"Treasure Coast", verified:false }','phone:"", url:"", area:"Treasure Coast", verified:true }'));
+ noContact.eval('lastRendered=null; session={...session, screen:"connect"}; render()');
+ r.push(['G: a verified entry with no phone or website is still hidden', !noContact.document.querySelector('[data-act="nearMe"]')]);
+ w.eval('openCrisis(); ACTIONS.nearMe()'); r.push(['G: blockIfRed first', w.eval('session.screen')==='crisis']);}
+
 //@@NEXT@@
 console.log(r.map(x=>(x[1]?'PASS ':'FAIL ')+x[0]+(x[1]||!x[2]?'':' — '+x[2])).join('\n'));
 process.exit(0);

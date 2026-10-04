@@ -1044,6 +1044,12 @@ E. Spanish interface: **scaffolding only, nothing shown**. SPANISH_ENABLED is fa
 
 F. Feedback (only when FEEDBACK_URL is set; it is empty): on About only, "Did ZigZag Mind help? Tell us anonymously →" (new tab). Privacy page adds: "If you use the feedback link on About, that form is a separate service. It receives only what you type there."
 
+G. "Help near me (Treasure Coast)" (**hidden until the owner verifies at least one entry**; on Change the scene and Connect). Screen: "Local services can change. For a crisis, call or text 988." Entries (all verified:false today):
+- 211 Treasure Coast: "Local help: food, housing, mental health and support services." · 211 (verified: false)
+- New Horizons of the Treasure Coast — mobile response: "A mobile crisis team that can come to you." (verified: false)
+- NAMI (local affiliate): "Support groups and classes for people and families living with mental health conditions." (verified: false)
+- Local recovery meetings: "Meetings for people working on drinking or drug use." (verified: false)
+
 ### Stage 6.18 owner-approved updates (OWNER-APPROVED INTERIM, pending clinician)
 
 A. Zags: first line now "Hi, I'm Zags. I'm not a person, just a little guide. I can guide you through the next few minutes."; Connect: "Calm down with Zags while you wait" (no subtitle).
@@ -1523,6 +1529,15 @@ _When: distraction_
 - **Button:** Try grounding
 - **Button:** Something else
 - **Button:** I'm good for now
+
+### `near-me`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Help near me (Treasure Coast)
+- For a crisis, call or text 988.
+- **Link → `tel:988`:** Call 988 _(screen reader: "Call 988, the Suicide and Crisis Lifeline")_
+- **Link → `sms:988`:** Text 988 _(screen reader: "Text 988, the Suicide and Crisis Lifeline")_
 
 ### `privacy`
 

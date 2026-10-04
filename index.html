@@ -1151,6 +1151,17 @@ function isNight(){ const h = new Date().getHours(); return h >= 0 && h < 6; }
    from this constant by sync-support.js. */
 const CRISIS_TEXT_LINE = { name:"Crisis Text Line", instruction:"Text HOME to 741741", hours:"24/7", sms:"sms:741741?&body=HOME", verified:false };
 const CTL_LINE = "Rather text a stranger? Text HOME to 741741 (Crisis Text Line).";
+/* 6.19 G: Help near me (Treasure Coast). Every entry starts verified:false and is hidden; the owner confirms each by
+   phone or official website (CRISIS_RESOURCE_VERIFICATION.md), fills in phone/url, and sets verified:true.
+   If no entry is verified, the screen and its links are hidden entirely. */
+const NEAR_ME = [
+  { name:"211 Treasure Coast", what:"Local help: food, housing, mental health and support services.", phone:"211", url:"", area:"Treasure Coast", verified:false },
+  { name:"New Horizons of the Treasure Coast — mobile response", what:"A mobile crisis team that can come to you.", phone:"", url:"", area:"Treasure Coast", verified:false },
+  { name:"NAMI (local affiliate)", what:"Support groups and classes for people and families living with mental health conditions.", phone:"", url:"", area:"Treasure Coast", verified:false },
+  { name:"Local recovery meetings", what:"Meetings for people working on drinking or drug use.", phone:"", url:"", area:"Treasure Coast", verified:false }
+];
+function nearMe(){ return NEAR_ME.filter(e => e.verified === true && (e.phone || /^https:\/\/\S+$/.test(e.url))); }
+const nearMeLink = () => nearMe().length ? `<button class="card wide near-card" data-act="nearMe" style="margin-top:10px">${icon("door")}<span>Help near me (Treasure Coast)</span></button>` : "";
 function ctlShown(){ return CRISIS_TEXT_LINE.verified === true; }
 function ctlLine(){
   if (!ctlShown()) return "";
@@ -2759,6 +2770,19 @@ const SCREENS = {
         <button class="link" data-act="phoneDown">I'm good for now</button>` };
   },
 
+  /* 6.19 G: Help near me (verified entries only). */
+  "near-me"(){
+    const list = nearMe();
+    if (!list.length) return { close:true, body:`${title("Help near me (Treasure Coast)")}<p class="sub">For a crisis, call or text 988.</p>${row988()}` };   // unreachable while nothing is verified
+    return { close:true, body:`
+      ${title("Help near me (Treasure Coast)")}
+      <p class="sub">Local services can change. For a crisis, call or text 988.</p>
+      ${list.map(e => `<div class="panel near-item"><h3>${esc(e.name)}</h3><p class="small" style="margin:4px 0 8px">${esc(e.what)}</p>
+        ${e.phone ? `<a class="btn btn-secondary" href="${telLink(e.phone)}">${callText("Call", e.phone)}</a>` : ""}
+        ${/^https:\/\/\S+$/.test(e.url) ? `<a class="btn btn-secondary" style="margin-top:8px" href="${esc(e.url)}" target="_blank" rel="noopener">Website</a>` : ""}</div>`).join("")}`,
+      actions:`<button class="btn btn-secondary" data-act="nearBack">Back</button>` };
+  },
+
   /* 6.19 C: Privacy & terms (plain language). */
   privacy(){
     return { close:true, body:`
@@ -3257,6 +3281,7 @@ const SCREENS = {
       </div>
       ${night ? warm : ""}
       <button class="card wide around-card" data-act="aroundPeople" style="margin-top:14px">${icon("people")}<span>${l10n("connect.around")}</span></button>
+      ${nearMeLink()}
       <button class="card wide zcard" data-act="zags" data-arg="connect" style="margin-top:10px">${zagsFace()}<span>${l10n("connect.zags")}</span></button>
       <button class="link" data-act="songStart" data-arg="connect">${l10n("connect.song")}</button>
       ${faithOn() ? `<button class="link faith-link" data-act="faith">${l10n("common.hope")}</button>` : ""}
@@ -3649,6 +3674,7 @@ const SCREENS = {
       <div class="sits places">${SCENE_PLACES.map(([label, q]) =>
         `<a class="sit" href="${mapsLink(q)}" target="_blank" rel="noopener">${label}</a>`).join("")}
       </div>
+      ${nearMeLink()}
       <div class="panel scene-211">
         <h3>Need real-world help near you?</h3>
         <p class="small" style="margin:0 0 10px">211 connects you to local help: food, housing, support groups. Free.</p>
@@ -5097,6 +5123,8 @@ const ACTIONS = {
     window.addEventListener("afterprint", clear);
     try { if (typeof window.print === "function") window.print(); } catch (_){}
   },
+  nearMe(){ if (blockIfRed()) return; if (!nearMe().length) return; ui.nearFrom = session.screen; go("near-me"); },
+  nearBack(){ go(ui.nearFrom === "connect" || ui.nearFrom === "scene" ? ui.nearFrom : "home"); },
   privacyOpen(){ ui.privacyFrom = session.screen; ui.flash = ""; go("privacy"); },
   privacyBack(){ const back = ui.privacyFrom && ["settings","about","ob-about"].includes(ui.privacyFrom) ? ui.privacyFrom : "home"; go(back); },
   aroundPeople(){ if (blockIfRed()) return; dispatch({ type:"SET_CURRENT_STATE", state:"alone" }); startIntervention("be_around_people", { route:"around-people" }); },
