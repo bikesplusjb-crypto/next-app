@@ -298,7 +298,11 @@ list([
   'Step 4: "'+DI.keep+'" (with saving off: "'+DI.keepOff+'") / "'+DI.dontKeep+'" → "'+DI.kept+'" / "'+DI.keptOff+'" / "'+DI.dropped+'"',
   'Both fields are safety-checked on Keep: RED → crisis screen, entry NOT saved (clinician item D-diary); YELLOW → support bar, entry saved.',
   'Storage full: "'+DI.full+'" (the words stay on screen)',
-  'Looking back: newest first, grouped by date; each entry shows its feeling words, the few words and the "still true" line (stronger brand style). Tap to read in full; "Delete" → "'+DI.deleteQ+'" Delete / Keep → "'+DI.deleted+'". Only at 7 or more entries, at the top: "'+DI.backNote+'". No stats, counts or graphs.'
+  'Looking back: newest first, grouped by date; each entry shows its feeling words, the few words and the "still true" line (stronger brand style). Tap to read in full; "Delete" → "'+DI.deleteQ+'" Delete / Keep → "'+DI.deleted+'". Only at 7 or more entries, at the top: "'+DI.backNote+'". No stats, counts or graphs.',
+  'Passcode lock (off by default): "'+DI.lock+'" → warning "'+DI.warn+'" / "'+DI.warnSub+'" ['+DI.understand+'] ['+DI.notNow+'] → "'+DI.setTitle+'" / "'+DI.setSub+'" ("'+DI.pass1+'", "'+DI.pass2+'"; errors "'+DI.tooShort+'", "'+DI.mismatch+'") → "'+DI.setBtn+'" → "'+DI.locked+'"',
+  'Locked: "'+DI.unlockTitle+'" (passcode field only) → "'+DI.unlockBtn+'"; wrong: "'+DI.wrong+'" (no lockout, no hints); "'+DI.forgot+'" → "'+DI.forgotTitle+'" / "'+DI.forgotSub+'" → "'+DI.forgotBtn+'" → "'+DI.forgotQ+'" '+DI.forgotYes+' / '+DI.cancel+' → "'+DI.forgotDone+'"',
+  'Lock options: "'+DI.lockOn+'" · "'+DI.lockNow+'" · "'+DI.lockOff+'" ("'+DI.offSub+'" → "'+DI.offDone+'"); without saving: "'+DI.lockNeedsSaving+'"; old browsers: "'+DI.lockNoCrypto+'". Re-locks when leaving the diary, when the page is hidden, or after 5 minutes.',
+  'Privacy & terms now says: "The optional diary lock encrypts diary entries on the phone; everything else is not encrypted" (lawyer review: the page is a DRAFT).'
 ]);
 
 H(3,'Stage 6.20: When you\'ve lost someone (CLINICIAN REVIEW REQUIRED for the whole path)');

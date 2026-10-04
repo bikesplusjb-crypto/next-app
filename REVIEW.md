@@ -1160,7 +1160,7 @@ A. Home, below everything else: "Worried about someone? How to help →" (opens 
 B. My Plan: "Print my plan" / "A full page and a wallet card to cut out. Printed from this phone; nothing is uploaded." / [ ] "Include my code word" (off by default, never saved). Printed page: "My plan for hard moments", each filled-in section, then "988 Suicide & Crisis Lifeline: call or text 988. Free, 24/7." / "911 if someone is hurt or in danger." / "✂ Cut along the dashed line" and a wallet card: first trusted person and number, "988 — call or text", "911 if someone is hurt or in danger", first reason to stay.
 
 C. **Privacy & terms — DRAFT, lawyer review required** (the page itself does not say "draft"). Linked from Settings, About and the first onboarding screen. Every paragraph, with the PRIVACY_DATA_FLOW.md sentence that supports it:
-- **What's saved, and where:** "Your plan, check-ins and settings are saved only in this browser on this phone. They are not encrypted: anyone who can use your unlocked phone, or its backups, may be able to read them." — source: "Not encrypted. Anyone with access to the unlocked phone and browser, or its backups, can read localStorage."
+- **What's saved, and where:** "Your plan, check-ins and settings are saved only in this browser on this phone. The optional diary lock encrypts diary entries on the phone; everything else is not encrypted: anyone who can use your unlocked phone, or its backups, may be able to read it." — source: "Not encrypted. Anyone with access to the unlocked phone and browser, or its backups, can read localStorage."
 - "Most things you type are checked and then thrown away. Song lines, photos from Find something with their notes, and what you write to someone you lost, are saved only if you tap Keep." — source: "Free text is never stored (except song lines, Find something photo notes and "Remembering" notes, and only when the person taps Keep)."
 - "Photos never leave this phone through ZigZag Mind. Nothing looks at them or analyzes them." — source: "No image analysis, no AI, nothing uploaded."
 - **What leaves your phone:** "ZigZag Mind doesn't send anything anywhere. There are no accounts, ads or analytics." — source: "The app makes no network requests of its own."
@@ -1197,6 +1197,10 @@ Only from My Plan ("A line for today") and a small link under "Put the phone dow
 - Both fields are safety-checked on Keep: RED → crisis screen, entry NOT saved (clinician item D-diary); YELLOW → support bar, entry saved.
 - Storage full: "This phone's storage is full, so this couldn't be saved. Your words are still here." (the words stay on screen)
 - Looking back: newest first, grouped by date; each entry shows its feeling words, the few words and the "still true" line (stronger brand style). Tap to read in full; "Delete" → "Delete this entry?" Delete / Keep → "Entry deleted.". Only at 7 or more entries, at the top: "Every 'still true' here is something you noticed on a hard day.". No stats, counts or graphs.
+- Passcode lock (off by default): "Lock with a passcode" → warning "If you forget this passcode, your entries can't be recovered." / "Not by you, not by anyone. ZigZag Mind doesn't store it anywhere." [I understand] [Not now] → "Choose a passcode" / "At least 4 characters. You'll need it every time you open your diary." ("Passcode", "Type it again"; errors "At least 4 characters.", "Those don't match.") → "Lock my diary" → "Your diary is locked. Only this passcode opens it."
+- Locked: "Your diary is locked" (passcode field only) → "Unlock"; wrong: "That's not it." (no lockout, no hints); "Forgot my passcode" → "Your passcode can't be recovered." / "Not by you, not by anyone. ZigZag Mind doesn't store it anywhere. The only way forward is to delete your diary and start over. Your plan and everything else stay." → "Delete my diary and start over" → "Delete your diary? This can't be undone." Delete my diary / Cancel → "Your diary was deleted. You can start a new one."
+- Lock options: "Locked with a passcode" · "Lock now" · "Turn off the lock" ("Type your passcode. Your entries will be saved without a lock, like the rest of your plan." → "The lock is off."); without saving: "Turn on saving in Settings to lock the diary."; old browsers: "This browser can't lock the diary.". Re-locks when leaving the diary, when the page is hidden, or after 5 minutes.
+- Privacy & terms now says: "The optional diary lock encrypts diary entries on the phone; everything else is not encrypted" (lawyer review: the page is a DRAFT).
 
 ### Stage 6.20: When you've lost someone (CLINICIAN REVIEW REQUIRED for the whole path)
 
@@ -2029,6 +2033,54 @@ _When: distraction_
 - Only on this phone.
 - **Button:** Write today's line
 - **Button:** Looking back
+- This browser can't lock the diary.
+
+### `diary-unlock`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Your diary is locked
+- Passcode
+- **Text box** (hint: "Passcode")
+- **Button:** Unlock
+- **Button:** Forgot my passcode
+
+### `diary-lock-warn`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** If you forget this passcode, your entries can't be recovered.
+- Not by you, not by anyone. ZigZag Mind doesn't store it anywhere.
+- **Button:** I understand
+- **Button:** Not now
+
+### `diary-lock-set`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** If you forget this passcode, your entries can't be recovered.
+- Not by you, not by anyone. ZigZag Mind doesn't store it anywhere.
+- **Button:** I understand
+- **Button:** Not now
+
+### `diary-forgot`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Your passcode can't be recovered.
+- Not by you, not by anyone. ZigZag Mind doesn't store it anywhere. The only way forward is to delete your diary and start over. Your plan and everything else stay.
+- **Button:** Delete my diary and start over
+- **Button:** Cancel
+
+### `diary-lock-off`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** A line for today
+- Only on this phone.
+- **Button:** Write today's line
+- **Button:** Looking back
+- This browser can't lock the diary.
 
 ### `diary-back`
 
@@ -2231,7 +2283,7 @@ _When: distraction_
 - **Button:** Help _(screen reader: "Get help now")_
 - **Heading:** Privacy & terms
 - **Heading:** What's saved, and where
-- Your plan, check-ins and settings are saved only in this browser on this phone. They are not encrypted: anyone who can use your unlocked phone, or its backups, may be able to read them.
+- Your plan, check-ins and settings are saved only in this browser on this phone. The optional diary lock encrypts diary entries on the phone; everything else is not encrypted: anyone who can use your unlocked phone, or its backups, may be able to read it.
 - Most things you type are checked and then thrown away. Song lines, photos from Find something with their notes, and what you write to someone you lost, are saved only if you tap Keep.
 - Photos never leave this phone through ZigZag Mind. Nothing looks at them or analyzes them.
 - **Heading:** What leaves your phone

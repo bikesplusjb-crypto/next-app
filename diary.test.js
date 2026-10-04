@@ -87,5 +87,76 @@ const seed=(a,n)=>a.G(`store.diary={entries:Array.from({length:${n}},(_,i)=>{ co
 {const a=boot(); seed(a,7); a.G('ACTIONS.diaryBack()'); const t=a.T();
  r.push(['B: at 7+ entries, only the note at the top', t.includes("Every 'still true' here is something you noticed on a hard day.") && a.w.document.querySelector('.diary-note').compareDocumentPosition(a.w.document.querySelector('.diary-item'))&4]); }
 
+// ================= C. Passcode lock =================
+const PASS='blue-heron-42';
+async function lockIt(a,pass=PASS){ a.G('ACTIONS.diaryOpen()'); a.click(act('diaryLockStart')); a.click(act('diaryLockOk'));
+  a.fill('diaryPass1',pass); a.fill('diaryPass2',pass); a.click(act('diaryLockSet')); return until(()=>a.S()==='diary' && a.G('!!store.diaryLock') && !a.G('ui.diaryBusy')); }
+{const a=boot(); a.G('ACTIONS.diaryOpen()');
+ r.push(['C: off by default; "Lock with a passcode" in the diary', a.G('store.diaryLock')===null && a.has(act('diaryLockStart')) && a.T().includes('Lock with a passcode')]);
+ a.click(act('diaryLockStart'));
+ r.push(['C1: warning first: "If you forget this passcode, your entries can\'t be recovered." [I understand] [Not now]', a.S()==='diary-lock-warn' && a.T().includes("If you forget this passcode, your entries can't be recovered.") && a.T().includes("Not by you, not by anyone. ZigZag Mind doesn't store it anywhere.") && a.has(act('diaryLockOk')) && a.T().includes('Not now')]);
+ a.G('session.screen="diary-lock-set"; lastRendered=null; render()'); r.push(['C1: can\'t skip the warning', a.T().includes("If you forget this passcode") && !a.w.document.getElementById('diaryPass1')]);
+ a.click(act('diaryLockOk')); a.fill('diaryPass1','abc'); a.fill('diaryPass2','abc'); a.click(act('diaryLockSet'));
+ r.push(['C2: at least 4 characters', a.T().includes('At least 4 characters.') && a.G('store.diaryLock')===null]);
+ a.fill('diaryPass1','abcd'); a.fill('diaryPass2','abce'); a.click(act('diaryLockSet'));
+ r.push(['C2: entered twice to confirm', a.T().includes("Those don't match.") && a.G('store.diaryLock')===null]); }
+{const a=boot(); await write(a,{text:'My secret words tonight', still:'Still here, still me'}); await write(a,{text:'Another private line', still:''});
+ const ok=await lockIt(a);
+ const raw=a.dump()['next.v1.diary']||''; const d=JSON.parse(raw||'{}');
+ r.push(['C3: locking works', ok && a.T().includes('Your diary is locked.')]);
+ r.push(['C3: stored = salt, encrypted check value, IV, ciphertext only', JSON.stringify(Object.keys(d).sort())==='["ct","iv","lock","v"]' && JSON.stringify(Object.keys(d.lock).sort())==='["check","salt"]' && atob(d.lock.salt).length===16 && atob(d.iv).length===12]);
+ const all=JSON.stringify(a.dump());
+ r.push(['C3: storage never holds the passcode or any entry text in plain form', !all.includes(PASS) && !all.includes('secret words') && !all.includes('Still here, still me') && !all.includes('Another private line') && !all.includes('"entries"')]);
+ r.push(['C3: PBKDF2 SHA-256 ≥ 310,000 iterations, AES-GCM 256 (in the code)', a.G('DIARY_ITER')>=310000 && /name:"PBKDF2", salt, iterations:DIARY_ITER, hash:"SHA-256"/.test(HTML) && /name:"AES-GCM", length:256/.test(HTML) && /getRandomValues\(new Uint8Array\(16\)\)/.test(HTML) && /getRandomValues\(new Uint8Array\(12\)\)/.test(HTML)]);
+ const iv1=d.iv; await write(a,{text:'Third line'}); const d2=JSON.parse(a.dump()['next.v1.diary']);
+ r.push(['C3: a fresh IV on every save, still encrypted', d2.iv!==iv1 && d2.lock.salt===d.lock.salt && !a.dump()['next.v1.diary'].includes('Third line')]);
+ r.push(['C3: the key is not extractable and lives in memory only', a.G('diaryKey && diaryKey.extractable===false') && !all.includes('"key"')]);
+ // leaving re-locks
+ a.G('ACTIONS.home()'); r.push(['C5: leaving the diary re-locks it (entries leave memory)', a.G('diaryKey')===null && a.G('store.diary')===null]);
+ a.G('ACTIONS.diaryOpen()'); r.push(['C4: while locked, only a passcode field', a.S()==='diary' && !!a.w.document.getElementById('diaryPass') && a.w.document.getElementById('diaryPass').type==='password' && !a.T().includes('Looking back') && a.has(act('diaryForgot'))]);
+ a.G('ACTIONS.diaryBack()'); r.push(['C4: Looking back is locked too', !!a.w.document.getElementById('diaryPass') && !a.T().includes('secret words')]);
+ a.fill('diaryPass','wrong-pass'); a.click(act('diaryUnlock')); await until(()=>!a.G('ui.diaryBusy'));
+ r.push(['C4: wrong passcode → "That\'s not it."', a.T().includes("That's not it.") && a.G('diaryKey')===null]);
+ a.fill('diaryPass','wrong-again'); a.click(act('diaryUnlock')); await until(()=>!a.G('ui.diaryBusy'));
+ a.fill('diaryPass',PASS); a.click(act('diaryUnlock')); await until(()=>!a.G('ui.diaryBusy') && a.G('!!diaryKey'));
+ r.push(['C4: right passcode unlocks (no lockout after wrong tries), back to the same screen', a.S()==='diary-back' && a.T().includes('My secret words tonight') && a.T().includes('Third line')]);
+ // visibilitychange
+ Object.defineProperty(a.w.document,'hidden',{value:true,configurable:true}); a.w.document.dispatchEvent(new a.w.Event('visibilitychange'));
+ r.push(['C5: re-locks when the page is hidden', a.G('diaryKey')===null && !!a.w.document.getElementById('diaryPass') && !a.T().includes('My secret words')]);
+ Object.defineProperty(a.w.document,'hidden',{value:false,configurable:true});
+ a.fill('diaryPass',PASS); a.click(act('diaryUnlock')); await until(()=>a.G('!!diaryKey'));
+ r.push(['C5: re-locks after 5 minutes (timer set)', a.G('DIARY_RELOCK_MS')===300000 && a.G('diaryRelockTimer')!==null]);
+ a.G('diaryRelock(true)'); r.push(['C5: when the timer fires, it locks', a.G('diaryKey')===null]);
+ // a half-written line survives a re-lock
+ a.fill('diaryPass',PASS); a.click(act('diaryUnlock')); await until(()=>a.G('!!diaryKey'));
+ a.G('ACTIONS.diaryWrite()'); a.click(act('diaryToWords')); a.fill('diaryText','Half a thought');
+ Object.defineProperty(a.w.document,'hidden',{value:true,configurable:true}); a.w.document.dispatchEvent(new a.w.Event('visibilitychange')); Object.defineProperty(a.w.document,'hidden',{value:false,configurable:true});
+ a.fill('diaryPass',PASS); a.click(act('diaryUnlock')); await until(()=>a.G('!!diaryKey'));
+ r.push(['C5: a half-written line is still there after unlocking', a.S()==='diary-words' && a.w.document.getElementById('diaryText').value==='Half a thought']);
+ // reload: still locked
+ const b=boot({storage:a.dump()}); b.G('ACTIONS.diaryOpen()');
+ r.push(['C: after a reload the diary is locked', b.G('diaryLockedNow()') && !!b.w.document.getElementById('diaryPass')]);
+ b.fill('diaryPass',PASS); b.click(act('diaryUnlock')); await until(()=>b.G('!!diaryKey'));
+ r.push(['C: and opens with the passcode', b.G('diaryEntries().length')===3]);
+ // turn off
+ b.click(act('diaryLockOff')); b.fill('diaryPassOff','nope'); b.click(act('diaryLockOffGo')); await until(()=>!b.G('ui.diaryBusy'));
+ r.push(['C7: turning the lock off needs the passcode', b.T().includes("That's not it.") && !!b.G('store.diaryLock')]);
+ b.fill('diaryPassOff',PASS); b.click(act('diaryLockOffGo')); await until(()=>b.G('store.diaryLock')===null);
+ const plain=JSON.parse(b.dump()['next.v1.diary']);
+ r.push(['C7: then decrypts and saves as normal', plain.entries.length===3 && !plain.lock && b.T().includes('The lock is off.')]); }
+// forgot
+{const a=boot(); a.G('ACTIONS.tab("plan")'); a.G('getPlan().anchor="My dog"; saveStore()'); await write(a,{text:'Forgettable'}); await lockIt(a); a.G('diaryRelock(true)');
+ a.G('store.noticed=[{id:"1",date:1,mission:"remembering",text:"note"}]; saveNoticed()');
+ a.click(act('diaryForgot'));
+ r.push(['C6: "Forgot my passcode" explains it can\'t be recovered', a.S()==='diary-forgot' && a.T().includes("Your passcode can't be recovered.") && a.has(act('diaryForgotAsk')) && a.w.document.querySelectorAll('.actions [data-act]').length===2]);
+ a.click(act('diaryForgotAsk')); r.push(['C6: "Delete my diary and start over" asks to confirm', a.T().includes("Delete your diary? This can't be undone.") && !!a.dump()['next.v1.diary']]);
+ a.click(act('diaryForgotYes'));
+ r.push(['C6: deletes only the diary', !a.dump()['next.v1.diary'] && a.G('store.diaryLock')===null && a.dump()['next.v1.sensitive'].includes('My dog') && !!a.dump()['next.v1.noticed'] && a.S()==='diary' && a.has(act('diaryLockStart'))]); }
+// privacy wording
+{const a=boot(); const t=a.G('PRIVACY_PAGE.map(x=>x[1]).join(" ")');
+ r.push(['C8: Privacy & terms: the optional diary lock encrypts diary entries; everything else is not encrypted', t.includes('The optional diary lock encrypts diary entries on the phone; everything else is not encrypted')]);
+ r.push(['C8: PRIVACY_DATA_FLOW.md matches', /the optional diary lock encrypts diary entries on the phone; everything else is not encrypted/.test(fs.readFileSync(path.join(__dirname,'docs/PRIVACY_DATA_FLOW.md'),'utf8'))]); }
+
 for(const [n,ok,info] of r) console.log((ok?'PASS':'FAIL')+' '+n+(ok||info===undefined?'':' ('+info+')'));
-})();
+process.exit(0);   // the diary's 5-minute re-lock timer would otherwise keep this process alive
+})().catch(e=>{ console.log('FAIL crashed: '+e.message); process.exit(1); });

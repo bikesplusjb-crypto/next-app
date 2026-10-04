@@ -579,7 +579,7 @@ function feedbackUrl(){ return /^https:\/\/\S+$/.test(FEEDBACK_URL) ? FEEDBACK_U
 const FEEDBACK_PRIVACY = ["If you use the feedback link on About, that form is a separate service. It receives only what you type there.",
   "**Feedback form (6.19 F, only when `FEEDBACK_URL` is set):** opens a separate service in a new tab. It receives only what the person types there (plus normal request data). Nothing from the app is sent with it."];   // owner: set to show a contact line; empty means no line
 const PRIVACY_PAGE = [
-  ["What's saved, and where", "Your plan, check-ins and settings are saved only in this browser on this phone. They are not encrypted: anyone who can use your unlocked phone, or its backups, may be able to read them.",
+  ["What's saved, and where", "Your plan, check-ins and settings are saved only in this browser on this phone. The optional diary lock encrypts diary entries on the phone; everything else is not encrypted: anyone who can use your unlocked phone, or its backups, may be able to read it.",
     "Not encrypted.** Anyone with access to the unlocked phone and browser, or its backups, can read `localStorage`."],
   ["", "Most things you type are checked and then thrown away. Song lines, photos from Find something with their notes, and what you write to someone you lost, are saved only if you tap Keep.",
     "Free text is never stored** (except song lines, Find something photo notes and \"Remembering\" notes, and only when the person taps Keep)."],
@@ -1297,8 +1297,71 @@ const DIARY = {
   backNote:"Every 'still true' here is something you noticed on a hard day.",
   empty:"Nothing here yet.",
   phoneDown:"Write a line about today?",
-  deleteQ:"Delete this entry?", deleted:"Entry deleted."
+  deleteQ:"Delete this entry?", deleted:"Entry deleted.",
+  // C: optional passcode lock
+  lock:"Lock with a passcode", lockOn:"Locked with a passcode", lockNow:"Lock now", lockOff:"Turn off the lock",
+  lockNeedsSaving:"Turn on saving in Settings to lock the diary.", lockNoCrypto:"This browser can't lock the diary.",
+  warn:"If you forget this passcode, your entries can't be recovered.",
+  warnSub:"Not by you, not by anyone. ZigZag Mind doesn't store it anywhere.",
+  understand:"I understand", notNow:"Not now",
+  setTitle:"Choose a passcode", setSub:"At least 4 characters. You'll need it every time you open your diary.",
+  pass1:"Passcode", pass2:"Type it again",
+  tooShort:"At least 4 characters.", mismatch:"Those don't match.",
+  setBtn:"Lock my diary", locked:"Your diary is locked. Only this passcode opens it.",
+  unlockTitle:"Your diary is locked", unlockBtn:"Unlock", wrong:"That's not it.", forgot:"Forgot my passcode",
+  forgotTitle:"Your passcode can't be recovered.",
+  forgotSub:"Not by you, not by anyone. ZigZag Mind doesn't store it anywhere. The only way forward is to delete your diary and start over. Your plan and everything else stay.",
+  forgotBtn:"Delete my diary and start over", forgotQ:"Delete your diary? This can't be undone.", forgotYes:"Delete my diary", cancel:"Cancel",
+  forgotDone:"Your diary was deleted. You can start a new one.",
+  offTitle:"Turn off the lock", offSub:"Type your passcode. Your entries will be saved without a lock, like the rest of your plan.", offBtn:"Turn off the lock", offDone:"The lock is off.",
+  working:"One moment…"
 };
+const DIARY_ITER = 310000;               // PBKDF2-SHA-256 iterations (at least 310,000)
+const DIARY_CHECK = "zigzag-diary-check-v1";
+const DIARY_RELOCK_MS = 5 * 60 * 1000;   // re-locks after 5 minutes
+let diaryKey = null;                      // the derived AES key: memory only, never stored
+let diaryRelockTimer = null;
+function diaryCryptoOk(){ try { return !!(window.crypto && crypto.subtle && crypto.getRandomValues); } catch (_){ return false; } }
+function diaryLockedNow(){ return !!store.diaryLock && !diaryKey; }
+const b64 = u8 => { let t = ""; new Uint8Array(u8).forEach(b => t += String.fromCharCode(b)); return btoa(t); };
+const unb64 = t => Uint8Array.from(atob(t), c => c.charCodeAt(0));
+async function diaryDerive(pass, salt){
+  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(pass), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey({ name:"PBKDF2", salt, iterations:DIARY_ITER, hash:"SHA-256" }, base, { name:"AES-GCM", length:256 }, false, ["encrypt","decrypt"]);
+}
+async function diaryEncrypt(key, value){
+  const iv = crypto.getRandomValues(new Uint8Array(12));   // a fresh IV every save
+  const ct = await crypto.subtle.encrypt({ name:"AES-GCM", iv }, key, new TextEncoder().encode(JSON.stringify(value)));
+  return { iv:b64(iv), ct:b64(ct) };
+}
+async function diaryDecrypt(key, box){
+  const pt = await crypto.subtle.decrypt({ name:"AES-GCM", iv:unb64(box.iv) }, key, unb64(box.ct));
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+/* Unlock: the check value proves the passcode; a wrong one fails AES-GCM authentication. */
+async function diaryOpenWith(pass){
+  const lock = store.diaryLock; if (!lock) return null;
+  try {
+    const key = await diaryDerive(pass, unb64(lock.salt));
+    if ((await diaryDecrypt(key, lock.check)) !== DIARY_CHECK) return null;
+    const entries = store.diaryBlob ? validDiaryEntries((await diaryDecrypt(key, store.diaryBlob)).entries) : [];
+    return { key, entries };
+  } catch (_){ return null; }
+}
+function diaryStartTimer(){ clearTimeout(diaryRelockTimer); diaryRelockTimer = setTimeout(() => diaryRelock(true), DIARY_RELOCK_MS); }
+function diaryCaptureDraft(){   // a half-written line survives a re-lock (memory only), so it isn't lost
+  const d = ui.diaryDraft; if (!d) return;
+  const t = document.getElementById("diaryText"), v = document.getElementById("diaryTrue");
+  if (t) d.text = t.value.slice(0, DIARY_TEXT_MAX);
+  if (v) d.trueLine = v.value.slice(0, DIARY_TRUE_MAX);
+}
+function diaryRelock(rerender){
+  clearTimeout(diaryRelockTimer); diaryRelockTimer = null;
+  if (!store.diaryLock || !diaryKey) return;
+  diaryCaptureDraft();
+  diaryKey = null; store.diary = null;   // entries leave memory too
+  if (rerender && /^diary/.test(session.screen)){ lastRendered = null; render(); }
+}
 function diaryDateLabel(day){ const [y, m, d] = day.split("-").map(Number); return new Date(y, m - 1, d).toLocaleDateString("en-US", { weekday:"long", month:"long", day:"numeric", year:"numeric" }); }
 function diaryDay(ts = Date.now()){ const d = new Date(ts); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; }
 function validDiaryEntries(a){
@@ -1310,21 +1373,33 @@ function validDiaryEntries(a){
 }
 function diaryEntries(){ return (store.diary && store.diary.entries) || []; }
 function loadDiary(){
-  store.diary = { entries:[] };
+  store.diary = { entries:[] }; store.diaryLock = null; store.diaryBlob = null; diaryKey = null;
   if (!STORAGE_OK || !persistOn) return;
   try {
     const d = JSON.parse(localStorage.getItem(DIARY_KEY) || "null");
     if (!d) return;
+    const ok = x => x && typeof x.iv === "string" && typeof x.ct === "string";
+    if (d.lock && typeof d.lock.salt === "string" && ok(d.lock.check) && ok(d)){
+      store.diaryLock = { salt:d.lock.salt, check:d.lock.check }; store.diaryBlob = { iv:d.iv, ct:d.ct }; store.diary = null;   // locked
+      return;
+    }
     store.diary = { entries:validDiaryEntries(d.entries) };
   } catch (_){ store.diary = { entries:[] }; }
 }
 /* Returns a promise of true (stored, or saving is off) / false (the browser refused, for example storage full). */
 async function saveDiary(){
+  if (store.diaryLock && diaryKey){
+    try { store.diaryBlob = await diaryEncrypt(diaryKey, { entries:diaryEntries() }); } catch (_){ return false; }
+  }
+  return writeDiary();
+}
+/* Writes what's in memory. Locked: only the salt, the encrypted check value, the IV and the ciphertext. */
+function writeDiary(){
   if (!STORAGE_OK || !persistOn) return true;
   try {
-    const entries = diaryEntries();
-    if (!entries.length) localStorage.removeItem(DIARY_KEY);
-    else localStorage.setItem(DIARY_KEY, JSON.stringify({ v:1, entries }));
+    if (store.diaryLock && store.diaryBlob) localStorage.setItem(DIARY_KEY, JSON.stringify({ v:1, lock:store.diaryLock, iv:store.diaryBlob.iv, ct:store.diaryBlob.ct }));
+    else if (diaryEntries().length) localStorage.setItem(DIARY_KEY, JSON.stringify({ v:1, entries:diaryEntries() }));
+    else localStorage.removeItem(DIARY_KEY);
     return true;
   } catch (_){ return false; }
 }
@@ -3494,7 +3569,58 @@ const SCREENS = {
       <div class="list">
         <button class="card" data-act="diaryWrite"><span>${DIARY.write}</span></button>
         <button class="card" data-act="diaryBack"><span>${DIARY.back}</span></button>
-      </div>` };
+      </div>
+      <div class="panel diary-lock">${store.diaryLock
+        ? `<p style="margin:0"><b>${DIARY.lockOn}</b></p>
+          <div class="pair" style="margin-top:10px"><button class="btn btn-secondary" data-act="diaryLockNow">${DIARY.lockNow}</button><button class="btn btn-outline" data-act="diaryLockOff">${DIARY.lockOff}</button></div>`
+        : !diaryCryptoOk() ? `<p class="small" style="margin:0">${DIARY.lockNoCrypto}</p>`
+        : !(persistOn && STORAGE_OK) ? `<p class="small" style="margin:0">${DIARY.lockNeedsSaving}</p>`
+        : `<button class="btn btn-secondary" data-act="diaryLockStart">${DIARY.lock}</button>`}</div>` };
+  },
+  "diary-unlock"(){
+    return { close:true, body:`
+      ${title(DIARY.unlockTitle)}
+      <label class="sr" for="diaryPass">${DIARY.pass1}</label>
+      <input class="field" id="diaryPass" type="password" autocomplete="current-password" placeholder="${DIARY.pass1}">
+      ${ui.msg ? `<p class="err" role="alert">${esc(ui.msg)}</p>` : ""}`,
+      actions:`<button class="btn btn-primary" data-act="diaryUnlock"${ui.diaryBusy ? " disabled" : ""}>${ui.diaryBusy ? DIARY.working : DIARY.unlockBtn}</button>
+        <button class="link" data-act="diaryForgot">${DIARY.forgot}</button>` };
+  },
+  "diary-lock-warn"(){
+    return { close:true, body:`
+      ${stepTitle(DIARY.warn, true)}
+      <p class="sub" style="font-size:19px">${DIARY.warnSub}</p>`,
+      actions:`<button class="btn btn-primary" data-act="diaryLockOk">${DIARY.understand}</button><button class="btn btn-secondary" data-act="diaryOpen">${DIARY.notNow}</button>` };
+  },
+  "diary-lock-set"(){
+    if (!ui.diaryWarned) return SCREENS["diary-lock-warn"]();   // the warning must be read and confirmed first
+    return { close:true, body:`
+      ${title(DIARY.setTitle)}
+      <p class="sub">${DIARY.setSub}</p>
+      <label class="small" for="diaryPass1" style="display:block;margin-top:10px">${DIARY.pass1}</label>
+      <input class="field" id="diaryPass1" type="password" autocomplete="new-password">
+      <label class="small" for="diaryPass2" style="display:block;margin-top:10px">${DIARY.pass2}</label>
+      <input class="field" id="diaryPass2" type="password" autocomplete="new-password">
+      ${ui.msg ? `<p class="err" role="alert">${esc(ui.msg)}</p>` : ""}`,
+      actions:`<button class="btn btn-primary" data-act="diaryLockSet"${ui.diaryBusy ? " disabled" : ""}>${ui.diaryBusy ? DIARY.working : DIARY.setBtn}</button><button class="link" data-act="diaryOpen">${DIARY.notNow}</button>` };
+  },
+  "diary-forgot"(){
+    return { close:true, body:`
+      ${stepTitle(DIARY.forgotTitle, true)}
+      <p class="sub">${DIARY.forgotSub}</p>
+      ${ui.diaryForgotAsk ? `<div class="panel"><p style="margin:0 0 10px"><b>${DIARY.forgotQ}</b></p>
+        <div class="pair"><button class="btn btn-outline" data-act="diaryForgotYes">${DIARY.forgotYes}</button><button class="btn btn-secondary" data-act="diaryForgotNo">${DIARY.cancel}</button></div></div>` : ""}`,
+      actions:ui.diaryForgotAsk ? "" : `<button class="btn btn-outline" data-act="diaryForgotAsk">${DIARY.forgotBtn}</button><button class="link" data-act="diaryOpen">${DIARY.cancel}</button>` };
+  },
+  "diary-lock-off"(){
+    if (!store.diaryLock) return SCREENS.diary();
+    return { close:true, body:`
+      ${title(DIARY.offTitle)}
+      <p class="sub">${DIARY.offSub}</p>
+      <label class="sr" for="diaryPassOff">${DIARY.pass1}</label>
+      <input class="field" id="diaryPassOff" type="password" autocomplete="current-password" placeholder="${DIARY.pass1}">
+      ${ui.msg ? `<p class="err" role="alert">${esc(ui.msg)}</p>` : ""}`,
+      actions:`<button class="btn btn-primary" data-act="diaryLockOffGo"${ui.diaryBusy ? " disabled" : ""}>${ui.diaryBusy ? DIARY.working : DIARY.offBtn}</button><button class="link" data-act="diaryOpen">${DIARY.cancel}</button>` };
   },
   "diary-back"(){
     const list = diaryEntries().slice().sort((a, b) => b.date - a.date);
@@ -5152,6 +5278,12 @@ function buildExport(){
 const CRISIS_SCREENS = ["crisis","crisis-full","crisis-no","safety-check"];
 const NO_YBAR = [...CRISIS_SCREENS, "talk", "plan-now"];   // plan-now has its own 988/911 (and NO-branch rules)
 
+/* 6.21 C: while the diary is locked, its screens show only the passcode field. */
+["diary","diary-feel","diary-words","diary-true","diary-back","diary-entry"].forEach(n => {
+  const f = SCREENS[n];
+  SCREENS[n] = () => diaryLockedNow() ? SCREENS["diary-unlock"]() : f();
+});
+
 /* ---------- SHELL ---------- */
 const app = document.getElementById("app");
 let lastRendered = null;
@@ -5507,7 +5639,7 @@ function render(){
   fitChrome();
   if (changed){
     if (s !== "grief-write-done") ui.griefNote = null;   // 6.20: a written note is deleted unless the person taps Keep
-    if (!/^diary/.test(s)) ui.diaryDraft = null;           // 6.21: leaving the diary drops an unsaved draft
+    if (!/^diary/.test(s)){ ui.diaryDraft = null; diaryRelock(false); }   // 6.21: leaving the diary drops an unsaved draft and re-locks it
     if (crisis){ ui.grief = null; ui.fsGrief = false; }    // nothing from the grief path survives a crisis screen
     window.scrollTo(0, 0);
     const h = document.getElementById("screen-title");
@@ -6216,6 +6348,61 @@ const ACTIONS = {
 
   /* 6.21 A LINE FOR TODAY */
   diaryOpen(){ if (blockIfRed()) return; ui.flash = ""; ui.msg = ""; ui.diaryDel = false; go("diary"); },
+  diaryLockStart(){ if (blockIfRed()) return; if (store.diaryLock || !diaryCryptoOk() || !persistOn) return; ui.diaryWarned = false; ui.msg = ""; go("diary-lock-warn"); },
+  diaryLockOk(){ if (blockIfRed()) return; ui.diaryWarned = true; ui.msg = ""; go("diary-lock-set"); },
+  async diaryLockSet(){
+    if (blockIfRed() || ui.diaryBusy || store.diaryLock || !ui.diaryWarned) return;
+    const a = document.getElementById("diaryPass1"), b = document.getElementById("diaryPass2");
+    const p1 = (a && a.value) || "", p2 = (b && b.value) || "";
+    if (p1.length < 4){ ui.msg = DIARY.tooShort; render(); return; }
+    if (p1 !== p2){ ui.msg = DIARY.mismatch; render(); return; }
+    ui.diaryBusy = true; ui.msg = ""; render();
+    try {
+      const salt = crypto.getRandomValues(new Uint8Array(16));
+      const key = await diaryDerive(p1, salt);
+      store.diaryLock = { salt:b64(salt), check:await diaryEncrypt(key, DIARY_CHECK) };
+      diaryKey = key;
+      const ok = await saveDiary();
+      if (!ok){ store.diaryLock = null; store.diaryBlob = null; diaryKey = null; writeDiary(); ui.msg = DIARY.full; return; }
+      diaryStartTimer();
+      ui.diaryWarned = false; ui.flash = DIARY.locked; go("diary");
+    } catch (_){ store.diaryLock = null; store.diaryBlob = null; diaryKey = null; ui.msg = DIARY.lockNoCrypto; }
+    finally { ui.diaryBusy = false; if (session.screen !== "diary") render(); }
+  },
+  async diaryUnlock(){
+    if (blockIfRed() || ui.diaryBusy || !diaryLockedNow()) return;
+    const box = document.getElementById("diaryPass"); const pass = (box && box.value) || "";
+    ui.diaryBusy = true; ui.msg = ""; render();
+    const opened = pass ? await diaryOpenWith(pass) : null;
+    ui.diaryBusy = false;
+    if (!opened){ ui.msg = DIARY.wrong; render(); return; }   // no lockout, no hints
+    diaryKey = opened.key; store.diary = { entries:opened.entries };
+    diaryStartTimer();
+    lastRendered = null; render();   // the screen they were on
+  },
+  diaryLockNow(){ diaryRelock(true); },
+  diaryLockOff(){ if (blockIfRed()) return; ui.msg = ""; go("diary-lock-off"); },
+  async diaryLockOffGo(){
+    if (blockIfRed() || ui.diaryBusy || !store.diaryLock) return;
+    const box = document.getElementById("diaryPassOff"); const pass = (box && box.value) || "";
+    ui.diaryBusy = true; ui.msg = ""; render();
+    const opened = pass ? await diaryOpenWith(pass) : null;
+    ui.diaryBusy = false;
+    if (!opened){ ui.msg = DIARY.wrong; render(); return; }
+    const was = { lock:store.diaryLock, blob:store.diaryBlob };
+    store.diaryLock = null; store.diaryBlob = null; diaryKey = null; clearTimeout(diaryRelockTimer);
+    store.diary = { entries:opened.entries };
+    if (!writeDiary()){ store.diaryLock = was.lock; store.diaryBlob = was.blob; store.diary = null; ui.msg = DIARY.full; render(); return; }
+    ui.flash = DIARY.offDone; go("diary");
+  },
+  diaryForgot(){ ui.msg = ""; ui.diaryForgotAsk = false; go("diary-forgot"); },
+  diaryForgotAsk(){ ui.diaryForgotAsk = true; render(); },
+  diaryForgotNo(){ ui.diaryForgotAsk = false; render(); },
+  diaryForgotYes(){   // deletes only the diary: the plan, photos, songs and settings stay
+    store.diary = { entries:[] }; store.diaryLock = null; store.diaryBlob = null; diaryKey = null; clearTimeout(diaryRelockTimer);
+    try { if (STORAGE_OK) localStorage.removeItem(DIARY_KEY); } catch (_){}
+    ui.diaryForgotAsk = false; ui.flash = DIARY.forgotDone; go("diary");
+  },
   diaryBack(){ if (blockIfRed()) return; ui.diaryDel = false; ui.msg = ""; go("diary-back"); },
   diaryEntry(arg){ if (blockIfRed()) return; if (!diaryEntries().some(e => e.id === arg)) return; ui.diaryId = arg; ui.diaryDel = false; ui.flash = ""; go("diary-entry"); },
   diaryDel(){ if (blockIfRed()) return; ui.diaryDel = true; render(); },
@@ -6250,6 +6437,7 @@ const ACTIONS = {
   diaryKeep(){
     if (blockIfRed()) return;
     const d = ui.diaryDraft; if (!d) return;
+    if (diaryLockedNow()){ render(); return; }   // locked meanwhile: unlock first (the draft is still here)
     const box = document.getElementById("diaryTrue");
     if (box) d.trueLine = box.value.trim().slice(0, DIARY_TRUE_MAX);
     const text = d.text.trim(), trueLine = d.trueLine;
@@ -6641,6 +6829,9 @@ document.addEventListener("click", e => {
   const fn = ACTIONS[act];
   if (fn) fn(el.getAttribute("data-arg"), el, e);
 });
+
+/* 6.21 C: the diary re-locks when the page is hidden. */
+document.addEventListener("visibilitychange", () => { if (document.hidden) diaryRelock(true); });
 
 /* FIND SOMETHING: the phone's camera (or a photo picker) hands back a photo; it stays in this page as a local preview. */
 document.addEventListener("change", e => {
