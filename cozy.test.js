@@ -68,5 +68,8 @@ const r=[];
  r.push(['YELLOW priority still wins', a.G('interventionEngine({state:"low", yellow:true, playbook:{helps:[]}}).interventionId')==='connection']);
  a.G('session.currentState="low"; startIntervention("cozy_up")'); r.push(['from the engine in a low state, it is time-boxed too', a.S().screen==='cozy' && a.G('ui.cozy.low')===true]);}
 r.push(['reduced motion: no new animation', !/\.cozy-[a-z]+\{[^}]*animation|\.zmark-blanket\{[^}]*animation/.test(HTML)]);
+{const a=boot({now:DAY}); a.G('ACTIONS.cozyStart()'); a.click(act('cozyGo')); a.click(act('cozyWarm')); a.click(act('home'));
+ a.G('ACTIONS.techStart(); ACTIONS.tcPick("scroll"); ACTIONS.szAnswer("no"); ACTIONS.szGo("warm")'); a.click(act('warmPick','decaf')); a.click(act('warmEnough'));
+ r.push(['leaving the warm steps early: a later warm flow (e.g. from Social Zig) doesn\'t offer "Next cozy thing"', !a.has(act('cozyBack'))]);}
 console.log(r.map(x=>(x[1]?'PASS ':'FAIL ')+x[0]+(x[1]||!x[2]?'':' — '+x[2])).join('\n'));
 process.exit(0);

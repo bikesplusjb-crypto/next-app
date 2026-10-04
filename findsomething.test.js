@@ -56,6 +56,9 @@ const r=[];
  a.G('ACTIONS.fsStart()'); r.push(['RED blocks Find something', a.S().screen==='crisis']);}
 {const a=boot(); a.G('ACTIONS.tab("settings")'); a.click(act('persist','off')); a.G('ACTIONS.fsStart()'); a.takePhoto(); a.click(act('fsKeep')); await tick();
  r.push(['saving off: a kept photo is only for this visit (nothing written)', !a.dump()['next.v1.noticed'] && a.G('noticed().length')===1]);}
+{const a=boot(); a.G('ACTIONS.tab("settings")'); a.click(act('persist','off')); a.G('ACTIONS.fsStart()'); a.takePhoto(); a.click(act('fsKeep')); await tick();
+ a.G('ACTIONS.tab("settings")'); a.click(act('persist','on'));
+ r.push(['turning saving back on also saves photos kept while it was off', JSON.parse(a.dump()['next.v1.noticed']||'[]').length===1]);}
 {const a=boot(); a.G('ACTIONS.fsStart()'); a.takePhoto(); a.click(act('fsKeep')); await tick();
  a.G('ACTIONS.tab("settings")'); a.click(act('askDelete')); a.click(act('deleteAll'));
  r.push(['Delete everything removes kept photos', !a.dump()['next.v1.noticed'] && a.G('noticed().length')===0]);}

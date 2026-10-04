@@ -2627,6 +2627,7 @@ function beginAfterBefore(){
 
 function startIntervention(interventionId, opts = {}){
   if (blockIfRed()) return false;
+  ui.cozyReturn = null;   // only Cozy up's own "warm drink steps" link returns to Cozy up
   const it = findIntervention(interventionId);
   if (!it) return false;
   dispatch({ type:"ADD_PICK", id:interventionId });
@@ -6159,7 +6160,7 @@ const ACTIONS = {
   country(arg){ if (["auto","us","other"].includes(arg)){ prefs.country = arg; savePrefs(); } render(); },
   persist(arg){
     persistOn = arg === "on";
-    if (persistOn){ saveStore(); ui.flash = "Saving is on. Your data stays on this device."; }
+    if (persistOn){ saveStore(); saveNoticed(); ui.flash = "Saving is on. Your data stays on this device."; }
     else { clearSaved(); ui.flash = "Saving is off. Saved data was removed from this device."; }
     savePrefs(); render();
   },
