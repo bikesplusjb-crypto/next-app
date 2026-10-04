@@ -85,6 +85,10 @@ r.push(['Help on every song screen', (()=>{ const a=boot(); a.G('ui.song={mood:"
  r.push(['different words → a different melody', other!==JSON.stringify(JSON.parse(m1).secs[1].mel)]);
  const P=JSON.parse(m1);
  r.push(['lines 1 and 2 in minor; line 3 in the relative major (root + 3 semitones)', !P.secs[1].major && !P.secs[2].major && P.secs[3].major && P.secs[3].root===P.secs[1].root+3]);
+ const steps=a.G(`(()=>{ const out=[]; for(const w of "My sister still picks up when I call stop".split(" ")){ const h=songHash(w); for(let s=0;s<4;s++) out.push(((h >>> (s * 3)) % 5) - 2); } return out; })()`);
+ r.push(['melody steps stay within -2..+2 (no drift to the bottom)', steps.every(x=>x>=-2&&x<=2) && /h >>> \(s \* 3\)/.test(HTML)]);
+ const pitches=P.secs[3].mel.notes.map(n=>n.pitch);
+ r.push(['the "still true" line moves (several notes, not stuck low)', new Set(pitches).size>=3 && pitches.filter(x=>x===Math.min(...pitches)).length<pitches.length/2]);
  r.push(['ends on a major chord (outro)', P.secs.at(-1).outro && P.secs.at(-1).major]);
  const bpms=P.secs.map(s=>s.bpm);
  r.push(['anxious: the tempo slows across the song (96 → 66)', bpms[0]===96 && bpms.at(-1)===66 && bpms.every((x,i)=>i===0||x<bpms[i-1])]);

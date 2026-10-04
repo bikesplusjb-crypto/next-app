@@ -77,6 +77,12 @@ r.push(['unknown device: phone', boot({ua:UA.odd,touch:0}).G('canPhone()')===tru
  show(a,'connect'); r.push(['desktop: Warm Line shows its number', a.T().includes('Call the Warm Line · 1-800-945-1355')]);
  r.push(['no console errors', a.errs.length===0, a.errs.join(';')]);}
 
+{const a=boot({phone:false}); a.G(SAMPLE); a.G('session.currentState="low"; ACTIONS.kindStart()');
+ a.G('ui.kindPerson=0; ui.kindWord="kind"; ui.kindText="Thank you"'); const before=a.G('store.sensitive.activity.length');
+ const scr=a.G('Object.keys(SCREENS).find(k=>/kind/.test(k) && SCREENS[k]().body.includes("kind-open"))');
+ if(scr){ show(a,scr); a.click('.kind-open'); }
+ r.push(['desktop: copying a kind message is not logged as reaching out (same as the phone)', !!scr && a.G('store.sensitive.activity.length')===before && a.w.copied.length>0]);}
+
 // ---- crisis flow and the safety-check rule: unchanged ----
 for(const phone of [true,false]){ const m=phone?'phone':'desktop';
  const a=boot({phone}); a.G(SAMPLE); a.G('openCrisis()');

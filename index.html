@@ -658,7 +658,7 @@ function text988Btn(cls = "btn btn-safety"){
 function text988Inline(){ return canPhone() ? `<a href="${LINKS.text988}">Text 988</a>` : `<a href="${LINKS.chat988}" target="_blank" rel="noopener">Chat with 988 online</a>`; }
 function copyMsg(el){
   const text = el.getAttribute("data-copy") || "";
-  logActivity("reach");
+  if (!el.hasAttribute("data-kind")) logActivity("reach");   // a kind message isn't reaching out for help (same as the phone link)
   const label = el.textContent;
   const show = t => { el.textContent = t; setTimeout(() => { if (el.isConnected) el.textContent = label; }, 1800); };
   try {
@@ -994,7 +994,7 @@ function songMelody(text, scaleRoot, penta){
   words.forEach((w, wi) => {
     const syl = songSyllables(w), h = songHash(w);
     for (let s = 0; s < syl; s++){
-      const step = ((h >> (s * 3)) % 5) - 2;
+      const step = ((h >>> (s * 3)) % 5) - 2;   // >>> keeps it unsigned: steps of -2..+2
       deg = Math.max(0, Math.min(9, deg + step));
       const lastOfWord = s === syl - 1;
       const endPhrase = lastOfWord && (wi === words.length - 1 || /[,.!?]$/.test(w));
@@ -2296,7 +2296,7 @@ const SCREENS = {
       ${stepTitle(`Your message to ${esc(p.name)}`, true)}
       <p class="kind-preview">${esc(text)}</p>
       <p class="sub">Tap below to open Messages with this ready. You decide whether to send it.</p>
-      ${canPhone() ? `<a class="btn btn-primary kind-open" href="${smsLink(p.phone, text)}" data-kind="1">Open Messages</a>` : copyButton(text, "btn btn-primary kind-open", "Copy message")}`,
+      ${canPhone() ? `<a class="btn btn-primary kind-open" href="${smsLink(p.phone, text)}" data-kind="1">Open Messages</a>` : copyButton(text, "btn btn-primary kind-open", "Copy message", 'data-kind="1"')}`,
       actions:`<button class="btn btn-secondary" data-act="kindDone">Done</button>
         <button class="link" data-act="kindBack">Not right now</button>` };
   },

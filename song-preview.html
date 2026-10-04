@@ -359,7 +359,7 @@ function melodyFor(text, scaleRoot, penta){
   words.forEach((w, wi) => {
     const syl = syllables(w), h = hash(w);
     for (let s = 0; s < syl; s++){
-      const step = ((h >> (s * 3)) % 5) - 2;
+      const step = ((h >>> (s * 3)) % 5) - 2;   // >>> keeps it unsigned: steps of -2..+2
       deg = Math.max(0, Math.min(9, deg + step));
       const lastOfWord = s === syl - 1;
       const endPhrase = lastOfWord && (wi === words.length - 1 || /[,.!?]$/.test(w));
