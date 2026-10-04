@@ -1050,6 +1050,8 @@ G. "Help near me (Treasure Coast)" (**hidden until the owner verifies at least o
 - NAMI (local affiliate): "Support groups and classes for people and families living with mental health conditions." (verified: false)
 - Local recovery meetings: "Meetings for people working on drinking or drug use." (verified: false)
 
+H. Simplicity audit: report only, nothing applied (docs/SIMPLICITY_AUDIT.md).
+
 ### Stage 6.18 owner-approved updates (OWNER-APPROVED INTERIM, pending clinician)
 
 A. Zags: first line now "Hi, I'm Zags. I'm not a person, just a little guide. I can guide you through the next few minutes."; Connect: "Calm down with Zags while you wait" (no subtitle).

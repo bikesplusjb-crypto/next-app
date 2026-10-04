@@ -243,7 +243,7 @@ P(''); P('E. Spanish interface: **scaffolding only, nothing shown**. SPANISH_ENA
 P(''); P('F. Feedback (only when FEEDBACK_URL is set; it is '+(G('FEEDBACK_URL')?'set':'empty')+'): on About only, "Did ZigZag Mind help? Tell us anonymously →" (new tab). Privacy page adds: "'+G('FEEDBACK_PRIVACY[0]')+'"');
 P(''); P('G. "Help near me (Treasure Coast)" (**hidden until the owner verifies at least one entry**; on Change the scene and Connect). Screen: "Local services can change. For a crisis, call or text 988." Entries (all verified:false today):');
 list(G('NEAR_ME').map(e=>`${e.name}: "${e.what}"${e.phone?' · '+e.phone:''} (verified: ${e.verified})`));
-//@@619@@
+P(''); P('H. Simplicity audit: report only, nothing applied (docs/SIMPLICITY_AUDIT.md).');
 
 H(3,'Stage 6.18 owner-approved updates (OWNER-APPROVED INTERIM, pending clinician)');
 P('A. Zags: first line now "'+G('ZAGS_LINES.hello')+'"; Connect: "Calm down with Zags while you wait" (no subtitle).');

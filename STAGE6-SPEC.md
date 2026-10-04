@@ -514,3 +514,15 @@ Built from STAGE6-18-ADDENDUM.md, parts A–E, on `build`. Items marked OWNER-AP
 - E3: "Something else" opens the five directions; the direction pick is the new suggestion and counts toward Human First as before.
 - E5: `be_around_people` (PEOPLE) is opened from Connect only (no states, so it is never suggested elsewhere). E6 is a Change the scene option (SPACE).
 Tests: `stage618.test.js`; `home-viewport.test.js` also runs at night.
+
+## 6.19 Reach, trust and simplicity (as built, 2026-10-04)
+
+Built from STAGE6-19-ADDENDUM.md, parts A–H, each committed separately on `build`. Notes where the build differs in form from the text:
+- A: the guide's opening section shows only for people who came from the app (`support/#worried`, CSS `:target`, no script). A4 (Crisis Text Line on the guide) was built with D, since it depends on D's constant.
+- B: "Things to avoid" and the professional contact are also printed (they're part of the full plan). The Print button isn't on the read-only plan opened from the crisis "No" path.
+- C: each paragraph is paired with the PRIVACY_DATA_FLOW.md sentence that supports it; Ko-fi is called "the donation page" so donation links stay on Settings and About only. Onboarding links to the page without "you agree" wording (lawyer item).
+- D: hidden until `CRISIS_TEXT_LINE.verified` is true; the supporter guide's line is written by `npm run sync-support`.
+- E: 211 strings in `L10N`; English proven unchanged by comparing 544 renders before and after; dynamic Settings sentences (the country hint, saving on/off text) and prepared messages to other people stay English-only for now.
+- G: no phone numbers or websites were invented for New Horizons, NAMI or recovery meetings; 211 uses "211".
+- H: measured with `simplicity-audit.js`; nothing applied.
+Tests: `stage619.test.js`; `home-viewport.test.js` also checks the "Worried about someone?" link and the guide's opening section.
