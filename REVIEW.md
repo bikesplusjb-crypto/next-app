@@ -1188,6 +1188,7 @@ Rendered for each state where the screen changes by state. Identical renders are
 
 - **Button:** Help _(screen reader: "Get help now")_
 - **Button:** ZigZag Mind
+- **Button:** Calm down with Zags
 - **Heading:** It's okay not to be okay.
 - You don't have to figure everything out right now.
 - **Button:** I don't feel safe — Get to a real person fast
@@ -1799,6 +1800,7 @@ _When: distraction_
 
 - **Button:** Help _(screen reader: "Get help now")_
 - **Button:** ZigZag Mind
+- **Button:** Calm down with Zags
 - **Heading:** It's okay not to be okay.
 - You don't have to figure everything out right now.
 - **Button:** I don't feel safe — Get to a real person fast
@@ -1824,6 +1826,7 @@ _When: distraction_
 
 - **Button:** Help _(screen reader: "Get help now")_
 - **Button:** ZigZag Mind
+- **Button:** Calm down with Zags
 - **Heading:** It's okay not to be okay.
 - You don't have to figure everything out right now.
 - **Button:** I don't feel safe — Get to a real person fast
@@ -1849,6 +1852,7 @@ _When: distraction_
 
 - **Button:** Help _(screen reader: "Get help now")_
 - **Button:** ZigZag Mind
+- **Button:** Calm down with Zags
 - **Heading:** It's okay not to be okay.
 - You don't have to figure everything out right now.
 - **Button:** I don't feel safe — Get to a real person fast

@@ -488,3 +488,7 @@ Store verse text in one constant for review. **Clinician or chaplain review requ
 - **Photography:** needs a curated, licensed **local** image set (real, ordinary moments; no staged wellness, no smiling-at-camera stock, nothing implying diagnosis or treatment). No remote images or image APIs. Until it exists, these features would rely on placeholders, which is a reason to wait.
 - **Microcopy rules** (apply everywhere): short and honest ("It's okay not to be okay." · "You can stop here."); never "You got this!", "Great job!", "This will make you feel better" or treatment claims.
 
+
+## Zags brand mark (owner request, 2026-10-04)
+
+A small, still Zags (the exact character from zags-preview.html) in these places only: next to the wordmark on Home (tap → Calm down with Zags; no talking or animation there), waving on "You're ready" (a gentle side-to-side sway three times, since the character has no arms; none with reduced motion), the onboarding welcome, empty My Plan, and empty My songs. Never on crisis, crisis-full, crisis-no, safety-check or "I need my plan" (`BRAND_ZAGS_NEVER`). On narrow screens (large text) he sits beside "Mind" so Home doesn't grow; `home-viewport.test.js` still passes. Tests: `zags-mark.test.js`.

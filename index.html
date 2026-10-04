@@ -336,6 +336,23 @@ a.cw-open,a.ci-open{text-decoration:none;display:flex;align-items:center;justify
 .cw-words{margin-top:14px}
 .cw-words .sit[aria-pressed="true"]{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
 
+/* Zags brand mark (still; waves only on "You're ready") */
+.brand-row{display:flex;align-items:center;gap:8px}
+.brand-row .brand{flex:0 1 auto;min-width:0;text-align:left}
+@media (max-width:320px){.brand-row{position:relative;display:block}.brand-row .zmark-btn{position:absolute;right:0;bottom:0;z-index:1}}
+.ready-mark{margin-top:10vh}
+.zmark-btn{background:none;border:none;padding:0;width:44px;height:44px;flex:none;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.zmark{display:block;width:38px;height:38px;flex:none}
+.zmark svg{width:100%;height:100%;display:block;overflow:visible}
+.zmark-lg{width:72px;height:72px}
+.zmark-wave .zmark-body{transform-box:fill-box;transform-origin:50% 100%;animation:zwave 1.1s ease-in-out 3}
+@keyframes zwave{0%,100%{transform:rotate(0)}25%{transform:rotate(-7deg)}75%{transform:rotate(7deg)}}
+.ob-hello{display:flex;align-items:center;gap:12px}
+.ob-hello h1{flex:1}
+.zmark-empty{display:flex;justify-content:center;margin:8px 0 4px}
+@media (prefers-reduced-motion:reduce){.zmark-wave .zmark-body{animation:none}}
+html.reduce .zmark-wave .zmark-body{animation:none}
+
 /* Stage 6.15: Faith & hope */
 .faith-link{display:block;margin:14px auto 0}
 .faith-next{margin-top:8px}
@@ -1913,7 +1930,10 @@ const SCREENS = {
   home(){
     return { nav:true, close:false, body:`
       <div class="home-hero">
-        <button class="brand" data-act="wordmark" aria-label="ZigZag Mind">ZigZag Mind</button>
+        <div class="brand-row">
+          <button class="brand" data-act="wordmark" aria-label="ZigZag Mind">ZigZag Mind</button>
+          <button class="zmark-btn" data-act="zags" data-arg="calm" aria-label="Calm down with Zags">${zagsMark()}</button>
+        </div>
         ${zigzag()}
         <h1 id="screen-title" tabindex="-1" class="home-tag">It's okay not to be okay.</h1>
         <p class="home-sub">You don't have to figure everything out right now.</p>
@@ -2110,7 +2130,8 @@ const SCREENS = {
   /* 6.17 B: a calm ending. Never suggests or starts anything else. */
   "phone-down"(){
     return { close:true, body:`
-      ${stepTitle("You're ready.")}
+      ${zagsMark("zmark-lg zmark-wave ready-mark")}
+      ${stepTitle("You're ready.", true)}
       <p class="sub" style="font-size:19px">You can put me away for a few minutes.</p>`,
       actions:`<button class="btn btn-primary" data-act="putDown">Put the phone down</button>
         ${ui.engine && ui.engine.interventionId && session.screen === "phone-down" && ui.fromHelped ? `<button class="link" data-act="phoneDownElse">Something else</button>` : ""}` };
@@ -2842,7 +2863,7 @@ const SCREENS = {
           <span class="song-btns"><button class="edit-btn" data-act="songDelYes" data-arg="${esc(s.id)}">Delete</button><button class="edit-btn" data-act="songDelNo">Keep</button></span></div>`;
         return `<div class="song-row"><span><b>${esc(name)}</b><span class="small">${esc(songDate(s.date))} · ${SONG_MOODS[s.mood].label}${s.still.length ? ` · ${s.still.length} added later` : ""}</span></span>
           <span class="song-btns"><button class="edit-btn" data-act="songOpen" data-arg="${esc(s.id)}" aria-label="Play: ${esc(name)}">Play</button><button class="edit-btn" data-act="songDel" data-arg="${esc(s.id)}" aria-label="Delete: ${esc(name)}">Delete</button></span></div>`;
-      }).join("") : `<p class="empty">No songs yet.</p>`}</div>`,
+      }).join("") : `<div class="zmark-empty">${zagsMark("zmark-lg")}</div><p class="empty" style="text-align:center">No songs yet.</p>`}</div>`,
       actions:`<button class="btn btn-primary" data-act="songNew">Make a new song</button>` };
   },
 
@@ -3172,6 +3193,7 @@ const SCREENS = {
         ${pb.professional.phone ? `<a class="btn btn-secondary" href="${telLink(pb.professional.phone)}">Call ${esc(pb.professional.name)}</a>` : ""}` : "";
     return { nav:editable, close:false, body:`
       ${title("My plan for hard moments")}
+      ${editable && planEmpty() ? `<div class="zmark-empty">${zagsMark("zmark-lg")}</div>` : ""}
       ${editable ? `<button class="btn btn-primary btn-big plan-now-btn" data-act="planNow">I need my plan now</button>` : ""}
       <p class="sub">${editable ? "Build it on a good day, so it's ready on a hard one. Each part saves on its own." : "Your plan, for right now."}</p>
       ${ui.flash && editable ? `<p class="flash" role="status">${esc(ui.flash)}</p>` : ""}
@@ -3362,7 +3384,7 @@ const SCREENS = {
   /* First launch only. Help stays in the top bar on every step, and 988 is on the first screen. */
   "ob-about"(){
     return { close:false, body:`
-      ${title("Welcome to ZigZag Mind.")}
+      <div class="ob-hello">${zagsMark("zmark-lg")}${title("Welcome to ZigZag Mind.")}</div>
       ${zigzag()}
       <p class="sub">Help for hard moments, one small step at a time.</p>
       <p class="small" style="margin:16px 0 0">In danger or thinking about suicide? Call or text 988. It's free and open 24/7.</p>
@@ -3666,6 +3688,28 @@ function pickCodeWords(avoid = []){
 }
 
 /* Small face for the entry cards. */
+/* Zags as a small, still brand mark: the exact character from zags-preview.html (open eyes, closed smile).
+   Only on Home (next to the wordmark), "You're ready", the onboarding welcome, empty My Plan and empty My songs.
+   Never on crisis screens, safety-check, crisis-no or "I need my plan" (BRAND_ZAGS_NEVER). */
+const BRAND_ZAGS_NEVER = [...CRISIS_SCREENS, "plan-now"];
+function zagsMark(cls = ""){
+  if (BRAND_ZAGS_NEVER.includes(session.screen)) return "";
+  return `<span class="zmark${cls ? " " + cls : ""}" aria-hidden="true"><svg viewBox="0 0 220 220">
+    <g class="zmark-body">
+    <path d="M92 52 L102 30 L110 46 L120 24 L128 52" fill="none" stroke="var(--zag-dark)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M110 48 C160 48 186 84 186 128 C186 170 154 196 110 196 C66 196 34 170 34 128 C34 84 60 48 110 48 Z" fill="var(--zag)"/>
+    <ellipse cx="110" cy="160" rx="44" ry="26" fill="#FFFFFF" opacity=".28"/>
+    <ellipse cx="86" cy="118" rx="8" ry="10" fill="var(--zag-eye)"/><ellipse cx="134" cy="118" rx="8" ry="10" fill="var(--zag-eye)"/>
+    <circle cx="89" cy="114" r="2.6" fill="#fff"/><circle cx="137" cy="114" r="2.6" fill="#fff"/>
+    <ellipse cx="70" cy="138" rx="10" ry="6" fill="var(--zag-cheek)" opacity=".55"/><ellipse cx="150" cy="138" rx="10" ry="6" fill="var(--zag-cheek)" opacity=".55"/>
+    <path d="M100 140 Q110 148 120 140" fill="none" stroke="var(--zag-eye)" stroke-width="4" stroke-linecap="round"/>
+    </g></svg></span>`;
+}
+function planEmpty(){
+  const pb = getPlan();
+  return !pb.warningSigns.length && !pb.helps.length && !pb.places.length && !pb.trustedPeople.length && !pb.avoid.length && !pb.reminders.length
+    && !(pb.professional && pb.professional.name) && !codeWord() && !(pb.timeDistance || {}).keepAway;
+}
 function zagsFace(){
   return `<span class="zface" aria-hidden="true"><svg viewBox="0 0 220 220">
     <path d="M92 52 L102 30 L110 46 L120 24 L128 52" fill="none" stroke="var(--zag-dark)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
