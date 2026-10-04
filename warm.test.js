@@ -12,11 +12,11 @@ const act=(a,arg)=>arg!==undefined?`[data-act="${a}"][data-arg="${arg}"]`:`[data
 const r=[];
 const COPY=()=>{ const a=boot(); return a.G('JSON.stringify([WARM_DRINKS,WARM_TITLE,WARM_SUB,WARM_HOT,WARM_STEPS,WARM_SLOW,WARM_END,findIntervention("warm_comfort")])'); };
 {const a=boot(); a.G('ACTIONS.route("calm")');
- r.push(['1: entry on Calm: "Make something warm"', a.has(act('warmStart')) && a.T().includes('Make something warm')]);
- a.click(act('warmStart'));
+ r.push(['1: entry on Calm: "Cozy up" (Make something warm is now its first step)', a.has(act('cozyStart')) && !a.has(act('warmStart'))]);
+ a.click(act('cozyStart')); a.click(act('cozyGo')); a.click(act('cozyWarm'));
  r.push(['4: "Make something warm." / "Nothing needs to be solved right now."', a.S().screen==='warm' && a.T().includes('Make something warm.') && a.T().includes('Nothing needs to be solved right now.')]);
  const opts=[...a.doc.querySelectorAll('[data-act="warmPick"]')].map(b=>b.textContent.replace(/\s+/g,' ').trim());
- r.push(['2: decaf coffee, caffeine-free tea, hot cocoa, warm milk, warm water, warm cider, something else', JSON.stringify(opts)===JSON.stringify(["☕Decaf coffee","🍵Caffeine-free tea","🍫Hot cocoa","🥛Warm milk","💧Warm water","🍎Warm cider","Something else"])]);
+ r.push(['2: decaf coffee, caffeine-free tea, hot cocoa, warm milk, warm water, warm apple juice, something else', JSON.stringify(opts)===JSON.stringify(["☕Decaf coffee","🍵Caffeine-free tea","🍫Hot cocoa","🥛Warm milk","💧Warm water","🍎Warm apple juice","Something else"])]);
  r.push(['3/17: decaf first; regular coffee is not suggested', opts[0].includes('Decaf coffee') && !opts.some(o=>/^☕Coffee|Regular coffee/i.test(o))]);
  a.click(act('warmPick','decaf'));
  r.push(['5: "Go make it." / "Take your time." (no countdown)', a.S().screen==='warm-go' && a.T().includes('Go make it.') && a.T().includes('Take your time.') && !a.has('[role="timer"]')]);
@@ -40,10 +40,10 @@ const COPY=()=>{ const a=boot(); return a.G('JSON.stringify([WARM_DRINKS,WARM_TI
 {const c=COPY();
  r.push(['4/24: no medical claims', !/anxiety|depress|calm(s|ing)? (you|your)|nervous system|cortisol|treat|cure|reduce|lower|therap|heal/i.test(c)]);
  r.push(['23: no food or drink judgment', !/sugar|calorie|diet|healthy|unhealthy/i.test(c)]);}
-{const a=boot(); const lib=a.G('findIntervention("warm_comfort")');
- r.push(['25: in INTERVENTION_LIBRARY (array), channel SENSE, real world', Array.isArray(a.G('INTERVENTION_LIBRARY')) && lib.channel==='SENSE' && lib.realWorld===true]);
+{const a=boot(); const lib=a.G('findIntervention("cozy_up")');   // the engine suggests Cozy up (warm is its first step)
+ r.push(['25: Cozy up in INTERVENTION_LIBRARY (array), channel SENSE, real world; warm_comfort no longer suggested twice', a.G('findIntervention("warm_comfort").states.length')===0 && Array.isArray(a.G('INTERVENTION_LIBRARY')) && lib.channel==='SENSE' && lib.realWorld===true]);
  r.push(['not offered in the craving flow', !lib.states.includes('craving')]);
- r.push(['11/12: Let\'s Zig can pick it after a different channel didn\'t help', a.G('interventionEngine({state:"low", zigFrom:"ACTION", exclude:INTERVENTION_LIBRARY.filter(i=>i.id!=="warm_comfort" && i.channel!=="ACTION").map(i=>i.id)}).interventionId')==='warm_comfort']);
+ r.push(['11/12: Let\'s Zig can pick it after a different channel didn\'t help', a.G('interventionEngine({state:"low", zigFrom:"ACTION", exclude:INTERVENTION_LIBRARY.filter(i=>i.id!=="cozy_up" && i.channel!=="ACTION").map(i=>i.id)}).interventionId')==='cozy_up']);
  r.push(['33: YELLOW priority still wins', a.G('interventionEngine({state:"low", yellow:true, playbook:{helps:[]}}).interventionId')==='connection']);
  a.G('openCrisis(); ACTIONS.warmStart()'); r.push(['32: RED blocks it', a.S().screen==='crisis']);}
 {const a=boot(); a.G('ACTIONS.warmStart()'); a.click(act('warmPick','cocoa')); a.click(act('warmEnough'));

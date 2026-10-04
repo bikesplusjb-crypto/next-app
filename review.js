@@ -240,6 +240,14 @@ P(''); P(`With one of the person\'s own things: "Find something from one of your
 P(''); P(`No camera: "${G('FS_NOCAM[0]')}" / "${G('FS_NOCAM[1]')}" [I found something] [Try something else]. After: "${G('FS_FOUND')}" / "${G('FS_CAPTION')} Optional." (safety-checked) [Keep it] [Try another] [I\'m done] / "How do I feel now?" → "Kept in Things I noticed." → "${G('PUT_DOWN_NOW')}" [I\'m done]`);
 P(''); P('Things I noticed: "Only on this phone. Not a feed, not shared." Each photo can be deleted (asks once). "Something that\'s yours" (used by the next features): the person\'s own entries from My Plan\'s "Things that help me", then "Go do your thing. You don\'t need to accomplish anything. Just spend a few minutes doing it." [I\'m heading out]');
 
+H(3,'Cozy up (owner request)');
+const CZ=G('COZY');
+P('Calm (replaces "Make something warm") and I feel low; SENSE, real world; one thing at a time, every step skippable; nothing saved; not a treatment.');
+P(''); P(`"${CZ.title}" / "${CZ.sub}" [Start] → `+G('COZY_ITEMS').map(([,t,l])=>`"${l}"`).join(' → ')+' (the drink step links to the warm drink steps; then "Next cozy thing"). Buttons: "Done. Next one" · "Skip this one" · "That\'s enough".');
+P(''); P(`End: "${CZ.end}" with Zags in a small blanket (never on crisis screens) [I\'m done] / "How do I feel now?"`);
+P(''); P(`From I feel low ("Cozy up" / "15 minutes, then one tiny thing."): "${CZ.low}" [Start a gentle 15-minute timer] and "Talk to someone" on every screen. At 15 minutes: "${CZ.lowEnd}" [One tiny thing] [Not now].`);
+P(''); P(`Night (00:00–05:59): "${CZ.sleepEntry}" ("Soft light, something warm with no caffeine, phone out of reach") → `+G('COZY_SLEEP').map(([,t,l])=>`"${l}"`).join(' → ')+` / "${CZ.sleepNote}" No sleep-medication advice.`);
+
 H(3,'Have coffee with ZigZag (owner handoff) — CLINICIAN REVIEW: companionship wording');
 P('A few quiet minutes with a cup, then back to real life. Scripted lines only, no AI; an illustrated cup labelled "ZigZag" (not Zags); "ZigZag is an app, not a person. Nothing you type here is kept." on the screen; finite (after four choices it ends). Typed text is safety-checked and dropped. Calm card and "Have it with ZigZag" from Warm & comfort; the engine can pick it for anxious, low or spiraling (not alone, not craving). Compare 6.18 A ("stay with you" → "guide you") and the on-hold 6.7c "Zags listens".');
 const C_=G('COFFEE');
@@ -253,7 +261,7 @@ list([`Talk (one at a time): `+C_.talk.map(x=>`"${x}"`).join(' · ')+` → repli
   `End: "${C_.enough[0]}" / "${C_.enough[1]}" `+C_.how.map(([,l])=>l).join(' · ')+` → `+Object.entries(C_.reply).map(([k,[a,b]])=>`${k}: "${a} ${b}"`).join(' · ')+` → "${C_.end[0]}" → "${C_.end[1]}" (A little better + own things: "${C_.yours}" [Go do your thing] [Just enjoy my coffee]; Still rough → Let\'s Zig)`]);
 
 H(3,'Warm & comfort (owner handoff)');
-P('An ordinary ritual, not a treatment; the ritual is the point, not caffeine (decaf and caffeine-free first; regular coffee isn\'t suggested). On Calm ("Make something warm" / "Nothing needs to be solved right now") and as a SENSE step the engine can pick (not in the craving flow). No timer, every step skippable, nothing saved.');
+P('An ordinary ritual, not a treatment; the ritual is the point, not caffeine (decaf and caffeine-free first; regular coffee isn\'t suggested). Now the first step of Cozy up ("Show me the warm drink steps"), and reachable from Social Zig and Have coffee with ZigZag; the engine suggests Cozy up rather than this. No timer, every step skippable, nothing saved.');
 P(''); P(`"${G('WARM_TITLE')}" / "${G('WARM_SUB')}" `+G('WARM_DRINKS').map(([,e,l])=>`${e} ${l}`.trim()).join(' · '));
 P(''); P(`"Go make it." / "Take your time." / "${G('WARM_HOT')}" / "While it\'s getting ready, find something around you" [It\'s ready] [That\'s enough]`);
 P(''); P('Steps: '+G('WARM_STEPS').map(x=>`"${x}"`).join(' → ')+' ("A slower version": '+G('WARM_SLOW').map(x=>`"${x}"`).join(' → ')+')');

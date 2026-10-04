@@ -533,11 +533,25 @@ Steps:
 2. Sit for a few minutes.
 3. Put the phone down.
 
+### Cozy up (`cozy_up`)
+
+- Button: "Cozy up"
+- Description: "One cozy thing at a time: something warm, a blanket, softer light, a soft sound."
+- For: anxious, spiraling, low, alone, distraction · about 15 min · needs moving around
+
+Steps:
+1. Something warm to drink.
+2. A blanket or warm socks.
+3. Softer light.
+4. A soft sound.
+5. Something soft.
+6. A warm shower.
+
 ### Make something warm (`warm_comfort`)
 
 - Button: "Make something warm"
 - Description: "Nothing needs to be solved right now. Make something warm and take a few quiet minutes."
-- For: anxious, spiraling, low, alone, distraction · about 5 min · needs moving around
+- For:  · about 5 min · needs moving around
 
 Steps:
 1. Make something warm.
@@ -1039,7 +1053,7 @@ On the guide when a name is given: "[name] would like you to check in now and th
 **Let's Zig** is a simple product rule, not a clinical method: after "I still feel bad" or a game's "No", the next suggestion comes from a different channel when one is available. After a recent rating of 8 or more, BODY, SPACE and PEOPLE steps come first. Safety routing always comes first: RED stops everything, and the YELLOW order (connection, own plan, grounding, fresh air) still wins.
 - `BODY`: grounding, breathing, hydration, walking, touch_real_world
 - `SPACE`: change_scene, environment_change, find_alive, craving_delay, break_the_loop
-- `SENSE`: distraction_game, distraction_color_hunt, distraction_around_me, distraction_categories, distraction_memory, distraction_pattern, distraction_60_second, ridiculous_mode, zags, song, find_something, warm_comfort, coffee_with_zigzag
+- `SENSE`: distraction_game, distraction_color_hunt, distraction_around_me, distraction_categories, distraction_memory, distraction_pattern, distraction_60_second, ridiculous_mode, zags, song, find_something, warm_comfort, cozy_up, coffee_with_zigzag
 - `PEOPLE`: ai_relationship_check, be_around_people, ai_loss, connection
 - `ACTION`: social_zig, ai_reliance_check, ai_fomo, thought_parking, still_true, true_sentence, kind_stranger, borrow_ten, behavioral_activation
 
@@ -1085,6 +1099,18 @@ No camera: "No camera? That's okay." / "Just find something and look at it for a
 
 Things I noticed: "Only on this phone. Not a feed, not shared." Each photo can be deleted (asks once). "Something that's yours" (used by the next features): the person's own entries from My Plan's "Things that help me", then "Go do your thing. You don't need to accomplish anything. Just spend a few minutes doing it." [I'm heading out]
 
+### Cozy up (owner request)
+
+Calm (replaces "Make something warm") and I feel low; SENSE, real world; one thing at a time, every step skippable; nothing saved; not a treatment.
+
+"Cozy up." / "One thing at a time. Skip anything." [Start] → "Make something warm to drink. Decaf, caffeine-free tea, cocoa, warm milk, warm water or warm apple juice." → "Put on a blanket, a hoodie or warm socks." → "Turn off the overhead light. Turn on a lamp instead." → "Put on a soft sound: rain, a fan or quiet music." → "Hold something soft, or your pet." → "Take a warm shower." (the drink step links to the warm drink steps; then "Next cozy thing"). Buttons: "Done. Next one" · "Skip this one" · "That's enough".
+
+End: "Stay cozy for a bit. You can put the phone down." with Zags in a small blanket (never on crisis screens) [I'm done] / "How do I feel now?"
+
+From I feel low ("Cozy up" / "15 minutes, then one tiny thing."): "Get cozy for 15 minutes. Then one tiny thing." [Start a gentle 15-minute timer] and "Talk to someone" on every screen. At 15 minutes: "Fifteen minutes is up. Ready for one tiny thing?" [One tiny thing] [Not now].
+
+Night (00:00–05:59): "Cozy up for sleep" ("Soft light, something warm with no caffeine, phone out of reach") → "Turn the lights down. A lamp, not the overhead light." → "If you want something warm, make it decaf or caffeine-free." → "Put the phone face down, out of reach." / "If you're not asleep in about 20 minutes, get up and do something quiet in dim light until you feel sleepy." No sleep-medication advice.
+
 ### Have coffee with ZigZag (owner handoff) — CLINICIAN REVIEW: companionship wording
 
 A few quiet minutes with a cup, then back to real life. Scripted lines only, no AI; an illustrated cup labelled "ZigZag" (not Zags); "ZigZag is an app, not a person. Nothing you type here is kept." on the screen; finite (after four choices it ends). Typed text is safety-checked and dropped. Calm card and "Have it with ZigZag" from Warm & comfort; the engine can pick it for anxious, low or spiraling (not alone, not craving). Compare 6.18 A ("stay with you" → "guide you") and the on-hold 6.7c "Zags listens".
@@ -1100,9 +1126,9 @@ Entry: "Have coffee with ZigZag" / "Make something warm. I'll sit with you for a
 
 ### Warm & comfort (owner handoff)
 
-An ordinary ritual, not a treatment; the ritual is the point, not caffeine (decaf and caffeine-free first; regular coffee isn't suggested). On Calm ("Make something warm" / "Nothing needs to be solved right now") and as a SENSE step the engine can pick (not in the craving flow). No timer, every step skippable, nothing saved.
+An ordinary ritual, not a treatment; the ritual is the point, not caffeine (decaf and caffeine-free first; regular coffee isn't suggested). Now the first step of Cozy up ("Show me the warm drink steps"), and reachable from Social Zig and Have coffee with ZigZag; the engine suggests Cozy up rather than this. No timer, every step skippable, nothing saved.
 
-"Make something warm." / "Nothing needs to be solved right now." ☕ Decaf coffee · 🍵 Caffeine-free tea · 🍫 Hot cocoa · 🥛 Warm milk · 💧 Warm water · 🍎 Warm cider · Something else
+"Make something warm." / "Nothing needs to be solved right now." ☕ Decaf coffee · 🍵 Caffeine-free tea · 🍫 Hot cocoa · 🥛 Warm milk · 💧 Warm water · 🍎 Warm apple juice · Something else
 
 "Go make it." / "Take your time." / "Make it comfortably warm, not dangerously hot. Set it down before you walk around with it." / "While it's getting ready, find something around you" [It's ready] [That's enough]
 
@@ -1432,7 +1458,7 @@ Rendered for each state where the screen changes by state. Identical renders are
 - **Heading:** Let's slow things down.
 - Pick one. You can stop any time.
 - **Button:** Have coffee with ZigZag — Make something warm. I'll sit with you for a few minutes.
-- **Button:** Make something warm — Nothing needs to be solved right now
+- **Button:** Cozy up — Something warm, a blanket, softer light
 - **Button:** Calm down with Zags — Breathe together for a few minutes
 - **Button:** Breathe for 1 minute — In for 4, out for 6
 - **Button:** 5-4-3-2-1 grounding — Notice what's around you
@@ -1771,6 +1797,34 @@ _When: distraction_
 - **Button:** About the same
 - **Button:** I don't know
 
+### `cozy`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Cozy up
+- **Heading:** Cozy up.
+- One thing at a time. Skip anything.
+- **Button:** Start
+
+### `cozy-step`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Cozy up · 1 of 6
+- **Heading:** Make something warm to drink. Decaf, caffeine-free tea, cocoa, warm milk, warm water or warm apple juice.
+- **Button:** Show me the warm drink steps
+- **Button:** Done. Next one
+- **Button:** Skip this one
+- **Button:** That's enough
+
+### `cozy-end`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Stay cozy for a bit. You can put the phone down.
+- **Button:** I'm done
+- **Button:** How do I feel now?
+
 ### `coffee`
 
 - **Button:** × _(screen reader: "Close and go to home")_
@@ -1783,7 +1837,7 @@ _When: distraction_
 - **Button:** Hot cocoa
 - **Button:** Warm milk
 - **Button:** Warm water
-- **Button:** Warm cider
+- **Button:** Warm apple juice
 - **Button:** Something else
 
 ### `coffee-go`
@@ -1825,7 +1879,7 @@ _When: distraction_
 - **Button:** Hot cocoa
 - **Button:** Warm milk
 - **Button:** Warm water
-- **Button:** Warm cider
+- **Button:** Warm apple juice
 - **Button:** Something else
 
 ### `warm-go`
@@ -2047,6 +2101,7 @@ _When: distraction_
 - **Button:** Body — Drink water.
 - **Button:** Space — Open a window or step outside.
 - **Button:** Connection — Text someone: hey
+- **Button:** Cozy up — 15 minutes, then one tiny thing.
 - **Button:** Borrow ten minutes — Just the next ten minutes.
 - **Button:** A kinder voice — What would you tell a friend?
 - **Button:** Find something alive — A pet, a bird, a tree.
@@ -3367,6 +3422,14 @@ _When: distraction_
 - **Button:** Help _(screen reader: "Get help now")_
 - Have coffee with ZigZag · Step 1 of 3
 - **Heading:** Make something warm.
+- **Button:** Next
+
+#### Cozy up
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Cozy up · Step 1 of 6
+- **Heading:** Something warm to drink.
 - **Button:** Next
 
 #### Make something warm

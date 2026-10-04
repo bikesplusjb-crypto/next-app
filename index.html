@@ -382,6 +382,11 @@ html.reduce .zmark-wave .zmark-body{animation:none}
 .faith-next{margin-top:8px}
 .faith-next a.sit{display:inline-flex;align-items:center;text-decoration:none;color:var(--text)}
 
+/* Cozy up */
+.cozy-mark{display:flex;justify-content:center;margin-top:8px}
+.cozy-connect{margin-top:14px;width:100%}
+.cozy-sleep-note{margin-top:12px}
+
 /* Have coffee with ZigZag: a quiet, slow cup; static with reduced motion */
 .coffee-scene{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;padding-top:8px}
 .coffee-cup{width:180px;height:154px}
@@ -1271,6 +1276,43 @@ function szOptions(){
   return `<div class="list sz-opts">${o.map(([k, l]) => `<button class="card" data-act="szGo" data-arg="${k}"><span>${l}</span></button>`).join("")}</div>`;
 }
 
+/* COZY UP (owner request, 2026-10-04): one cozy thing at a time; "Make something warm" lives inside it now.
+   From "I feel low" it's time-boxed (15 minutes, then one tiny thing) with Connect one tap away. At night it can be
+   "Cozy up for sleep" (no sleep-medication advice). Nothing saved. Not a treatment. */
+const COZY_ITEMS = [
+  ["drink","Something warm to drink","Make something warm to drink. Decaf, caffeine-free tea, cocoa, warm milk, warm water or warm apple juice."],
+  ["blanket","A blanket or warm socks","Put on a blanket, a hoodie or warm socks."],
+  ["light","Softer light","Turn off the overhead light. Turn on a lamp instead."],
+  ["sound","A soft sound","Put on a soft sound: rain, a fan or quiet music."],
+  ["soft","Something soft","Hold something soft, or your pet."],
+  ["shower","A warm shower","Take a warm shower."]
+];
+const COZY_SLEEP = [
+  ["light","Soft light","Turn the lights down. A lamp, not the overhead light."],
+  ["drink","Something warm, no caffeine","If you want something warm, make it decaf or caffeine-free."],
+  ["phone","Phone down","Put the phone face down, out of reach."]
+];
+const COZY = {
+  title:"Cozy up.",
+  sub:"One thing at a time. Skip anything.",
+  low:"Get cozy for 15 minutes. Then one tiny thing.",
+  sleepEntry:"Cozy up for sleep",
+  sleepNote:"If you're not asleep in about 20 minutes, get up and do something quiet in dim light until you feel sleepy.",
+  end:"Stay cozy for a bit. You can put the phone down.",
+  lowEnd:"Fifteen minutes is up. Ready for one tiny thing?"
+};
+const COZY_LOW_MS = 15 * 60 * 1000;
+let cozyTimer = null;
+function cozyTick(){
+  if (!ui.cozy || !ui.cozy.until || !session.screen.startsWith("cozy")){ clearInterval(cozyTimer); cozyTimer = null; return; }
+  const left = ui.cozy.until - Date.now(), el = document.getElementById("cozyTime");
+  if (left <= 0){ clearInterval(cozyTimer); cozyTimer = null; ui.cozy.until = 0; ui.cozy.timeUp = true; go("cozy-end"); return; }
+  if (el) el.textContent = fmtTime(left);
+}
+function cozyState(){ return ui.cozy || (ui.cozy = { idx:0, low:false, sleep:false, until:0, timeUp:false }); }
+function cozyList(){ return ui.cozy && ui.cozy.sleep ? COZY_SLEEP : COZY_ITEMS; }
+function cozyConnect(){ return ui.cozy && ui.cozy.low ? `<button class="btn btn-secondary cozy-connect" data-act="route" data-arg="connect">Talk to someone</button>` : ""; }
+
 /* HAVE COFFEE WITH ZIGZAG (owner handoff, 2026-10-04): a few quiet minutes with a cup, then back to real life.
    Not therapy, not a chatbot, not a person: scripted lines only, no AI, nothing typed is kept (safety-checked, then
    dropped). Finite: after a few choices it ends. Uses an illustrated cup, not Zags (the Zags mark stays in its five
@@ -1322,7 +1364,7 @@ function coffeeCup(){
 /* WARM & COMFORT (owner handoff, 2026-10-04): an ordinary ritual, not a treatment. The ritual is the point, not
    caffeine: decaf and caffeine-free come first and regular coffee isn't suggested. No timer, every step skippable,
    no tracking, no medical claims. Not offered in the craving flow. */
-const WARM_DRINKS = [["decaf","☕","Decaf coffee"],["tea","🍵","Caffeine-free tea"],["cocoa","🍫","Hot cocoa"],["milk","🥛","Warm milk"],["water","💧","Warm water"],["cider","🍎","Warm cider"],["else","","Something else"]];
+const WARM_DRINKS = [["decaf","☕","Decaf coffee"],["tea","🍵","Caffeine-free tea"],["cocoa","🍫","Hot cocoa"],["milk","🥛","Warm milk"],["water","💧","Warm water"],["apple","🍎","Warm apple juice"],["else","","Something else"]];
 const WARM_TITLE = "Make something warm.";
 const WARM_SUB = "Nothing needs to be solved right now.";
 const WARM_HOT = "Make it comfortably warm, not dangerously hot. Set it down before you walk around with it.";
@@ -1554,10 +1596,16 @@ INTERVENTION_LIBRARY.push(
     states:["anxious","low","spiraling"], intensityRange:[0,10], needsMobility:true, realWorld:true,
     steps:["Make something warm.","Sit for a few minutes.","Put the phone down."], completion:"tap_done" }
 );
-// WARM & COMFORT (SENSE, real world).
+// COZY UP (SENSE, real world): the engine suggests this; "Make something warm" is now its first step.
+INTERVENTION_LIBRARY.push(
+  { id:"cozy_up", name:"Cozy up", tryLabel:"Cozy up", description:"One cozy thing at a time: something warm, a blanket, softer light, a soft sound.", durationSec:900,
+    states:["anxious","spiraling","low","alone","distraction"], intensityRange:[0,10], needsMobility:true, realWorld:true,
+    steps:["Something warm to drink.","A blanket or warm socks.","Softer light.","A soft sound.","Something soft.","A warm shower."], completion:"tap_done" }
+);
+// WARM & COMFORT (SENSE, real world): reached from Cozy up, Social Zig and coffee; no states, so the engine doesn't suggest it twice.
 INTERVENTION_LIBRARY.push(
   { id:"warm_comfort", name:"Make something warm", tryLabel:"Make something warm", description:"Nothing needs to be solved right now. Make something warm and take a few quiet minutes.", durationSec:300,
-    states:["anxious","spiraling","low","alone","distraction"], intensityRange:[0,10], needsMobility:true, realWorld:true,
+    states:[], intensityRange:[0,10], needsMobility:true, realWorld:true,
     steps:["Make something warm.","Hold the cup for a moment.","Take your time with the first sip."], completion:"tap_done" }
 );
 // 6.18 E5: "Be around people, no talking needed" (PEOPLE), opened from Connect only.
@@ -1577,7 +1625,7 @@ const CHANNEL_OF = {
   grounding:"BODY", breathing:"BODY", hydration:"BODY", walking:"BODY", touch_real_world:"BODY",
   change_scene:"SPACE", environment_change:"SPACE", find_alive:"SPACE", craving_delay:"SPACE",
   distraction_game:"SENSE", distraction_color_hunt:"SENSE", distraction_around_me:"SENSE", distraction_categories:"SENSE",
-  distraction_memory:"SENSE", distraction_pattern:"SENSE", distraction_60_second:"SENSE", ridiculous_mode:"SENSE", zags:"SENSE", song:"SENSE", break_the_loop:"SPACE", ai_relationship_check:"PEOPLE", be_around_people:"PEOPLE", find_something:"SENSE", warm_comfort:"SENSE", social_zig:"ACTION", coffee_with_zigzag:"SENSE", ai_loss:"PEOPLE", ai_reliance_check:"ACTION", ai_fomo:"ACTION",
+  distraction_memory:"SENSE", distraction_pattern:"SENSE", distraction_60_second:"SENSE", ridiculous_mode:"SENSE", zags:"SENSE", song:"SENSE", break_the_loop:"SPACE", ai_relationship_check:"PEOPLE", be_around_people:"PEOPLE", find_something:"SENSE", warm_comfort:"SENSE", cozy_up:"SENSE", social_zig:"ACTION", coffee_with_zigzag:"SENSE", ai_loss:"PEOPLE", ai_reliance_check:"ACTION", ai_fomo:"ACTION",
   connection:"PEOPLE",
   thought_parking:"ACTION", still_true:"ACTION", true_sentence:"ACTION", kind_stranger:"ACTION", borrow_ten:"ACTION", behavioral_activation:"ACTION"
 };
@@ -2596,6 +2644,7 @@ function startIntervention(interventionId, opts = {}){
     ui.touchPhase = interventionId === "touch_real_world" && getPlan().anchor ? "anchor" : null;
     route = R617[interventionId];
   }
+  if (interventionId === "cozy_up"){ route = "cozy"; ui.cozy = { idx:0, low:opts.low === true || session.currentState === "low", sleep:false, until:0, timeUp:false }; }
   if (interventionId === "coffee_with_zigzag"){ route = "coffee"; ui.warmDrink = null; ui.coffee = { phase:"intro", turns:0, talkIdx:0, randomUsed:0, line:"" }; }
   if (interventionId === "warm_comfort"){ route = "warm"; ui.warmDrink = null; ui.warmStep = 0; ui.warmSlow = false; }
   if (interventionId === "find_something"){ route = "fs"; fsDropPhoto(); ui.fsIdx = opts.mission != null ? opts.mission : 1; ui.fsYours = opts.yours || null; ui.fsCaption = ""; ui.fsKept = false; ui.msg = ""; }
@@ -2826,7 +2875,7 @@ const SCREENS = {
       ${title(l10n("calm.title"))}
       <p class="sub">${l10n("calm.sub")}</p>
       <button class="card wide coffee-card" data-act="coffeeStart">${icon("calm")}<span>${COFFEE.entry}<span class="meta">${COFFEE.entrySub}</span></span></button>
-      <button class="card wide warm-card" data-act="warmStart">${icon("calm")}<span>Make something warm<span class="meta">Nothing needs to be solved right now</span></span></button>
+      <button class="card wide cozy-card" data-act="cozyStart">${icon("calm")}<span>Cozy up<span class="meta">Something warm, a blanket, softer light</span></span></button>
       <button class="card wide zcard" data-act="zags" data-arg="calm">${zagsFace()}<span>${l10n("calm.zags")}<span class="meta">${l10n("calm.zagsMeta")}</span></span></button>
       <div class="list">${opts.map(([arg, ic, t, m]) =>
         `<button class="card" data-act="calmPick" data-arg="${arg}">${icon(ic)}<span>${t}<span class="meta">${m}</span></span></button>`).join("")}
@@ -3060,6 +3109,49 @@ const SCREENS = {
       actions:SZ.feltChoices.map(([k, l]) => `<button class="btn btn-secondary" data-act="szZig" data-arg="felt">${l}</button>`).join("") };
   },
 
+  /* COZY UP */
+  cozy(){
+    const c = cozyState();
+    const night = isNight() && !c.sleep;
+    return { close:true, body:`
+      <p class="step-count">Cozy up</p>
+      ${title(COZY.title)}
+      <p class="sub">${c.low ? COZY.low : COZY.sub}</p>
+      ${c.low && !c.until ? `<button class="btn btn-secondary" data-act="cozyTimer">Start a gentle 15-minute timer</button>` : ""}
+      ${c.low && c.until ? `<p class="borrow-time" id="cozyTime" role="timer" aria-label="Time left">${fmtTime(Math.max(0, c.until - Date.now()))}</p>` : ""}
+      ${night ? `<button class="card wide cozy-sleep" data-act="cozySleep" style="margin-top:12px">${icon("calm")}<span>${COZY.sleepEntry}<span class="meta">Soft light, something warm with no caffeine, phone out of reach</span></span></button>` : ""}
+      ${cozyConnect()}`,
+      actions:`<button class="btn btn-primary" data-act="cozyGo">Start</button>` };
+  },
+  "cozy-step"(){
+    const c = cozyState(), list = cozyList();
+    const it = list[Math.min(c.idx, list.length - 1)];
+    const last = c.idx >= list.length - 1;
+    return { close:true, body:`
+      <p class="step-count">${c.sleep ? COZY.sleepEntry : "Cozy up"} · ${c.idx + 1} of ${list.length}</p>
+      ${stepTitle(it[2], true)}
+      ${!c.sleep && it[0] === "drink" ? `<button class="link" data-act="cozyWarm" style="margin-top:12px">Show me the warm drink steps</button>` : ""}
+      ${c.sleep && last ? `<p class="sub cozy-sleep-note">${COZY.sleepNote}</p>` : ""}
+      ${c.low && c.until ? `<p class="small">Time left: <span id="cozyTime" role="timer">${fmtTime(Math.max(0, c.until - Date.now()))}</span></p>` : ""}
+      ${cozyConnect()}`,
+      actions:`<button class="btn btn-primary" data-act="${last ? "cozyEnd" : "cozyNext"}">${last ? "Done" : "Done. Next one"}</button>
+        ${last ? "" : `<button class="btn btn-secondary" data-act="cozyNext">Skip this one</button>`}
+        <button class="link" data-act="cozyEnd">That's enough</button>` };
+  },
+  "cozy-end"(){
+    const c = cozyState();
+    if (c.low && c.timeUp) return { close:true, body:`${stepTitle(COZY.lowEnd, true)}${cozyConnect()}`,
+      actions:`<button class="btn btn-primary" data-act="cozyTiny">One tiny thing</button><button class="link" data-act="putDown">Not now</button>` };
+    return { close:true, body:`
+      <div class="cozy-mark">${zagsMark("zmark-lg zmark-cozy", { blanket:true })}</div>
+      ${stepTitle(COZY.end, true)}
+      ${c.sleep ? `<p class="sub">${COZY.sleepNote}</p>` : ""}
+      ${c.low ? `<p class="sub">${COZY.low}</p>${cozyConnect()}` : ""}`,
+      actions:`${c.low ? `<button class="btn btn-secondary" data-act="cozyTiny">One tiny thing</button>` : ""}
+        <button class="btn btn-primary" data-act="putDown">I'm done</button>
+        <button class="link" data-act="stepCheckin">How do I feel now?</button>` };
+  },
+
   /* HAVE COFFEE WITH ZIGZAG */
   coffee(){
     return { close:true, body:`
@@ -3163,8 +3255,9 @@ const SCREENS = {
     return { close:true, body:`
       ${stepTitle(WARM_END[0], true)}
       <p class="sub" style="font-size:19px">${WARM_END[1]}</p>`,
-      actions:`${yours ? `<button class="btn btn-secondary" data-act="yourThings">Now go do something that's yours</button>` : ""}
-        <button class="btn btn-primary" data-act="fsDone">I'm done</button>
+      actions:`${ui.cozyReturn ? `<button class="btn btn-primary" data-act="cozyBack">Next cozy thing</button>` : ""}
+        ${yours && !ui.cozyReturn ? `<button class="btn btn-secondary" data-act="yourThings">Now go do something that's yours</button>` : ""}
+        <button class="btn ${ui.cozyReturn ? "btn-secondary" : "btn-primary"}" data-act="fsDone">I'm done</button>
         <button class="link" data-act="stepCheckin">How do I feel now?</button>` };
   },
 
@@ -3336,6 +3429,7 @@ const SCREENS = {
         <button class="card" data-act="lowPick" data-arg="hydration"><span class="em" aria-hidden="true">💧</span><span>Body<span class="meta">Drink water.</span></span></button>
         <button class="card" data-act="lowPick" data-arg="environment_change"><span class="em" aria-hidden="true">🪟</span><span>Space<span class="meta">Open a window or step outside.</span></span></button>
         <button class="card" data-act="lowPick" data-arg="connection"><span class="em" aria-hidden="true">💬</span><span>Connection<span class="meta">Text someone: hey</span></span></button>
+        <button class="card" data-act="cozyStart" data-arg="low"><span class="em" aria-hidden="true">🧣</span><span>Cozy up<span class="meta">15 minutes, then one tiny thing.</span></span></button>
         <button class="card" data-act="lowPick" data-arg="borrow_ten"><span class="em" aria-hidden="true">⏱️</span><span>Borrow ten minutes<span class="meta">Just the next ten minutes.</span></span></button>
         <button class="card" data-act="lowPick" data-arg="kind_stranger"><span class="em" aria-hidden="true">🤝</span><span>A kinder voice<span class="meta">What would you tell a friend?</span></span></button>
         <button class="card" data-act="lowPick" data-arg="find_alive"><span class="em" aria-hidden="true">🌿</span><span>Find something alive<span class="meta">A pet, a bird, a tree.</span></span></button>
@@ -4884,10 +4978,11 @@ function pickCodeWords(avoid = []){
 
 /* Small face for the entry cards. */
 /* Zags as a small, still brand mark: the exact character from zags-preview.html (open eyes, closed smile).
-   Only on Home (next to the wordmark), "You're ready", the onboarding welcome, empty My Plan and empty My songs.
+   Only on Home (next to the wordmark), "You're ready", the onboarding welcome, empty My Plan, empty My songs, and
+   (owner request) the end of Cozy up, in a small blanket.
    Never on crisis screens, safety-check, crisis-no or "I need my plan" (BRAND_ZAGS_NEVER). */
 const BRAND_ZAGS_NEVER = [...CRISIS_SCREENS, "plan-now"];
-function zagsMark(cls = ""){
+function zagsMark(cls = "", opts = {}){
   if (BRAND_ZAGS_NEVER.includes(session.screen)) return "";
   return `<span class="zmark${cls ? " " + cls : ""}" aria-hidden="true"><svg viewBox="0 0 220 220">
     <g class="zmark-body">
@@ -4898,6 +4993,8 @@ function zagsMark(cls = ""){
     <circle cx="89" cy="114" r="2.6" fill="#fff"/><circle cx="137" cy="114" r="2.6" fill="#fff"/>
     <ellipse cx="70" cy="138" rx="10" ry="6" fill="var(--zag-cheek)" opacity=".55"/><ellipse cx="150" cy="138" rx="10" ry="6" fill="var(--zag-cheek)" opacity=".55"/>
     <path d="M100 140 Q110 148 120 140" fill="none" stroke="var(--zag-eye)" stroke-width="4" stroke-linecap="round"/>
+    ${opts.blanket ? `<path class="zmark-blanket" d="M30 150 C60 138 160 138 190 150 L184 192 C150 206 70 206 36 192 Z" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M60 160 L64 190 M110 156 L110 196 M160 160 L156 190" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" opacity=".6"/>` : ""}
     </g></svg></span>`;
 }
 /* 6.19 B: the print view. Built only when the person taps Print; empty sections are skipped; the code word only
@@ -5080,7 +5177,9 @@ function render(){
     if (!["fs","fs-found","fs-nocam"].includes(s) && ui.fsPhoto) fsDropPhoto();   // the preview never outlives the activity
     clearInterval(tcTimer); tcTimer = null;
     clearInterval(minuteTimer); minuteTimer = null;
-    if (s !== "coffee-table") coffeeClear();   // leaving (Help, X, RED) stops the coffee lines
+    if (s !== "coffee-table") coffeeClear();
+    clearInterval(cozyTimer); cozyTimer = null;
+    if (s.startsWith("cozy") && ui.cozy && ui.cozy.until) cozyTimer = setInterval(cozyTick, 1000);   // leaving (Help, X, RED) stops the coffee lines
     if (s === "minute-down" && ui.minutePhase === "wait") minuteTimer = setInterval(minuteTick, 1000);
     if (s === "tc-loop" && ui.tcLoopEnd) tcTimer = setInterval(tcTick, 1000);   // leaving the player (Help, X, RED) stops the song at once
     if (s === "zags" && ui.zags && ui.zags.phase === "breathe") zagsStartBreathing();
@@ -5661,6 +5760,30 @@ const ACTIONS = {
     if (arg === "talk"){ ACTIONS.route("connect"); return; }
     if (arg === "pick"){ dispatch({ type:"SET_CURRENT_STATE", state:"distraction" }); ui.exclude = ["social_zig"]; ui.dirOpen = false; runEngine(); go("recommendation"); return; }   // the engine decides (YELLOW first)
     if (arg === "down"){ go("sz-enough"); return; }
+  },
+
+  /* COZY UP */
+  cozyStart(arg){ if (blockIfRed()) return; ui.cozyReturn = null; startIntervention("cozy_up", { low:arg === "low" }); },
+  cozyGo(){ if (blockIfRed()) return; cozyState(); ui.cozy.idx = 0; go("cozy-step"); },
+  cozySleep(){ if (blockIfRed()) return; if (!isNight()) return; cozyState(); ui.cozy.sleep = true; ui.cozy.idx = 0; go("cozy-step"); },
+  cozyNext(){ if (blockIfRed()) return; cozyState(); const n = cozyList().length; ui.cozy.idx = Math.min(ui.cozy.idx + 1, n - 1); lastRendered = null; render(); },
+  cozyEnd(){ if (blockIfRed()) return; cozyState(); ui.cozy.timeUp = false; go("cozy-end"); },
+  cozyTimer(){ if (blockIfRed()) return; cozyState(); ui.cozy.until = Date.now() + COZY_LOW_MS; lastRendered = null; render(); },
+  cozyTiny(){ if (blockIfRed()) return; clearInterval(cozyTimer); cozyTimer = null; dispatch({ type:"SET_CURRENT_STATE", state:"low" }); go("low-choose"); },
+  cozyWarm(){   // the existing warm flow, then back to the next cozy thing
+    if (blockIfRed()) return;
+    ui.cozyReturn = { ...ui.cozy };
+    dispatch({ type:"SET_CURRENT_INTERVENTION", id:"warm_comfort" });
+    ui.warmDrink = null; ui.warmStep = 0; ui.warmSlow = false;
+    go("warm");
+  },
+  cozyBack(){
+    if (blockIfRed()) return;
+    const back = ui.cozyReturn; ui.cozyReturn = null;
+    if (!back){ go("cozy"); return; }
+    dispatch({ type:"SET_CURRENT_INTERVENTION", id:"cozy_up" });
+    ui.cozy = back; ui.cozy.idx = Math.min(ui.cozy.idx + 1, cozyList().length - 1);
+    go("cozy-step");
   },
 
   /* HAVE COFFEE WITH ZIGZAG */
