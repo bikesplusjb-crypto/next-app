@@ -543,7 +543,13 @@ h2{font-size:22px;line-height:1.25}
 const DONATE_URL = "https://ko-fi.com/zigzagmind";
 /* 6.19 C: Privacy & terms. DRAFT, lawyer review required (docs/CLINICIAN_REVIEW.md); the page itself doesn't say "draft".
    Every paragraph is paired with the sentence in docs/PRIVACY_DATA_FLOW.md that supports it (stage619.test.js checks both). */
-const CONTACT_EMAIL = "";   // owner: set to show a contact line; empty means no line
+const CONTACT_EMAIL = "";
+/* 6.19 F: optional, anonymous feedback form. Empty: nothing is shown anywhere. When set (https only): one quiet link
+   on About, never on crisis screens, Home, onboarding or after a check-in; no prompts or pop-ups. */
+const FEEDBACK_URL = "";
+function feedbackUrl(){ return /^https:\/\/\S+$/.test(FEEDBACK_URL) ? FEEDBACK_URL : ""; }
+const FEEDBACK_PRIVACY = ["If you use the feedback link on About, that form is a separate service. It receives only what you type there.",
+  "**Feedback form (6.19 F, only when `FEEDBACK_URL` is set):** opens a separate service in a new tab. It receives only what the person types there (plus normal request data). Nothing from the app is sent with it."];   // owner: set to show a contact line; empty means no line
 const PRIVACY_PAGE = [
   ["What's saved, and where", "Your plan, check-ins and settings are saved only in this browser on this phone. They are not encrypted: anyone who can use your unlocked phone, or its backups, may be able to read them.",
     "Not encrypted.** Anyone with access to the unlocked phone and browser, or its backups, can read `localStorage`."],
@@ -2758,6 +2764,7 @@ const SCREENS = {
     return { close:true, body:`
       ${title("Privacy &amp; terms")}
       ${PRIVACY_PAGE.map(([h, t]) => `${h ? `<h2>${h}</h2>` : ""}<p class="privacy-p">${esc(t)}</p>`).join("")}
+      ${feedbackUrl() ? `<p class="privacy-p privacy-feedback">${esc(FEEDBACK_PRIVACY[0])}</p>` : ""}
       ${CONTACT_EMAIL ? `<p class="privacy-p privacy-contact">Questions? Email <a href="mailto:${esc(CONTACT_EMAIL)}">${esc(CONTACT_EMAIL)}</a>.</p>` : ""}`,
       actions:`<button class="btn btn-secondary" data-act="privacyBack">Back</button>` };
   },
@@ -4147,6 +4154,7 @@ const SCREENS = {
         <p class="small" style="margin:8px 0 0">In this prototype, data is saved only in your browser on this device. Turn saving off in Settings for a shared phone.</p>
         <button class="link" data-act="privacyOpen" style="margin-top:6px">Privacy &amp; terms</button></div>
       <p class="disclaimer" style="margin:24px 0">ZigZag Mind is a self-help support tool. It is not therapy, medical care, or an emergency service. If you're in danger, call 911 or call or text 988.</p>
+      ${feedbackUrl() ? `<p class="small feedback-line" style="text-align:center;margin:0 0 16px"><a href="${esc(feedbackUrl())}" target="_blank" rel="noopener">Did ZigZag Mind help? Tell us anonymously →</a></p>` : ""}
       ${donateUrl() ? `<p class="small donate-line" style="text-align:center;margin:0 0 24px">Free for everyone, always. <a class="donate" href="${esc(donateUrl())}" target="_blank" rel="noopener">Support ZigZag Mind</a></p>` : ""}` };
   }
 };

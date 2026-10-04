@@ -139,6 +139,22 @@ const SCREENS_ALL=w=>w.eval('Object.keys(SCREENS)');
  const on=bootSrc(HTML.replace('const SPANISH_ENABLED = false;','const SPANISH_ENABLED = true;')); on.eval('prefs.lang="es"; openCrisis()');
  r.push(['E5: even if it were turned on, a draft crisis line falls back to English (never shown)', on.document.getElementById('screen-title').textContent==="I'm glad you told me." && on.eval('l10n("calm.title")')==='Vamos a bajar el ritmo.']);}
 
+// ---- F. Feedback link ----
+{const sweep=w=>{ const found=[]; for(const sc of SCREENS_ALL(w)){ try{ w.eval(`ui=freshUi(); lastRendered=null; session={...session, screen:${JSON.stringify(sc)}}; render()`); if(/Tell us anonymously/.test(w.document.getElementById('app').innerHTML)) found.push(sc); }catch(e){} } return found; };
+ const off=bootSrc(HTML);
+ r.push(['F1: FEEDBACK_URL is empty by default, and nothing is shown anywhere', off.eval('FEEDBACK_URL')==='' && sweep(off).length===0]);
+ off.eval('lastRendered=null; session={...session, screen:"privacy"}; render()'); r.push(['F4: no privacy note while it is empty', !off.document.querySelector('.privacy-feedback')]);
+ const ON=HTML.replace('const FEEDBACK_URL = "";','const FEEDBACK_URL = "https://forms.example.org/zz";');
+ const on=bootSrc(ON); const where=sweep(on);
+ r.push(['F2/F3: when set, on About only (never crisis screens, Home, onboarding or after a check-in)', JSON.stringify(where)==='["about"]', where.join()]);
+ on.eval('ACTIONS.about()'); const l=[...on.document.querySelectorAll('#app a')].find(a=>a.textContent==='Did ZigZag Mind help? Tell us anonymously →');
+ r.push(['F2: "Did ZigZag Mind help? Tell us anonymously →" opens the URL in a new tab', !!l && l.getAttribute('href')==='https://forms.example.org/zz' && l.target==='_blank' && /noopener/.test(l.rel)]);
+ on.eval('lastRendered=null; session={...session, screen:"privacy"}; render()'); const n=on.document.querySelector('.privacy-feedback');
+ r.push(['F4: privacy page notes the form is a separate service and only receives what is typed there', !!n && n.textContent===on.eval('FEEDBACK_PRIVACY[0]')]);
+ r.push(['F4: ...backed by PRIVACY_DATA_FLOW.md', fs.readFileSync(path.join(__dirname,'docs','PRIVACY_DATA_FLOW.md'),'utf8').includes(on.eval('FEEDBACK_PRIVACY[1]'))]);
+ const bad=bootSrc(HTML.replace('const FEEDBACK_URL = "";','const FEEDBACK_URL = "javascript:alert(1)";')); bad.eval('ACTIONS.about()');
+ r.push(['F1: only an https address is used', !/Tell us anonymously/.test(bad.document.getElementById('app').innerHTML)]);}
+
 //@@NEXT@@
 console.log(r.map(x=>(x[1]?'PASS ':'FAIL ')+x[0]+(x[1]||!x[2]?'':' — '+x[2])).join('\n'));
 process.exit(0);

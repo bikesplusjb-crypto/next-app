@@ -65,6 +65,8 @@ Everything below happens only when the person taps something:
 
 - **Calendar files (6.13 and check-ins):** built on the phone and handed to the phone's own calendar. Nothing is sent by the app.
 
+- **Feedback form (6.19 F, only when `FEEDBACK_URL` is set):** opens a separate service in a new tab. It receives only what the person types there (plus normal request data). Nothing from the app is sent with it. Shown only as a link on About.
+
 - **Print my plan (6.19 B):** the print view is built in the page only when the person taps Print and is cleared afterwards; the phone's or computer's own print dialog sends it to the printer the person picks. The code word is left out unless they tick "Include my code word" (never saved). Nothing is uploaded.
 
 - **Copy buttons (desktop, no phone):** the prepared message or code word goes to the clipboard only when the person taps Copy. The clipboard may sync to their other devices. Nothing is sent by the app.
