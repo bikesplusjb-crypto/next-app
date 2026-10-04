@@ -107,6 +107,7 @@ Shown with a trusted person in My Plan (example name "Jordan") unless noted. The
 - **Heading:** I'm glad you told me.
 - **Link → `tel:988`:** Call 988 _(screen reader: "Call 988, the Suicide and Crisis Lifeline")_
 - **Link → `sms:988`:** Text 988 _(screen reader: "Text 988, the Suicide and Crisis Lifeline")_
+- Veteran or service member? Call 988 and press 1.
 - **Heading:** Are you in danger of hurting yourself or someone else right now?
 - **Button:** Yes
 - **Button:** No
@@ -122,6 +123,9 @@ Shown with a trusted person in My Plan (example name "Jordan") unless noted. The
 - **Link → `tel:988`:** Call 988 _(screen reader: "Call 988, the Suicide and Crisis Lifeline")_
 - **Link → `sms:988`:** Text 988 _(screen reader: "Text 988, the Suicide and Crisis Lifeline")_
 - **Link → `https://988lifeline.org/chat`:** Chat online with 988
+- Veteran or service member? Call 988 and press 1.
+- Want someone to come to you who isn't police? In many Florida counties, 211 can connect you to a mobile crisis team.
+- **Link → `tel:211`:** Call 211
 - **Link → `tel:5550142`:** Call Jordan
 - **Link → `sms:5550142?&body=I'm having a really hard time. Can you call me?`:** Text Jordan
 - **Button:** Go where other people are
@@ -129,6 +133,7 @@ Shown with a trusted person in My Plan (example name "Jordan") unless noted. The
 - The public library
 - **Button:** Open my plan
 - If you can, put distance between yourself and anything you could use to hurt yourself.
+- Been drinking or using? Alcohol and drugs can make hard moments feel more final. Don't decide anything tonight, and try to be near someone.
 - ZigZag Mind is not an emergency service.
 - **Button:** That's not what I meant — go back
 
@@ -140,11 +145,15 @@ Shown with a trusted person in My Plan (example name "Jordan") unless noted. The
 - **Link → `tel:988`:** Call 988 _(screen reader: "Call 988, the Suicide and Crisis Lifeline")_
 - **Link → `sms:988`:** Text 988 _(screen reader: "Text 988, the Suicide and Crisis Lifeline")_
 - **Link → `https://988lifeline.org/chat`:** Chat online with 988
+- Veteran or service member? Call 988 and press 1.
+- Want someone to come to you who isn't police? In many Florida counties, 211 can connect you to a mobile crisis team.
+- **Link → `tel:211`:** Call 211
 - Add someone you trust in My Plan.
 - **Button:** Go where other people are
 - A shop, a library, a friend's place — anywhere with people.
 - **Button:** Open my plan
 - If you can, put distance between yourself and anything you could use to hurt yourself.
+- Been drinking or using? Alcohol and drugs can make hard moments feel more final. Don't decide anything tonight, and try to be near someone.
 - ZigZag Mind is not an emergency service.
 - **Button:** That's not what I meant — go back
 
@@ -161,6 +170,7 @@ Shown with a trusted person in My Plan (example name "Jordan") unless noted. The
 - ZigZag Mind never contacts anyone for you. These buttons open your phone.
 - **Button:** Open my plan
 - **Button:** Do something grounding
+- Been drinking or using? Alcohol and drugs can make hard moments feel more final. Don't decide anything tonight, and try to be near someone.
 - ZigZag Mind is not an emergency service.
 
 ### "Do you feel safer?"
@@ -196,6 +206,7 @@ Shown with a trusted person in My Plan (example name "Jordan") unless noted. The
 - **Link → `tel:988`:** Call 988 _(screen reader: "Call 988, the Suicide and Crisis Lifeline")_
 - **Link → `sms:988`:** Text 988 _(screen reader: "Text 988, the Suicide and Crisis Lifeline")_
 - **Link → `https://findahelpline.com`:** Find a helpline in your country
+- Veteran or service member? Call 988 and press 1.
 - **Heading:** Are you in danger of hurting yourself or someone else right now?
 - **Button:** Yes
 - **Button:** No
@@ -626,6 +637,7 @@ Changed for review: the craving button now reads "I have an urge to use (drink o
 
 - "How I know a hard moment is starting" (hint: "In your own words. One per line.")
 - "Things that help me on my own"
+- "Reasons to stay" (hint: "People, plans, things you're looking forward to, songs, anything.")
 - "People and places that take my mind off things" (hint: "Names or places. One per line.")
 - "My trusted people"
 - "Professional and crisis support"
@@ -918,6 +930,7 @@ A static page for the people in someone's plan: no scripts, no storage, no track
 
 **Time and distance**
 - Offer to hold onto things for a while, or help them get somewhere safer.
+- If there's a gun at home: the safest step during hard times is to store it away from the person for a while — with someone you trust, or at a gun shop, range, or police department that offers temporary storage. It's temporary, and it's yours.
 
 **Check in now and then**
 - Short, no-pressure messages help, even weeks later. Add reminders to your own calendar:
@@ -991,6 +1004,26 @@ About: "When something isn't helping, ZigZag doesn't tell you to try harder. It 
 **Ridiculous mode** (Get out of my head only; hidden in YELLOW and after any crisis screen this visit; two per visit): "Make this less serious. Just for a moment." "Find the most boring object in the room." · "Decide whether your refrigerator is judging you." · "Find the object that looks most like a face." · "Give the nearest chair a completely unnecessary name." · "Find something that would make a terrible hat." → "Okay. Back to reality."
 
 **Find something real** (Calm): "Find something you can hold." · "Find something cooler." · "Find something warmer." · "Put both feet on the floor." · "Change your position." · "Wash your hands." · "Turn on a light.". Optional textures: smooth, rough, warm, cool, soft, hard, heavy, light. With an anchor in My Plan: "Do you have your anchor nearby?" Yes: "Hold it for a moment." No: "Find something else you can safely hold." Ends: "You found something real."
+
+### Stage 6.18 owner-approved updates (OWNER-APPROVED INTERIM, pending clinician)
+
+A. Zags: first line now "Hi, I'm Zags. I'm not a person, just a little guide. I can guide you through the next few minutes."; Connect: "Calm down with Zags while you wait" (no subtitle).
+
+B. Supporter guide, "Look after yourself": "Talk to someone who gets it. The Florida Warm Line is free and is also for family and friends supporting someone: 1-800-945-1355, every day 4pm–10pm Eastern. Not a crisis line. For a crisis, call or text 988."
+
+C. Spanish RED phrases: quiero morir · me quiero morir · quiero matarme · me voy a matar · quitarme la vida · suicidarme · no quiero vivir. Accents are folded before matching. A reviewed Spanish YELLOW list is requested.
+
+D1. Under the 988 buttons (first crisis screen, full crisis screen, Connect): "Veteran or service member? Call 988 and press 1."
+
+D2. Night (00:00–05:59, phone clock, nothing saved). Home: "It's late. Everything feels heavier at night. You don't have to decide anything before morning." Connect: 988 first; Warm Line moves below your people with "Usually closed right now · opens at 4pm Eastern" (button never disabled); "Can't sleep, you up?" first. Crisis screens never change.
+
+D3. crisis-no and full crisis screen, below the options: "Been drinking or using? Alcohol and drugs can make hard moments feel more final. Don't decide anything tonight, and try to be near someone."
+
+D4. Full crisis screen, below 988 and the veteran line: "Want someone to come to you who isn't police? In many Florida counties, 211 can connect you to a mobile crisis team." [Call 211]
+
+D5. My Plan "Reasons to stay" (hint: "People, plans, things you're looking forward to, songs, anything."; "Your songs are here too."). Shown on "I need my plan" and as "Your reasons to stay" on the full crisis screen when filled in.
+
+D6. Time-and-distance help text and supporter guide: "If there's a gun at home: the safest step during hard times is to store it away from the person for a while — with someone you trust, or at a gun shop, range, or police department that offers temporary storage. It's temporary, and it's yours."
 
 ### Desktop support (no phone or SMS)
 
@@ -1768,6 +1801,7 @@ _When: distraction_
 - If it gets heavier
 - **Link → `tel:988`:** Call 988 _(screen reader: "Call 988, the Suicide and Crisis Lifeline")_
 - **Link → `sms:988`:** Text 988 _(screen reader: "Text 988, the Suicide and Crisis Lifeline")_
+- Veteran or service member? Call 988 and press 1.
 
 ### `human-first`
 
@@ -2320,6 +2354,9 @@ _When: distraction_
 - Walking
 - Music
 - Shower
+- **Heading:** Reasons to stay
+- **Button:** Edit _(screen reader: "Edit: Reasons to stay")_
+- Nothing here yet.
 - **Heading:** People and places that take my mind off things
 - **Button:** Edit _(screen reader: "Edit: People and places that take my mind off things")_
 - The coffee shop on Main St

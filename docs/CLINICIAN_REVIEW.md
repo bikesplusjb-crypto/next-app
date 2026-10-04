@@ -138,5 +138,11 @@ These tests document **current** behavior so that any change is visible. They ar
 | D14 | Florida Warm Line (number, hours, time zone, coverage) | §16 | **OPEN** | | | |
 | D15 | Harm-to-others detection and routing | §14.2 | **OPEN: OWNER-APPROVED INTERIM in the code** (harm-to-others phrases → same crisis screen) | | | |
 | D16 | Spanish RED phrases (6.18 C): quiero morir · me quiero morir · quiero matarme · me voy a matar · quitarme la vida · suicidarme · no quiero vivir; accent folding in matching | §6, SAFETY_TEST_MATRIX "Spanish" | **OPEN: OWNER-APPROVED INTERIM in the code**. Please review these entries (e.g. "no quiero vivir aquí" now matches) and provide a reviewed Spanish YELLOW list | | | |
+| D17 | Veteran line "Veteran or service member? Call 988 and press 1." under the 988 buttons (crisis, full crisis, Connect) (6.18 D1) | §7 | **OPEN: OWNER-APPROVED INTERIM in the code** | | | |
+| D18 | Night mode 00:00–05:59: Home line "It's late. Everything feels heavier at night. You don't have to decide anything before morning."; Connect puts 988 first, Warm Line "Usually closed right now · opens at 4pm Eastern" (6.18 D2) | §7, §16 | **OPEN: OWNER-APPROVED INTERIM in the code** (crisis screens never change at night) | | | |
+| D19 | Alcohol and drugs line on crisis-no and the full crisis screen: "Been drinking or using? Alcohol and drugs can make hard moments feel more final. Don't decide anything tonight, and try to be near someone." (6.18 D3) | §7, §11 | **OPEN: OWNER-APPROVED INTERIM in the code** | | | |
+| D20 | "Want someone to come to you who isn't police? In many Florida counties, 211 can connect you to a mobile crisis team." [Call 211] on the full crisis screen (6.18 D4) | §7, §16 | **OPEN: OWNER-APPROVED INTERIM in the code**; owner to confirm local availability (CRISIS_RESOURCE_VERIFICATION) | | | |
+| D21 | Reasons to stay (My Plan section; shown on "I need my plan" and as a card on the full crisis screen when filled in) (6.18 D5) | §8 | **OPEN: OWNER-APPROVED INTERIM in the code** | | | |
+| D22 | Gun-storage line in the time-and-distance help text and the supporter guide (never on crisis screens) (6.18 D6) | §8, §12 | **OPEN: OWNER-APPROVED INTERIM in the code** | | | |
 
 Signed: ______________________ (name, credentials) Date: __________

@@ -23,7 +23,9 @@ r.push(['sections in order: code word · what to say · help together · time an
   H.join('|')==='If you got a code word|What to say|Get help together|Time and distance|Check in now and then|Look after yourself']);
 r.push(['what to say: ask directly; asking doesn\'t put the idea in their head; "I\'m here" is enough',
   text.includes('Ask directly: "Are you thinking about suicide?"') && text.includes("Asking doesn't put the idea in someone's head.") && text.includes('"I\'m here"')]);
-r.push(['time and distance: no specifics', text.includes('Offer to hold onto things for a while') && !/gun|firearm|pill|medication|knife|rope|lock/i.test(text)]);
+// 6.18 D6 (owner-approved, clinician review): the one gun-storage sentence is the only exception; nothing else may name a means.
+const GUN_P = [...g.querySelectorAll('#gunLine')].map(e=>e.textContent.replace(/\s+/g,' ')).join(' ');
+r.push(['time and distance: no specifics (except the approved gun-storage line, 6.18 D6)', text.includes('Offer to hold onto things for a while') && !/gun|firearm|pill|medication|knife|rope|lock/i.test(text.replace(GUN_P,'')) && /^If there's a gun at home: the safest step/.test(GUN_P)]);
 r.push(['footer: not an emergency service', g.querySelector('footer').textContent.trim()==='ZigZag Mind is a self-help support tool, not an emergency service.']);
 const words=g.querySelector('main').textContent.trim().split(/\s+/).length;
 r.push(['readable in 3 minutes (well under 600 words)', words<600, words]);

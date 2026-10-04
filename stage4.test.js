@@ -10,7 +10,7 @@ const r=[];
 {const {w,click,S,G,T}=boot();
  click(act('tab','settings')); click(act('loadSample')); // these edits build on the sample plan; real users start empty
  click(act('tab','plan'));
- r.push(['plan editable', w.document.querySelectorAll('.plan-head [data-act="planEdit"]').length===8]);
+ r.push(['plan editable', w.document.querySelectorAll('.plan-head [data-act="planEdit"]').length===9]);   // 9 since 6.18 D5 (Reasons to stay)
  r.push(['never-contact line', T().includes('ZigZag Mind will never contact these people for you')]);
  click(act('planEdit','warningSigns')); w.document.getElementById('edList').value='I stop eating\n\nI go quiet'; click(act('planSave'));
  r.push(['list saved', JSON.stringify(G('getPlan().warningSigns'))==='["I stop eating","I go quiet"]' && T().includes('Saved.')]);

@@ -5,10 +5,14 @@ const URL='file://'+require('path').join(__dirname,'index.html');
 const r=[];
 (async()=>{
  const b=await chromium.launch();
- for(const [name,viewport,deviceScaleFactor] of [['normal text',{width:390,height:844},3],['large text (200%)',{width:195,height:422},6]]){
+ // 6.18 D2: also at night (01:00), when Home adds the night line.
+ for(const [name,viewport,deviceScaleFactor,night] of [['normal text',{width:390,height:844},3,false],['large text (200%)',{width:195,height:422},6,false],
+     ['night, normal text',{width:390,height:844},3,true],['night, large text (200%)',{width:195,height:422},6,true]]){
   const p=await b.newPage({viewport,deviceScaleFactor});
+  if(night) await p.clock.setFixedTime(new Date(2026,9,5,1,0,0));
   await p.goto(URL);
   for(const a of ['obNext','obAdult','obLater']) await p.click(`[data-act="${a}"]`);
+  if(night) r.push([`${name}: the night line is on Home (or hidden in large text)`, await p.evaluate(()=>isNight() && !!document.querySelector('.home-night'))]);
   const m=await p.evaluate(()=>{
    const el=[...document.querySelectorAll('main [data-act="crisis"]')].find(e=>e.textContent.includes("I don't feel safe"));
    if(!el) return null;

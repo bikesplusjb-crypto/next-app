@@ -382,6 +382,13 @@ html.reduce .zmark-wave .zmark-body{animation:none}
 .faith-next{margin-top:8px}
 .faith-next a.sit{display:inline-flex;align-items:center;text-decoration:none;color:var(--text)}
 
+/* Stage 6.18 */
+.vet-line{margin:10px 0 0;font-weight:600}
+.using-line{margin-top:12px}
+.not-police .btn{width:100%}
+.td-gun{margin:8px 0 4px}
+.warm-night{font-weight:600;margin:4px 0 8px}
+
 /* Stage 6.14: Tech check */
 .tech-row{margin-top:14px;width:100%}
 .tc-sda .panel{margin:0}
@@ -621,6 +628,19 @@ function firstStep(){
   return FIRST_STEP[h] || SUGGESTION_TEXT[h] || `${helpLabel(h)}.`;
 }
 const MESSAGE_IDEAS = ["Can't sleep, you up?","Rough night. Can you talk for 5 minutes?","Want to catch up this week?"];
+/* 6.18 D: research-backed additions. OWNER-APPROVED INTERIM, pending clinician. Nothing here is saved or tracked. */
+const NIGHT_IDEA = MESSAGE_IDEAS[0];   // "Can't sleep, you up?" (already a message idea): first at night
+const VETERAN_LINE = "Veteran or service member? Call 988 and press 1.";
+const NIGHT_HOME_LINE = "It's late. Everything feels heavier at night. You don't have to decide anything before morning.";
+const WARMLINE_NIGHT = "Usually closed right now · opens at 4pm Eastern";
+const USING_LINE = "Been drinking or using? Alcohol and drugs can make hard moments feel more final. Don't decide anything tonight, and try to be near someone.";
+const NOT_POLICE_HEAD = "Want someone to come to you who isn't police?";
+const NOT_POLICE_TEXT = "In many Florida counties, 211 can connect you to a mobile crisis team.";   // clinician review; owner to confirm local availability
+const REASONS_HINT = "People, plans, things you're looking forward to, songs, anything.";
+const GUN_LINE = "If there's a gun at home: the safest step during hard times is to store it away from the person for a while — with someone you trust, or at a gun shop, range, or police department that offers temporary storage. It's temporary, and it's yours.";   // clinician review; never on crisis screens
+// Night: 00:00–05:59 by the phone's clock, read on each render. Nothing about it is saved.
+function isNight(){ const h = new Date().getHours(); return h >= 0 && h < 6; }
+const vetLine = () => `<p class="note vet-line">${VETERAN_LINE}</p>`;
 /* Human First (session only, never saved): after 2 taps on "Something else", or 2 finished steps without
    "That helped", ask once per visit whether a person would help more. */
 const HUMAN_FIRST_AFTER = 2;
@@ -1374,7 +1394,7 @@ function helpLabel(h){
    "sensitive" (plan, check-ins, activity) is kept apart from "product" data. */
 function emptyPlan(){
   return { myName:"", anchor:"", warningSigns:[], helps:[], places:[], trustedPeople:[], professional:{ name:"", phone:"" },
-    timeDistance:{ keepAway:"", holder:"", getBack:"" }, avoid:[], reminders:[] };
+    timeDistance:{ keepAway:"", holder:"", getBack:"" }, avoid:[], reminders:[], reasons:[] };
 }
 /* 6.11: "Making my space safer" became the time and distance plan. Old text moves into the first field. */
 function migratePlan(pl){
@@ -1382,6 +1402,7 @@ function migratePlan(pl){
   pl.timeDistance = { keepAway:String(td.keepAway || ""), holder:String(td.holder || ""), getBack:String(td.getBack || "") };
   if (typeof pl.saferSpace === "string" && pl.saferSpace.trim() && !pl.timeDistance.keepAway) pl.timeDistance.keepAway = pl.saferSpace.trim();
   delete pl.saferSpace;
+  pl.reasons = Array.isArray(pl.reasons) ? pl.reasons.map(x => String(x).trim().slice(0, 120)).filter(Boolean).slice(0, 10) : [];   // 6.18 D5
   return pl;
 }
 function samplePlan(){
@@ -2006,6 +2027,7 @@ const SCREENS = {
         ${zigzag()}
         <h1 id="screen-title" tabindex="-1" class="home-tag">It's okay not to be okay.</h1>
         <p class="home-sub">You don't have to figure everything out right now.</p>
+        ${isNight() ? `<p class="home-sub home-night">${NIGHT_HOME_LINE}</p>` : ""}
       </div>
       <button class="card wide safety home-safe" data-act="crisis">${icon("shield", "safety")}<span>I don't feel safe<span class="meta">Get to a real person fast</span></span></button>
       ${afterBar()}
@@ -2616,6 +2638,7 @@ const SCREENS = {
         ${people.length ? people.map(p => pairOrStack(`<a class="btn btn-outline" href="${telLink(p.phone)}"${attr} aria-label="${callText(`Call ${esc(p.name)}`, p.phone)}">${callText(`Call ${esc(p.name)}`, p.phone)}</a>`,
             textOrCopy({ phone:p.phone, body:HARD_TIME_MSG, label:`Text ${esc(p.name)}`, cls:"btn btn-outline", attr:attr.trim(), aria:`Text ${esc(p.name)}` }), "margin-top:10px")).join("")
           : `<p class="small" style="margin:6px 0 0">No one in your plan yet. 988 is below, any time.</p>`}</div>
+      ${(pb.reasons || []).length ? `<div class="panel pn"><p class="lbl">Reasons to stay</p>${pb.reasons.map(x => `<p>${esc(x)}</p>`).join("")}</div>` : ""}
       ${pb.places.length ? `<div class="panel pn"><p class="lbl">Places I can go</p><p>${pb.places.map(esc).join(" · ")}</p></div>` : ""}
       ${tdLines ? `<div class="panel pn"><p class="lbl">My time and distance plan</p>${tdLines}</div>` : ""}
       ${pb.reminders.length ? `<div class="panel pn"><p class="lbl">What I want to remember</p>${pb.reminders.map(x => `<p>${esc(x)}</p>`).join("")}</div>` : ""}
@@ -2630,15 +2653,22 @@ const SCREENS = {
   connect(){
     const people = getPlan().trustedPeople || [];
     const first = people[0];
-    return { close:true, body:`
-      ${title("You don't have to sit with this alone.")}
-      <div class="panel conn">
+    const night = isNight();   // 6.18 D2: at night 988 comes first and the Warm Line moves below your people
+    const ideas = night ? [NIGHT_IDEA, ...MESSAGE_IDEAS.filter(m => m !== NIGHT_IDEA)] : MESSAGE_IDEAS;
+    const warm = `<div class="panel conn" id="connWarm">
         <p class="lbl">Talk to someone who's been there</p>
         <h3>${WARMLINE.name}</h3>
         <p class="small">${WARMLINE.hours} ${WARMLINE.about}</p>
+        ${night ? `<p class="small warm-night">${WARMLINE_NIGHT}</p>` : ""}
         <a class="btn btn-primary" href="${WARMLINE.tel}">${callText("Call the Warm Line", WARMLINE.number)}</a>
         <a class="conn-more" href="${WARMLINE.elsewhereUrl}" target="_blank" rel="noopener">${WARMLINE.elsewhere}</a>
-      </div>
+      </div>`;
+    const crisis988 = `<p class="lbl">If it gets heavier</p>
+      ${row988()}
+      ${vetLine()}`;
+    return { close:true, body:`
+      ${title("You don't have to sit with this alone.")}
+      ${night ? crisis988 : warm}
       <div class="panel conn" id="connPeople">
         <p class="lbl">Reach one of your people</p>
         ${people.length ? people.map(p => `<h3>${esc(p.name)}${p.relationship ? ` <span class="small">· ${esc(p.relationship)}</span>` : ""}</h3>
@@ -2646,15 +2676,15 @@ const SCREENS = {
             `<a class="btn btn-secondary" href="${telLink(p.phone)}" aria-label="${callText(`Call ${esc(p.name)}`, p.phone)}">${callText("Call", p.phone)}</a>`)}`).join("") + `
           ${codeWordButton(false)}
           <p class="small" style="margin:14px 0 8px">Don't know what to say${people.length > 1 ? ` to ${esc(first.name)}` : ""}? ${canPhone() ? "Tap one:" : "Tap one to copy it:"}</p>
-          <div class="sits">${MESSAGE_IDEAS.map(m => canPhone() ? `<a class="sit idea" href="${smsLink(first.phone, m)}">${esc(m)}</a>` : copyButton(m, "sit idea", esc(m))).join("")}</div>`
+          <div class="sits">${ideas.map(m => canPhone() ? `<a class="sit idea" href="${smsLink(first.phone, m)}">${esc(m)}</a>` : copyButton(m, "sit idea", esc(m))).join("")}</div>`
         : `<p class="small">Add someone you trust, and they'll be here with Text and Call.</p>
           <button class="btn btn-secondary" data-act="planFromConnect">Add someone to My Plan</button>`}
       </div>
+      ${night ? warm : ""}
       <button class="card wide zcard" data-act="zags" data-arg="connect" style="margin-top:14px">${zagsFace()}<span>Calm down with Zags while you wait</span></button>
       <button class="link" data-act="songStart" data-arg="connect">Make a song while you wait</button>
       ${faithOn() ? `<button class="link faith-link" data-act="faith">Need a little hope?</button>` : ""}
-      <p class="lbl">If it gets heavier</p>
-      ${row988()}` };
+      ${night ? "" : crisis988}` };
   },
 
   "human-first"(){
@@ -3183,6 +3213,7 @@ const SCREENS = {
     return { close:false, body:`
       ${title("I'm glad you told me.")}
       ${row988()}
+      ${vetLine()}
       ${codeWord() ? `<div style="margin-top:10px">${codeWordButton(false)}</div>` : ""}
       <div class="panel">
         <h3 style="font-size:20px;line-height:1.3">Are you in danger of hurting yourself or someone else right now?</h3>
@@ -3204,13 +3235,18 @@ const SCREENS = {
         <a class="btn btn-safety two-line" href="${LINKS.call911}">Call 911<span class="cap">If someone is hurt, or someone else is in danger</span></a>
         ${row988().replace('style="margin-top:12px"', "")}
         ${canPhone() ? `<a class="btn btn-secondary" href="${LINKS.chat988}" target="_blank" rel="noopener">Chat online with 988</a>` : ""}
+        ${vetLine()}
+        <div class="panel not-police" style="margin-top:0"><p style="margin:0"><b>${NOT_POLICE_HEAD}</b> ${NOT_POLICE_TEXT}</p>
+          <a class="btn btn-secondary" style="margin-top:10px" href="${LINKS.call211}">Call 211</a></div>
         ${codeWordButton(false)}
         ${p ? personButtons(HARD_TIME_MSG, false) : `<p class="note">Add someone you trust in My Plan.</p>`}
         <button class="btn btn-secondary" data-act="cPlaces" aria-expanded="${ui.placesOpen}">Go where other people are</button>
         ${ui.placesOpen ? `<div class="panel" style="margin-top:0"><ul>${getPlan().places.length ? getPlan().places.map(x => `<li>${esc(x)}</li>`).join("") : "<li>A shop, a library, a friend's place — anywhere with people.</li>"}</ul></div>` : ""}
+        ${(getPlan().reasons || []).length ? `<div class="panel reasons-card" style="margin-top:0"><p class="lbl">Your reasons to stay</p>${getPlan().reasons.map(x => `<p style="margin:4px 0 0">${esc(x)}</p>`).join("")}</div>` : ""}
         <button class="btn btn-secondary" data-act="cPlan">Open my plan</button>
       </div>
       <p class="note">If you can, put distance between yourself and anything you could use to hurt yourself.</p>
+      <p class="note using-line">${USING_LINE}</p>
       <p class="disclaimer">ZigZag Mind is not an emergency service.</p>
       <div style="display:flex;justify-content:center"><button class="link" data-act="cFullBack">That's not what I meant — go back</button></div>` };
   },
@@ -3228,6 +3264,7 @@ const SCREENS = {
         <button class="btn btn-secondary" data-act="noPlan">Open my plan</button>
         <button class="btn btn-secondary" data-act="noGround">Do something grounding</button>
       </div>
+      <p class="note using-line">${USING_LINE}</p>
       <p class="disclaimer">ZigZag Mind is not an emergency service.</p>` };
   },
 
@@ -3264,6 +3301,8 @@ const SCREENS = {
       <div class="panel">${head("warningSigns", "How I know a hard moment is starting")}${ul(pb.warningSigns)}</div>
       <div class="panel">${head("helps", "Things that help me on my own")}${ul(pb.helps.map(helpLabel))}
         ${pb.anchor ? `<p class="small" style="margin:8px 0 0">My anchor: ${esc(pb.anchor)}</p>` : ""}</div>
+      <div class="panel">${head("reasons", "Reasons to stay")}${ul(pb.reasons || [])}
+        ${editable && songs().length ? `<button class="link" data-act="songList">Your songs are here too.</button>` : ""}</div>
       <div class="panel">${head("places", "People and places that take my mind off things")}${ul(pb.places)}</div>
       <div class="panel">${head("trustedPeople", "My trusted people")}
         <p class="note" style="margin-top:6px">ZigZag Mind will never contact these people for you. These buttons only open your phone's call or text app.</p>
@@ -3300,6 +3339,7 @@ const SCREENS = {
     let form = "";
     if (kind === "list"){
       form = `<label class="sub" for="edList">${esc(hint)}</label>
+        ${key === "reasons" && songs().length ? `<button class="link" data-act="songList" style="display:block">Your songs are here too.</button>` : ""}
         <textarea class="field" id="edList">${esc(pb[key].join("\n"))}</textarea>`;
     } else if (kind === "text"){
       form = `<label class="sub" for="edText">${esc(hint)}</label>
@@ -3307,6 +3347,7 @@ const SCREENS = {
     } else if (kind === "td"){
       const td = pb.timeDistance || {};
       form = `<p class="sub">Time and distance can make a hard moment safer. Write it in your own words. It stays on this phone.</p>
+        <p class="small td-gun">${GUN_LINE}</p>
         ${TD_FIELDS.map(([k, t, h], i) => `<label class="td-label" for="td${i}">${t}</label>${h ? `<p class="small" style="margin:2px 0 0">${h}</p>` : ""}
         <textarea class="field" id="td${i}" style="min-height:90px">${esc(td[k] || "")}</textarea>`).join("")}`;
     } else if (kind === "helps"){
@@ -3534,6 +3575,7 @@ const SCREENS = {
 const PLAN_SECTIONS = [
   ["warningSigns","How I know a hard moment is starting","list","In your own words. One per line."],
   ["helps","Things that help me on my own","helps",""],
+  ["reasons","Reasons to stay","list",REASONS_HINT],
   ["places","People and places that take my mind off things","list","Names or places. One per line."],
   ["trustedPeople","My trusted people","people",""],
   ["professional","Professional and crisis support","pro",""],
@@ -3772,7 +3814,7 @@ function zagsMark(cls = ""){
 }
 function planEmpty(){
   const pb = getPlan();
-  return !pb.warningSigns.length && !pb.helps.length && !pb.places.length && !pb.trustedPeople.length && !pb.avoid.length && !pb.reminders.length
+  return !pb.warningSigns.length && !pb.helps.length && !(pb.reasons || []).length && !pb.places.length && !pb.trustedPeople.length && !pb.avoid.length && !pb.reminders.length
     && !(pb.professional && pb.professional.name) && !codeWord() && !(pb.timeDistance || {}).keepAway;
 }
 function zagsFace(){

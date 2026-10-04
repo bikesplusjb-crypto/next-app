@@ -232,6 +232,18 @@ P(''); P(`**Find something alive**: "Find something alive." / "Do you have a pet
 P(''); P('**Ridiculous mode** (Get out of my head only; hidden in YELLOW and after any crisis screen this visit; two per visit): "Make this less serious. Just for a moment." '+G('RIDICULOUS_LINES').map(x=>`"${x}"`).join(' · ')+' → "Okay. Back to reality."');
 P(''); P('**Find something real** (Calm): '+G('TOUCH_PROMPTS').map(x=>`"${x}"`).join(' · ')+'. Optional textures: '+G('TEXTURES').join(', ')+'. With an anchor in My Plan: "Do you have your anchor nearby?" Yes: "Hold it for a moment." No: "Find something else you can safely hold." Ends: "You found something real."');
 
+H(3,'Stage 6.18 owner-approved updates (OWNER-APPROVED INTERIM, pending clinician)');
+P('A. Zags: first line now "'+G('ZAGS_LINES.hello')+'"; Connect: "Calm down with Zags while you wait" (no subtitle).');
+P(''); P('B. Supporter guide, "Look after yourself": "Talk to someone who gets it. The Florida Warm Line is free and is also for family and friends supporting someone: 1-800-945-1355, every day 4pm–10pm Eastern. Not a crisis line. For a crisis, call or text 988."');
+P(''); P('C. Spanish RED phrases: quiero morir · me quiero morir · quiero matarme · me voy a matar · quitarme la vida · suicidarme · no quiero vivir. Accents are folded before matching. A reviewed Spanish YELLOW list is requested.');
+P(''); P('D1. Under the 988 buttons (first crisis screen, full crisis screen, Connect): "'+G('VETERAN_LINE')+'"');
+P(''); P('D2. Night (00:00–05:59, phone clock, nothing saved). Home: "'+G('NIGHT_HOME_LINE')+'" Connect: 988 first; Warm Line moves below your people with "'+G('WARMLINE_NIGHT')+'" (button never disabled); "Can\'t sleep, you up?" first. Crisis screens never change.');
+P(''); P('D3. crisis-no and full crisis screen, below the options: "'+G('USING_LINE')+'"');
+P(''); P('D4. Full crisis screen, below 988 and the veteran line: "'+G('NOT_POLICE_HEAD')+' '+G('NOT_POLICE_TEXT')+'" [Call 211]');
+P(''); P('D5. My Plan "Reasons to stay" (hint: "'+G('REASONS_HINT')+'"; "Your songs are here too."). Shown on "I need my plan" and as "Your reasons to stay" on the full crisis screen when filled in.');
+P(''); P('D6. Time-and-distance help text and supporter guide: "'+G('GUN_LINE')+'"');
+//@@E618@@
+
 H(3,'Desktop support (no phone or SMS)');
 P('Phone stays the priority: links stay as they are unless the device is clearly a desktop or laptop (desktop browser, no touch). Unsure means phone. The crisis flow and the NO-branch safety-check rule are unchanged; a Copy button from the NO branch still sets "Do you feel safer?" in the same tap.');
 list(['"Text 988" → "Chat with 988 online" (https://988lifeline.org/chat, new tab). On crisis-full and Talk the separate "Chat online with 988" button is not shown twice.',

@@ -26,7 +26,8 @@ const MEANS=/gun|firearm|weapon|ammo|pill|medic|tablet|prescription|dose|overdos
  const labels=[...a.doc.querySelectorAll('.td-label')].map(x=>x.textContent);
  r.push(['edit: three labelled fields', labels.join('|')===Q.join('|') && ['td0','td1','td2'].every(id=>!!a.doc.querySelector(`label[for="${id}"]`) && !!a.doc.getElementById(id))]);
  const screenText=a.T()+' '+a.doc.querySelectorAll('textarea')[0].getAttribute('placeholder');
- r.push(['no examples or suggestions of means on the edit screen', !MEANS.test(screenText), (screenText.match(MEANS)||[''])[0]]);
+ // 6.18 D6 (owner-approved, clinician review): the one gun-storage sentence is the only exception.
+ const gun=a.G('GUN_LINE'); r.push(['no examples or suggestions of means on the edit screen (except the approved gun-storage line, 6.18 D6)', !MEANS.test(screenText.replace(gun,'')) && screenText.includes(gun), (screenText.replace(gun,'').match(MEANS)||[''])[0]]);
  a.doc.getElementById('td0').value='The things I wrote down'; a.doc.getElementById('td1').value='Jordan'; a.doc.getElementById('td2').value="after I've talked it over with Jordan";
  a.click(act('planSave'));
  const td=a.G('getPlan().timeDistance');
