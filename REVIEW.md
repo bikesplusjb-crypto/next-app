@@ -1077,7 +1077,7 @@ At 30 days, once, on Home: "Your first 30 days are over. Your plan and your peop
 ### Zags: every line he can say (ZAGS_LINES)
 
 Scripted, not AI. Taps only. Says he is not a person in every session's first line. No relationship language, no pressure to stay, no memory between sessions, never the person's name. Every session ends at a person. RED stops Zags. At most two breathing rounds per session (4 breaths each: in 4 seconds, out 6; 3 breaths with reduced motion). Voice is off by default and uses the device's own speech only.
-- `hello`: "Hi, I'm Zags. I'm not a person, just a little guide. I can stay with you for a few minutes."
+- `hello`: "Hi, I'm Zags. I'm not a person, just a little guide. I can guide you through the next few minutes."
 - `quiet`: "You don't have to say anything. Just breathe with me."
 - `in`: "Breathe in…"
 - `out`: "And out, slowly…"
@@ -1097,7 +1097,7 @@ _Hello_
 
 - **Button:** × _(screen reader: "Close and go to home")_
 - **Button:** Help _(screen reader: "Get help now")_
-- **Heading:** Hi, I'm Zags. I'm not a person, just a little guide. I can stay with you for a few minutes.
+- **Heading:** Hi, I'm Zags. I'm not a person, just a little guide. I can guide you through the next few minutes.
 - **Button:** Okay, Zags
 - **Button:** Not right now
 - Zags is a scripted guide, not a person and not AI.
@@ -1654,7 +1654,7 @@ _When: distraction_
 
 - **Button:** × _(screen reader: "Close and go to home")_
 - **Button:** Help _(screen reader: "Get help now")_
-- **Heading:** Hi, I'm Zags. I'm not a person, just a little guide. I can stay with you for a few minutes.
+- **Heading:** Hi, I'm Zags. I'm not a person, just a little guide. I can guide you through the next few minutes.
 - **Button:** Okay, Zags
 - **Button:** Not right now
 - Zags is a scripted guide, not a person and not AI.
@@ -1754,7 +1754,7 @@ _When: distraction_
 - **Link → `sms:5550142?&body=Can't sleep, you up?`:** Can't sleep, you up?
 - **Link → `sms:5550142?&body=Rough night. Can you talk for 5 minutes?`:** Rough night. Can you talk for 5 minutes?
 - **Link → `sms:5550142?&body=Want to catch up this week?`:** Want to catch up this week?
-- **Button:** Stay with Zags for a few minutes — Until someone calls back
+- **Button:** Calm down with Zags while you wait
 - **Button:** Make a song while you wait
 - If it gets heavier
 - **Link → `tel:988`:** Call 988 _(screen reader: "Call 988, the Suicide and Crisis Lifeline")_

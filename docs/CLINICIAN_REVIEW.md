@@ -54,7 +54,7 @@ My Plan: warning signs, things that help, places, trusted people (up to 3), prof
 
 ## 9. Zags — CLINICIAN REVIEW REQUIRED
 
-Exact wording, inconsistencies and the owner's candidate rewording are in SAFETY_AUDIT §8. The central question: does **"I can stay with you for a few minutes."** and **"Stay with Zags for a few minutes / Until someone calls back"** imply companionship or waiting together, next to **"Zags is a scripted guide, not a person and not AI."**? Also: Zags sessions do not count toward Human First.
+Exact wording, inconsistencies and the owner's candidate rewording are in SAFETY_AUDIT §8. **6.18 A (OWNER-APPROVED INTERIM, in the code):** the first line is now "I can guide you through the next few minutes." and Connect says "Calm down with Zags while you wait" (no subtitle). The original question remains for your review: did **"I can stay with you for a few minutes."** and **"Stay with Zags for a few minutes / Until someone calls back"** imply companionship or waiting together, next to **"Zags is a scripted guide, not a person and not AI."**? Also: Zags sessions do not count toward Human First.
 
 ## 10. Human First
 
@@ -126,7 +126,7 @@ These tests document **current** behavior so that any change is visible. They ar
 | D2 | YELLOW thresholds (phrases; 2× still bad / game No; 2× 9–10) | §6 | **OPEN** | | | |
 | D3 | Danger question wording and branches | §7 | **OPEN** | | | |
 | D4 | RED → YELLOW exits, incl. "That's not what I meant" on the full crisis screen; reset to GREEN on reload | §5, §7 | **OPEN: OWNER-APPROVED INTERIM in the code** (full crisis screen back → \"Do you feel safer?\") | | | |
-| D5 | Zags wording and Zags vs Human First | §9 | **OPEN** | | | |
+| D5 | Zags wording and Zags vs Human First | §9 | **OPEN: OWNER-APPROVED INTERIM in the code** (6.18 A: "I can guide you through the next few minutes."; Connect "Calm down with Zags while you wait") | | | |
 | D6 | Human First trigger and wording | §10 | **OPEN** | | | |
 | D7 | Safety plan structure and copy | §8 | **OPEN** | | | |
 | D8 | Time and distance plan | §8 | **OPEN** | | | |

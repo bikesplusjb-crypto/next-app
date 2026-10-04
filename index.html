@@ -846,7 +846,7 @@ const STILL_TRUE_ENOUGH = 3;
    Rules: says he's not a person every session; no relationship language; no pressure to stay;
    no memory between sessions (never "welcome back", never the person's name); every session ends at a person. */
 const ZAGS_LINES = {
-  hello:"Hi, I'm Zags. I'm not a person, just a little guide. I can stay with you for a few minutes.",
+  hello:"Hi, I'm Zags. I'm not a person, just a little guide. I can guide you through the next few minutes.",   // 6.18 A: OWNER-APPROVED INTERIM, pending clinician
   quiet:"You don't have to say anything. Just breathe with me.",
   in:"Breathe in…",
   out:"And out, slowly…",
@@ -2647,7 +2647,7 @@ const SCREENS = {
         : `<p class="small">Add someone you trust, and they'll be here with Text and Call.</p>
           <button class="btn btn-secondary" data-act="planFromConnect">Add someone to My Plan</button>`}
       </div>
-      <button class="card wide zcard" data-act="zags" data-arg="connect" style="margin-top:14px">${zagsFace()}<span>Stay with Zags for a few minutes<span class="meta">Until someone calls back</span></span></button>
+      <button class="card wide zcard" data-act="zags" data-arg="connect" style="margin-top:14px">${zagsFace()}<span>Calm down with Zags while you wait</span></button>
       <button class="link" data-act="songStart" data-arg="connect">Make a song while you wait</button>
       ${faithOn() ? `<button class="link faith-link" data-act="faith">Need a little hope?</button>` : ""}
       <p class="lbl">If it gets heavier</p>

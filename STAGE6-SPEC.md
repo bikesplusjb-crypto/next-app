@@ -55,6 +55,7 @@ ZigZag Mind is comfortable with people leaving. That is the goal, not a failure.
 | 2 Zags | 6.7d | Safe place (on hold: needs owner + clinician sign-off) |
 | 2 Zags | 6.16 | Turn it into a song |
 | 2 Real world | 6.17 | Let's Zig + real-world steps |
+| 6.18 | 6.18 | Owner-approved updates (STAGE6-18-ADDENDUM.md) |
 | 3 People & safety | 6.8 | Code word |
 | 3 People & safety | 6.9 | Supporter guide page |
 | 3 People & safety | 6.10 | Check-in reminders |
@@ -142,7 +143,7 @@ Reached from the Connect route and the "I feel alone" chip.
 
 1. **Talk to someone who's been there:** Florida Warm Line, `tel:18009451355`, "Every day, 4pm–10pm. Not a crisis line. Just real people who've been through it." Plus "After 10pm or outside Florida: find a warmline near you" → findahelpline.com. Hours are display text only; never disable the button by clock. Keep number and hours in one config constant.
 2. **Reach one of your people:** trusted people with Text and Call; the code word button if set (6.8); message ideas that open `sms:` prepared: "Can't sleep, you up?" · "Rough night. Can you talk for 5 minutes?" · "Want to catch up this week?"
-3. **Stay with Zags for a few minutes** (6.7): "Until someone calls back."
+3. **Calm down with Zags while you wait** (6.7; wording changed in 6.18 A, OWNER-APPROVED INTERIM).
 4. **If it gets heavier:** Call 988 · Text 988.
 
 **Human First prompt (session only):** if, within the current visit, the person taps "Something else" twice, or completes two interventions without choosing "That helped," show once: *"Would talking to a person help more than another answer?"* with Call someone · Text someone · Be around people (→ 6.5 Somewhere to go) · Not right now. Track this only in session state; never save it, never carry it across visits.
@@ -169,11 +170,11 @@ Reached from the Connect route and the "I feel alone" chip.
 
 A small, cute character (a soft sage-teal blob with a zigzag tuft) who breathes with you, talks you through a few grounding steps, then points you to a person. **Scripted, not AI.** Taps only; no text box.
 
-**Entry points:** Calm (featured), Connect ("Stay with Zags"), and the Get out of my head menu.
+**Entry points:** Calm (featured), Connect ("Calm down with Zags while you wait"), and the Get out of my head menu.
 
 **Session:**
 
-1. "Hi, I'm Zags. I'm not a person, just a little guide. I can stay with you for a few minutes." Said **every** session.
+1. "Hi, I'm Zags. I'm not a person, just a little guide. I can guide you through the next few minutes." Said **every** session. (6.18 A, OWNER-APPROVED INTERIM; was "I can stay with you for a few minutes.")
 2. Breathing: 4 rounds of in for 4 seconds, out for 6, with Zags gently growing and shrinking and his eyes going calm on the out-breath. "Skip breathing" always available. Reduced motion: 3 rounds and a color fade instead of scaling.
 3. Three grounding steps: press your feet into the floor → find one thing that's blue → listen for the farthest sound.
 4. "How are you feeling now?" A bit better / Still hard / Worse.
