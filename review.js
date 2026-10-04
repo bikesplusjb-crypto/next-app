@@ -232,6 +232,18 @@ P(''); P(`**Find something alive**: "Find something alive." / "Do you have a pet
 P(''); P('**Ridiculous mode** (Get out of my head only; hidden in YELLOW and after any crisis screen this visit; two per visit): "Make this less serious. Just for a moment." '+G('RIDICULOUS_LINES').map(x=>`"${x}"`).join(' · ')+' → "Okay. Back to reality."');
 P(''); P('**Find something real** (Calm): '+G('TOUCH_PROMPTS').map(x=>`"${x}"`).join(' · ')+'. Optional textures: '+G('TEXTURES').join(', ')+'. With an anchor in My Plan: "Do you have your anchor nearby?" Yes: "Hold it for a moment." No: "Find something else you can safely hold." Ends: "You found something real."');
 
+H(3,'Tech check (6.14)');
+P('From the Tech check row on Home. Copy rule: no shame, ever. Nothing typed or tapped here is saved. Each path ends at a person or a real-world step, then the usual "How do you feel now?" check-in. Option 6, "I\'m not sure what\'s real" (ai_reality), is NOT built: it needs clinician review first.');
+P(''); P(`Intro: "${G('TC_INTRO')}"`);
+list(G('TC_OPTIONS').map(([,t,m,id])=>`"${t}"${m?` (${m})`:''} → ${code(id)}`));
+P(''); P(`**Asking AI again:** "${G('TC_RELIANCE')}" `+G('TC_SDA').map(([h,t])=>`${h}: "${t}"`).join(' · ')+' → [Start a 10-minute break] or [I\'m done]');
+P(''); P(`**Checking:** "${G('TC_CHECK_Q')}" [Information] [Reassurance] (either; "Either is okay. Just notice which.") → 10-minute loop break, countdown and checklist: `+G('TC_LOOP_STEPS').map(([,t])=>`"${t}"`).join(' · ')+`. "${G('TC_LOOP_ASK')}" At zero: "${G('TC_LOOP_END')}"`);
+P(''); P('**Falling behind:** "Afraid you\'re falling behind?" / "What are you afraid of missing?" '+G('TC_FOMO_MISS').join(' · ')+'. Fields (safety-checked, "Only on this screen. Not saved."): '+G('TC_FOMO_FIELDS').map(([,l,ph])=>`"${l}" (example: "${ph}")`).join(' · ')+`. Then: "${G('TC_FOMO_END')}" / Talk it over with someone / "${G('TC_FOMO_USING')}" [Help with an urge]`);
+P(''); P(`**Attached to AI / instead of people:** "${G('TC_ATTACHED')}" What does it give you? `+G('TC_GIVES').join(' · ')+' / What might it be replacing? '+G('TC_REPLACING').join(' · ')+' / "Would one real-world connection help right now?" Text someone · Call someone · Be around people · Go somewhere · Take a tech break.');
+P(''); P(`Set a boundary with your AI ("Paste this into your AI's custom instructions."): "${G('TC_BOUNDARY')}" [Copy boundary text] "${G('TC_BOUNDARY_NOTE')}"`);
+P(''); P(`**My AI changed or is gone:** "${G('TC_LOSS')}" → "${G('TC_LOSS_GROUND')}" → optional "Write what you'd want to say" ("Optional. Only on this screen. Not saved."; safety-checked; afterwards: "You said it. It isn't kept anywhere.") → Tell one person: "${G('TC_LOSS_MSG')}"`);
+P(''); P('Self-reflection at the end of options 1, 2 and 4: "Which feels closest right now?" / "Only you can say. Nothing is scored or saved." '+G('TC_REFLECT').map(x=>`"${x}"`).join(' · ')+' · Skip');
+
 H(3,'Turn it into a song (6.16)');
 P('The person picks a mood and writes three short lines; the phone turns them into a short song (Web Audio). No AI, no server, no recording, no in-browser speech recognition. Every line is safety-checked: RED goes to the crisis screen and no song is made. Saved only when the person taps Keep (max 50; each can be deleted; in Export; removed by Delete everything). Entry: the top card in Get out of my head, "Make a song while you wait" on Connect, and My songs in My Plan.');
 P(''); P(`Intro: "${G('SONG_INTRO')}"`);

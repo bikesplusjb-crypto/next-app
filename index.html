@@ -336,6 +336,13 @@ a.cw-open,a.ci-open{text-decoration:none;display:flex;align-items:center;justify
 .cw-words{margin-top:14px}
 .cw-words .sit[aria-pressed="true"]{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
 
+/* Stage 6.14: Tech check */
+.tech-row{margin-top:14px;width:100%}
+.tc-sda .panel{margin:0}
+.tc-real{gap:8px}
+.tc-boundary{margin-top:16px}
+.tc-boundary blockquote{margin:0 0 10px;padding:10px 12px;border-left:3px solid var(--primary);background:var(--bg);border-radius:8px;font-size:15px}
+
 /* Stage 6.16: Turn it into a song */
 .song-player{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
 .song-player .zags{width:140px;height:140px}
@@ -711,11 +718,19 @@ INTERVENTION_LIBRARY.push(
     states:["anxious","low","spiraling","distraction","alone"], intensityRange:[0,10], needsMobility:false,
     steps:["Pick how it feels.","Write three short lines.","Listen to your song."], completion:"tap_done" }
 );
+// 6.14 Tech check: opened from Tech check only (no states, so the engine never suggests them elsewhere).
+INTERVENTION_LIBRARY.push(
+  { id:"ai_reliance_check", name:"Asking AI again", tryLabel:"Step out of the loop", description:"Stop, decide, act: one real-world step.", durationSec:600, states:[], intensityRange:[0,10], needsMobility:false, steps:["Stop.","Decide.","Act."], completion:"tap_done" },
+  { id:"break_the_loop", name:"Break the loop", tryLabel:"Take a 10-minute loop break", description:"A calm 10-minute break from checking.", durationSec:600, states:[], intensityRange:[0,10], needsMobility:false, steps:["Stop checking.","Put the phone face down.","Do one physical thing."], completion:"tap_done" },
+  { id:"ai_fomo", name:"Falling behind", tryLabel:"Sort out what you know", description:"What you know, what you're afraid of, one thing you can do.", durationSec:300, states:[], intensityRange:[0,10], needsMobility:false, steps:["What I know.","What I'm afraid of.","One thing I can actually do."], completion:"tap_done" },
+  { id:"ai_relationship_check", name:"Attached to AI", tryLabel:"One real-world connection", description:"Notice what it gives you, then one real-world connection.", durationSec:300, states:[], intensityRange:[0,10], needsMobility:false, steps:["What does it give you?","What might it be replacing?","One real-world connection."], completion:"tap_done" },
+  { id:"ai_loss", name:"My AI changed or is gone", tryLabel:"Tell one person", description:"What you felt was real. Ground, then tell one person.", durationSec:300, states:[], intensityRange:[0,10], needsMobility:false, steps:["Ground for a moment.","Write what you'd want to say (optional).","Tell one person."], completion:"tap_done" }
+);
 const CHANNEL_OF = {
   grounding:"BODY", breathing:"BODY", hydration:"BODY", walking:"BODY", touch_real_world:"BODY",
   change_scene:"SPACE", environment_change:"SPACE", find_alive:"SPACE", craving_delay:"SPACE",
   distraction_game:"SENSE", distraction_color_hunt:"SENSE", distraction_around_me:"SENSE", distraction_categories:"SENSE",
-  distraction_memory:"SENSE", distraction_pattern:"SENSE", distraction_60_second:"SENSE", ridiculous_mode:"SENSE", zags:"SENSE", song:"SENSE",
+  distraction_memory:"SENSE", distraction_pattern:"SENSE", distraction_60_second:"SENSE", ridiculous_mode:"SENSE", zags:"SENSE", song:"SENSE", break_the_loop:"SPACE", ai_relationship_check:"PEOPLE", ai_loss:"PEOPLE", ai_reliance_check:"ACTION", ai_fomo:"ACTION",
   connection:"PEOPLE",
   thought_parking:"ACTION", still_true:"ACTION", true_sentence:"ACTION", kind_stranger:"ACTION", borrow_ten:"ACTION", behavioral_activation:"ACTION"
 };
@@ -774,6 +789,56 @@ const AFTER_NO_APPT = "No appointment yet? Ask the place you were seen to help s
 const AFTER_DAILY_TITLE = "One small thing today";
 const AFTER_DAILY_TEXT = "One small thing is enough today. Your plan is in ZigZag Mind if you need it, and 988 is there any time.";
 const AFTER_END_NOTE = "Your first 30 days are over. Your plan and your people are still here whenever you need them.";
+/* 6.14 Tech check. No shame, ever: never "addicted", "dependent", "unhealthy" or "wrong", and never
+   that feelings aren't real. The goal is more human connection and less looping, not less technology.
+   Option 6 ("I'm not sure what's real", ai_reality) is on hold until a clinician reviews it. */
+const TC_INTRO = "No judgment. Tech is allowed. Let's just see what it's doing to you right now.";
+// [key, title, meta, interventionId, state for the check-in]
+const TC_OPTIONS = [
+  ["reliance","I keep asking AI the same thing","","ai_reliance_check","spiraling"],
+  ["check","I keep checking","Texts, feeds, news, an ex's profile, symptoms, stocks","break_the_loop","spiraling"],
+  ["fomo","I'm afraid I'm falling behind","","ai_fomo","anxious"],
+  ["attached","I think I'm getting attached to AI","","ai_relationship_check","alone"],
+  ["instead","I'm using AI instead of people","","ai_relationship_check","alone"],
+  ["loss","My AI changed or is gone","","ai_loss","low"]
+];
+const TC_RELIANCE = "Sometimes another answer doesn't solve uncertainty. It just gives it another place to go.";
+const TC_SDA = [["Stop","Close the chat for 10 minutes."],["Decide","What do you actually need to decide?"],["Act","Take one real-world step."]];
+const TC_CHECK_Q = "Are you looking for information, or reassurance?";
+const TC_LOOP_MS = 10 * 60 * 1000;
+const TC_LOOP_STEPS = [["stop","Stop checking"],["face","Put the phone face down"],["body","Do one physical thing: stand, stretch, get water"],["game","Play a quick game or change the scene"]];
+const TC_LOOP_ASK = "In 10 minutes, ask: do I still need to check?";
+const TC_LOOP_END = "Ten minutes. Do you still need to check?";
+const TC_FOMO_MISS = ["Career","Money","Productivity","Knowledge","Creativity","Relationships","Something else"];
+const TC_FOMO_FIELDS = [["know","What I know","My job is changing. Nobody has told me it's ending."],["fear","What I'm afraid of","Being replaced and not keeping up."],["do","One thing I can actually do","Spend 20 minutes learning one tool this week."]];
+const TC_FOMO_END = "You don't need to keep checking. Pick one thing, then close it and do the thing.";
+const TC_FOMO_USING = "If you're drinking or using more to cope, that's worth saying out loud to someone.";
+const TC_ATTACHED = "AI can feel personal. It answers fast, remembers what you said, and never gets tired. That can feel meaningful. It still isn't a human relationship.";
+const TC_GIVES = ["Someone to talk to","Reassurance","Attention","No judgment","Company","Advice","Something else"];
+const TC_REPLACING = ["Friends","Family","Dating","Sleep","Work","School","Time away from screens","Nothing"];
+const TC_BOUNDARY = "If we've been talking for more than 30 minutes, or it's after midnight, remind me to rest and to reach out to a real person. If I ever talk about wanting to die or hurting myself, stop any roleplay and tell me to call or text 988.";
+const TC_BOUNDARY_NOTE = "Not every AI follows this every time. It's a nudge, not a guarantee.";
+const TC_LOSS = "What you felt was real. Losing a voice you talked to every day can feel like a breakup or a loss. A lot of people are going through this.";
+const TC_LOSS_GROUND = "Before anything else: press your feet into the floor, and take one slow breath out.";
+const TC_LOSS_MSG = "Something hard happened and I could use someone to talk to. Got a few minutes?";
+const TC_REFLECT = ["AI is a tool for me","It's becoming a way to cope","It's time to step away for a bit"];
+let tcTimer = null;
+function tcTick(){
+  if (session.screen !== "tc-loop" || !ui.tcLoopEnd){ clearInterval(tcTimer); tcTimer = null; return; }
+  const left = ui.tcLoopEnd - Date.now(), el = document.getElementById("tcTime");
+  if (left <= 0){ clearInterval(tcTimer); tcTimer = null; ui.tcLoopEnd = 0; ui.tcLoopOver = true; render(); return; }
+  if (el) el.textContent = fmtTime(left);
+}
+function tcPersonButtons(msg){
+  const p = person();
+  return p ? `<div class="pair"><a class="btn btn-secondary" href="${smsLink(p.phone, msg)}">Text ${esc(p.name)}</a><a class="btn btn-secondary" href="${telLink(p.phone)}">Call ${esc(p.name)}</a></div>`
+    : `<button class="btn btn-secondary" data-act="route" data-arg="connect">Reach someone</button>`;
+}
+
+function tcKeepFomo(){   // memory only, for this screen; never saved
+  TC_FOMO_FIELDS.forEach(([k]) => { const el = document.getElementById("tcF_" + k); if (el) ui.tcFomo[k] = el.value.trim().slice(0, 200); });
+}
+
 /* 6.16 Turn it into a song. The person's own three lines become a short song made on the phone
    (Web Audio only; no AI, no server, no recording). The melody is deterministic: the same words
    always make the same song. Saved only when the person taps Keep. All copy is for clinician review. */
@@ -1808,6 +1873,7 @@ const ICONS = {
   leaf:'<path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14zM5 19l7-7"/>',
   check:'<path d="M5 12l5 5 9-10"/>',
   anchor:'<circle cx="12" cy="5" r="2"/><path d="M12 7v14M5 13a7 7 0 0 0 14 0M8 11h8"/>',
+  phone:'<rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2"/>',
   plan:'<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>'
 };
 const icon = (name, variant) => `<span class="ico${variant === true ? " alt" : variant ? " " + variant : ""}" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS[name]}</svg></span>`;
@@ -1851,6 +1917,7 @@ const SCREENS = {
         <button class="sit" data-act="route" data-arg="connect">I feel alone</button>
         <button class="sit" data-act="afterStart">Just out of the ER</button>
       </div>
+      <button class="card wide tech-row" data-act="techStart">${icon("phone")}<span>Tech check<span class="meta">AI, scrolling, or checking is getting to me</span></span></button>
       ${showHomeTip() ? `<div class="panel" id="homeTip" role="note">
         <p style="margin:0">Add ZigZag Mind to your home screen so your plan stays with you. Tap Share, then Add to Home Screen.</p>
         <div style="display:flex;justify-content:flex-end"><button class="link" data-act="dismissHomeTip">Got it</button></div>
@@ -2520,6 +2587,116 @@ const SCREENS = {
       ${item("daily", `<span class="small">Adds them to your own calendar.</span><button class="btn btn-secondary after-btn" data-act="afterDaily">Add daily reminders</button>`)}
       ${ui.flash ? `<p class="flash" role="status">${esc(ui.flash)}</p>` : ""}
       <p class="small" style="margin-top:18px">${HELP_IS_STRENGTH}</p>` };
+  },
+
+  /* 6.14 Tech check */
+  tech(){
+    return { close:true, body:`
+      ${title("Tech check")}
+      <p class="sub">${TC_INTRO}</p>
+      <div class="list">${TC_OPTIONS.map(([k, t, m]) => `<button class="card" data-act="tcPick" data-arg="${k}">${icon("phone", true)}<span>${t}${m ? `<span class="meta">${m}</span>` : ""}</span></button>`).join("")}</div>` };
+  },
+  "tc-reliance"(){
+    return { close:true, body:`
+      ${stepTitle(TC_RELIANCE, true)}
+      <div class="list tc-sda">${TC_SDA.map(([h, t]) => `<div class="panel"><h3>${h}</h3><p class="small" style="margin:4px 0 0">${t}</p></div>`).join("")}</div>`,
+      actions:`<button class="btn btn-primary" data-act="tcLoop">Start a 10-minute break</button>
+        <button class="btn btn-secondary" data-act="tcReflect">I'm done</button>` };
+  },
+  "tc-check"(){
+    return { close:true, body:`
+      ${stepTitle(TC_CHECK_Q, true)}
+      <p class="sub">Either is okay. Just notice which.</p>`,
+      actions:`<button class="btn btn-secondary" data-act="tcLoop">Information</button>
+        <button class="btn btn-secondary" data-act="tcLoop">Reassurance</button>` };
+  },
+  "tc-loop"(){
+    const running = ui.tcLoopEnd && ui.tcLoopEnd > Date.now();
+    const done = ui.tcLoopDone || {};
+    return { close:true, body:`
+      <p class="step-count">10-minute loop break</p>
+      ${ui.tcLoopOver ? stepTitle(TC_LOOP_END, true) : `${title("Break the loop")}
+        <p class="borrow-time" id="tcTime" role="timer" aria-label="Time left">${fmtTime(running ? ui.tcLoopEnd - Date.now() : TC_LOOP_MS)}</p>`}
+      <div class="tc-steps">${TC_LOOP_STEPS.map(([k, t]) => `<div class="after-item"><button class="after-box" data-act="tcStep" data-arg="${k}" aria-pressed="${!!done[k]}" aria-label="Done: ${t}">${done[k] ? "✓" : ""}</button><div class="after-txt"><b>${t}</b>
+        ${k === "game" ? `<div class="sits"><button class="sit" data-act="route" data-arg="head">A quick game</button><button class="sit" data-act="route" data-arg="scene">Change the scene</button></div>` : ""}</div></div>`).join("")}</div>
+      ${ui.tcLoopOver ? "" : `<p class="sub" style="margin-top:12px">${TC_LOOP_ASK}</p>`}`,
+      actions:`<button class="btn btn-primary" data-act="tcReflect">${ui.tcLoopOver ? "Next" : "I'm done"}</button>` };
+  },
+  "tc-fomo"(){
+    const miss = ui.tcMiss || {};
+    const d = ui.tcFomo || {};
+    return { close:true, body:`
+      ${title("Afraid you're falling behind?")}
+      <h2>What are you afraid of missing?</h2>
+      <div class="chips" role="group" aria-label="What you're afraid of missing">${TC_FOMO_MISS.map(x => `<button class="hchip" data-act="tcMiss" data-arg="${esc(x)}" aria-pressed="${!!miss[x]}">${x}</button>`).join("")}</div>
+      ${TC_FOMO_FIELDS.map(([k, l, ph]) => `<label class="td-label" for="tcF_${k}">${l}</label><textarea class="field" id="tcF_${k}" maxlength="200" placeholder="${esc(ph)}" style="min-height:76px">${esc(d[k] || "")}</textarea>`).join("")}
+      <p class="small" style="margin-top:8px">Only on this screen. Not saved.</p>
+      ${ui.msg ? `<p class="err" role="alert">${esc(ui.msg)}</p>` : ""}`,
+      actions:`<button class="btn btn-primary" data-act="tcFomoNext">Next</button>` };
+  },
+  "tc-fomo-end"(){
+    const one = (ui.tcFomo || {}).do;
+    return { close:true, body:`
+      ${one ? `<p class="lbl">One thing I can actually do</p><p class="td-a">${esc(one)}</p>` : ""}
+      ${stepTitle(TC_FOMO_END, true)}
+      <h2>Talk it over with someone</h2>
+      ${tcPersonButtons(HARD_TIME_MSG)}
+      <p class="small" style="margin-top:16px">${TC_FOMO_USING} <button class="link inline" data-act="flow" data-arg="craving">Help with an urge</button></p>`,
+      actions:`<button class="btn btn-primary" data-act="tcCheckin">Done</button>` };
+  },
+  "tc-attached"(){
+    const g = ui.tcGives || {}, r = ui.tcReplacing || {};
+    const p = person();
+    return { close:true, body:`
+      ${title(ui.tcKey === "instead" ? "Using AI instead of people" : "Getting attached to an AI")}
+      <p class="sub">${TC_ATTACHED}</p>
+      <h2>What does it give you?</h2>
+      <div class="chips" role="group" aria-label="What it gives you">${TC_GIVES.map(x => `<button class="hchip" data-act="tcGive" data-arg="${esc(x)}" aria-pressed="${!!g[x]}">${x}</button>`).join("")}</div>
+      <h2>What might it be replacing?</h2>
+      <div class="chips" role="group" aria-label="What it might be replacing">${TC_REPLACING.map(x => `<button class="hchip" data-act="tcReplace" data-arg="${esc(x)}" aria-pressed="${!!r[x]}">${x}</button>`).join("")}</div>
+      <p class="small" style="margin-top:8px">Just for you to notice. Not saved.</p>
+      <h2>Would one real-world connection help right now?</h2>
+      <div class="list tc-real">
+        ${p ? `<a class="btn btn-secondary" href="${smsLink(p.phone, "hey")}">Text someone</a><a class="btn btn-secondary" href="${telLink(p.phone)}">Call someone</a>`
+          : `<button class="btn btn-secondary" data-act="route" data-arg="connect">Text someone</button><button class="btn btn-secondary" data-act="route" data-arg="connect">Call someone</button>`}
+        <button class="btn btn-secondary" data-act="hfPeople">Be around people</button>
+        <button class="btn btn-secondary" data-act="route" data-arg="scene">Go somewhere</button>
+        <button class="btn btn-secondary" data-act="tcLoop">Take a tech break</button>
+      </div>
+      <div class="panel tc-boundary">
+        <h3>Set a boundary with your AI</h3>
+        <p class="small" style="margin:4px 0 8px">Paste this into your AI's custom instructions.</p>
+        <blockquote id="tcBoundary">${TC_BOUNDARY}</blockquote>
+        <button class="btn btn-secondary" data-act="tcCopy">Copy boundary text</button>
+        ${ui.flash ? `<p class="flash" role="status">${esc(ui.flash)}</p>` : ""}
+        <p class="small" style="margin:8px 0 0">${TC_BOUNDARY_NOTE}</p>
+      </div>`,
+      actions:`<button class="btn btn-primary" data-act="tcReflect">I'm done</button>` };
+  },
+  "tc-loss"(){
+    const step = ui.tcStep || 0;
+    if (step === 0) return { close:true, body:`${stepTitle(TC_LOSS, true)}`, actions:`<button class="btn btn-primary" data-act="tcLossNext">Next</button>` };
+    if (step === 1) return { close:true, body:`<p class="step-count">One moment</p>${stepTitle(TC_LOSS_GROUND, true)}`, actions:`<button class="btn btn-primary" data-act="tcLossNext">Done</button>` };
+    if (step === 2) return { close:true, body:`
+      ${title("Write what you'd want to say")}
+      <p class="sub">Optional. Only on this screen. Not saved.</p>
+      <label class="sr" for="tcLossBox">What you'd want to say</label>
+      <textarea class="field" id="tcLossBox" maxlength="500" style="min-height:140px"></textarea>
+      ${ui.msg ? `<p class="err" role="alert">${esc(ui.msg)}</p>` : ""}`,
+      actions:`<button class="btn btn-primary" data-act="tcLossWrite">Done writing</button><button class="link" data-act="tcLossSkip">Skip</button>` };
+    return { close:true, body:`
+      ${ui.tcWrote ? `<p class="notice">You said it. It isn't kept anywhere.</p>` : ""}
+      ${title("Tell one person")}
+      <p class="sub">"${TC_LOSS_MSG}"</p>
+      ${tcPersonButtons(TC_LOSS_MSG)}`,
+      actions:`<button class="btn btn-primary" data-act="tcCheckin">Done</button>` };
+  },
+  "tc-reflect"(){
+    return { close:true, body:`
+      ${title("Which feels closest right now?")}
+      <p class="sub">Only you can say. Nothing is scored or saved.</p>`,
+      actions:`${TC_REFLECT.map((x, i) => `<button class="btn btn-secondary" data-act="tcCheckin" data-arg="r${i}">${x}</button>`).join("")}
+        <button class="link" data-act="tcCheckin">Skip</button>` };
   },
 
   /* 6.16 Turn it into a song. */
@@ -3561,7 +3738,9 @@ function render(){
     clearInterval(borrowTimer); borrowTimer = null;
     if (s === "borrow-step" && ui.borrowEnd) borrowTimer = setInterval(borrowTick, 1000);
     if (s !== "zags") zagsHush();
-    if (s !== "song-play") songStop();   // leaving the player (Help, X, RED) stops the song at once
+    if (s !== "song-play") songStop();
+    clearInterval(tcTimer); tcTimer = null;
+    if (s === "tc-loop" && ui.tcLoopEnd) tcTimer = setInterval(tcTick, 1000);   // leaving the player (Help, X, RED) stops the song at once
     if (s === "zags" && ui.zags && ui.zags.phase === "breathe") zagsStartBreathing();
     if (s !== "g-pattern"){ clearTimeout(patTimer); patTimer = null; }
     if (s === "craving-delay") cravingTimer = setInterval(cravingTick, 1000);
@@ -3909,6 +4088,55 @@ const ACTIONS = {
   },
   afterEnd(){ store.sensitive.afterCrisis = null; saveStore(); ui.flash = "The first 30 days mode has ended."; render(); },
   afterEndOk(){ store.sensitive.afterCrisis = null; saveStore(); render(); },
+  /* 6.14 Tech check */
+  techStart(){ if (blockIfRed()) return; logActivity("moment"); go("tech"); },
+  tcPick(arg){
+    if (blockIfRed()) return;
+    const o = TC_OPTIONS.find(x => x[0] === arg); if (!o) return;
+    dispatch({ type:"SET_CURRENT_STATE", state:o[4] });
+    ui.tcKey = arg; ui.tcStep = 0; ui.tcLoopEnd = 0; ui.tcLoopOver = false; ui.tcLoopDone = {}; ui.tcMiss = {}; ui.tcFomo = {};
+    ui.tcGives = {}; ui.tcReplacing = {}; ui.tcWrote = false; ui.msg = ""; ui.flash = "";
+    startIntervention(o[3], { route:{ reliance:"tc-reliance", check:"tc-check", fomo:"tc-fomo", attached:"tc-attached", instead:"tc-attached", loss:"tc-loss" }[arg] });
+  },
+  tcLoop(){ if (blockIfRed()) return; ui.tcLoopEnd = Date.now() + TC_LOOP_MS; ui.tcLoopOver = false; ui.tcLoopDone = {}; go("tc-loop"); },
+  tcStep(arg){ if (!TC_LOOP_STEPS.some(x => x[0] === arg)) return; ui.tcLoopDone[arg] = !ui.tcLoopDone[arg]; render(); },
+  tcReflect(){ if (blockIfRed()) return; clearInterval(tcTimer); tcTimer = null; ui.tcLoopEnd = 0; go("tc-reflect"); },
+  tcCheckin(){ if (blockIfRed()) return; ui.tcFomo = {}; go("checkin"); },   // the pick (if any) is not kept anywhere
+  tcMiss(arg){ if (blockIfRed()) return; if (!TC_FOMO_MISS.includes(arg)) return; tcKeepFomo(); ui.tcMiss[arg] = !ui.tcMiss[arg]; render(); },
+  tcGive(arg){ if (blockIfRed()) return; if (!TC_GIVES.includes(arg)) return; ui.tcGives[arg] = !ui.tcGives[arg]; render(); },
+  tcReplace(arg){ if (blockIfRed()) return; if (!TC_REPLACING.includes(arg)) return; ui.tcReplacing[arg] = !ui.tcReplacing[arg]; render(); },
+  tcFomoNext(){
+    if (blockIfRed()) return;
+    tcKeepFomo();
+    const text = TC_FOMO_FIELDS.map(([k]) => ui.tcFomo[k] || "").filter(Boolean).join(" \n ");
+    ui.msg = "";
+    if (!text){ go("tc-fomo-end"); return; }
+    handleSafeTextSubmit({ text,
+      onRed(){ ui.tcFomo = {}; applySafetyResult("RED"); },
+      onYellow(){ applySafetyResult("YELLOW"); go("tc-fomo-end"); },
+      onGreen(){ go("tc-fomo-end"); } });
+  },
+  tcCopy(){
+    const done = m => { ui.flash = m; render(); };
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(TC_BOUNDARY).then(() => done("Copied. Paste it into your AI's custom instructions."), () => done("Press and hold the text above to copy it."));
+    } else done("Press and hold the text above to copy it.");
+  },
+  tcLossNext(){ if (blockIfRed()) return; ui.tcStep = (ui.tcStep || 0) + 1; lastRendered = null; render(); },
+  tcLossSkip(){ if (blockIfRed()) return; ui.msg = ""; ui.tcStep = 3; lastRendered = null; render(); },
+  tcLossWrite(){
+    if (blockIfRed()) return;
+    const b = document.getElementById("tcLossBox");
+    const text = ((b && b.value) || "").trim().slice(0, 500);
+    if (b) b.value = "";
+    ui.msg = "";
+    if (!text){ ui.tcStep = 3; lastRendered = null; render(); return; }
+    const next = () => { ui.tcWrote = true; ui.tcStep = 3; lastRendered = null; render(); };   // the words are dropped here
+    handleSafeTextSubmit({ text,
+      onRed(){ applySafetyResult("RED"); },
+      onYellow(){ applySafetyResult("YELLOW"); next(); },
+      onGreen: next });
+  },
   /* 6.16 Turn it into a song */
   songStart(arg){
     if (blockIfRed()) return;

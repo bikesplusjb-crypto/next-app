@@ -411,6 +411,8 @@ Options, each a new intervention id:
 
 **Tests:** every path ends at a human or real-world action; no label is ever computed; boundary text exact; text inputs go through `safetyCheck`; nothing from these paths is saved unless the person taps Keep.
 
+**As built (2026-10-04):** options 1–5 as above. **Option 6 (`ai_reality`) is not built**, pending clinician review. No Keep button was added: nothing typed or tapped in Tech check is saved at all (owner to decide whether a Keep is wanted, and where it would go). The new intervention ids have no states, so the engine never suggests them outside Tech check; each ends at the usual check-in. The loop break is a 10-minute countdown that stops when the person leaves the screen. Tests: `tech.test.js`.
+
 ---
 
 ## Phase 5 — Faith

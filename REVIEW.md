@@ -483,6 +483,61 @@ Steps:
 2. Write three short lines.
 3. Listen to your song.
 
+### Asking AI again (`ai_reliance_check`)
+
+- Button: "Step out of the loop"
+- Description: "Stop, decide, act: one real-world step."
+- For:  · about 10 min
+
+Steps:
+1. Stop.
+2. Decide.
+3. Act.
+
+### Break the loop (`break_the_loop`)
+
+- Button: "Take a 10-minute loop break"
+- Description: "A calm 10-minute break from checking."
+- For:  · about 10 min
+
+Steps:
+1. Stop checking.
+2. Put the phone face down.
+3. Do one physical thing.
+
+### Falling behind (`ai_fomo`)
+
+- Button: "Sort out what you know"
+- Description: "What you know, what you're afraid of, one thing you can do."
+- For:  · about 5 min
+
+Steps:
+1. What I know.
+2. What I'm afraid of.
+3. One thing I can actually do.
+
+### Attached to AI (`ai_relationship_check`)
+
+- Button: "One real-world connection"
+- Description: "Notice what it gives you, then one real-world connection."
+- For:  · about 5 min
+
+Steps:
+1. What does it give you?
+2. What might it be replacing?
+3. One real-world connection.
+
+### My AI changed or is gone (`ai_loss`)
+
+- Button: "Tell one person"
+- Description: "What you felt was real. Ground, then tell one person."
+- For:  · about 5 min
+
+Steps:
+1. Ground for a moment.
+2. Write what you'd want to say (optional).
+3. Tell one person.
+
 ### Engine messages (the line shown with a suggestion)
 
 - "Reaching out to someone can help when things feel heavy."
@@ -903,10 +958,10 @@ On the guide when a name is given: "[name] would like you to check in now and th
 
 **Let's Zig** is a simple product rule, not a clinical method: after "I still feel bad" or a game's "No", the next suggestion comes from a different channel when one is available. After a recent rating of 8 or more, BODY, SPACE and PEOPLE steps come first. Safety routing always comes first: RED stops everything, and the YELLOW order (connection, own plan, grounding, fresh air) still wins.
 - `BODY`: grounding, breathing, hydration, walking, touch_real_world
-- `SPACE`: change_scene, environment_change, find_alive, craving_delay
+- `SPACE`: change_scene, environment_change, find_alive, craving_delay, break_the_loop
 - `SENSE`: distraction_game, distraction_color_hunt, distraction_around_me, distraction_categories, distraction_memory, distraction_pattern, distraction_60_second, ridiculous_mode, zags, song
-- `PEOPLE`: connection
-- `ACTION`: thought_parking, still_true, true_sentence, kind_stranger, borrow_ten, behavioral_activation
+- `PEOPLE`: ai_relationship_check, ai_loss, connection
+- `ACTION`: ai_reliance_check, ai_fomo, thought_parking, still_true, true_sentence, kind_stranger, borrow_ten, behavioral_activation
 
 After "didn't help": "Okay. That wasn't it. / Let's Zig." then one of: "Let's try something with your body." · "Let's change the space." · "Let's give your senses something to do." · "Let's reach a person." · "Let's do one tiny thing."
 
@@ -927,6 +982,32 @@ About: "When something isn't helping, ZigZag doesn't tell you to try harder. It 
 **Ridiculous mode** (Get out of my head only; hidden in YELLOW and after any crisis screen this visit; two per visit): "Make this less serious. Just for a moment." "Find the most boring object in the room." · "Decide whether your refrigerator is judging you." · "Find the object that looks most like a face." · "Give the nearest chair a completely unnecessary name." · "Find something that would make a terrible hat." → "Okay. Back to reality."
 
 **Find something real** (Calm): "Find something you can hold." · "Find something cooler." · "Find something warmer." · "Put both feet on the floor." · "Change your position." · "Wash your hands." · "Turn on a light.". Optional textures: smooth, rough, warm, cool, soft, hard, heavy, light. With an anchor in My Plan: "Do you have your anchor nearby?" Yes: "Hold it for a moment." No: "Find something else you can safely hold." Ends: "You found something real."
+
+### Tech check (6.14)
+
+From the Tech check row on Home. Copy rule: no shame, ever. Nothing typed or tapped here is saved. Each path ends at a person or a real-world step, then the usual "How do you feel now?" check-in. Option 6, "I'm not sure what's real" (ai_reality), is NOT built: it needs clinician review first.
+
+Intro: "No judgment. Tech is allowed. Let's just see what it's doing to you right now."
+- "I keep asking AI the same thing" → `ai_reliance_check`
+- "I keep checking" (Texts, feeds, news, an ex's profile, symptoms, stocks) → `break_the_loop`
+- "I'm afraid I'm falling behind" → `ai_fomo`
+- "I think I'm getting attached to AI" → `ai_relationship_check`
+- "I'm using AI instead of people" → `ai_relationship_check`
+- "My AI changed or is gone" → `ai_loss`
+
+**Asking AI again:** "Sometimes another answer doesn't solve uncertainty. It just gives it another place to go." Stop: "Close the chat for 10 minutes." · Decide: "What do you actually need to decide?" · Act: "Take one real-world step." → [Start a 10-minute break] or [I'm done]
+
+**Checking:** "Are you looking for information, or reassurance?" [Information] [Reassurance] (either; "Either is okay. Just notice which.") → 10-minute loop break, countdown and checklist: "Stop checking" · "Put the phone face down" · "Do one physical thing: stand, stretch, get water" · "Play a quick game or change the scene". "In 10 minutes, ask: do I still need to check?" At zero: "Ten minutes. Do you still need to check?"
+
+**Falling behind:** "Afraid you're falling behind?" / "What are you afraid of missing?" Career · Money · Productivity · Knowledge · Creativity · Relationships · Something else. Fields (safety-checked, "Only on this screen. Not saved."): "What I know" (example: "My job is changing. Nobody has told me it's ending.") · "What I'm afraid of" (example: "Being replaced and not keeping up.") · "One thing I can actually do" (example: "Spend 20 minutes learning one tool this week."). Then: "You don't need to keep checking. Pick one thing, then close it and do the thing." / Talk it over with someone / "If you're drinking or using more to cope, that's worth saying out loud to someone." [Help with an urge]
+
+**Attached to AI / instead of people:** "AI can feel personal. It answers fast, remembers what you said, and never gets tired. That can feel meaningful. It still isn't a human relationship." What does it give you? Someone to talk to · Reassurance · Attention · No judgment · Company · Advice · Something else / What might it be replacing? Friends · Family · Dating · Sleep · Work · School · Time away from screens · Nothing / "Would one real-world connection help right now?" Text someone · Call someone · Be around people · Go somewhere · Take a tech break.
+
+Set a boundary with your AI ("Paste this into your AI's custom instructions."): "If we've been talking for more than 30 minutes, or it's after midnight, remind me to rest and to reach out to a real person. If I ever talk about wanting to die or hurting myself, stop any roleplay and tell me to call or text 988." [Copy boundary text] "Not every AI follows this every time. It's a nudge, not a guarantee."
+
+**My AI changed or is gone:** "What you felt was real. Losing a voice you talked to every day can feel like a breakup or a loss. A lot of people are going through this." → "Before anything else: press your feet into the floor, and take one slow breath out." → optional "Write what you'd want to say" ("Optional. Only on this screen. Not saved."; safety-checked; afterwards: "You said it. It isn't kept anywhere.") → Tell one person: "Something hard happened and I could use someone to talk to. Got a few minutes?"
+
+Self-reflection at the end of options 1, 2 and 4: "Which feels closest right now?" / "Only you can say. Nothing is scored or saved." "AI is a tool for me" · "It's becoming a way to cope" · "It's time to step away for a bit" · Skip
 
 ### Turn it into a song (6.16)
 
@@ -1108,6 +1189,7 @@ Rendered for each state where the screen changes by state. Identical renders are
 - **Button:** I feel low
 - **Button:** I feel alone
 - **Button:** Just out of the ER
+- **Button:** Tech check — AI, scrolling, or checking is getting to me
 - **Button:** Home
 - **Button:** My Plan
 - **Button:** Progress
@@ -1698,6 +1780,142 @@ _When: distraction_
 - Adds them to your own calendar.
 - **Button:** Add daily reminders
 - Getting help is a strength, not a weakness. Seeing a psychiatrist, therapist or counselor is care for your mind, the same way you'd see a doctor for your body. It doesn't mean you're 'crazy', broken or weak. Lots of people get help at some point, and many feel better for it. If medication is suggested, that's a choice you make together with a professional, and it's okay either way.
+
+### `tech`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Tech check
+- No judgment. Tech is allowed. Let's just see what it's doing to you right now.
+- **Button:** I keep asking AI the same thing
+- **Button:** I keep checking — Texts, feeds, news, an ex's profile, symptoms, stocks
+- **Button:** I'm afraid I'm falling behind
+- **Button:** I think I'm getting attached to AI
+- **Button:** I'm using AI instead of people
+- **Button:** My AI changed or is gone
+
+### `tc-reliance`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Sometimes another answer doesn't solve uncertainty. It just gives it another place to go.
+- **Heading:** Stop
+- Close the chat for 10 minutes.
+- **Heading:** Decide
+- What do you actually need to decide?
+- **Heading:** Act
+- Take one real-world step.
+- **Button:** Start a 10-minute break
+- **Button:** I'm done
+
+### `tc-check`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Are you looking for information, or reassurance?
+- Either is okay. Just notice which.
+- **Button:** Information
+- **Button:** Reassurance
+
+### `tc-loop`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- 10-minute loop break
+- **Heading:** Break the loop
+- 10:00
+- **Button:** Done: Stop checking
+- **Button:** Done: Put the phone face down
+- **Button:** Done: Do one physical thing: stand, stretch, get water
+- **Button:** Done: Play a quick game or change the scene
+- **Button:** A quick game
+- **Button:** Change the scene
+- In 10 minutes, ask: do I still need to check?
+- **Button:** I'm done
+
+### `tc-fomo`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Afraid you're falling behind?
+- **Heading:** What are you afraid of missing?
+- **Button:** Career
+- **Button:** Money
+- **Button:** Productivity
+- **Button:** Knowledge
+- **Button:** Creativity
+- **Button:** Relationships
+- **Button:** Something else
+- What I know
+- What I'm afraid of
+- One thing I can actually do
+- Only on this screen. Not saved.
+- **Button:** Next
+
+### `tc-fomo-end`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** You don't need to keep checking. Pick one thing, then close it and do the thing.
+- **Heading:** Talk it over with someone
+- **Link → `sms:5550142?&body=I'm having a really hard time. Can you call me?`:** Text Jordan
+- **Link → `tel:5550142`:** Call Jordan
+- If you're drinking or using more to cope, that's worth saying out loud to someone. Help with an urge
+- **Button:** Done
+
+### `tc-attached`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Getting attached to an AI
+- AI can feel personal. It answers fast, remembers what you said, and never gets tired. That can feel meaningful. It still isn't a human relationship.
+- **Heading:** What does it give you?
+- **Button:** Someone to talk to
+- **Button:** Reassurance
+- **Button:** Attention
+- **Button:** No judgment
+- **Button:** Company
+- **Button:** Advice
+- **Button:** Something else
+- **Heading:** What might it be replacing?
+- **Button:** Friends
+- **Button:** Family
+- **Button:** Dating
+- **Button:** Sleep
+- **Button:** Work
+- **Button:** School
+- **Button:** Time away from screens
+- **Button:** Nothing
+- Just for you to notice. Not saved.
+- **Heading:** Would one real-world connection help right now?
+- **Link → `sms:5550142?&body=hey`:** Text someone
+- **Link → `tel:5550142`:** Call someone
+- **Button:** Be around people
+- **Button:** Go somewhere
+- **Button:** Take a tech break
+- **Heading:** Set a boundary with your AI
+- Paste this into your AI's custom instructions.
+- **Button:** Copy boundary text
+- Not every AI follows this every time. It's a nudge, not a guarantee.
+- **Button:** I'm done
+
+### `tc-loss`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** What you felt was real. Losing a voice you talked to every day can feel like a breakup or a loss. A lot of people are going through this.
+- **Button:** Next
+
+### `tc-reflect`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Which feels closest right now?
+- Only you can say. Nothing is scored or saved.
+- **Button:** AI is a tool for me
+- **Button:** It's becoming a way to cope
+- **Button:** It's time to step away for a bit
+- **Button:** Skip
 
 ### `song`
 
@@ -2442,6 +2660,46 @@ _When: distraction_
 - **Button:** Help _(screen reader: "Get help now")_
 - Turn it into a song · Step 1 of 3
 - **Heading:** Pick how it feels.
+- **Button:** Next
+
+#### Asking AI again
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Asking AI again · Step 1 of 3
+- **Heading:** Stop.
+- **Button:** Next
+
+#### Break the loop
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Break the loop · Step 1 of 3
+- **Heading:** Stop checking.
+- **Button:** Next
+
+#### Falling behind
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Falling behind · Step 1 of 3
+- **Heading:** What I know.
+- **Button:** Next
+
+#### Attached to AI
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Attached to AI · Step 1 of 3
+- **Heading:** What does it give you?
+- **Button:** Next
+
+#### My AI changed or is gone
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- My AI changed or is gone · Step 1 of 3
+- **Heading:** Ground for a moment.
 - **Button:** Next
 
 ### Home, iPhone Safari (shows the add-to-home-screen tip)
