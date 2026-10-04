@@ -146,5 +146,6 @@ These tests document **current** behavior so that any change is visible. They ar
 | D22 | Gun-storage line in the time-and-distance help text and the supporter guide (never on crisis screens) (6.18 D6) | §8, §12 | **OPEN: OWNER-APPROVED INTERIM in the code** | | | |
 | D23 | **Privacy & terms page (6.19 C): DRAFT — lawyer review required.** Plain-language page in Settings, About and onboarding, written from PRIVACY_DATA_FLOW.md | §13 | **OPEN: lawyer** (also FTC Health Breach Notification Rule, already open) | | | |
 | D24 | Spanish interface drafts (6.19 E): 211 strings incl. 46 crisis-screen lines, side by side in docs/SPANISH_REVIEW.md. Not shown to anyone (SPANISH_ENABLED = false) | §6, §7 | **OPEN: human translator + clinician** (crisis lines must be reviewed before Spanish can be turned on; a test enforces it) | | | |
+| D25 | Find something (photo missions, "Things I noticed", "Something that's yours"): wording, the "find something that reminds you of someone" mission for people who are grieving, and photo safety | §8 | **OPEN** | | | |
 
 Signed: ______________________ (name, credentials) Date: __________

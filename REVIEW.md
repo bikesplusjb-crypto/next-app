@@ -501,6 +501,17 @@ Steps:
 2. Write three short lines.
 3. Listen to your song.
 
+### Find something (`find_something`)
+
+- Button: "Find something worth looking at"
+- Description: "Look outward. Find one thing, and take a photo if you want."
+- For: anxious, spiraling, low, distraction, alone · about 2 min · needs moving around
+
+Steps:
+1. Find something worth looking at.
+2. Take a photo if you want.
+3. Put the phone down.
+
 ### Be around people (`be_around_people`)
 
 - Button: "Be around people"
@@ -996,7 +1007,7 @@ On the guide when a name is given: "[name] would like you to check in now and th
 **Let's Zig** is a simple product rule, not a clinical method: after "I still feel bad" or a game's "No", the next suggestion comes from a different channel when one is available. After a recent rating of 8 or more, BODY, SPACE and PEOPLE steps come first. Safety routing always comes first: RED stops everything, and the YELLOW order (connection, own plan, grounding, fresh air) still wins.
 - `BODY`: grounding, breathing, hydration, walking, touch_real_world
 - `SPACE`: change_scene, environment_change, find_alive, craving_delay, break_the_loop
-- `SENSE`: distraction_game, distraction_color_hunt, distraction_around_me, distraction_categories, distraction_memory, distraction_pattern, distraction_60_second, ridiculous_mode, zags, song
+- `SENSE`: distraction_game, distraction_color_hunt, distraction_around_me, distraction_categories, distraction_memory, distraction_pattern, distraction_60_second, ridiculous_mode, zags, song, find_something
 - `PEOPLE`: ai_relationship_check, be_around_people, ai_loss, connection
 - `ACTION`: ai_reliance_check, ai_fomo, thought_parking, still_true, true_sentence, kind_stranger, borrow_ten, behavioral_activation
 
@@ -1020,6 +1031,28 @@ About: "When something isn't helping, ZigZag doesn't tell you to try harder. It 
 
 **Find something real** (Calm): "Find something you can hold." · "Find something cooler." · "Find something warmer." · "Put both feet on the floor." · "Change your position." · "Wash your hands." · "Turn on a light.". Optional textures: smooth, rough, warm, cool, soft, hard, heavy, light. With an anchor in My Plan: "Do you have your anchor nearby?" Yes: "Hold it for a moment." No: "Find something else you can safely hold." Ends: "You found something real."
 
+### Find something (owner handoff)
+
+One photo mission at a time (the person decides what they found; the camera is optional; no AI, no image analysis, nothing uploaded; photos kept only on Keep, in "Things I noticed" in My Plan). On Change the scene ("Find something worth looking at" / "One thing. A photo if you want.") and as a SENSE step the engine can pick.
+
+"Let's Zig. Find something worth looking at." / [mission] / "Don't risk your safety for the photo." / [Start] / "Don't post it. Just notice it. The photo stays on this phone unless you keep it here or share it yourself." / [No camera? Just look] [Try another] [I'm done]
+- find_beautiful: "Find something beautiful."
+- find_unnoticed: "Find something you walk past all the time but never really notice."
+- find_smile: "Find something that makes you smile."
+- find_texture: "Find something with an interesting texture."
+- find_color: "Pick a color. Find something that matches it."
+- find_old: "Find something old."
+- find_alive: "Find something alive: a plant, a tree, a bird, a pet."
+- find_memory: "Find something that reminds you of someone."
+- find_ordinary: "Find something completely ordinary and look at it closely."
+- find_true: "Find one thing that's true right now."
+
+With one of the person's own things: "Find something from one of your things: [thing]."
+
+No camera: "No camera? That's okay." / "Just find something and look at it for a moment." [I found something] [Try something else]. After: "You found it." / "Want to write one sentence about it? Optional." (safety-checked) [Keep it] [Try another] [I'm done] / "How do I feel now?" → "Kept in Things I noticed." → "You can put the phone down now." [I'm done]
+
+Things I noticed: "Only on this phone. Not a feed, not shared." Each photo can be deleted (asks once). "Something that's yours" (used by the next features): the person's own entries from My Plan's "Things that help me", then "Go do your thing. You don't need to accomplish anything. Just spend a few minutes doing it." [I'm heading out]
+
 ### Stage 6.19: reach, trust and simplicity
 
 A. Home, below everything else: "Worried about someone? How to help →" (opens the supporter guide at support/#worried). Supporter guide, very top: "Take it seriously, even if they seem fine. Listen more than you talk." Opening section, shown only when arriving that way: "Someone you care about is struggling." / "You don't need the right words. Being there and taking it seriously matters most." / "What to say →".
@@ -1028,7 +1061,8 @@ B. My Plan: "Print my plan" / "A full page and a wallet card to cut out. Printed
 
 C. **Privacy & terms — DRAFT, lawyer review required** (the page itself does not say "draft"). Linked from Settings, About and the first onboarding screen. Every paragraph, with the PRIVACY_DATA_FLOW.md sentence that supports it:
 - **What's saved, and where:** "Your plan, check-ins and settings are saved only in this browser on this phone. They are not encrypted: anyone who can use your unlocked phone, or its backups, may be able to read them." — source: "Not encrypted. Anyone with access to the unlocked phone and browser, or its backups, can read localStorage."
-- "Most things you type are checked and then thrown away. Song lines are saved only if you tap Keep." — source: "Free text is never stored (except song lines, and only when the person taps Keep)."
+- "Most things you type are checked and then thrown away. Song lines, and photos from Find something with their notes, are saved only if you tap Keep." — source: "Free text is never stored (except song lines and Find something photo notes, and only when the person taps Keep)."
+- "Photos never leave this phone through ZigZag Mind. Nothing looks at them or analyzes them." — source: "No image analysis, no AI, nothing uploaded."
 - **What leaves your phone:** "ZigZag Mind doesn't send anything anywhere. There are no accounts, ads or analytics." — source: "The app makes no network requests of its own."
 - "When you tap a link, like calling or texting 988, opening Maps, or the donation page, that app or website gets what you send it. Texts you prepare go to whoever you send them to." — source: "Everything below happens only when the person taps something:"
 - "When this site loads, the web host receives standard request information, like your IP address, browser type, time and the page. How long the host keeps it is up to the host." — source: "The host (Render) receives normal request data: IP address, user agent, time, path. What Render logs and keeps was not checked."
@@ -1532,6 +1566,71 @@ _When: distraction_
 - **Button:** Something else
 - **Button:** I'm good for now
 
+### `fs`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Find something
+- Let's Zig. Find something worth looking at.
+- **Heading:** Find something beautiful.
+- Don't risk your safety for the photo.
+- Start
+- **Text box** "Open the camera"
+- Don't post it. Just notice it. The photo stays on this phone unless you keep it here or share it yourself.
+- **Button:** No camera? Just look
+- **Button:** Try another
+- **Button:** I'm done
+
+### `fs-nocam`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** No camera? That's okay.
+- Just find something and look at it for a moment.
+- Find something beautiful.
+- **Button:** I found something
+- **Button:** Try something else
+
+### `fs-found`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** You found it.
+- **Button:** Try another
+- **Button:** I'm done
+- **Button:** How do I feel now?
+
+### `put-down-now`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** You can put the phone down now.
+- **Button:** I'm done
+
+### `your-thing`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** You can put the phone down now.
+- **Button:** I'm done
+
+### `your-things`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** What's something that's actually yours?
+- **Button:** Music
+- **Button:** Shower
+
+### `noticed-list`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Things I noticed
+- Only on this phone. Not a feed, not shared.
+- Nothing here yet.
+- **Button:** Find something
+
 ### `near-me`
 
 - **Button:** × _(screen reader: "Close and go to home")_
@@ -1548,7 +1647,8 @@ _When: distraction_
 - **Heading:** Privacy & terms
 - **Heading:** What's saved, and where
 - Your plan, check-ins and settings are saved only in this browser on this phone. They are not encrypted: anyone who can use your unlocked phone, or its backups, may be able to read them.
-- Most things you type are checked and then thrown away. Song lines are saved only if you tap Keep.
+- Most things you type are checked and then thrown away. Song lines, and photos from Find something with their notes, are saved only if you tap Keep.
+- Photos never leave this phone through ZigZag Mind. Nothing looks at them or analyzes them.
 - **Heading:** What leaves your phone
 - ZigZag Mind doesn't send anything anywhere. There are no accounts, ads or analytics.
 - When you tap a link, like calling or texting 988, opening Maps, or the donation page, that app or website gets what you send it. Texts you prepare go to whoever you send them to.
@@ -2350,6 +2450,7 @@ _When: distraction_
 - **Button:** Get something to drink
 - **Button:** Go to a window
 - **Button:** Find something alive
+- **Button:** Find something worth looking at — One thing. A photo if you want.
 - **Heading:** Somewhere to go
 - Opens your phone's Maps. ZigZag Mind never sees your location.
 - **Link → `https://www.google.com/maps/search/library`:** Library
@@ -2515,6 +2616,8 @@ _When: distraction_
 - **Link → `sms:5550142?&body=Would you be willing to hold onto a few things for me for a while? I'll explain when we talk.`:** Ask Jordan _(screen reader: "Ask Jordan to hold onto a few things")_
 - A full page and a wallet card to cut out. Printed from this phone; nothing is uploaded.
 - **Button:** Print my plan
+- Photos you keep from Find something show up here.
+- **Button:** Find something
 - Songs you make and keep show up here.
 - **Button:** Make one
 - **Heading:** Things to avoid when I'm struggling
@@ -2946,6 +3049,14 @@ _When: distraction_
 - **Button:** Help _(screen reader: "Get help now")_
 - Turn it into a song · Step 1 of 3
 - **Heading:** Pick how it feels.
+- **Button:** Next
+
+#### Find something
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Find something · Step 1 of 3
+- **Heading:** Find something worth looking at.
 - **Button:** Next
 
 #### Be around people

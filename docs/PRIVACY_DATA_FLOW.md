@@ -18,6 +18,7 @@ Method: read the code in `index.html`, `support/index.html` and `sw.js` at the c
 |---|---|---|---|
 | `localStorage` | Yes | `next.v1.prefs` | Settings: reduce motion, haptics, home-screen tip dismissed, onboarded (true/false), country, theme, saving on/off, and since F6 **`under18` (true once someone answers "No, I'm under 18")**. Since 6.15, **`strength`**: the person's answer to "What gives you strength?" (for example "bible"), only if they choose one; not written while saving is off; cleared by Delete everything. |
 | `localStorage` | Yes | `next.v1.sensitive` | **My Plan** (warning signs, things that help, places, trusted people: names, relationships, phone numbers; professional; time and distance plan; things to avoid; reminders; reasons to stay (6.18 D5); code word with the person's phone digits; who was asked for check-ins, with phone digits) · **check-in outcomes** (state, intervention id, before/after ratings, game/Zags/scene answers, timestamp; last 500) · **activity** (type `moment` / `plan` / `reach`, timestamp; last 500; never from crisis screens or while RED, since F3) · **your first name** for check-in reminders (optional, `myName`, since F1) · **first 30 days mode** when the person turns it on (6.13: start date, end date, which optional items are ticked; nothing about the hospital visit itself) · **songs** the person chose to Keep (6.16: mood, their three lines and any added lines, date; max 50) |
+| `localStorage` | Yes, only if the person keeps a photo | `next.v1.noticed` | **Things I noticed** (Find something): photos the person chose to Keep, shrunk on the phone to at most 640px (JPEG), with the mission id, date and an optional one-line note; max 20. Its own key, so a full browser store can't block saving the plan. Not written while saving is off; removed by Delete everything and by turning saving off. Not in the text export (the export lists date, mission and note only). |
 | `sessionStorage` | No | | |
 | IndexedDB | No | | |
 | Cookies | No | | |
@@ -26,7 +27,7 @@ Method: read the code in `index.html`, `support/index.html` and `sw.js` at the c
 
 - **Saving off** (Settings): nothing is written to `localStorage`, and the saved store is removed.
 - **Not encrypted.** Anyone with access to the unlocked phone and browser, or its backups, can read `localStorage`. (Already an open item in HANDOFF.md.)
-- **Free text is never stored** (except song lines, and only when the person taps Keep). The three-things fields, Thought Parking, the spiral "own step" and "Thank you for ___" are checked and then discarded. Verified after a RED entry: not in `localStorage`, not in `session`/`ui`, not in the page.
+- **Free text is never stored** (except song lines and Find something photo notes, and only when the person taps Keep). The three-things fields, Thought Parking, the spiral "own step" and "Thank you for ___" are checked and then discarded. Verified after a RED entry: not in `localStorage`, not in `session`/`ui`, not in the page.
 
 ## 2. Network: what leaves the phone
 
@@ -64,6 +65,8 @@ Everything below happens only when the person taps something:
 - **Delete everything:** empties the plan, history, activity, the first 30 days mode and kept songs in memory and in `localStorage` (verified: storage history and activity are 0 afterwards). **Kept:** settings (`next.v1.prefs`, including "onboarded"), and the current visit's safety level (by design: "safety level is never reset").
 
 - **Calendar files (6.13 and check-ins):** built on the phone and handed to the phone's own calendar. Nothing is sent by the app.
+
+- **Find something (camera):** the phone's own camera or photo picker hands the photo to the page (a file input); the app has no camera access of its own and asks for no permission. The preview exists only in the page and is dropped when the person leaves. No image analysis, no AI, nothing uploaded. Kept only on Keep (see `next.v1.noticed`).
 
 - **Feedback form (6.19 F, only when `FEEDBACK_URL` is set):** opens a separate service in a new tab. It receives only what the person types there (plus normal request data). Nothing from the app is sent with it. Shown only as a link on About.
 

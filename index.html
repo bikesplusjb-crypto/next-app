@@ -382,6 +382,11 @@ html.reduce .zmark-wave .zmark-body{animation:none}
 .faith-next{margin-top:8px}
 .faith-next a.sit{display:inline-flex;align-items:center;text-decoration:none;color:var(--text)}
 
+/* Find something */
+.fs-photo{display:block;width:100%;max-height:60vh;object-fit:contain;border-radius:14px;margin-top:12px;background:var(--surface)}
+label.fs-start{margin-top:16px;cursor:pointer}
+.fs-safe{margin-top:8px}
+
 /* Stage 6.19 */
 .privacy-p{margin:8px 0 0}
 .ctl-line{margin:8px 0 0}
@@ -553,8 +558,10 @@ const FEEDBACK_PRIVACY = ["If you use the feedback link on About, that form is a
 const PRIVACY_PAGE = [
   ["What's saved, and where", "Your plan, check-ins and settings are saved only in this browser on this phone. They are not encrypted: anyone who can use your unlocked phone, or its backups, may be able to read them.",
     "Not encrypted.** Anyone with access to the unlocked phone and browser, or its backups, can read `localStorage`."],
-  ["", "Most things you type are checked and then thrown away. Song lines are saved only if you tap Keep.",
-    "Free text is never stored** (except song lines, and only when the person taps Keep)."],
+  ["", "Most things you type are checked and then thrown away. Song lines, and photos from Find something with their notes, are saved only if you tap Keep.",
+    "Free text is never stored** (except song lines and Find something photo notes, and only when the person taps Keep)."],
+  ["", "Photos never leave this phone through ZigZag Mind. Nothing looks at them or analyzes them.",
+    "No image analysis, no AI, nothing uploaded."],
   ["What leaves your phone", "ZigZag Mind doesn't send anything anywhere. There are no accounts, ads or analytics.",
     "The app makes no network requests of its own."],
   ["", "When you tap a link, like calling or texting 988, opening Maps, or the donation page, that app or website gets what you send it. Texts you prepare go to whoever you send them to.",
@@ -1151,6 +1158,68 @@ function isNight(){ const h = new Date().getHours(); return h >= 0 && h < 6; }
    from this constant by sync-support.js. */
 const CRISIS_TEXT_LINE = { name:"Crisis Text Line", instruction:"Text HOME to 741741", hours:"24/7", sms:"sms:741741?&body=HOME", verified:false };
 const CTL_LINE = "Rather text a stranger? Text HOME to 741741 (Crisis Text Line).";
+/* FIND SOMETHING (owner handoff, 2026-10-04). Look outward: one photo mission at a time; the person decides what they
+   found. The camera is optional (the phone's own camera through a file input; no in-page camera, no permission prompt
+   of our own). No AI, no image analysis, nothing uploaded. Photos are kept only if the person taps Keep, in their own
+   storage key so a full browser store can never block saving the plan. Not a claim that photography treats anything. */
+const PHOTO_MISSIONS = [
+  { id:"find_beautiful", title:"Find something beautiful", prompt:"Find something beautiful." },
+  { id:"find_unnoticed", title:"Find something you never noticed", prompt:"Find something you walk past all the time but never really notice." },
+  { id:"find_smile", title:"Find something that makes you smile", prompt:"Find something that makes you smile." },
+  { id:"find_texture", title:"Find an interesting texture", prompt:"Find something with an interesting texture." },
+  { id:"find_color", title:"Find a color", prompt:"Pick a color. Find something that matches it." },
+  { id:"find_old", title:"Find something old", prompt:"Find something old." },
+  { id:"find_alive", title:"Find something alive", prompt:"Find something alive: a plant, a tree, a bird, a pet." },
+  { id:"find_memory", title:"Find something that reminds you of someone", prompt:"Find something that reminds you of someone." },
+  { id:"find_ordinary", title:"Find something ordinary", prompt:"Find something completely ordinary and look at it closely." },
+  { id:"find_true", title:"Find one true thing", prompt:"Find one thing that's true right now." }
+];
+const FS_LEAD = "Let's Zig. Find something worth looking at.";
+const FS_SAFE = "Don't risk your safety for the photo.";
+const FS_PRIVATE = "Don't post it. Just notice it. The photo stays on this phone unless you keep it here or share it yourself.";
+const FS_NOCAM = ["No camera? That's okay.", "Just find something and look at it for a moment."];
+const FS_FOUND = "You found it.";
+const FS_CAPTION = "Want to write one sentence about it?";
+const PUT_DOWN_NOW = "You can put the phone down now.";
+const NOTICED_KEY = "next.v1.noticed", NOTICED_CAP = 20, NOTICED_EDGE = 640;
+function noticed(){ return store.noticed || (store.noticed = []); }
+function validNoticed(a){
+  if (!Array.isArray(a)) return [];
+  return a.filter(n => n && typeof n.id === "string" && typeof n.date === "number" && typeof n.img === "string" && /^data:image\/jpeg;base64,/.test(n.img)
+    && PHOTO_MISSIONS.some(m => m.id === n.mission) && (n.caption === undefined || (typeof n.caption === "string" && n.caption.length <= 120))).slice(0, NOTICED_CAP);
+}
+function loadNoticed(){
+  if (!STORAGE_OK || !persistOn) return;
+  try { store.noticed = validNoticed(JSON.parse(localStorage.getItem(NOTICED_KEY) || "[]")); } catch (_){ store.noticed = []; }
+}
+function saveNoticed(){   // returns false if the browser refused (for example, storage full)
+  if (!STORAGE_OK || !persistOn) return true;
+  try { if (noticed().length) localStorage.setItem(NOTICED_KEY, JSON.stringify(noticed())); else localStorage.removeItem(NOTICED_KEY); return true; } catch (_){ return false; }
+}
+/* Shrinks a photo on the phone (longest edge 640px, JPEG) before keeping it. Resolves to a data: URL, or null. */
+function shrinkPhoto(url){
+  return new Promise(resolve => {
+    try {
+      const img = new Image();
+      img.onload = () => { try {
+        const k = Math.min(1, NOTICED_EDGE / Math.max(img.naturalWidth, img.naturalHeight));
+        const c = document.createElement("canvas"); c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+        const g = c.getContext("2d"); if (!g) return resolve(null);
+        g.drawImage(img, 0, 0, c.width, c.height); resolve(c.toDataURL("image/jpeg", 0.72));
+      } catch (_){ resolve(null); } };
+      img.onerror = () => resolve(null);
+      img.src = url;
+    } catch (_){ resolve(null); }
+  });
+}
+function fsMission(){
+  if (ui.fsYours) return { id:"find_true", title:"Find something from your things", prompt:`Find something from one of your things: ${ui.fsYours}.` };
+  return PHOTO_MISSIONS[(ui.fsIdx || 0) % PHOTO_MISSIONS.length];
+}
+function fsDropPhoto(){ if (ui.fsPhoto){ try { URL.revokeObjectURL(ui.fsPhoto); } catch (_){} } ui.fsPhoto = null; }
+/* "Something that's yours": the person's own things from My Plan's "Things that help me" (not the app's own steps). */
+function yourThings(){ return (getPlan().helps || []).filter(h => !findIntervention(h)).map(helpLabel); }
+
 /* 6.19 G: Help near me (Treasure Coast). Every entry starts verified:false and is hidden; the owner confirms each by
    phone or official website (CRISIS_RESOURCE_VERIFICATION.md), fills in phone/url, and sets verified:true.
    If no entry is verified, the screen and its links are hidden entirely. */
@@ -1358,6 +1427,12 @@ INTERVENTION_LIBRARY.push(
     states:["anxious","low","spiraling","distraction","alone"], intensityRange:[0,10], needsMobility:false,
     steps:["Pick how it feels.","Write three short lines.","Listen to your song."], completion:"tap_done" }
 );
+// FIND SOMETHING (SENSE, real world): a Let's Zig direction the engine may pick; YELLOW/RED rules still come first.
+INTERVENTION_LIBRARY.push(
+  { id:"find_something", name:"Find something", tryLabel:"Find something worth looking at", description:"Look outward. Find one thing, and take a photo if you want.", durationSec:120,
+    states:["anxious","spiraling","low","distraction","alone"], intensityRange:[0,10], needsMobility:true, realWorld:true,
+    steps:["Find something worth looking at.","Take a photo if you want.","Put the phone down."], completion:"tap_done" }
+);
 // 6.18 E5: "Be around people, no talking needed" (PEOPLE), opened from Connect only.
 INTERVENTION_LIBRARY.push(
   { id:"be_around_people", name:"Be around people", tryLabel:"Be around people", description:"No talking needed.", durationSec:900, states:[], intensityRange:[0,10], needsMobility:true,
@@ -1375,7 +1450,7 @@ const CHANNEL_OF = {
   grounding:"BODY", breathing:"BODY", hydration:"BODY", walking:"BODY", touch_real_world:"BODY",
   change_scene:"SPACE", environment_change:"SPACE", find_alive:"SPACE", craving_delay:"SPACE",
   distraction_game:"SENSE", distraction_color_hunt:"SENSE", distraction_around_me:"SENSE", distraction_categories:"SENSE",
-  distraction_memory:"SENSE", distraction_pattern:"SENSE", distraction_60_second:"SENSE", ridiculous_mode:"SENSE", zags:"SENSE", song:"SENSE", break_the_loop:"SPACE", ai_relationship_check:"PEOPLE", be_around_people:"PEOPLE", ai_loss:"PEOPLE", ai_reliance_check:"ACTION", ai_fomo:"ACTION",
+  distraction_memory:"SENSE", distraction_pattern:"SENSE", distraction_60_second:"SENSE", ridiculous_mode:"SENSE", zags:"SENSE", song:"SENSE", break_the_loop:"SPACE", ai_relationship_check:"PEOPLE", be_around_people:"PEOPLE", find_something:"SENSE", ai_loss:"PEOPLE", ai_reliance_check:"ACTION", ai_fomo:"ACTION",
   connection:"PEOPLE",
   thought_parking:"ACTION", still_true:"ACTION", true_sentence:"ACTION", kind_stranger:"ACTION", borrow_ten:"ACTION", behavioral_activation:"ACTION"
 };
@@ -1995,6 +2070,7 @@ function loadStore(){
         songs:validSongs(d.songs)
       };
     }
+    loadNoticed();
   } catch (_){ /* corrupted data: keep defaults */ }
 }
 function saveStore(){
@@ -2012,7 +2088,7 @@ function savePrefs(){
 }
 function clearSaved(){
   if (!STORAGE_OK) return;
-  try { localStorage.removeItem(STORE_KEY); } catch (_){}
+  try { localStorage.removeItem(STORE_KEY); localStorage.removeItem(NOTICED_KEY); } catch (_){}
 }
 const getPlan = () => store.sensitive.plan;
 /* Nothing is saved from crisis screens or while RED (no "moment", "reach" or "plan" entries): HANDOFF safety rule. */
@@ -2392,6 +2468,7 @@ function startIntervention(interventionId, opts = {}){
     ui.touchPhase = interventionId === "touch_real_world" && getPlan().anchor ? "anchor" : null;
     route = R617[interventionId];
   }
+  if (interventionId === "find_something"){ route = "fs"; fsDropPhoto(); ui.fsIdx = opts.mission != null ? opts.mission : 1; ui.fsYours = opts.yours || null; ui.fsCaption = ""; ui.fsKept = false; ui.msg = ""; }
   if (interventionId === "song"){ route = "song"; ui.songMood = null; ui.songIdx = 0; ui.songLines = ["", "", ""]; ui.song = null; ui.songEnded = false; ui.songKept = false; ui.songReplay = false; ui.msg = ""; }
   if (interventionId === "zags"){ route = "zags"; if (!ui.zags || ui.zags.phase !== "hello") ui.zags = { phase:"hello", step:0, rounds:0, hard:0, breath:0, half:null }; }
   if (!route) route = interventionId === "thought_parking" ? "spiral-input"
@@ -2768,6 +2845,78 @@ const SCREENS = {
       : `<button class="btn btn-primary" data-act="recTry">${esc(it.tryLabel)}</button>
         <button class="btn btn-secondary" data-act="recElse">Something else</button>
         <button class="link" data-act="phoneDown">I'm good for now</button>` };
+  },
+
+  /* FIND SOMETHING */
+  fs(){
+    const m = fsMission();
+    return { close:true, body:`
+      <p class="step-count">Find something</p>
+      <p class="sub fs-lead">${FS_LEAD}</p>
+      ${stepTitle(esc(m.prompt), true)}
+      <p class="small fs-safe">${FS_SAFE}</p>
+      <label class="btn btn-primary fs-start" for="fsCam">Start</label>
+      <input type="file" id="fsCam" class="sr" accept="image/*" capture="environment" aria-label="Open the camera">
+      <p class="small" style="margin-top:10px">${FS_PRIVATE}</p>`,
+      actions:`<button class="btn btn-secondary" data-act="fsNoCam">No camera? Just look</button>
+        <button class="btn btn-secondary" data-act="fsAnother">Try another</button>
+        <button class="link" data-act="fsDone">I'm done</button>` };
+  },
+  "fs-nocam"(){
+    return { close:true, body:`${stepTitle(FS_NOCAM[0], true)}<p class="sub" style="font-size:19px">${FS_NOCAM[1]}</p>
+      <p class="sub">${esc(fsMission().prompt)}</p>`,
+      actions:`<button class="btn btn-primary" data-act="fsFoundNoPhoto">I found something</button>
+        <button class="btn btn-secondary" data-act="fsElse">Try something else</button>` };
+  },
+  "fs-found"(){
+    const photo = ui.fsPhoto;
+    return { close:true, body:`
+      ${stepTitle(FS_FOUND, true)}
+      ${photo ? `<img class="fs-photo" src="${esc(photo)}" alt="Your photo">` : ""}
+      ${photo && !ui.fsKept ? `<label class="small" for="fsCaption" style="display:block;margin-top:12px">${FS_CAPTION} Optional.</label>
+        <input class="field" id="fsCaption" maxlength="120" autocomplete="off" value="${esc(ui.fsCaption || "")}">` : ""}
+      ${ui.fsKept ? `<p class="flash" role="status">Kept in Things I noticed.</p>` : ""}
+      ${ui.msg ? `<p class="err" role="alert">${esc(ui.msg)}</p>` : ""}`,
+      actions:`${photo && !ui.fsKept ? `<button class="btn btn-primary" data-act="fsKeep">Keep it</button>` : ""}
+        <button class="btn btn-secondary" data-act="fsAnother">Try another</button>
+        <button class="btn btn-secondary" data-act="fsDone">I'm done</button>
+        <button class="link" data-act="stepCheckin">How do I feel now?</button>` };
+  },
+  "put-down-now"(){
+    return { close:true, body:`${stepTitle(PUT_DOWN_NOW, true)}`,
+      actions:`<button class="btn btn-primary" data-act="putDown">I'm done</button>` };
+  },
+  "your-thing"(){
+    const t = ui.yourThing;
+    if (!t) return SCREENS["put-down-now"]();
+    return { close:true, body:`
+      <p class="step-count">Something that's yours</p>
+      ${stepTitle(esc(t), true)}
+      <p class="sub" style="font-size:19px">Go do your thing. You don't need to accomplish anything. Just spend a few minutes doing it.</p>`,
+      actions:`<button class="btn btn-primary" data-act="putDown">I'm heading out</button>` };
+  },
+  "your-things"(){
+    const list = yourThings();
+    return { close:true, body:`
+      ${title("What's something that's actually yours?")}
+      ${list.length ? `<div class="list">${list.map((t, i) => `<button class="card" data-act="yourThing" data-arg="${i}"><span>${esc(t)}</span></button>`).join("")}</div>`
+        : `<p class="sub">Add the things you like doing to My Plan, under "Things that help me on my own".</p>`}`,
+      actions:list.length ? "" : `<button class="btn btn-secondary" data-act="tab" data-arg="plan">Open My Plan</button>` };
+  },
+  "noticed-list"(){
+    const list = noticed();
+    return { close:true, body:`
+      ${title("Things I noticed")}
+      <p class="sub">Only on this phone. Not a feed, not shared.</p>
+      ${ui.flash ? `<p class="flash" role="status">${esc(ui.flash)}</p>` : ""}
+      ${list.length ? list.map(n => `<div class="panel noticed-item">
+          <img class="fs-photo" src="${esc(n.img)}" alt="${esc(n.caption || "A photo you kept")}">
+          ${n.caption ? `<p style="margin:8px 0 0">${esc(n.caption)}</p>` : ""}
+          <p class="small" style="margin:6px 0 0">${esc(songDate(n.date))}</p>
+          ${ui.noticedDel === n.id ? `<div class="pair" style="margin-top:8px"><button class="btn btn-outline" data-act="noticedDelYes" data-arg="${esc(n.id)}">Delete</button><button class="btn btn-secondary" data-act="noticedDelNo">Keep</button></div>`
+            : `<button class="link" data-act="noticedDel" data-arg="${esc(n.id)}">Delete</button>`}</div>`).join("")
+        : `<p class="empty">Nothing here yet.</p>`}`,
+      actions:`<button class="btn btn-secondary" data-act="fsStart">Find something</button>` };
   },
 
   /* 6.19 G: Help near me (verified entries only). */
@@ -3668,6 +3817,7 @@ const SCREENS = {
       <div class="list">${CHANGE_SCENE.map(([k, t]) =>
         `<button class="card scene-opt" data-act="scenePick" data-arg="${k}">${icon("door")}<span>${t}</span></button>`).join("")}
         <button class="card scene-opt" data-act="sceneAlive">${icon("leaf")}<span>Find something alive</span></button>
+        <button class="card scene-opt fs-card" data-act="fsStart">${icon("leaf")}<span>Find something worth looking at<span class="meta">One thing. A photo if you want.</span></span></button>
       </div>
       <h2 id="placesHead" tabindex="-1">Somewhere to go</h2>
       <p class="sub">Opens your phone's Maps. ZigZag Mind never sees your location.</p>
@@ -3930,6 +4080,8 @@ const SCREENS = {
       ${editable ? `<div class="panel print-row" id="printPanel"><div class="setup-row"><span><b>${l10n("plan.print")}</b><span class="small">${l10n("plan.printHint")}</span></span></div>
         ${codeWord() ? `<label class="print-check"><input type="checkbox" id="printCode"> ${l10n("plan.printCode")}</label>` : ""}
         <button class="btn btn-secondary" data-act="printPlan">${l10n("plan.print")}</button></div>` : ""}
+      ${editable ? `<div class="panel"><div class="setup-row"><span><b>Things I noticed</b><span class="small">${noticed().length ? `${noticed().length} kept on this phone` : "Photos you keep from Find something show up here."}</span></span>
+          <button class="edit-btn" data-act="${noticed().length ? "noticedOpen" : "fsStart"}">${noticed().length ? "Open" : "Find something"}</button></div></div>` : ""}
       ${editable ? `<div class="panel"><div class="setup-row"><span><b>${l10n("plan.songs")}</b><span class="small">${songs().length ? `${songs().length} ${l10n("plan.songsSaved")}` : l10n("plan.songsHint")}</span></span>
           <button class="edit-btn" data-act="${songs().length ? "songList" : "songNew"}">${songs().length ? l10n("plan.open") : l10n("plan.makeOne")}</button></div></div>` : ""}
       <div class="panel">${head("avoid", l10n("plan.h.avoid"))}${ul(pb.avoid)}</div>
@@ -4231,7 +4383,9 @@ function buildExport(){
     checkIns:[ ...store.sensitive.baseHistory, ...session.sessionHistory ].map(strip),
     activity:store.sensitive.activity.map(a => ({ type:a.type, date:new Date(a.ts).toISOString(), sample:a.sample || undefined })),
     first30Days:store.sensitive.afterCrisis ? { start:new Date(store.sensitive.afterCrisis.start).toISOString(), until:new Date(store.sensitive.afterCrisis.until).toISOString(), done:store.sensitive.afterCrisis.done } : undefined,
-    songs:songs().length ? songs().map(x => ({ date:new Date(x.date).toISOString(), mood:x.mood, lines:x.lines, still:x.still })) : undefined
+    songs:songs().length ? songs().map(x => ({ date:new Date(x.date).toISOString(), mood:x.mood, lines:x.lines, still:x.still })) : undefined,
+    // photos stay on the phone (too large for a text export); the export lists what was kept
+    thingsINoticed:noticed().length ? noticed().map(n => ({ date:new Date(n.date).toISOString(), mission:n.mission, caption:n.caption || undefined, photo:"kept on this phone, not in the export" })) : undefined
   };
 }
 
@@ -4602,6 +4756,7 @@ function render(){
     if (s === "borrow-step" && ui.borrowEnd) borrowTimer = setInterval(borrowTick, 1000);
     if (s !== "zags") zagsHush();
     if (s !== "song-play") songStop();
+    if (!["fs","fs-found","fs-nocam"].includes(s) && ui.fsPhoto) fsDropPhoto();   // the preview never outlives the activity
     clearInterval(tcTimer); tcTimer = null;
     clearInterval(minuteTimer); minuteTimer = null;
     if (s === "minute-down" && ui.minutePhase === "wait") minuteTimer = setInterval(minuteTick, 1000);
@@ -5123,6 +5278,39 @@ const ACTIONS = {
     window.addEventListener("afterprint", clear);
     try { if (typeof window.print === "function") window.print(); } catch (_){}
   },
+  /* FIND SOMETHING */
+  fsStart(){ if (blockIfRed()) return; ui.flash = ""; startIntervention("find_something"); },
+  fsAnother(){ if (blockIfRed()) return; fsDropPhoto(); ui.fsYours = null; ui.fsIdx = ((ui.fsIdx || 0) + 1) % PHOTO_MISSIONS.length; ui.fsKept = false; ui.fsCaption = ""; ui.msg = ""; lastRendered = null; go("fs"); },
+  fsNoCam(){ if (blockIfRed()) return; go("fs-nocam"); },
+  fsFoundNoPhoto(){ if (blockIfRed()) return; fsDropPhoto(); go("fs-found"); },
+  fsElse(){ if (blockIfRed()) return; fsDropPhoto(); go("dont-know"); },
+  fsDone(){ fsDropPhoto(); go("put-down-now"); },
+  fsKeep(){
+    if (blockIfRed()) return;
+    if (!ui.fsPhoto || ui.fsKept) return;
+    const box = document.getElementById("fsCaption");
+    const caption = ((box && box.value) || "").trim().replace(/\s+/g, " ").slice(0, 120);
+    const keep = async () => {
+      const img = await shrinkPhoto(ui.fsPhoto);
+      if (!img){ ui.msg = "Couldn't keep it on this phone."; render(); return; }
+      const d = Date.now();
+      const item = { id:String(d), date:d, mission:fsMission().id, img, ...(caption ? { caption } : {}) };
+      store.noticed = [item, ...noticed()].slice(0, NOTICED_CAP);
+      if (!saveNoticed()){ store.noticed = noticed().filter(x => x.id !== item.id); ui.msg = "Couldn't keep it: this phone's browser storage is full."; render(); return; }
+      ui.fsKept = true; ui.msg = ""; render();
+    };
+    if (!caption){ keep(); return; }
+    handleSafeTextSubmit({ text:caption,
+      onRed(){ fsDropPhoto(); applySafetyResult("RED"); },   // nothing is kept
+      onYellow(){ applySafetyResult("YELLOW"); keep(); },
+      onGreen(){ keep(); } });
+  },
+  noticedOpen(){ if (blockIfRed()) return; ui.flash = ""; ui.noticedDel = null; go("noticed-list"); },
+  noticedDel(arg){ ui.noticedDel = arg; render(); },
+  noticedDelNo(){ ui.noticedDel = null; render(); },
+  noticedDelYes(arg){ store.noticed = noticed().filter(n => n.id !== arg); saveNoticed(); ui.noticedDel = null; ui.flash = "Photo deleted."; render(); },
+  yourThings(){ if (blockIfRed()) return; go("your-things"); },
+  yourThing(arg){ if (blockIfRed()) return; const t = yourThings()[Number(arg)]; if (!t) return; ui.yourThing = t; go("your-thing"); },
   nearMe(){ if (blockIfRed()) return; if (!nearMe().length) return; ui.nearFrom = session.screen; go("near-me"); },
   nearBack(){ go(ui.nearFrom === "connect" || ui.nearFrom === "scene" ? ui.nearFrom : "home"); },
   privacyOpen(){ ui.privacyFrom = session.screen; ui.flash = ""; go("privacy"); },
@@ -5342,6 +5530,7 @@ const ACTIONS = {
   deleteAll(){
     store.sensitive = { plan:emptyPlan(), baseHistory:[], activity:[], afterCrisis:null, songs:[] };
     saveStore();
+    store.noticed = []; saveNoticed();   // photos kept in Things I noticed go too
     prefs.strength = null; savePrefs();   // 6.15: a faith answer is personal, so it goes too
     dispatch({ type:"DELETE_DATA" });
     ui.engine = null;
@@ -5395,6 +5584,18 @@ document.addEventListener("click", e => {
   e.preventDefault();
   const fn = ACTIONS[act];
   if (fn) fn(el.getAttribute("data-arg"), el, e);
+});
+
+/* FIND SOMETHING: the phone's camera (or a photo picker) hands back a photo; it stays in this page as a local preview. */
+document.addEventListener("change", e => {
+  if (!e.target || e.target.id !== "fsCam") return;
+  if (blockIfRed()) return;
+  const f = e.target.files && e.target.files[0];
+  if (!f || !/^image\//.test(f.type || "")) return;
+  fsDropPhoto();
+  try { ui.fsPhoto = URL.createObjectURL(f); } catch (_){ ui.fsPhoto = null; }
+  ui.fsKept = false; ui.msg = "";
+  go("fs-found");
 });
 
 /* Focus game input */
