@@ -336,6 +336,24 @@ a.cw-open,a.ci-open{text-decoration:none;display:flex;align-items:center;justify
 .cw-words{margin-top:14px}
 .cw-words .sit[aria-pressed="true"]{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
 
+/* Very narrow screens (200% text on a phone: about 195px wide): stack, wrap, never scroll sideways. */
+@media (max-width:260px){
+  .pair,.routes,.seg-theme,.after-row{grid-template-columns:1fr !important}
+  .rating{grid-template-columns:repeat(3,1fr)}
+  .tab{font-size:10px;padding:0 1px;min-width:0;letter-spacing:-.01em}
+  .pair > *,.routes > *,.seg-theme > *,.list > *,.after-txt,.setup-row > span{min-width:0;overflow-wrap:anywhere}
+  .setup-row{flex-wrap:wrap}
+  h1,.step-big{overflow-wrap:anywhere}
+  .ob-hello{flex-direction:column;align-items:flex-start}
+  .ring-wrap{width:160px;height:160px}.ring-wrap svg{width:100%;height:100%}
+  .zags{width:150px;height:150px;max-width:100%}
+  .bar{max-width:100%}
+  .after-appt .field,.after-txt .btn{min-width:0;width:100%;max-width:100%}
+  .after-item{gap:8px}
+  .plan-head{flex-wrap:wrap;gap:6px}
+  .plan-head h3{min-width:0;overflow-wrap:anywhere}
+}
+
 /* Zags brand mark (still; waves only on "You're ready") */
 .brand-row{display:flex;align-items:center;gap:8px}
 .brand-row .brand{flex:0 1 auto;min-width:0;text-align:left}

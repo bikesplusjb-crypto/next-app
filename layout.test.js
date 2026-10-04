@@ -1,11 +1,11 @@
-// Stage 7 visual QA: every screen at 375, 390 and 430px wide (real Chromium layout):
+// Stage 7 visual QA: every screen at 195 (200% text on a 390px phone), 375, 390 and 430px wide (real Chromium layout):
 // no horizontal scrolling, no clipped text, no tap target under 44px.
 const {chromium}=require('playwright');
 const URL='file://'+require('path').join(__dirname,'index.html');
 const r=[];
 (async()=>{
  const b=await chromium.launch();
- for(const width of [375,390,430]){
+ for(const width of [195,375,390,430]){
   const p=await b.newPage({viewport:{width,height:844}});
   await p.goto(URL);
   for(const a of ['obNext','obAdult','obLater']) await p.click(`[data-act="${a}"]`);
