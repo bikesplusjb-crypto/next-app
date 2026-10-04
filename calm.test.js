@@ -15,7 +15,7 @@ const r=[];
 
 {const a=calm(); const t=a.T();
  r.push(['Calm opens from Home', a.S().screen==='calm' && a.doc.getElementById('screen-title').textContent==="Let's slow things down."]);
- r.push(['short menu: breathe, 5-4-3-2-1, feet on the floor, what\'s still true, + 6.17 find something real, what\'s also true', [...a.doc.querySelectorAll('[data-act="calmPick"]')].map(b=>b.dataset.arg).join()==='breathe,ground,feet,true,real,also']);
+ r.push(['short menu: breathe, 5-4-3-2-1, feet on the floor, what\'s true (still true + also true inside, simplicity audit #8), find something real', [...a.doc.querySelectorAll('[data-act="calmPick"]')].map(b=>b.dataset.arg).join()==='breathe,ground,feet,truth,real']);
  r.push(['"I\'d rather talk to someone" goes to Connect', !!a.doc.querySelector('.actions [data-act="route"][data-arg="connect"]') && t.includes("I'd rather talk to someone")]);
  r.push(['no emoji; Help in the top bar', !/\p{Extended_Pictographic}/u.test(t) && !!a.doc.querySelector('header .help-pill')]);
  r.push(['Zags is the featured card, first on the menu (6.7)', /^Calm down with Zags/.test(a.doc.querySelector('#app .zcard').textContent.trim()) && a.doc.querySelector('#app .zcard').compareDocumentPosition(a.doc.querySelector('[data-act="calmPick"]'))===4]);
@@ -40,7 +40,7 @@ const r=[];
  r.push(['...then the check-in', a.S().screen==='checkin']);}
 
 // What's still true?
-{const a=calm(); a.click(act('calmPick','true'));
+{const a=calm(); a.click(act('calmPick','truth')); a.click(act('calmPick','true'));
  const STILL=a.G('STILL_TRUE');
  r.push(['what\'s still true: one statement at a time', a.S().screen==='still-true' && a.T().includes(STILL[0]) && !a.T().includes(STILL[1])]);
  r.push(['...opens with "start with what you know"', a.T().includes('When everything feels like too much, start with what you know.')]);
@@ -52,7 +52,7 @@ const r=[];
  a.click(act('trueDone')); a.click(act('rate','4')); a.click(act('ciHelped')); a.click(act('phoneDownElse'));
  r.push(['...Next → check-in, recorded as still_true', a.S().sessionHistory.at(-1).interventionId==='still_true']);
  r.push(['nothing about the answers is saved', !/I am here|trueCount|My feet/.test(JSON.stringify(a.dump()))]);}
-{const a=calm(); a.click(act('calmPick','true'));
+{const a=calm(); a.click(act('calmPick','truth')); a.click(act('calmPick','true'));
  const n=a.G('STILL_TRUE.length'); for(let i=0;i<n;i++) a.click(act('trueNo'));
  const hrefs=[...a.doc.querySelectorAll('#app a[href]')].map(x=>x.getAttribute('href'));
  r.push(['nothing true → no forced positivity', a.T().includes("That's okay. Nothing has to feel true right now.") && !a.T().includes('You found something')]);
@@ -62,7 +62,7 @@ const r=[];
 r.push(['statements kept in one constant for review', /const STILL_TRUE = \[/.test(HTML) && fs.readFileSync(require('path').join(__dirname,'REVIEW.md'),'utf8').includes('"I am here right now."')]);
 r.push(['still_true is in the intervention library', /id:"still_true"/.test(HTML)]);
 // RED stops it.
-{const a=calm(); a.click(act('calmPick','true')); a.click('.help-pill[data-act="crisis"]');
+{const a=calm(); a.click(act('calmPick','truth')); a.click(act('calmPick','true')); a.click('.help-pill[data-act="crisis"]');
  r.push(['Help mid-flow → crisis, RED', a.S().screen==='crisis' && a.S().safetyLevel==='RED']);
  a.G('ACTIONS.trueYes()'); r.push(['RED blocks the flow from continuing', a.S().screen==='crisis']);}
 console.log(r.map(x=>(x[1]?'PASS ':'FAIL ')+x[0]).join('\n'));

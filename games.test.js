@@ -20,8 +20,11 @@ const gameText=a=>{ const c=a.doc.getElementById('app').cloneNode(true); c.query
 {const a=menu(); const t=a.T();
  r.push(['Get out of my head opens the games menu, no before-rating', a.S().screen==='distract' && a.S().currentState==='distraction' && a.doc.getElementById('screen-title').textContent==='Get out of my head.']);
  r.push(['menu line: "1 to 5 minutes. No points, no levels."', t.includes('Quick games to interrupt the loop. 1 to 5 minutes. No points, no levels.')]);
- r.push(['six games in spec order, then Focus', [...a.doc.querySelectorAll('[data-act="game"]')].map(b=>b.dataset.arg).join()==='color,around,cats,memory,pattern,sixty' && !!a.doc.querySelector('[data-act="distFocus"]')
-   && ['Color hunt','Around me','Rapid categories','Memory snap','Pattern break','60-second challenge','Focus'].every(x=>t.includes(x))]);
+ r.push(['"Quick games" and Focus on the menu (simplicity audit #3)', !!a.doc.querySelector('[data-act="gamesOpen"]') && !!a.doc.querySelector('[data-act="distFocus"]') && t.includes('Quick games') && t.includes('Focus')]);
+ a.click(act('gamesOpen')); const g=a.T();
+ r.push(['...six games in spec order behind it', [...a.doc.querySelectorAll('[data-act="game"]')].map(b=>b.dataset.arg).join()==='color,around,cats,memory,pattern,sixty'
+   && ['Color hunt','Around me','Rapid categories','Memory snap','Pattern break','60-second challenge'].every(x=>g.includes(x)) && !/\p{Extended_Pictographic}/u.test(g)]);
+ a.G('go("distract")');
  r.push(['no emoji; Help in the top bar', !/\p{Extended_Pictographic}/u.test(t) && !!a.doc.querySelector('header .help-pill[data-act="crisis"]')]);
  r.push(['"Break the loop" waits for 6.14 (Tech check)', !/Break the loop/.test(t)]);
  r.push(['opening the menu counts as a hard moment', a.G('store.sensitive.activity.filter(x=>x.type==="moment").length')===1]);}
@@ -37,26 +40,26 @@ function finish(a,id,name){
     && ['yes','a_little','no'].every(x=>!!a.doc.querySelector(act('gameChange',x))) && a.T().includes('Yes') && a.T().includes('A little') && !!a.doc.querySelector(act('ciSkip'))]);
   look(a,name+' check-in');
 }
-{const a=menu(); a.click(act('game','color'));
+{const a=menu(); a.click(act('gamesOpen')); a.click(act('game','color'));
  r.push(['Color hunt: part 1, 5 blue circles to tap', a.S().screen==='g-color' && a.doc.querySelectorAll('.dot.blue').length===5 && a.T().includes('Find 5 things around you that are blue.') && a.T().includes('Color hunt · Part 1 of 2')]);
  look(a,'color 1'); a.click(act('gDot','0')); a.click(act('gDot','1'));
  r.push(['Color hunt: a tap fills a circle', a.doc.querySelectorAll('.dot[aria-pressed="true"]').length===2]);
  a.click(act('gNext'));
  r.push(['Color hunt: part 2, 3 red circles', a.doc.querySelectorAll('.dot.red').length===3 && a.T().includes('Now find 3 things that are red.')]);
  look(a,'color 2'); a.click(act('gNext')); finish(a,'distraction_color_hunt','Color hunt');}
-{const a=menu(); a.click(act('game','around'));
+{const a=menu(); a.click(act('gamesOpen')); a.click(act('game','around'));
  r.push(['Around me: the five things to find', a.S().screen==='g-around' && ['Something soft','Something cold','Something rectangular','Something older than you','Something that makes a sound'].every(x=>a.T().includes(x))]);
  a.click(act('gFound','0')); a.click(act('gFound','3'));
  r.push(['Around me: tap each when found', a.doc.querySelectorAll('.todo[aria-pressed="true"]').length===2]);
  look(a,'around'); a.click(act('gDone')); finish(a,'distraction_around_me','Around me');}
-{const a=menu(); a.click(act('game','cats'));
+{const a=menu(); a.click(act('gamesOpen')); a.click(act('game','cats'));
  r.push(['Rapid categories: animals first, a tap counter, no typing', a.S().screen==='g-cats' && a.T().includes('Name 5 animals.') && !!a.doc.querySelector(act('gTally')) && !a.doc.querySelector('#app input, #app textarea')]);
  for(let i=0;i<7;i++) a.click(act('gTally'));
  r.push(['Rapid categories: the counter fills, never past 5, no number shown', a.doc.querySelectorAll('.dots .dot.on').length===5]);
  look(a,'cats 1'); a.click(act('gNext')); r.push(['...then cities', a.T().includes('Name 5 cities.') && a.doc.querySelectorAll('.dots .dot.on').length===0]);
  a.click(act('gNext')); r.push(['...then foods', a.T().includes('Name 5 foods.')]);
  look(a,'cats 3'); a.click(act('gNext')); finish(a,'distraction_categories','Rapid categories');}
-{const a=menu(); a.click(act('game','memory'));
+{const a=menu(); a.click(act('gamesOpen')); a.click(act('game','memory'));
  r.push(['Memory snap: 6 shapes shown first, nothing to tap yet', a.S().screen==='g-memory' && a.doc.querySelectorAll('.shapes .shape').length===6 && !a.doc.querySelector(act('memPick'))]);
  r.push(['Memory snap: hides after 5 seconds', a.G('memTimer!==null && MEMORY_SHOW_MS')===5000]);
  a.G('memHide()');
@@ -66,9 +69,9 @@ function finish(a,id,name){
  r.push(['Memory snap: reveal outlines the 6 that were there', a.doc.querySelectorAll('.shape.was').length===6 && a.T().includes("Here's what was there.")]);
  r.push(['Memory snap: never a count or score', !/\d/.test(gameText(a))]);
  look(a,'memory reveal'); a.click(act('gDone')); finish(a,'distraction_memory','Memory snap');}
-{const a=menu(); a.click(act('game','memory')); a.click(act('home')); a.G('memHide()');
+{const a=menu(); a.click(act('gamesOpen')); a.click(act('game','memory')); a.click(act('home')); a.G('memHide()');
  r.push(['Memory snap: leaving early stops its timer', a.S().screen==='home' && a.G('memTimer')===null]);}
-{const a=menu(); a.click(act('game','pattern'));
+{const a=menu(); a.click(act('gamesOpen')); a.click(act('game','pattern'));
  r.push(['Pattern break: 4 soft pads, a sequence of 4', a.S().screen==='g-pattern' && a.doc.querySelectorAll('.pad').length===4 && a.G('ui.patSeq.length')===4 && a.G('ui.patPlaying')===true]);
  a.G('stopGameTimers()');
  const seq=a.G('ui.patSeq'); const wrong=(seq[0]+1)%4;
@@ -78,9 +81,9 @@ function finish(a,id,name){
  for(const k of seq) a.click(act('padTap',String(k)));
  r.push(['Pattern break: tap it back and it ends calmly', a.G('ui.patDone')===true && a.T().includes("That's the pattern.")]);
  look(a,'pattern done'); a.click(act('gDone')); finish(a,'distraction_pattern','Pattern break');}
-{const a=menu(); a.click(act('game','pattern')); a.G('stopGameTimers()'); a.click(act('gDone'));
+{const a=menu(); a.click(act('gamesOpen')); a.click(act('game','pattern')); a.G('stopGameTimers()'); a.click(act('gDone'));
  r.push(['Pattern break: "I\'m done" any time still reaches the check-in', a.S().screen==='game-check']);}
-{const a=menu(); a.click(act('game','sixty'));
+{const a=menu(); a.click(act('gamesOpen')); a.click(act('game','sixty'));
  r.push(['60-second challenge: the Focus mechanic with its own line', a.S().screen==='focus' && a.S().currentInterventionId==='distraction_60_second' && a.doc.getElementById('screen-title').textContent==='For the next 60 seconds, your only job is to beat the timer.']);
  look(a,'sixty'); a.click(act('focusDone')); finish(a,'distraction_60_second','60-second challenge');}
 {const a=menu(); a.click(act('distFocus'));
@@ -89,7 +92,7 @@ function finish(a,id,name){
 r.push(['no game screen shows a number that judges performance', judged.length===0, judged.join(' | ')]);
 
 // ---- the check-in feeds outcomes and the engine ----
-function played(arg, change){ const a=menu(); a.click(act('game',arg)); a.G('stopGameTimers()'); if(a.S().screen==='focus') a.click(act('focusDone')); else a.G('ACTIONS.gDone()'); a.click(act('gameChange',change)); return a; }
+function played(arg, change){ const a=menu(); a.click(act('gamesOpen')); a.click(act('game',arg)); a.G('stopGameTimers()'); if(a.S().screen==='focus') a.click(act('focusDone')); else a.G('ACTIONS.gDone()'); a.click(act('gameChange',change)); return a; }
 {const a=played('around','yes'); const o=a.S().sessionHistory.at(-1);
  r.push(['Yes → outcome recorded with the change, then "You\'re ready." (6.17)', o.interventionId==='distraction_around_me' && o.state==='distraction' && o.change==='yes' && o.after===null && a.S().screen==='phone-down']);
  r.push(['outcome saved on the device like any other', (a.w.localStorage.getItem(a.G('STORE_KEY'))||'').includes('"change":"yes"')]);}
@@ -99,19 +102,19 @@ function played(arg, change){ const a=menu(); a.click(act('game',arg)); a.G('sto
  r.push(['No counts like "I still feel bad"', a.S().stillBadCount===1 && a.S().yellow===false]);}
 {const a=played('color','no'); a.G('startIntervention("distraction_around_me")'); a.G('ACTIONS.gDone()'); a.click(act('gameChange','no'));
  r.push(['two "No" answers in a visit → YELLOW (988 support bar), like "I still feel bad" twice', a.S().stillBadCount===2 && a.S().yellow===true && !!a.doc.querySelector('header .ybar')]);}
-{const a=menu(); a.click(act('game','memory')); a.G('memHide()'); a.click(act('memReveal')); a.click(act('gDone')); a.click(act('ciSkip'));
+{const a=menu(); a.click(act('gamesOpen')); a.click(act('game','memory')); a.G('memHide()'); a.click(act('memReveal')); a.click(act('gDone')); a.click(act('ciSkip'));
  r.push(['Skip → recorded with no change, then the next step', a.S().sessionHistory.at(-1).change===undefined && a.S().screen==='recommendation']);}
 {const a=played('around','yes'); a.click(act('phoneDownElse')); a.G('ui.engine={interventionId:"distraction_pattern",reason:"x"}'); a.click(act('recTry'));
  r.push(['when the engine suggests a game, Try opens that game', a.S().screen==='g-pattern' && a.S().currentInterventionId==='distraction_pattern']);}
 
 // ---- safety ----
 for(const [arg,screen] of [['color','g-color'],['around','g-around'],['cats','g-cats'],['memory','g-memory'],['pattern','g-pattern'],['sixty','focus']]){
-  const a=menu(); a.click(act('game',arg));
+  const a=menu(); a.click(act('gamesOpen')); a.click(act('game',arg));
   const ok=a.S().screen===screen && !!a.doc.querySelector('header .help-pill[data-act="crisis"]');
   a.click('header .help-pill[data-act="crisis"]');
   r.push([`${arg}: Help is one tap to the crisis screen`, ok && a.S().screen==='crisis' && a.S().safetyLevel==='RED']);
 }
-{const a=menu(); a.click(act('game','color')); a.G('dispatch({type:"SET_SAFETY_LEVEL",level:"RED"})');
+{const a=menu(); a.click(act('gamesOpen')); a.click(act('game','color')); a.G('dispatch({type:"SET_SAFETY_LEVEL",level:"RED"})');
  a.G('ACTIONS.gNext()'); r.push(['RED stops a game mid-way', a.S().screen==='crisis']);
  a.G('ACTIONS.game("pattern")'); r.push(['RED: no game can start', a.S().screen==='crisis' && a.S().currentInterventionId==='distraction_color_hunt']);}
 
@@ -128,7 +131,7 @@ for(const [arg,screen] of [['color','g-color'],['around','g-around'],['cats','g-
  r.push(['60-second challenge: reduced motion is side to side only', !!m && Number(m[2])===0]);}
 
 // ---- Pattern break really plays (real timers) ----
-{const a=menu(); a.click(act('game','pattern'));
+{const a=menu(); a.click(act('gamesOpen')); a.click(act('game','pattern'));
  setTimeout(()=>{
    r.push(['Pattern break lights the pads in turn', a.doc.querySelectorAll('.pad.lit').length===1 && a.doc.getElementById('patMsg').textContent==='Watch.']);
    a.click(act('padTap','0'));

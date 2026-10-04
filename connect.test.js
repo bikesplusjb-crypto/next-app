@@ -41,7 +41,9 @@ for(const hour of [3,23]){
 
 // ---- your people and message ideas ----
 const IDEAS=["Can't sleep, you up?","Rough night. Can you talk for 5 minutes?","Want to catch up this week?","Hey. Just saying hi.","Got a minute?"];   // last two: 6.18 E4
-{const a=boot(); a.G('ACTIONS.loadSample()'); a.click(act('route','connect')); const box=a.doc.getElementById('connPeople');
+{const a=boot(); a.G('ACTIONS.loadSample()'); a.click(act('route','connect'));
+ r.push(['message ideas are one tap behind "Don\'t know what to say?" (simplicity audit #5)', !a.doc.querySelector('a.idea') && !!a.doc.querySelector('[data-act="ideasToggle"][aria-expanded="false"]')]);
+ a.click(act('ideasToggle')); const box=a.doc.getElementById('connPeople');
  r.push(['your person, with Text and Call', box.textContent.includes('Jordan') && box.textContent.includes('friend')
    && !!box.querySelector('a[href="sms:5550142"][aria-label="Text Jordan"]') && !!box.querySelector('a[href="tel:5550142"][aria-label="Call Jordan"]')]);
  const ideas=[...box.querySelectorAll('a.idea')];
@@ -50,7 +52,7 @@ const IDEAS=["Can't sleep, you up?","Rough night. Can you talk for 5 minutes?","
  r.push(['prepare, never send: these are links that open Messages', ideas.every(x=>x.tagName==='A' && !x.dataset.act)]);}
 {const a=boot(); a.G('ACTIONS.loadSample(); getPlan().trustedPeople.push({name:"Sam",relationship:"sister",phone:"555-0199"})'); a.click(act('route','connect'));
  r.push(['every trusted person gets Text and Call', !!a.doc.querySelector('a[href="tel:5550199"][aria-label="Call Sam"]') && !!a.doc.querySelector('a[href="sms:5550199"][aria-label="Text Sam"]')]);
- r.push(['with more than one person, the ideas say who they go to', a.T().includes("Don't know what to say to Jordan? Tap one:")]);}
+ a.click(act('ideasToggle')); r.push(['with more than one person, the ideas say who they go to', a.T().includes("Don't know what to say to Jordan? Tap one:")]);}
 {const a=boot(); a.click(act('route','connect'));
  r.push(['nobody in the plan yet: a way to add someone, no message ideas', !a.doc.querySelector('a.idea') && !!a.doc.querySelector(act('planFromConnect'))]);
  a.click(act('planFromConnect')); r.push(['...which opens My Plan', a.S().screen==='plan']);}
@@ -95,7 +97,7 @@ const HF="Would talking to a person help more than another answer?";
 {const a=boot(); atRec(a); elseTap(a); elseTap(a);
  r.push(['nobody in the plan: Call someone → Connect', !!a.doc.querySelector('.actions [data-act="route"][data-arg="connect"]')]);
  a.click(act('hfPeople'));
- r.push(['Be around people → Change the scene, at "Somewhere to go"', a.S().screen==='scene' && a.doc.activeElement && a.doc.activeElement.id==='placesHead']);}
+ r.push(['Be around people → "Somewhere to go"', a.S().screen==='scene-places' && a.doc.getElementById('screen-title').textContent==='Somewhere to go']);}
 {const a=boot(); atRec(a); elseTap(a); a.G('dispatch({type:"SET_SAFETY_LEVEL",level:"RED"})'); a.G('ACTIONS.recElse()');
  r.push(['never shown over a crisis (RED goes to the crisis screen)', a.S().screen==='crisis' && a.S().humanFirstShown===false]);}
 

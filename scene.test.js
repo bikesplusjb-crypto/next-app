@@ -43,7 +43,7 @@ for(const [k,label] of OPTS){
  r.push(['...and picking one does not count it twice', a.S().screen==='scene-step' && a.S().interventionCount===n]);}
 
 // Somewhere to go: Maps with a plain search, nothing about where the person is.
-const places=a=>[...a.doc.querySelectorAll('.places a')].map(x=>[x.textContent.trim(),x.getAttribute('href')]);
+const places=a=>{ if(a.doc.querySelector('[data-act="placesOpen"]')) a.click(act('placesOpen')); return [...a.doc.querySelectorAll('.places a')].map(x=>[x.textContent.trim(),x.getAttribute('href')]); };   // one tap behind "Somewhere to go" (simplicity audit #6)
 {const a=scene(IPHONE); const p=places(a);
  r.push(['four places: Library, Park, Coffee shop, Community center', p.map(x=>x[0]).join()==='Library,Park,Coffee shop,Community center']);
  r.push(['iPhone: Apple Maps search', p.map(x=>x[1]).join()==='https://maps.apple.com/?q=library,https://maps.apple.com/?q=park,https://maps.apple.com/?q=coffee+shop,https://maps.apple.com/?q=community+center']);}
@@ -57,10 +57,10 @@ for(const ua of [IPHONE,ANDROID]){
   r.push([`the page never touches navigator.geolocation (${ua===IPHONE?'iPhone':'Android'})`, a.w.__geo===0]);
 }
 r.push(['no geolocation, places API or location lookup in the code', !/geolocation|getCurrentPosition|watchPosition|maps\.googleapis|places\b.*api/i.test(HTML)]);
-{const a=scene(); const box=a.doc.querySelector('.scene-211'); const call=box && box.querySelector('a[href]');
+{const a=scene(); a.click(act('placesOpen')); const box=a.doc.querySelector('.scene-211'); const call=box && box.querySelector('a[href]');
  r.push(['211: the line and a Call 211 button to tel:211', !!box && box.textContent.includes('Need real-world help near you?') && box.textContent.includes('211 connects you to local help: food, housing, support groups. Free.')
    && call.getAttribute('href')==='tel:211' && call.textContent.trim()==='Call 211']);
- const local=[...a.doc.querySelectorAll('.places, .scene-211')].map(x=>x.textContent).join(' ')+' '+a.doc.querySelector('h2').textContent+' '+a.doc.querySelector('h2').nextElementSibling.textContent;
+ const local=[...a.doc.querySelectorAll('.places, .scene-211')].map(x=>x.textContent).join(' ')+' '+a.doc.getElementById('screen-title').textContent+' '+a.doc.getElementById('screen-title').nextElementSibling.textContent;
  r.push(['places and 211 are never labelled as crisis help', !/crisis|emergency|988|911|suicid|safe place/i.test(local)]);
  r.push(['crisis help stays separate: Help is still in the top bar', !!a.doc.querySelector('header .help-pill[data-act="crisis"]')]);}
 

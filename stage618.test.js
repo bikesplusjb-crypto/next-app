@@ -72,7 +72,7 @@ const SAMPLE='ACTIONS.loadSample();';
  r.push(['D2: Warm Line card says "Usually closed right now · opens at 4pm Eastern" at night only', n.T().includes('Usually closed right now · opens at 4pm Eastern') && !d.T().includes('Usually closed right now')]);
  const btn=n.doc.querySelector('#connWarm a.btn');
  r.push(['D2: the Warm Line button stays enabled at night', !!btn && btn.getAttribute('href')==='tel:18009451355' && !btn.hasAttribute('disabled') && !btn.hasAttribute('aria-disabled')]);
- r.push(['D2: "Can\'t sleep, you up?" is the first message idea at night', n.doc.querySelector('.sits .idea').textContent==="Can't sleep, you up?"]);
+ n.G('ui.ideasOpen=true; render()'); r.push(['D2: "Can\'t sleep, you up?" is the first message idea at night', n.doc.querySelector('.sits .idea').textContent==="Can't sleep, you up?"]);
  const same=['crisis','crisis-full','crisis-no','safety-check'].every(s=>{ for(const a of [n,d]){ a.G('ui=freshUi(); ui.talkOpen=true; ui.placesOpen=true;'); show(a,s,'session.safetyLevel="RED";'); } return n.doc.getElementById('app').innerHTML===d.doc.getElementById('app').innerHTML; });
  r.push(['D2: crisis screens are identical at night and by day', same]);}
 // D3 alcohol and drugs line
@@ -157,7 +157,7 @@ const SAMPLE='ACTIONS.loadSample();';
  const h=boot(); h.G('session.currentState="anxious"; runEngine(); go("recommendation")'); for(let i=0;i<2;i++){ h.click(act('recElse')); h.click(act('recDir','BODY')); }
  r.push(['E3: Human First still comes after two "Something else"', h.S().screen==='human-first']);}
 // E4 tiny signals
-{const a=boot({phone:true}); a.G(SAMPLE); show(a,'connect');
+{const a=boot({phone:true}); a.G(SAMPLE); show(a,'connect'); a.click(act('ideasToggle'));
  const ideas=a.all('.sits .idea').map(x=>x.textContent);
  r.push(['E4: "Hey. Just saying hi." · "Got a minute?" with "You don\'t have to explain anything."', ideas.includes('Hey. Just saying hi.') && ideas.includes('Got a minute?') && a.T().includes("You don't have to explain anything.")]);}
 // E5 be around people

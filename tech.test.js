@@ -20,8 +20,8 @@ const realWorld=a=>a.has('a[href^="sms:"]')||a.has('a[href^="tel:"]')||a.has(act
 // ---- entry ----
 {const a=boot(); a.click(act('techStart'));
  r.push(['Home → Tech check: "No judgment. Tech is allowed. Let\'s just see what it\'s doing to you right now."', a.S().screen==='tech' && a.T().includes("No judgment. Tech is allowed. Let's just see what it's doing to you right now.")]);
- r.push(['seven options (Social Zig "I\'ve been scrolling" added first): asking AI again · checking · falling behind · attached · instead of people · AI changed or gone', a.doc.querySelectorAll('[data-act="tcPick"]').length===7
-   && ["I keep asking AI the same thing","I keep checking","I'm afraid I'm falling behind","I think I'm getting attached to AI","I'm using AI instead of people","My AI changed or is gone"].every(x=>a.T().includes(x))]);
+ r.push(['six options (Social Zig added; the two AI-and-people options merged, simplicity audit #2)', a.doc.querySelectorAll('[data-act="tcPick"]').length===6
+   && ["I've been scrolling","I keep asking AI the same thing","I keep checking","I'm afraid I'm falling behind","AI is taking the place of people","My AI changed or is gone"].every(x=>a.T().includes(x))]);
  r.push(['"I\'m not sure what\'s real" is on hold (clinician review before it ships)', !a.T().includes("not sure what's real") && !a.G('findIntervention("ai_reality")') && !a.G('TC_OPTIONS').some(o=>o[3]==='ai_reality')]);
  r.push(['no shame anywhere in Tech check copy', !shame.test(a.G('JSON.stringify([TC_INTRO,TC_OPTIONS,TC_RELIANCE,TC_SDA,TC_CHECK_Q,TC_LOOP_STEPS,TC_LOOP_ASK,TC_LOOP_END,TC_FOMO_MISS,TC_FOMO_FIELDS,TC_FOMO_END,TC_FOMO_USING,TC_ATTACHED,TC_GIVES,TC_REPLACING,TC_BOUNDARY_NOTE,TC_LOSS,TC_LOSS_GROUND,TC_LOSS_MSG,TC_REFLECT])').replace("It still isn't a human relationship",""))]);
  r.push(['the new steps are never suggested outside Tech check', ['ai_reliance_check','break_the_loop','ai_fomo','ai_relationship_check','ai_loss'].every(id=>{ const i=a.G(`findIntervention(${JSON.stringify(id)})`); return i && i.states.length===0 && i.channel; })]);
@@ -81,8 +81,9 @@ const realWorld=a=>a.has('a[href^="sms:"]')||a.has('a[href^="tel:"]')||a.has(act
  r.push(['boundary text exact', a.doc.getElementById('tcBoundary').textContent==="If we've been talking for more than 30 minutes, or it's after midnight, remind me to rest and to reach out to a real person. If I ever talk about wanting to die or hurting myself, stop any roleplay and tell me to call or text 988."]);
  r.push(['"Not every AI follows this every time. It\'s a nudge, not a guarantee."', a.T().includes("Not every AI follows this every time. It's a nudge, not a guarantee.")]);
 }
-{const a=boot(); a.click(act('techStart')); a.click(act('tcPick','instead'));
- r.push(['"I\'m using AI instead of people" opens the same path', a.S().screen==='tc-attached' && a.T().includes('Using AI instead of people') && a.S().currentInterventionId==='ai_relationship_check']);
+{const a=boot(); a.click(act('techStart'));
+ r.push(['"I\'m using AI instead of people" is now part of "AI is taking the place of people"', !a.doc.querySelector('[data-arg="instead"]') && a.T().includes('Getting attached, or using it instead of people')]);
+ a.click(act('tcPick','attached'));
  r.push(['with no one in My Plan, connection buttons go to Connect', a.has(act('route','connect'))]);
  a.click(act('tcReflect')); r.push(['→ self-reflection', a.S().screen==='tc-reflect']);}
 

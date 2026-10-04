@@ -28,7 +28,7 @@ function stepsThrough(a){ for(let i=0;i<4;i++) a.click(act('zagsNext')); }
 // ---- entry points ----
 {const a=fromCalm(); r.push(['Calm → Zags (featured)', a.S().screen==='zags' && a.S().currentInterventionId==='zags' && a.S().currentState==='anxious']);}
 {const a=boot(); a.click(act('route','connect')); a.click(act('zags','connect')); r.push(['Connect → "Calm down with Zags while you wait" (state: alone)', a.S().screen==='zags' && a.S().currentState==='alone']);}
-{const a=boot(); a.click(act('route','head')); a.click(act('zags','head')); r.push(['Get out of my head menu → Zags', a.S().screen==='zags' && a.S().currentState==='distraction']);}
+{const a=boot(); a.click(act('route','head')); r.push(['not in Get out of my head any more (simplicity audit #4)', !a.doc.querySelector('[data-act="zags"]')]);}
 {const a=boot(); const z=a.G('findIntervention("zags")');
  r.push(['zags is in the library for anxious, low, distraction, alone', !!z && ['anxious','low','distraction','alone'].every(s=>z.states.includes(s))]);
  a.G('session.currentState="low"; ui.engine={interventionId:"zags",reason:"x"}; ACTIONS.recTry()');

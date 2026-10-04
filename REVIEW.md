@@ -122,7 +122,7 @@ Shown with a trusted person in My Plan (example name "Jordan") unless noted. The
 - **Link → `tel:911`:** Call 911 — If someone is hurt, or someone else is in danger
 - **Link → `tel:988`:** Call 988 _(screen reader: "Call 988, the Suicide and Crisis Lifeline")_
 - **Link → `sms:988`:** Text 988 _(screen reader: "Text 988, the Suicide and Crisis Lifeline")_
-- **Link → `https://988lifeline.org/chat`:** Chat online with 988
+- **Link → `https://988lifeline.org/chat`:** Chat with 988 online
 - Veteran or service member? Call 988 and press 1.
 - Want someone to come to you who isn't police? In many Florida counties, 211 can connect you to a mobile crisis team.
 - **Link → `tel:211`:** Call 211
@@ -144,7 +144,7 @@ Shown with a trusted person in My Plan (example name "Jordan") unless noted. The
 - **Link → `tel:911`:** Call 911 — If someone is hurt, or someone else is in danger
 - **Link → `tel:988`:** Call 988 _(screen reader: "Call 988, the Suicide and Crisis Lifeline")_
 - **Link → `sms:988`:** Text 988 _(screen reader: "Text 988, the Suicide and Crisis Lifeline")_
-- **Link → `https://988lifeline.org/chat`:** Chat online with 988
+- **Link → `https://988lifeline.org/chat`:** Chat with 988 online
 - Veteran or service member? Call 988 and press 1.
 - Want someone to come to you who isn't police? In many Florida counties, 211 can connect you to a mobile crisis team.
 - **Link → `tel:211`:** Call 211
@@ -196,7 +196,7 @@ Shown with a trusted person in My Plan (example name "Jordan") unless noted. The
 - Free, 24/7. Also for substance-use crises.
 - **Link → `tel:988`:** Call 988 _(screen reader: "Call 988, the Suicide and Crisis Lifeline")_
 - **Link → `sms:988`:** Text 988 _(screen reader: "Text 988, the Suicide and Crisis Lifeline")_
-- **Link → `https://988lifeline.org/chat`:** Chat online with 988
+- **Link → `https://988lifeline.org/chat`:** Chat with 988 online
 - **Button:** Back
 
 ### Crisis, outside the US
@@ -1167,7 +1167,7 @@ Contact line (only when CONTACT_EMAIL is set): "Questions? Email [address]."
 
 D. Crisis Text Line (**hidden until the owner verifies it**; CRISIS_TEXT_LINE.verified is false): one line below the 988 buttons on the full crisis screen and Connect, on the printed plan, and in the supporter guide's "Get help together": "Rather text a stranger? Text HOME to 741741 (Crisis Text Line)." (phones: Text HOME to 741741 is a text link; computers: shown as text).
 
-E. Spanish interface: **scaffolding only, nothing shown**. SPANISH_ENABLED is false. 211 strings (onboarding, Home, crisis screens, Calm, Connect, My Plan, Help, Settings labels) now live in one table; English is unchanged. Every Spanish line is a DRAFT for a human translator and the clinician: docs/SPANISH_REVIEW.md. A draft crisis-screen line is never shown, even with Spanish on.
+E. Spanish interface: **scaffolding only, nothing shown**. SPANISH_ENABLED is false. 213 strings (onboarding, Home, crisis screens, Calm, Connect, My Plan, Help, Settings labels) now live in one table; English is unchanged. Every Spanish line is a DRAFT for a human translator and the clinician: docs/SPANISH_REVIEW.md. A draft crisis-screen line is never shown, even with Spanish on.
 
 F. Feedback (only when FEEDBACK_URL is set; it is empty): on About only, "Did ZigZag Mind help? Tell us anonymously →" (new tab). Privacy page adds: "If you use the feedback link on About, that form is a separate service. It receives only what you type there."
 
@@ -1245,8 +1245,7 @@ Intro: "No judgment. Tech is allowed. Let's just see what it's doing to you righ
 - "I keep asking AI the same thing" → `ai_reliance_check`
 - "I keep checking" (Texts, feeds, news, an ex's profile, symptoms, stocks) → `break_the_loop`
 - "I'm afraid I'm falling behind" → `ai_fomo`
-- "I think I'm getting attached to AI" → `ai_relationship_check`
-- "I'm using AI instead of people" → `ai_relationship_check`
+- "AI is taking the place of people" (Getting attached, or using it instead of people) → `ai_relationship_check`
 - "My AI changed or is gone" → `ai_loss`
 
 **Asking AI again:** "Sometimes another answer doesn't solve uncertainty. It just gives it another place to go." Stop: "Close the chat for 10 minutes." · Decide: "What do you actually need to decide?" · Act: "Take one real-world step." → [Start a 10-minute break] or [I'm done]
@@ -1463,9 +1462,8 @@ Rendered for each state where the screen changes by state. Identical renders are
 - **Button:** Breathe for 1 minute — In for 4, out for 6
 - **Button:** 5-4-3-2-1 grounding — Notice what's around you
 - **Button:** Feet on the floor — Three tiny steps, 2 minutes
-- **Button:** What's still true? — Start with what you know
+- **Button:** What's true — What you know, and what else is true
 - **Button:** Find something real — Something you can hold, cooler, warmer
-- **Button:** What's also true — The sentence on repeat, and what else is true
 - **Button:** I'd rather talk to someone
 
 ### `still-true`
@@ -2353,13 +2351,7 @@ _When: distraction_
 - **Heading:** Jordan · friend
 - **Link → `sms:5550142`:** Text _(screen reader: "Text Jordan")_
 - **Link → `tel:5550142`:** Call _(screen reader: "Call Jordan")_
-- Don't know what to say? Tap one:
-- You don't have to explain anything.
-- **Link → `sms:5550142?&body=Can't sleep, you up?`:** Can't sleep, you up?
-- **Link → `sms:5550142?&body=Rough night. Can you talk for 5 minutes?`:** Rough night. Can you talk for 5 minutes?
-- **Link → `sms:5550142?&body=Want to catch up this week?`:** Want to catch up this week?
-- **Link → `sms:5550142?&body=Hey. Just saying hi.`:** Hey. Just saying hi.
-- **Link → `sms:5550142?&body=Got a minute?`:** Got a minute?
+- **Button:** Don't know what to say?
 - **Button:** Be around people, no talking needed
 - **Button:** Calm down with Zags while you wait
 - **Button:** Make a song while you wait
@@ -2504,8 +2496,7 @@ _When: distraction_
 - **Button:** I keep asking AI the same thing
 - **Button:** I keep checking — Texts, feeds, news, an ex's profile, symptoms, stocks
 - **Button:** I'm afraid I'm falling behind
-- **Button:** I think I'm getting attached to AI
-- **Button:** I'm using AI instead of people
+- **Button:** AI is taking the place of people — Getting attached, or using it instead of people
 - **Button:** My AI changed or is gone
 
 ### `tc-reliance`
@@ -2581,7 +2572,7 @@ _When: distraction_
 
 - **Button:** × _(screen reader: "Close and go to home")_
 - **Button:** Help _(screen reader: "Get help now")_
-- **Heading:** Getting attached to an AI
+- **Heading:** When AI takes the place of people
 - AI can feel personal. It answers fast, remembers what you said, and never gets tired. That can feel meaningful. It still isn't a human relationship.
 - **Heading:** What does it give you?
 - **Button:** Someone to talk to
@@ -2800,6 +2791,12 @@ _When: distraction_
 - **Button:** Go to a window
 - **Button:** Find something alive
 - **Button:** Find something worth looking at — One thing. A photo if you want.
+- **Button:** Somewhere to go — A library, a park, a coffee shop, or 211 for local help
+
+### `scene-places`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
 - **Heading:** Somewhere to go
 - Opens your phone's Maps. ZigZag Mind never sees your location.
 - **Link → `https://www.google.com/maps/search/library`:** Library
@@ -2826,16 +2823,31 @@ _When: distraction_
 - **Heading:** Get out of my head.
 - Quick games to interrupt the loop. 1 to 5 minutes. No points, no levels.
 - **Button:** Turn it into a song — Three lines in your words, made into a short song
+- **Button:** Quick games — Color hunt, around me, categories and more
+- **Button:** Focus — Tap when the dot reaches the ring. One minute.
+- **Button:** Make this less serious — One absurd little mission
+- **Button:** Borrow ten minutes — Just the next ten minutes
+
+### `calm-truth`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** What's true
+- **Button:** What's still true? — Start with what you know
+- **Button:** What's also true — The sentence on repeat, and what else is true
+
+### `games`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Quick games
+- 1 to 5 minutes. No points, no levels.
 - **Button:** Color hunt — Find 5 blue things, then 3 red
 - **Button:** Around me — Something soft, cold, older than you
 - **Button:** Rapid categories — 5 animals, 5 cities, 5 foods
 - **Button:** Memory snap — See 6 shapes, then find them again
 - **Button:** Pattern break — Watch a pattern, tap it back
 - **Button:** 60-second challenge — Your only job: beat the timer
-- **Button:** Focus — Tap when the dot reaches the ring. One minute.
-- **Button:** Make this less serious — One absurd little mission
-- **Button:** Borrow ten minutes — Just the next ten minutes
-- **Button:** Calm down with Zags — Breathe together for a few minutes
 
 ### `g-color`
 

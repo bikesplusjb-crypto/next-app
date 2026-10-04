@@ -59,3 +59,18 @@ Home's "I don't feel safe" stays on the first screen in normal and large text de
 | 10 | **Leave "Put the phone down" at 3 taps from Home** (or add it nowhere new). | It's an ending, not a destination; adding it to Home would add a 17th choice there. | none |
 
 Also noted, not proposed: the wordmark on Home is a hidden developer panel (5 taps). It's counted above but invisible to people; removing it in production would touch `home.test.js` and `zags-mark.test.js`.
+
+## Applied (owner decision, 2026-10-04)
+
+Applied: 1, 2, 3, 4, 5, 6, 8 and 10 (10 = leave "Put the phone down" as it is). **Not applied:** 7 (the "I feel alone" chip stays) and 9 (crisis "Open my plan" wording waits for the clinician).
+
+| Screen | Before (with Find something, Warm, Social Zig, Coffee, Cozy added) | After | Change |
+|---|---|---|---|
+| Home | 16 | 16 | unchanged (7 not applied); "I don't feel safe" still on the first screen |
+| Calm | 10 | 9 | #8: "What's still true?" and "What's also true" behind one "What's true" |
+| Get out of my head | 11 | 5 | #3: six games behind "Quick games"; #4: Zags removed here |
+| Connect | 14 | 10 | #5: five message ideas behind "Don't know what to say?" |
+| Change the scene | 13 | 9 | #6: four Maps places and 211 behind "Somewhere to go" (Human First's "Be around people" opens it directly) |
+| Tech check | 7 | 6 | #2: "AI is taking the place of people" replaces the two AI-and-people options |
+
+#1: the 988 chat button is "Chat with 988 online" everywhere (full crisis screen and Talk to someone too). Taps from Home are unchanged (1–2, and 3 for "Put the phone down").

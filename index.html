@@ -731,7 +731,7 @@ const L10N = {
     "crisisfull.title":"Please reach a person right now.",
     "crisisfull.call911":"Call 911",
     "crisisfull.call911Cap":"If someone is hurt, or someone else is in danger",
-    "crisisfull.chat":"Chat online with 988",
+    "crisisfull.chat":"Chat with 988 online",   // simplicity audit #1: one name everywhere
     "crisisfull.notPoliceHead":"Want someone to come to you who isn't police?",
     "crisisfull.notPoliceText":"In many Florida counties, 211 can connect you to a mobile crisis team.",
     "crisisfull.call211":"Call 211",
@@ -760,6 +760,8 @@ const L10N = {
     "calm.real":"Find something real",
     "calm.realMeta":"Something you can hold, cooler, warmer",
     "calm.also":"What's also true",
+    "calm.truth":"What's true",
+    "calm.truthMeta":"What you know, and what else is true",
     "calm.alsoMeta":"The sentence on repeat, and what else is true",
     "calm.title":"Let's slow things down.",
     "calm.sub":"Pick one. You can stop any time.",
@@ -973,6 +975,8 @@ const L10N = {
     "calm.real":{ text:"Encuentra algo real", draft:true },
     "calm.realMeta":{ text:"Algo que puedas sostener, más fresco, más tibio", draft:true },
     "calm.also":{ text:"Lo que también es cierto", draft:true },
+    "calm.truth":{ text:"Lo que es cierto", draft:true },
+    "calm.truthMeta":{ text:"Lo que sabes, y qué más es cierto", draft:true },
     "calm.alsoMeta":{ text:"La frase que se repite, y qué más es cierto", draft:true },
     "calm.title":{ text:"Vamos a bajar el ritmo.", draft:true },
     "calm.sub":{ text:"Elige una. Puedes parar cuando quieras.", draft:true },
@@ -1709,8 +1713,7 @@ const TC_OPTIONS = [
   ["reliance","I keep asking AI the same thing","","ai_reliance_check","spiraling"],
   ["check","I keep checking","Texts, feeds, news, an ex's profile, symptoms, stocks","break_the_loop","spiraling"],
   ["fomo","I'm afraid I'm falling behind","","ai_fomo","anxious"],
-  ["attached","I think I'm getting attached to AI","","ai_relationship_check","alone"],
-  ["instead","I'm using AI instead of people","","ai_relationship_check","alone"],
+  ["attached","AI is taking the place of people","Getting attached, or using it instead of people","ai_relationship_check","alone"],   // simplicity audit #2 (was two options)
   ["loss","My AI changed or is gone","","ai_loss","low"]
 ];
 const TC_RELIANCE = "Sometimes another answer doesn't solve uncertainty. It just gives it another place to go.";
@@ -2867,9 +2870,8 @@ const SCREENS = {
       ["breathe","calm",l10n("calm.breathe"),l10n("calm.breatheMeta")],
       ["ground","leaf",l10n("calm.ground"),l10n("calm.groundMeta")],
       ["feet","check",l10n("calm.feet"),l10n("calm.feetMeta")],
-      ["true","anchor",l10n("calm.true"),l10n("calm.trueMeta")],
-      ["real","leaf",l10n("calm.real"),l10n("calm.realMeta")],
-      ["also","anchor",l10n("calm.also"),l10n("calm.alsoMeta")]
+      ["truth","anchor",l10n("calm.truth"),l10n("calm.truthMeta")],   // simplicity audit #8: "still true" and "also true" behind one option
+      ["real","leaf",l10n("calm.real"),l10n("calm.realMeta")]
     ];
     return { close:true, body:`
       ${title(l10n("calm.title"))}
@@ -3837,9 +3839,10 @@ const SCREENS = {
           ${pairOrStack(textOrCopy({ phone:p.phone, label:canPhone() ? l10n("person.text") : `${l10n("person.text")} ${esc(p.name)}`, cls:"btn btn-secondary", aria:`${l10n("person.text")} ${esc(p.name)}` }),
             `<a class="btn btn-secondary" href="${telLink(p.phone)}" aria-label="${callText(`${l10n("person.call")} ${esc(p.name)}`, p.phone)}">${callText(l10n("person.call"), p.phone)}</a>`)}`).join("") + `
           ${codeWordButton(false)}
-          <p class="small" style="margin:14px 0 8px">${l10n("connect.dontKnow")}${people.length > 1 ? ` ${l10n("connect.to")} ${esc(first.name)}` : ""}? ${canPhone() ? l10n("connect.tapOne") : l10n("connect.tapCopy")}</p>
+          <button class="link ideas-toggle" data-act="ideasToggle" aria-expanded="${!!ui.ideasOpen}" style="margin-top:14px">${l10n("connect.dontKnow")}${people.length > 1 ? ` ${l10n("connect.to")} ${esc(first.name)}` : ""}?</button>
+          ${ui.ideasOpen ? `<p class="small" style="margin:8px 0 8px">${canPhone() ? l10n("connect.tapOne") : l10n("connect.tapCopy")}</p>
           <p class="small ideas-note" style="margin:0 0 8px">${l10n("connect.ideasNote")}</p>
-          <div class="sits">${ideas.map(m => canPhone() ? `<a class="sit idea" href="${smsLink(first.phone, m)}">${esc(m)}</a>` : copyButton(m, "sit idea", esc(m))).join("")}</div>`
+          <div class="sits">${ideas.map(m => canPhone() ? `<a class="sit idea" href="${smsLink(first.phone, m)}">${esc(m)}</a>` : copyButton(m, "sit idea", esc(m))).join("")}</div>` : ""}`
         : `<p class="small">${l10n("connect.addHint")}</p>
           <button class="btn btn-secondary" data-act="planFromConnect">${l10n("connect.addSomeone")}</button>`}
       </div>
@@ -3986,7 +3989,7 @@ const SCREENS = {
     const g = ui.tcGives || {}, r = ui.tcReplacing || {};
     const p = person();
     return { close:true, body:`
-      ${title(ui.tcKey === "instead" ? "Using AI instead of people" : "Getting attached to an AI")}
+      ${title("When AI takes the place of people")}
       <p class="sub">${TC_ATTACHED}</p>
       <h2>What does it give you?</h2>
       <div class="chips" role="group" aria-label="What it gives you">${TC_GIVES.map(x => `<button class="hchip" data-act="tcGive" data-arg="${esc(x)}" aria-pressed="${!!g[x]}">${x}</button>`).join("")}</div>
@@ -4233,13 +4236,18 @@ const SCREENS = {
         `<button class="card scene-opt" data-act="scenePick" data-arg="${k}">${icon("door")}<span>${t}</span></button>`).join("")}
         <button class="card scene-opt" data-act="sceneAlive">${icon("leaf")}<span>Find something alive</span></button>
         <button class="card scene-opt fs-card" data-act="fsStart">${icon("leaf")}<span>Find something worth looking at<span class="meta">One thing. A photo if you want.</span></span></button>
+        <button class="card scene-opt places-card" data-act="placesOpen">${icon("door")}<span>Somewhere to go<span class="meta">A library, a park, a coffee shop, or 211 for local help</span></span></button>
       </div>
-      <h2 id="placesHead" tabindex="-1">Somewhere to go</h2>
+      ${nearMeLink()}` };
+  },
+  /* Simplicity audit #6: Maps places and 211, one tap behind "Somewhere to go". */
+  "scene-places"(){
+    return { close:true, body:`
+      <h1 id="screen-title" tabindex="-1">Somewhere to go</h1>
       <p class="sub">Opens your phone's Maps. ZigZag Mind never sees your location.</p>
       <div class="sits places">${SCENE_PLACES.map(([label, q]) =>
         `<a class="sit" href="${mapsLink(q)}" target="_blank" rel="noopener">${label}</a>`).join("")}
       </div>
-      ${nearMeLink()}
       <div class="panel scene-211">
         <h3>Need real-world help near you?</h3>
         <p class="small" style="margin:0 0 10px">211 connects you to local help: food, housing, support groups. Free.</p>
@@ -4262,12 +4270,29 @@ const SCREENS = {
       ${title("Get out of my head.")}
       <p class="sub">Quick games to interrupt the loop. 1 to 5 minutes. No points, no levels.</p>
       <button class="card wide song-card" data-act="songStart" data-arg="head">${icon("head", true)}<span>Turn it into a song<span class="meta">Three lines in your words, made into a short song</span></span></button>
-      <div class="list">${GAMES.map(([arg, , t, m]) =>
-        `<button class="card" data-act="game" data-arg="${arg}">${icon("head", true)}<span>${t}<span class="meta">${m}</span></span></button>`).join("")}
+      <div class="list">
+        <button class="card" data-act="gamesOpen">${icon("head", true)}<span>Quick games<span class="meta">Color hunt, around me, categories and more</span></span></button>
         <button class="card" data-act="distFocus">${icon("head", true)}<span>Focus<span class="meta">Tap when the dot reaches the ring. One minute.</span></span></button>
         ${ridiculousAvailable() ? `<button class="card" data-act="ridiculousStart">${icon("head", true)}<span>Make this less serious<span class="meta">One absurd little mission</span></span></button>` : ""}
         <button class="card" data-act="lowPick" data-arg="borrow_ten">${icon("head", true)}<span>Borrow ten minutes<span class="meta">Just the next ten minutes</span></span></button>
-        <button class="card zcard" data-act="zags" data-arg="head">${zagsFace()}<span>Calm down with Zags<span class="meta">Breathe together for a few minutes</span></span></button>
+      </div>` };
+  },
+  /* Simplicity audit #8: "What's true" holds both true-tools. */
+  "calm-truth"(){
+    return { close:true, body:`
+      ${title(l10n("calm.truth"))}
+      <div class="list">
+        <button class="card" data-act="calmPick" data-arg="true">${icon("anchor")}<span>${l10n("calm.true")}<span class="meta">${l10n("calm.trueMeta")}</span></span></button>
+        <button class="card" data-act="calmPick" data-arg="also">${icon("anchor")}<span>${l10n("calm.also")}<span class="meta">${l10n("calm.alsoMeta")}</span></span></button>
+      </div>` };
+  },
+  /* Simplicity audit #3: the six games, one tap behind "Quick games". */
+  games(){
+    return { close:true, body:`
+      ${title("Quick games")}
+      <p class="sub">1 to 5 minutes. No points, no levels.</p>
+      <div class="list">${GAMES.map(([arg, , t, m]) =>
+        `<button class="card" data-act="game" data-arg="${arg}">${icon("head", true)}<span>${t}<span class="meta">${m}</span></span></button>`).join("")}
       </div>` };
   },
 
@@ -4372,7 +4397,7 @@ const SCREENS = {
       <h2>988 Suicide &amp; Crisis Lifeline</h2>
       <p class="small">Free, 24/7. Also for substance-use crises.</p>
       ${row988()}
-      ${canPhone() ? `<a class="btn btn-secondary" style="margin-top:10px" href="${LINKS.chat988}" target="_blank" rel="noopener">Chat online with 988</a>` : ""}`,
+      ${canPhone() ? `<a class="btn btn-secondary" style="margin-top:10px" href="${LINKS.chat988}" target="_blank" rel="noopener">${l10n("r988.chat")}</a>` : ""}`,
       actions:`<button class="btn btn-secondary" data-act="talkBack">Back</button>` };
   },
 
@@ -5229,6 +5254,7 @@ const ACTIONS = {
     else if (arg === "true") startIntervention("still_true");
     else if (arg === "real") startIntervention("touch_real_world");
     else if (arg === "also") startIntervention("true_sentence");
+    else if (arg === "truth") go("calm-truth");
   },
   trueYes(){ if (blockIfRed()) return; ui.trueCount++; ui.trueIdx++; lastRendered = null; render(); },
   trueNo(){ if (blockIfRed()) return; ui.trueIdx++; lastRendered = null; render(); },
@@ -5509,10 +5535,12 @@ const ACTIONS = {
   hfNotNow(){ if (blockIfRed()) return; go("recommendation"); },
   hfPeople(){
     if (blockIfRed()) return;
-    go("scene");
-    const h = document.getElementById("placesHead");
-    if (h){ h.scrollIntoView({ block:"start" }); h.focus({ preventScroll:true }); }
+    go("scene-places");   // straight to "Somewhere to go"
   },
+  placesOpen(){ if (blockIfRed()) return; go("scene-places"); },
+  gamesOpen(){ if (blockIfRed()) return; dispatch({ type:"SET_CURRENT_STATE", state:"distraction" }); go("games"); },
+  ideasToggle(){ ui.ideasOpen = !ui.ideasOpen; render(); },
+  calmTruth(){ if (blockIfRed()) return; go("calm-truth"); },
   /* ---- 6.13 ---- */
   afterStart(){ if (blockIfRed()) return; ui.flash = ""; go(afterActive() ? "after" : "after-setup"); },
   afterOpen(){ if (blockIfRed()) return; ui.flash = ""; go("after"); },

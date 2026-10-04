@@ -80,7 +80,7 @@ for(const [state,id] of [['anxious','breathing'],['anxious','grounding'],['spira
 {const a=boot(); a.click(act('route','head')); r.push(['C entry: Get out of my head', a.has(act('lowPick','borrow_ten'))]);}
 
 // ---------- D. What's also true ----------
-const tsStart=a=>{ a.click(act('route','calm')); a.click(act('calmPick','also')); };
+const tsStart=a=>{ a.click(act('route','calm')); a.click(act('calmPick','truth')); a.click(act('calmPick','also')); };
 {const a=boot(); tsStart(a);
  r.push(['D entry: Calm; "What\'s the sentence your brain keeps repeating?" (120 characters)', a.S().screen==='ts' && a.T().includes("What's the sentence your brain keeps repeating?") && a.doc.getElementById('tsBox').maxLength===120]);
  a.doc.getElementById('tsBox').value='Everything is going wrong'; a.click(act('tsNext'));

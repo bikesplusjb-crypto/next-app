@@ -8,7 +8,7 @@ Every Spanish line below is a **draft** (not reviewed). Please give each one a h
 
 Notes for the translator: keep "988", "911", "211" and "ZigZag Mind" as they are. Lines starting with a space or comma are joined to a name or number on screen (for example "Llamar a" + a name). `&` is shown on screen as "&".
 
-Strings: 211 (crisis-screen: 46).
+Strings: 213 (crisis-screen: 46).
 
 
 ## Help button
@@ -165,7 +165,7 @@ Strings: 211 (crisis-screen: 46).
 | `crisisfull.title` | Please reach a person right now. | Por favor, busca a una persona ahora mismo. | **Crisis** | DRAFT |
 | `crisisfull.call911` | Call 911 | Llamar al 911 | **Crisis** | DRAFT |
 | `crisisfull.call911Cap` | If someone is hurt, or someone else is in danger | Si alguien está herido, o si otra persona está en peligro | **Crisis** | DRAFT |
-| `crisisfull.chat` | Chat online with 988 | Chatear en línea con el 988 | **Crisis** | DRAFT |
+| `crisisfull.chat` | Chat with 988 online | Chatear en línea con el 988 | **Crisis** | DRAFT |
 | `crisisfull.notPoliceHead` | Want someone to come to you who isn't police? | ¿Quieres que venga alguien que no sea la policía? | **Crisis** | DRAFT |
 | `crisisfull.notPoliceText` | In many Florida counties, 211 can connect you to a mobile crisis team. | En muchos condados de Florida, el 211 puede conectarte con un equipo móvil de crisis. | **Crisis** | DRAFT |
 | `crisisfull.call211` | Call 211 | Llamar al 211 | **Crisis** | DRAFT |
@@ -229,6 +229,8 @@ Strings: 211 (crisis-screen: 46).
 | `calm.real` | Find something real | Encuentra algo real |  | DRAFT |
 | `calm.realMeta` | Something you can hold, cooler, warmer | Algo que puedas sostener, más fresco, más tibio |  | DRAFT |
 | `calm.also` | What's also true | Lo que también es cierto |  | DRAFT |
+| `calm.truth` | What's true | Lo que es cierto |  | DRAFT |
+| `calm.truthMeta` | What you know, and what else is true | Lo que sabes, y qué más es cierto |  | DRAFT |
 | `calm.alsoMeta` | The sentence on repeat, and what else is true | La frase que se repite, y qué más es cierto |  | DRAFT |
 | `calm.title` | Let's slow things down. | Vamos a bajar el ritmo. |  | DRAFT |
 | `calm.sub` | Pick one. You can stop any time. | Elige una. Puedes parar cuando quieras. |  | DRAFT |

@@ -48,7 +48,7 @@ r.push(['unknown device: phone', boot({ua:UA.odd,touch:0}).G('canPhone()')===tru
  a.G(SAMPLE); show(a,'crisis-full');
  r.push(['phone: call buttons say "Call Jordan" (no number added)', a.all('a[href^="tel:5550142"]').every(x=>x.textContent.trim()==='Call Jordan')]);
  r.push(['phone: code word is an sms: link with the word', a.has(`a.codeword[href="sms:5550142?&body=lighthouse"]`)]);
- r.push(['phone: crisis-full keeps its "Chat online with 988" button', a.T().includes('Chat online with 988')]);}
+ r.push(['phone: crisis-full keeps its chat button, now named "Chat with 988 online" everywhere (simplicity audit #1)', a.T().includes('Chat with 988 online') && !a.T().includes('Chat online with 988')]);}
 
 // ---- desktop ----
 {const a=boot({phone:false});
@@ -72,7 +72,7 @@ r.push(['unknown device: phone', boot({ua:UA.odd,touch:0}).G('canPhone()')===tru
  r.push(['desktop: trusted-person text shows the prepared message with Copy', !!msg && a.T().includes("I'm having a really hard time. Can you call me?")]);
  a.click('[data-copy="lighthouse"]');
  r.push(['Copy puts the message on the clipboard', a.w.copied.at(-1)==='lighthouse' && a.S().screen==='crisis-full']);
- show(a,'connect'); a.click(`[data-copy="${a.G('MESSAGE_IDEAS[0]')}"]`);
+ show(a,'connect'); a.click(act('ideasToggle')); a.click(`[data-copy="${a.G('MESSAGE_IDEAS[0]')}"]`);
  r.push(['desktop: Connect message ideas copy too', a.w.copied.at(-1)===a.G('MESSAGE_IDEAS[0]') && a.T().includes('Tap one to copy it')]);
  show(a,'connect'); r.push(['desktop: Warm Line shows its number', a.T().includes('Call the Warm Line · 1-800-945-1355')]);
  r.push(['no console errors', a.errs.length===0, a.errs.join(';')]);}
