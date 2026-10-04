@@ -287,6 +287,19 @@ P(''); P('G. "Help near me (Treasure Coast)" (**hidden until the owner verifies 
 list(G('NEAR_ME').map(e=>`${e.name}: "${e.what}"${e.phone?' · '+e.phone:''} (verified: ${e.verified})`));
 P(''); P('H. Simplicity audit: report only, nothing applied (docs/SIMPLICITY_AUDIT.md).');
 
+H(3,'Stage 6.21: A line for today');
+P('Only from My Plan ("'+G('DIARY.title')+'") and a small link under "Put the phone down" ("'+G('DIARY.phoneDown')+'"). Never on crisis screens; never suggested. Only on this phone (its own key). No counts, streaks, charts or reminders.');
+const DI=G('DIARY');
+list([
+  'Diary screen: "'+DI.title+'" / "'+DI.planHint+'" → "'+DI.write+'" · "'+DI.back+'"',
+  'Step 1: "'+DI.feel+'" (tap any, optional; Skip): '+DI.feelings.join(' · '),
+  'Step 2: "'+DI.words+'" (placeholder "'+DI.wordsPh+'"; up to 1,000 characters)',
+  'Step 3: "'+DI.still+'" (Optional; up to 120 characters). Examples: '+DI.stillEx.map(x=>`"${x}"`).join(' · '),
+  'Step 4: "'+DI.keep+'" (with saving off: "'+DI.keepOff+'") / "'+DI.dontKeep+'" → "'+DI.kept+'" / "'+DI.keptOff+'" / "'+DI.dropped+'"',
+  'Both fields are safety-checked on Keep: RED → crisis screen, entry NOT saved (clinician item D-diary); YELLOW → support bar, entry saved.',
+  'Storage full: "'+DI.full+'" (the words stay on screen)'
+]);
+
 H(3,'Stage 6.20: When you\'ve lost someone (CLINICIAN REVIEW REQUIRED for the whole path)');
 P('Entered only by the person: Home chip "'+G('l10n("home.lost")')+'", and on Tech check\'s "My AI changed or is gone" last screen: "Lost a person or a pet? →". The engine and Let\'s Zig never suggest it. Who/when pick wording only and are never saved. Every free-text field is safety-checked (RED → crisis, nothing kept).');
 const GR=G('GRIEF');

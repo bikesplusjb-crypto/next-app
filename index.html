@@ -145,6 +145,9 @@ textarea.field{min-height:150px;resize:vertical}
 .nextcard .for{font-size:15px;color:var(--text-muted);margin-top:12px}
 
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px;margin-top:16px}
+.diary-feel .sit[aria-pressed="true"]{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
+.diary-text{min-height:96px;field-sizing:content;max-height:60vh;resize:vertical}
+.diary-still{color:var(--primary);font-family:var(--serif);font-weight:600;font-size:19px;margin:8px 0 0}
 .panel h3{margin:0 0 6px;font-size:17px}
 .panel ul{margin:6px 0 0;padding-left:20px}
 .note{font-size:15px;color:var(--text-muted);margin-top:16px}
@@ -1273,6 +1276,56 @@ const GRIEF_RESOURCES = [
 ];
 const NOTICED_KEY = "next.v1.noticed", NOTICED_CAP = 20, NOTICED_EDGE = 640;
 function noticed(){ return store.noticed || (store.noticed = []); }
+/* 6.21 A LINE FOR TODAY. A line a day that ends on "still true", not a blank journal. Only on this phone, in its own
+   key. Never on crisis screens, never suggested (not in INTERVENTION_LIBRARY). No counting, charts or reminders. */
+const DIARY_KEY = "next.v1.diary";
+const DIARY_TEXT_MAX = 1000, DIARY_TRUE_MAX = 120;
+const DIARY = {
+  title:"A line for today",
+  feel:"How was today?",
+  feelings:["heavy","calm","anxious","okay","lonely","hopeful","numb","angry","tired","mixed"],
+  words:"A few words about it.",
+  wordsPh:"Just a line or two is enough.",
+  still:"One thing that's still true today",
+  stillEx:["I got through today.","Someone was kind to me.","I'm still here."],
+  keep:"Keep", keepOff:"Keep for now (saving is off)", dontKeep:"Don't keep",
+  kept:"Kept. Only on this phone.", keptOff:"Kept for this visit. Saving is off, so it's gone when you close ZigZag Mind.",
+  dropped:"Not kept.",
+  full:"This phone's storage is full, so this couldn't be saved. Your words are still here.",
+  planHint:"Only on this phone.",
+  write:"Write today's line", back:"Looking back",
+  backNote:"Every 'still true' here is something you noticed on a hard day.",
+  empty:"Nothing here yet.",
+  phoneDown:"Write a line about today?"
+};
+function diaryDay(ts = Date.now()){ const d = new Date(ts); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; }
+function validDiaryEntries(a){
+  if (!Array.isArray(a)) return [];
+  return a.filter(e => e && typeof e.id === "string" && typeof e.date === "number" && /^\d{4}-\d{2}-\d{2}$/.test(e.day || "")
+    && Array.isArray(e.feelings) && e.feelings.every(f => DIARY.feelings.includes(f))
+    && typeof e.text === "string" && e.text.length <= DIARY_TEXT_MAX && typeof e.trueLine === "string" && e.trueLine.length <= DIARY_TRUE_MAX
+    && (e.text || e.trueLine || e.feelings.length));
+}
+function diaryEntries(){ return (store.diary && store.diary.entries) || []; }
+function loadDiary(){
+  store.diary = { entries:[] };
+  if (!STORAGE_OK || !persistOn) return;
+  try {
+    const d = JSON.parse(localStorage.getItem(DIARY_KEY) || "null");
+    if (!d) return;
+    store.diary = { entries:validDiaryEntries(d.entries) };
+  } catch (_){ store.diary = { entries:[] }; }
+}
+/* Returns a promise of true (stored, or saving is off) / false (the browser refused, for example storage full). */
+async function saveDiary(){
+  if (!STORAGE_OK || !persistOn) return true;
+  try {
+    const entries = diaryEntries();
+    if (!entries.length) localStorage.removeItem(DIARY_KEY);
+    else localStorage.setItem(DIARY_KEY, JSON.stringify({ v:1, entries }));
+    return true;
+  } catch (_){ return false; }
+}
 function griefResources(){ return GRIEF_RESOURCES.filter(e => e.verified === true && (!e.faith || faithOn()) && (e.phone || /^https:\/\/\S+$/.test(e.url))); }
 function validNoticed(a){
   if (!Array.isArray(a)) return [];
@@ -2331,6 +2384,7 @@ function loadStore(){
       };
     }
     loadNoticed();
+    loadDiary();
   } catch (_){ /* corrupted data: keep defaults */ }
 }
 function saveStore(){
@@ -2348,7 +2402,7 @@ function savePrefs(){
 }
 function clearSaved(){
   if (!STORAGE_OK) return;
-  try { localStorage.removeItem(STORE_KEY); localStorage.removeItem(NOTICED_KEY); } catch (_){}
+  try { localStorage.removeItem(STORE_KEY); localStorage.removeItem(NOTICED_KEY); localStorage.removeItem(DIARY_KEY); } catch (_){}
 }
 const getPlan = () => store.sensitive.plan;
 /* Nothing is saved from crisis screens or while RED (no "moment", "reach" or "plan" entries): HANDOFF safety rule. */
@@ -3429,6 +3483,48 @@ const SCREENS = {
       actions:`<button class="btn btn-secondary" data-act="fsStart">Find something</button>` };
   },
 
+  /* 6.21 A LINE FOR TODAY */
+  diary(){
+    return { close:true, body:`
+      ${title(DIARY.title)}
+      <p class="sub">${DIARY.planHint}</p>
+      ${ui.flash ? `<p class="flash" role="status">${esc(ui.flash)}</p>` : ""}
+      <div class="list">
+        <button class="card" data-act="diaryWrite"><span>${DIARY.write}</span></button>
+        <button class="card" data-act="diaryBack"><span>${DIARY.back}</span></button>
+      </div>` };
+  },
+  "diary-feel"(){
+    const d = ui.diaryDraft || { feelings:[] };
+    return { close:true, body:`
+      <p class="step-count">${DIARY.title}</p>
+      ${title(DIARY.feel)}
+      <div class="sits diary-feel" role="group" aria-label="${DIARY.feel}">${DIARY.feelings.map(f => `<button class="sit" data-act="diaryFeel" data-arg="${f}" aria-pressed="${d.feelings.includes(f)}">${f}</button>`).join("")}</div>`,
+      actions:`<button class="btn btn-primary" data-act="diaryToWords">Next</button><button class="link" data-act="diaryToWords" data-arg="skip">Skip</button>` };
+  },
+  "diary-words"(){
+    const d = ui.diaryDraft || {};
+    return { close:true, body:`
+      <p class="step-count">${DIARY.title}</p>
+      ${title(DIARY.words)}
+      <label class="sr" for="diaryText">${DIARY.words}</label>
+      <textarea class="field diary-text" id="diaryText" rows="3" maxlength="${DIARY_TEXT_MAX}" placeholder="${DIARY.wordsPh}">${esc(d.text || "")}</textarea>`,
+      actions:`<button class="btn btn-primary" data-act="diaryToTrue">Next</button><button class="link" data-act="diaryToTrue" data-arg="skip">Skip</button>` };
+  },
+  "diary-true"(){
+    const d = ui.diaryDraft || {};
+    return { close:true, body:`
+      <p class="step-count">${DIARY.title}</p>
+      ${title(DIARY.still)}
+      <p class="small">Optional.</p>
+      <label class="sr" for="diaryTrue">${DIARY.still}</label>
+      <input class="field" id="diaryTrue" maxlength="${DIARY_TRUE_MAX}" autocomplete="off" value="${esc(d.trueLine || "")}">
+      <div class="sits" style="margin-top:10px">${DIARY.stillEx.map((x, i) => `<button class="sit" data-act="diaryTrueEx" data-arg="${i}">${x}</button>`).join("")}</div>
+      ${ui.msg ? `<p class="err" role="alert">${esc(ui.msg)}</p>${d.text ? `<p class="copy-text diary-draft">${esc(d.text)}</p>` : ""}` : ""}`,
+      actions:`<button class="btn btn-primary" data-act="diaryKeep">${persistOn && STORAGE_OK ? DIARY.keep : DIARY.keepOff}</button>
+        <button class="btn btn-secondary" data-act="diaryDontKeep">${DIARY.dontKeep}</button>` };
+  },
+
   /* 6.20 WHEN YOU'VE LOST SOMEONE (entered only by the person; never suggested). */
   "grief-who"(){
     return { close:true, body:`
@@ -3573,7 +3669,8 @@ const SCREENS = {
       <p class="sub" style="font-size:19px">You can put me away for a few minutes.</p>`,
       actions:`<button class="btn btn-primary" data-act="putDown">Put the phone down</button>
         <button class="btn btn-secondary" data-act="minuteStart">Put it down for one minute</button>
-        ${ui.engine && ui.engine.interventionId && session.screen === "phone-down" && ui.fromHelped ? `<button class="link" data-act="phoneDownElse">Something else</button>` : ""}` };
+        ${ui.engine && ui.engine.interventionId && session.screen === "phone-down" && ui.fromHelped ? `<button class="link" data-act="phoneDownElse">Something else</button>` : ""}
+        ${session.screen === "phone-down" ? `<button class="link small diary-link" data-act="diaryWrite">${DIARY.phoneDown}</button>` : ""}` };
   },
 
   suggestion(){
@@ -4712,6 +4809,8 @@ const SCREENS = {
         <button class="btn btn-secondary" data-act="printPlan">${l10n("plan.print")}</button></div>` : ""}
       ${editable ? `<div class="panel"><div class="setup-row"><span><b>Things I noticed</b><span class="small">${noticed().length ? `${noticed().length} kept on this phone` : "Photos you keep from Find something show up here."}</span></span>
           <button class="edit-btn" data-act="${noticed().length ? "noticedOpen" : "fsStart"}">${noticed().length ? "Open" : "Find something"}</button></div></div>` : ""}
+      ${editable ? `<div class="panel diary-row"><div class="setup-row"><span><b>${DIARY.title}</b><span class="small">${DIARY.planHint}</span></span>
+          <button class="edit-btn" data-act="diaryOpen">${l10n("plan.open")}</button></div></div>` : ""}
       ${editable ? `<div class="panel"><div class="setup-row"><span><b>${l10n("plan.songs")}</b><span class="small">${songs().length ? `${songs().length} ${l10n("plan.songsSaved")}` : l10n("plan.songsHint")}</span></span>
           <button class="edit-btn" data-act="${songs().length ? "songList" : "songNew"}">${songs().length ? l10n("plan.open") : l10n("plan.makeOne")}</button></div></div>` : ""}
       <div class="panel">${head("avoid", l10n("plan.h.avoid"))}${ul(pb.avoid)}</div>
@@ -5377,6 +5476,7 @@ function render(){
   fitChrome();
   if (changed){
     if (s !== "grief-write-done") ui.griefNote = null;   // 6.20: a written note is deleted unless the person taps Keep
+    if (!/^diary/.test(s)) ui.diaryDraft = null;           // 6.21: leaving the diary drops an unsaved draft
     if (crisis){ ui.grief = null; ui.fsGrief = false; }    // nothing from the grief path survives a crisis screen
     window.scrollTo(0, 0);
     const h = document.getElementById("screen-title");
@@ -6083,6 +6183,50 @@ const ACTIONS = {
   warmEnough(){ if (blockIfRed()) return; go("warm-end"); },
   warmFind(){ if (blockIfRed()) return; startIntervention("find_something"); },
 
+  /* 6.21 A LINE FOR TODAY */
+  diaryOpen(){ if (blockIfRed()) return; ui.flash = ""; ui.msg = ""; go("diary"); },
+  diaryWrite(){ if (blockIfRed()) return; ui.flash = ""; ui.msg = ""; ui.diaryDraft = { feelings:[], text:"", trueLine:"" }; go("diary-feel"); },
+  diaryFeel(arg){
+    if (blockIfRed()) return;
+    if (!DIARY.feelings.includes(arg)) return;
+    const d = ui.diaryDraft || (ui.diaryDraft = { feelings:[], text:"", trueLine:"" });
+    d.feelings = d.feelings.includes(arg) ? d.feelings.filter(f => f !== arg) : [...d.feelings, arg];
+    render();
+  },
+  diaryToWords(arg){ if (blockIfRed()) return; const d = ui.diaryDraft || (ui.diaryDraft = { feelings:[], text:"", trueLine:"" }); if (arg === "skip") d.feelings = []; go("diary-words"); },
+  diaryToTrue(arg){
+    if (blockIfRed()) return;
+    const d = ui.diaryDraft || (ui.diaryDraft = { feelings:[], text:"", trueLine:"" });
+    const box = document.getElementById("diaryText");
+    d.text = arg === "skip" ? "" : ((box && box.value) || "").slice(0, DIARY_TEXT_MAX);
+    go("diary-true");
+  },
+  diaryTrueEx(arg){ const b = document.getElementById("diaryTrue"); const x = DIARY.stillEx[Number(arg)]; if (b && x){ b.value = x; b.focus(); } },
+  diaryDontKeep(){ ui.diaryDraft = null; ui.msg = ""; ui.flash = DIARY.dropped; go("diary"); },
+  diaryKeep(){
+    if (blockIfRed()) return;
+    const d = ui.diaryDraft; if (!d) return;
+    const box = document.getElementById("diaryTrue");
+    if (box) d.trueLine = box.value.trim().slice(0, DIARY_TRUE_MAX);
+    const text = d.text.trim(), trueLine = d.trueLine;
+    if (!text && !trueLine && !d.feelings.length){ ui.diaryDraft = null; ui.flash = DIARY.dropped; go("diary"); return; }
+    let red = false, yellow = false;   // each field on its own, so words can't run together across the two
+    for (const t of [text, trueLine]) handleSafeTextSubmit({ text:t, onRed(){ red = true; }, onYellow(){ yellow = true; }, onGreen(){} });
+    if (red){ ui.diaryDraft = null; openCrisis(); return; }   // current rule: not saved (clinician item D-diary)
+    if (yellow) applySafetyResult("YELLOW");                  // saved normally, support bar on
+    const now = Date.now();
+    const entry = { id:String(now), date:now, day:diaryDay(now), feelings:DIARY.feelings.filter(f => d.feelings.includes(f)), text, trueLine };
+    store.diary = { ...(store.diary || {}), entries:[entry, ...diaryEntries()] };   // same day: a new entry under that date, never overwriting
+    saveDiary().then(ok => {
+      if (!ok){   // never lose a draft silently
+        store.diary.entries = diaryEntries().filter(e => e.id !== entry.id);
+        ui.msg = DIARY.full; render(); return;
+      }
+      ui.diaryDraft = null; ui.msg = "";
+      ui.flash = persistOn && STORAGE_OK ? DIARY.kept : DIARY.keptOff;
+      go("diary");
+    });
+  },
   /* 6.20 WHEN YOU'VE LOST SOMEONE */
   griefStart(){ if (blockIfRed()) return; ui.grief = {}; ui.griefNote = null; ui.fsGrief = false; ui.msg = ""; ui.flash = ""; go("grief-who"); },
   griefWho(arg){ if (blockIfRed()) return; if (!GRIEF.whoOpts.some(o => o[0] === arg)) return; ui.grief = { ...(ui.grief || {}), who:arg }; go("grief-when"); },

@@ -1186,6 +1186,17 @@ G. "Help near me (Treasure Coast)" (**hidden until the owner verifies at least o
 
 H. Simplicity audit: report only, nothing applied (docs/SIMPLICITY_AUDIT.md).
 
+### Stage 6.21: A line for today
+
+Only from My Plan ("A line for today") and a small link under "Put the phone down" ("Write a line about today?"). Never on crisis screens; never suggested. Only on this phone (its own key). No counts, streaks, charts or reminders.
+- Diary screen: "A line for today" / "Only on this phone." → "Write today's line" · "Looking back"
+- Step 1: "How was today?" (tap any, optional; Skip): heavy · calm · anxious · okay · lonely · hopeful · numb · angry · tired · mixed
+- Step 2: "A few words about it." (placeholder "Just a line or two is enough."; up to 1,000 characters)
+- Step 3: "One thing that's still true today" (Optional; up to 120 characters). Examples: "I got through today." · "Someone was kind to me." · "I'm still here."
+- Step 4: "Keep" (with saving off: "Keep for now (saving is off)") / "Don't keep" → "Kept. Only on this phone." / "Kept for this visit. Saving is off, so it's gone when you close ZigZag Mind." / "Not kept."
+- Both fields are safety-checked on Keep: RED → crisis screen, entry NOT saved (clinician item D-diary); YELLOW → support bar, entry saved.
+- Storage full: "This phone's storage is full, so this couldn't be saved. Your words are still here." (the words stay on screen)
+
 ### Stage 6.20: When you've lost someone (CLINICIAN REVIEW REQUIRED for the whole path)
 
 Entered only by the person: Home chip "I lost someone", and on Tech check's "My AI changed or is gone" last screen: "Lost a person or a pet? →". The engine and Let's Zig never suggest it. Who/when pick wording only and are never saved. Every free-text field is safety-checked (RED → crisis, nothing kept).
@@ -2009,6 +2020,59 @@ _When: distraction_
 - Nothing here yet.
 - **Button:** Find something
 
+### `diary`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** A line for today
+- Only on this phone.
+- **Button:** Write today's line
+- **Button:** Looking back
+
+### `diary-feel`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- A line for today
+- **Heading:** How was today?
+- **Button:** heavy
+- **Button:** calm
+- **Button:** anxious
+- **Button:** okay
+- **Button:** lonely
+- **Button:** hopeful
+- **Button:** numb
+- **Button:** angry
+- **Button:** tired
+- **Button:** mixed
+- **Button:** Next
+- **Button:** Skip
+
+### `diary-words`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- A line for today
+- **Heading:** A few words about it.
+- A few words about it.
+- **Button:** Next
+- **Button:** Skip
+
+### `diary-true`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- A line for today
+- **Heading:** One thing that's still true today
+- Optional.
+- One thing that's still true today
+- **Text box**
+- **Button:** I got through today.
+- **Button:** Someone was kind to me.
+- **Button:** I'm still here.
+- **Button:** Keep
+- **Button:** Don't keep
+
 ### `grief-who`
 
 - **Button:** × _(screen reader: "Close and go to home")_
@@ -2194,6 +2258,7 @@ _When: distraction_
 - You can put me away for a few minutes.
 - **Button:** Put the phone down
 - **Button:** Put it down for one minute
+- **Button:** Write a line about today?
 
 ### `suggestion`
 
@@ -3138,6 +3203,8 @@ _When: distraction_
 - **Button:** Print my plan
 - Photos you keep from Find something show up here.
 - **Button:** Find something
+- Only on this phone.
+- **Button:** Open
 - Songs you make and keep show up here.
 - **Button:** Make one
 - **Heading:** Things to avoid when I'm struggling

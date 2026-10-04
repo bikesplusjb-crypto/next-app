@@ -58,6 +58,7 @@ ZigZag Mind is comfortable with people leaving. That is the goal, not a failure.
 | 6.18 | 6.18 | Owner-approved updates (STAGE6-18-ADDENDUM.md) |
 | 6.19 | 6.19 | Reach, trust and simplicity (STAGE6-19-ADDENDUM.md) |
 | 6.20 | 6.20 | When you've lost someone (STAGE6-20-ADDENDUM.md) |
+| 6.21 | 6.21 | A line for today (STAGE6-21-ADDENDUM.md) |
 | 3 People & safety | 6.8 | Code word |
 | 3 People & safety | 6.9 | Supporter guide page |
 | 3 People & safety | 6.10 | Check-in reminders |
