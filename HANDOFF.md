@@ -32,6 +32,7 @@ Everything is in one file, `index.html` (vanilla JS, no build step, no runtime d
 | 6.20 | STAGE6-20-ADDENDUM.md (When you've lost someone: Home chip, Tech check link, who/when, acknowledgment, breathe / find / write / tell / hard-date reminder, grief YELLOW phrases, grief resources hidden until verified) |
 | 6.21 | STAGE6-21-ADDENDUM.md (A line for today: feeling words, a few words, "still true"; Looking back; optional passcode lock with PBKDF2 + AES-GCM on the phone; export/delete/saving off) |
 | 6.22 | Doodle (Get out of my head; SENSE, real world; canvas, Keep to Things I noticed or Let it go) |
+| 6.23 | I feel sad or low (Home chip renamed; Zags under a small cloud; Let it out, one idea at a time; the two-weeks line; clinician D32) |
 | Owner handoffs | Find something (+ Things I noticed), Warm & comfort, Social Zig, Have coffee with ZigZag, Cozy up; simplicity audit proposals 1–6, 8, 10 applied |
 
 Where each part stands (as built, what differs from the text, tests) is at the end of STAGE6-SPEC.md.

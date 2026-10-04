@@ -82,7 +82,7 @@ Strings: 218 (crisis-screen: 46).
 | `home.anxious` | I'm anxious | Tengo ansiedad |  | DRAFT |
 | `home.spiraling` | I'm spiraling | Mis pensamientos no paran |  | DRAFT |
 | `home.craving` | I have an urge to use (drink or drugs) | Tengo ganas de consumir (alcohol o drogas) |  | DRAFT |
-| `home.low` | I feel low | Me siento decaído |  | DRAFT |
+| `home.low` | I feel sad or low | Me siento triste o decaído |  | DRAFT |
 | `home.alone` | I feel alone | Me siento solo |  | DRAFT |
 | `home.er` | Just out of the ER | Acabo de salir de urgencias |  | DRAFT |
 | `home.lost` | I lost someone | Perdí a alguien |  | DRAFT |

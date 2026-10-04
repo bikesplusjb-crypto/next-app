@@ -23,7 +23,7 @@ const r=[];
  a.click(act('tab','progress'));
  r.push(['Progress is quiet, with no sample note', a.T().includes("Nothing logged this week") && !a.T().includes('sample data')]);
  // Flows and crisis still work with nothing set up.
- a.click(act('tab','home')); a.click(act('flow','low')); a.click(act('beforeSkip')); a.click(act('lowPick','hydration'));
+ a.click(act('tab','home')); a.click(act('flow','low')); a.click(act('sadTiny'));   /* 6.23: the sad first screen */ a.click(act('beforeSkip')); a.click(act('lowPick','hydration'));
  r.push(['flows work with an empty plan', a.S().screen==='intervention' && a.S().currentInterventionId==='hydration']);
  a.click('.help-pill[data-act="crisis"]'); a.click(act('cYes'));
  const hrefs=[...a.w.document.querySelectorAll('a[href]')].map(x=>x.getAttribute('href'));

@@ -145,6 +145,12 @@ textarea.field{min-height:150px;resize:vertical}
 .nextcard .for{font-size:15px;color:var(--text-muted);margin-top:12px}
 
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px;margin-top:16px}
+.sad-art{position:relative;display:flex;justify-content:center;padding-top:34px;margin:4px 0 6px}
+.sad-cloud{position:absolute;top:0;left:50%;width:96px;margin-left:-48px;animation:cloudDrift 6s ease-in-out infinite alternate}
+.sad-cloud svg{display:block;width:100%;height:auto}
+@keyframes cloudDrift{from{transform:translateX(-6px)}to{transform:translateX(6px)}}
+@media (prefers-reduced-motion:reduce){.sad-cloud{animation:none}}
+.sad-sky{margin-top:14px}
 .doodle-prompt{margin:0 0 8px;font-family:var(--serif);font-size:19px;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline}
 .doodle-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
 .doodle-swatch{width:44px;height:44px;border-radius:50%;border:2px solid var(--line)}
@@ -695,7 +701,7 @@ const L10N = {
     "home.anxious":"I'm anxious",
     "home.spiraling":"I'm spiraling",
     "home.craving":"I have an urge to use (drink or drugs)",
-    "home.low":"I feel low",
+    "home.low":"I feel sad or low",
     "home.alone":"I feel alone",
     "home.er":"Just out of the ER",
     "home.lost":"I lost someone",
@@ -915,7 +921,7 @@ const L10N = {
     "home.anxious":{ text:"Tengo ansiedad", draft:true },
     "home.spiraling":{ text:"Mis pensamientos no paran", draft:true },
     "home.craving":{ text:"Tengo ganas de consumir (alcohol o drogas)", draft:true },
-    "home.low":{ text:"Me siento decaído", draft:true },
+    "home.low":{ text:"Me siento triste o decaído", draft:true },
     "home.alone":{ text:"Me siento solo", draft:true },
     "home.er":{ text:"Acabo de salir de urgencias", draft:true },
     "home.lost":{ text:"Perdí a alguien", draft:true },
@@ -1272,6 +1278,31 @@ function griefMsgs(name){
 }
 const GRIEF_MISSION = { id:"remembering", title:"Remembering", prompt:"Find something that reminds you of them — their spot, a photo, something they loved." };
 const GRIEF_NOTE_MAX = 1000;
+/* 6.23 I FEEL SAD OR LOW: a first screen before the tiny things. All wording: clinician review. Nothing saved. */
+const SAD = {
+  q:"Feels like a dark cloud over you?",
+  ok:"It's okay to feel sad. You don't have to fix it right now.",
+  sky:"You're the sky, not the cloud. Clouds can be heavy, and they still move.",
+  letOut:"Let it out", tiny:"Do one tiny thing",
+  ideas:[
+    ["rain","Let it rain","Crying is allowed. It often helps."],
+    ["sit","Sit with it for a minute","No need to do anything with it. Just let it be here for a minute."],
+    ["put","Put it somewhere","Get it out of your head and onto something."],
+    ["songs","One sad song, then one gentler one","Play one song that matches how you feel. Then one that's a little lighter. You pick them."],
+    ["gap","Find a gap in the clouds","Find one small thing that's a little lighter: a window, a song, a text from someone."]
+  ],
+  another:"Another idea", doneForNow:"I'm done for now",
+  sitTitle:"Sit with it for a minute.", sitSub:"Nothing to do and nothing to fix. Breathe however you breathe. Take as long as you need.", sitDone:"Okay",
+  putDiary:"Write a line about today", putDoodle:"Doodle it", putSong:"Turn it into a song",
+  songsOk:"Okay", gapGo:"Show me tiny things",
+  end:"If you've felt this way most days for two weeks or more, talking to a doctor or counselor can really help."
+};
+/* A small, soft-gray cloud above Zags (gentle, not gloomy). Never on crisis screens; still with reduced motion. */
+function sadCloud(){
+  if (CRISIS_SCREENS.includes(session.screen)) return "";
+  return `<span class="sad-cloud" aria-hidden="true"><svg viewBox="0 0 120 60"><path d="M30 50 C14 50 8 38 16 30 C14 18 30 12 38 20 C42 8 62 6 70 18 C80 10 98 16 96 30 C108 32 108 50 92 50 Z" fill="#C9CED1" opacity=".85"/></svg></span>`;
+}
+
 /* 6.22 DOODLE. A drawing canvas (pointer events, no libraries). Strokes live in memory; nothing is analyzed or sent.
    Keep saves a shrunk PNG to Things I noticed (same storage, cap, saving-off rules, export and Delete everything). */
 const DOODLE = {
@@ -2782,7 +2813,7 @@ function startFlow(stateId, opts = {}){
   logActivity("moment");
   const first = ui.firstPick || FLOW_FIRST[stateId];
   dispatch({ type:"SET_ENGINE_RESULT", pick:first, reason:first ? "Default first step for this state." : "User chooses the first step." });
-  go("before");
+  go(stateId === "low" && !ui.firstPick ? "sad" : "before");   // 6.23: "I feel sad or low" starts with the cloud screen
 }
 
 /* 6.3 Calm: a short menu. No before-rating; every option ends at the usual check-in. */
@@ -3584,6 +3615,44 @@ const SCREENS = {
             : `<button class="link" data-act="noticedDel" data-arg="${esc(n.id)}">Delete</button>`}</div>`).join("")
         : `<p class="empty">Nothing here yet.</p>`}`,
       actions:`<button class="btn btn-secondary" data-act="fsStart">Find something</button>` };
+  },
+
+  /* 6.23 I FEEL SAD OR LOW */
+  sad(){
+    return { close:true, body:`
+      <div class="sad-art">${sadCloud()}${zagsMark("zmark-lg sad-zags")}</div>
+      ${stepTitle(SAD.q, true)}
+      <p class="sub" style="font-size:19px">${SAD.ok}</p>
+      <p class="small sad-sky">${SAD.sky}</p>`,
+      actions:`<button class="btn btn-primary" data-act="sadOut">${SAD.letOut}</button>
+        <button class="btn btn-secondary" data-act="sadTiny">${SAD.tiny}</button>` };
+  },
+  "sad-out"(){
+    const [k, t, m] = SAD.ideas[(ui.sadIdx || 0) % SAD.ideas.length];
+    const main = k === "rain" ? `<button class="btn btn-primary" data-act="sadNext">${SAD.songsOk}</button>`
+      : k === "sit" ? `<button class="btn btn-primary" data-act="sadSit">${t}</button>`
+      : k === "put" ? `<button class="btn btn-primary" data-act="diaryWrite">${SAD.putDiary}</button>
+          <button class="btn btn-secondary" data-act="doodleStart">${SAD.putDoodle}</button>
+          <button class="btn btn-secondary" data-act="songStart" data-arg="sad">${SAD.putSong}</button>`
+      : k === "songs" ? `<button class="btn btn-primary" data-act="sadNext">${SAD.songsOk}</button>`
+      : `<button class="btn btn-primary" data-act="sadTiny" data-arg="list">${SAD.gapGo}</button>`;
+    return { close:true, body:`
+      <p class="step-count">${SAD.letOut}</p>
+      ${stepTitle(t, true)}
+      <p class="sub" style="font-size:19px">${m}</p>`,
+      actions:`${main}
+        <button class="btn btn-secondary" data-act="sadNext">${SAD.another}</button>
+        <button class="link" data-act="sadEnd">${SAD.doneForNow}</button>` };
+  },
+  "sad-sit"(){
+    return { close:true, body:`${stepTitle(SAD.sitTitle, true)}<p class="sub" style="font-size:19px">${SAD.sitSub}</p>`,
+      actions:`<button class="btn btn-primary" data-act="sadNext">${SAD.sitDone}</button>` };
+  },
+  "sad-end"(){
+    return { close:true, body:`${stepTitle(SAD.end, true)}`,
+      actions:`<button class="btn btn-primary" data-act="putDown">Put the phone down</button>
+        <button class="btn btn-secondary" data-act="route" data-arg="connect">Talk to someone</button>
+        <button class="btn btn-secondary" data-act="sadTiny" data-arg="list">${SAD.tiny}</button>` };
   },
 
   /* 6.22 DOODLE */
@@ -6229,7 +6298,7 @@ const ACTIONS = {
   /* 6.16 Turn it into a song */
   songStart(arg){
     if (blockIfRed()) return;
-    const state = arg === "connect" ? "alone" : arg === "head" ? "distraction" : null;
+    const state = arg === "connect" ? "alone" : arg === "head" ? "distraction" : arg === "sad" ? "low" : null;
     if (state) dispatch({ type:"SET_CURRENT_STATE", state });
     startIntervention("song");
   },
@@ -6481,6 +6550,21 @@ const ACTIONS = {
   warmEnough(){ if (blockIfRed()) return; go("warm-end"); },
   warmFind(){ if (blockIfRed()) return; startIntervention("find_something"); },
 
+  /* 6.23 I FEEL SAD OR LOW */
+  sadOut(){ if (blockIfRed()) return; ui.sadIdx = 0; ui.sadSeen = 1; go("sad-out"); },
+  sadNext(){
+    if (blockIfRed()) return;
+    if ((ui.sadSeen || 0) >= SAD.ideas.length){ go("sad-end"); return; }   // every idea offered once: the ending
+    ui.sadIdx = ((ui.sadIdx || 0) + 1) % SAD.ideas.length; ui.sadSeen = (ui.sadSeen || 0) + 1;
+    lastRendered = null; go("sad-out");
+  },
+  sadSit(){ if (blockIfRed()) return; go("sad-sit"); },
+  sadEnd(){ if (blockIfRed()) return; go("sad-end"); },
+  sadTiny(arg){   // the existing low path, unchanged: from the first screen the optional rating, then the tiny things; later, the list itself
+    if (blockIfRed()) return;
+    dispatch({ type:"SET_CURRENT_STATE", state:"low" });
+    go(arg === "list" ? "low-choose" : "before");
+  },
   /* 6.22 DOODLE */
   doodleStart(){ if (blockIfRed()) return; startIntervention("doodle"); },
   doodleIdea(){ if (blockIfRed()) return; const d = ui.doodle; if (!d) return; d.prompt = (d.prompt + 1) % DOODLE.prompts.length; const el = document.getElementById("doodlePrompt"); if (el) el.textContent = DOODLE.prompts[d.prompt]; else render(); },

@@ -60,6 +60,7 @@ ZigZag Mind is comfortable with people leaving. That is the goal, not a failure.
 | 6.20 | 6.20 | When you've lost someone (STAGE6-20-ADDENDUM.md) |
 | 6.21 | 6.21 | A line for today (STAGE6-21-ADDENDUM.md) |
 | 6.22 | 6.22 | Doodle (owner request, 2026-10-04) |
+| 6.23 | 6.23 | I feel sad or low (owner request, 2026-10-04) |
 | 3 People & safety | 6.8 | Code word |
 | 3 People & safety | 6.9 | Supporter guide page |
 | 3 People & safety | 6.10 | Check-in reminders |
@@ -578,3 +579,12 @@ Tests: `diary.test.js`.
 ## 6.22 Doodle (owner request, as built, 2026-10-04)
 
 `doodle` (SENSE, `realWorld:true`; anxious, spiraling, low, distraction), so Let's Zig may pick it; entry on Get out of my head (6 choices). Screens `doodle` → `doodle-done` → `doodle-end`. A `<canvas>` with pointer events (fingers, pen, mouse; `touch-action:none`), no libraries. Strokes are stored in memory as points relative to the canvas and redrawn after every render or resize. Five calm colors from the palette (teal `--primary`, Zags sea green, lavender `--accent`, sky `--secondary-accent`, clay) plus dark ink `--text`; Thin / Thick; eraser (`destination-out`, twice the brush width); Undo; Clear with confirm. Prompts in `DOODLE.prompts`, one at a time ("Another idea"). Done → Keep (a PNG on a white page, longest edge 640px, into `next.v1.noticed` with mission `doodle`; same cap of 20, saving-off rule, export and Delete everything as photos) or Let it go ("Some things are just for now."), then "That's enough. You can put the phone down." Added beyond the text: "Keep drawing" on the Done screen, and a "Nothing on the page. That's okay too." line when the page is empty (Keep hidden). No animation, so reduced motion needs nothing extra. Tests: `doodle.test.js`.
+
+## 6.23 I feel sad or low (owner request, as built, 2026-10-04)
+
+Built from the owner's second, fuller 6.23 message (cloud, "Let it rain", "Find a gap in the clouds"); the first version is contained in it. Home chip "I feel sad or low" → `startFlow("low")` → `sad` (Zags brand mark under `sadCloud()`, a soft-gray SVG cloud that drifts gently and is still with reduced motion; never on crisis screens) → "Let it out" (`sad-out`, ideas in `SAD.ideas`, one at a time; `sad-sit`; `sad-end`) or "Do one tiny thing". Differences from the text, and why:
+- **"Do one tiny thing"** from the first screen keeps the existing low path exactly (the optional rating, then the same eight tiny things). From "Find a gap in the clouds" and the ending it opens the tiny-things list directly (the rating would be a detour there).
+- **"One sad song, then one gentler one"** is the fourth "Let it out" idea (between "Put it somewhere" and "Find a gap in the clouds"); after all five ideas the ending shows. "I'm done for now" goes to the ending at any time.
+- **Zags on this screen** is added to the brand-mark allow-list (`zags-mark.test.js`), as the owner asked.
+- **"Turn it into a song"** from here keeps the state "low".
+Nothing is saved beyond the usual "moment" activity that every flow logs. Tests: `sad.test.js`.

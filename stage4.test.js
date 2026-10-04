@@ -35,7 +35,7 @@ const r=[];
  click(act('tab','progress')); r.push(['quiet week', T().includes("Nothing logged this week — that's okay.")]);
  click(act('tab','home')); r.push(['build plan card', !!w.document.querySelector('[data-act="tab"][data-arg="plan"].card')]);
  // flows still work with empty plan: connection shows add someone
- click(act('flow','low')); click(act('beforeSkip')); click(act('lowPick','connection'));
+ click(act('flow','low')); click(act('sadTiny'));   /* 6.23: the sad first screen */ click(act('beforeSkip')); click(act('lowPick','connection'));
  r.push(['empty plan connection', T().includes('Add someone you trust')]);
  click(act('crisis')); r.push(['crisis w/ empty plan', S().screen==='crisis']); click(act('cYes'));
  r.push(['crisis-full empty plan', T().includes('Call 911') && T().includes('Add someone you trust')]);

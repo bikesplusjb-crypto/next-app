@@ -711,7 +711,7 @@ Filter by state → filter by intensity → never repeat the last pick → if YE
 - "I'm anxious" → `flow:anxious`
 - "I'm spiraling" → `flow:spiraling`
 - "I have an urge to use (drink or drugs)" → `flow:craving`
-- "I feel low" → `flow:low`
+- "I feel sad or low" → `flow:low`
 - "I feel alone" → `route:connect`
 - "Just out of the ER" → `afterStart`
 - "I lost someone" → `griefStart`
@@ -1197,6 +1197,15 @@ G. "Help near me (Treasure Coast)" (**hidden until the owner verifies at least o
 
 H. Simplicity audit: report only, nothing applied (docs/SIMPLICITY_AUDIT.md).
 
+### Stage 6.23: I feel sad or low (CLINICIAN REVIEW REQUIRED for all of it)
+
+- Home chip renamed: "I feel sad or low" (was "I feel low").
+- First screen (Zags under a small soft-gray cloud; the cloud drifts gently, still with reduced motion, never on crisis screens): "Feels like a dark cloud over you?" / "It's okay to feel sad. You don't have to fix it right now." / small: "You're the sky, not the cloud. Clouds can be heavy, and they still move." → "Let it out" · "Do one tiny thing" (the existing low path: optional rating, then the same tiny things)
+- "Let it out", one idea at a time ("Another idea" · "I'm done for now"): "Let it rain" ("Crying is allowed. It often helps.") · "Sit with it for a minute" ("No need to do anything with it. Just let it be here for a minute.") · "Put it somewhere" ("Get it out of your head and onto something.") · "One sad song, then one gentler one" ("Play one song that matches how you feel. Then one that's a little lighter. You pick them.") · "Find a gap in the clouds" ("Find one small thing that's a little lighter: a window, a song, a text from someone.")
+- Sit with it: "Sit with it for a minute." / "Nothing to do and nothing to fix. Breathe however you breathe. Take as long as you need." → "Okay" (no timer)
+- Put it somewhere: "Write a line about today" · "Doodle it" · "Turn it into a song"; Find a gap: "Show me tiny things" (the tiny-things list); songs: no links or recommendations
+- Ending: "If you've felt this way most days for two weeks or more, talking to a doctor or counselor can really help." → Put the phone down · Talk to someone · Do one tiny thing
+
 ### Stage 6.22: Doodle
 
 Get out of my head → "Doodle" ("Draw anything. No skill needed."). SENSE, real world; Let's Zig may pick it ("Draw anything for a few minutes. No skill needed, and nobody has to see it."). Nothing analyzed or sent; kept only on Keep.
@@ -1512,7 +1521,7 @@ Rendered for each state where the screen changes by state. Identical renders are
 - **Button:** I'm anxious
 - **Button:** I'm spiraling
 - **Button:** I have an urge to use (drink or drugs)
-- **Button:** I feel low
+- **Button:** I feel sad or low
 - **Button:** I feel alone
 - **Button:** Just out of the ER
 - **Button:** I lost someone
@@ -2045,6 +2054,44 @@ _When: distraction_
 - Only on this phone. Not a feed, not shared.
 - Nothing here yet.
 - **Button:** Find something
+
+### `sad`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Feels like a dark cloud over you?
+- It's okay to feel sad. You don't have to fix it right now.
+- You're the sky, not the cloud. Clouds can be heavy, and they still move.
+- **Button:** Let it out
+- **Button:** Do one tiny thing
+
+### `sad-out`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Let it out
+- **Heading:** Let it rain
+- Crying is allowed. It often helps.
+- **Button:** Okay
+- **Button:** Another idea
+- **Button:** I'm done for now
+
+### `sad-sit`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Sit with it for a minute.
+- Nothing to do and nothing to fix. Breathe however you breathe. Take as long as you need.
+- **Button:** Okay
+
+### `sad-end`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** If you've felt this way most days for two weeks or more, talking to a doctor or counselor can really help.
+- **Button:** Put the phone down
+- **Button:** Talk to someone
+- **Button:** Do one tiny thing
 
 ### `doodle`
 
@@ -2770,7 +2817,7 @@ _When: distraction_
 - **Button:** I'm anxious
 - **Button:** I'm spiraling
 - **Button:** I have an urge to use (drink or drugs)
-- **Button:** I feel low
+- **Button:** I feel sad or low
 - **Button:** I feel alone
 - **Button:** Just out of the ER
 - **Button:** I lost someone
@@ -2798,7 +2845,7 @@ _When: distraction_
 - **Button:** I'm anxious
 - **Button:** I'm spiraling
 - **Button:** I have an urge to use (drink or drugs)
-- **Button:** I feel low
+- **Button:** I feel sad or low
 - **Button:** I feel alone
 - **Button:** Just out of the ER
 - **Button:** I lost someone
@@ -2826,7 +2873,7 @@ _When: distraction_
 - **Button:** I'm anxious
 - **Button:** I'm spiraling
 - **Button:** I have an urge to use (drink or drugs)
-- **Button:** I feel low
+- **Button:** I feel sad or low
 - **Button:** I feel alone
 - **Button:** Just out of the ER
 - **Button:** I lost someone

@@ -13,7 +13,7 @@ const r=[];
 
 {const a=boot(); const t=a.app().textContent;
  r.push(['wordmark and tagline', !!a.doc.querySelector('.brand[data-act="wordmark"]') && a.doc.getElementById('screen-title').textContent==="It's okay not to be okay." && a.doc.querySelector('.home-sub').textContent==="You don't have to figure everything out right now."]);
- const order=["I don't feel safe","I don't know what I need","Calm down","Get out of my head","Connect","Change the scene","Or tell me what's happening","I'm anxious","I'm spiraling","I have an urge to use (drink or drugs)","I feel low","I feel alone"];
+ const order=["I don't feel safe","I don't know what I need","Calm down","Get out of my head","Connect","Change the scene","Or tell me what's happening","I'm anxious","I'm spiraling","I have an urge to use (drink or drugs)","I feel sad or low","I feel alone"];
  r.push(['Home items in the spec order', order.every((x,i)=>t.indexOf(x)>-1 && (i===0 || t.indexOf(x)>t.indexOf(order[i-1])))]);
  r.push(['four escape routes in a 2x2 grid, each with a stroke icon', a.doc.querySelectorAll('.routes .route').length===4 && [...a.doc.querySelectorAll('.routes .route')].every(b=>b.querySelector('.ico[aria-hidden="true"] svg'))]);
  r.push(['no emoji on Home', !/\p{Extended_Pictographic}/u.test(t)]);
@@ -31,8 +31,9 @@ s=go(act('route','connect')); r.push(['Connect → the Connect screen (6.6)', s.
 {const a=boot(); a.click(act('route','connect')); a.click(act('home')); r.push(['Connect → close returns Home', a.S().screen==='home']);}
 {const a=boot(); a.w.eval('ACTIONS.talk()'); a.click(act('talkBack')); r.push(['Talk to someone (YELLOW bar) → Back returns Home', a.S().screen==='home']);}
 s=go(act('route','scene')); r.push(['Change the scene → its menu (6.5)', s.screen==='scene']);
-for(const [arg,label] of [['anxious',"I'm anxious"],['spiraling',"I'm spiraling"],['low','I feel low']]){
+for(const [arg,label] of [['anxious',"I'm anxious"],['spiraling',"I'm spiraling"],['low','I feel sad or low']]){
   const a=boot(); const b=[...a.doc.querySelectorAll('.sit')].find(x=>x.textContent===label); b.dispatchEvent(new a.w.MouseEvent('click',{bubbles:true}));
+  if(arg==='low'){ r.push(['"I feel sad or low" opens its first screen (6.23), then "Do one tiny thing" reaches the existing low flow', a.S().screen==='sad' && a.S().currentState==='low']); a.click(act('sadTiny')); }
   r.push([`"${label}" opens the existing ${arg} flow`, a.S().screen==='before' && a.S().currentState===arg]);
 }
 s=go(act('flow','craving'),a=>a.click(act('beforeSkip'))); r.push(['"I have an urge to use (drink or drugs)" still reaches the craving delay', s.screen==='craving-delay' && s.currentInterventionId==='craving_delay']);

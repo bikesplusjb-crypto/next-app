@@ -39,7 +39,7 @@ let r=[];
 }
 // Test 4 still bad x2
 {const {w,click,S}=boot();
- click(act('flow','low')); click(act('beforeSkip')); click(act('lowPick','hydration'));
+ click(act('flow','low')); click(act('sadTiny'));   /* 6.23: the sad first screen */ click(act('beforeSkip')); click(act('lowPick','hydration'));
  click(act('ivNext')); click(act('ivDone')); click(act('ciBad'));
  click(act('recTry')); let n=0; while(w.document.querySelector(act('ivNext'))&&n<6){click(act('ivNext'));n++} click(act('ivDone')); click(act('ciBad'));
  const s=S(); r.push(['T4 still bad YELLOW', s.yellow&&s.stillBadCount===2, s.lastEnginePick]);

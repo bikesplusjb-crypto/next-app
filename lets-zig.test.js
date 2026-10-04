@@ -64,7 +64,7 @@ for(const [state,id] of [['anxious','breathing'],['anxious','grounding'],['spira
  r.push(['the ending never suggests another activity', !/Try |Something else|recTry/.test(a.doc.getElementById('app').innerHTML.replace(/data-act="phoneDownElse"[^>]*>Something else/,''))]);}
 
 // ---------- C. Borrow ten minutes ----------
-{const a=boot(); a.click(act('flow','low')); a.click(act('beforeSkip'));
+{const a=boot(); a.click(act('flow','low')); a.click(act('sadTiny'));   /* 6.23: the sad first screen */ a.click(act('beforeSkip'));
  r.push(['C entry: I feel low', a.has(act('lowPick','borrow_ten'))]);
  a.click(act('lowPick','borrow_ten'));
  r.push(['"You don\'t have to decide the rest of your day." · "Just borrow the next ten minutes."', a.S().screen==='borrow' && a.T().includes("You don't have to decide the rest of your day.") && a.T().includes('Just borrow the next ten minutes.')]);
@@ -98,7 +98,7 @@ const tsStart=a=>{ a.click(act('route','calm')); a.click(act('calmPick','truth')
 {const a=boot(); a.click(act('flow','spiraling')); a.click(act('beforeSkip')); r.push(['D entry: the I\'m spiraling flow', a.has(act('spAlsoTrue'))]);}
 
 // ---------- E. kind stranger ----------
-{const a=boot(); a.click(act('flow','low')); a.click(act('beforeSkip')); a.click(act('lowPick','kind_stranger'));
+{const a=boot(); a.click(act('flow','low')); a.click(act('sadTiny'));   /* 6.23: the sad first screen */ a.click(act('beforeSkip')); a.click(act('lowPick','kind_stranger'));
  r.push(['E: the question and five taps, no typing', a.T().includes('If someone you cared about felt like this, what would you tell them?') && a.doc.querySelectorAll('[data-act="strangerPick"]').length===5 && !a.has('#app input, #app textarea')]);
  a.click(act('strangerPick','0')); r.push(['...then "You can give yourself the same."', a.T().includes('You can give yourself the same.') && a.has(act('putDown'))]);}
 

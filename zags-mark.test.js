@@ -28,7 +28,7 @@ const show=(a,s,extra='')=>a.G(`${extra} lastRendered=null; session={...session,
  r.push(['never on crisis, crisis-full, crisis-no, safety-check or "I need my plan"', never.length===0, never.join()]);
  a.G('ui.planFrom="no"; store.sensitive.plan=emptyPlan()'); show(a,'plan'); r.push(['never on the plan opened from the crisis "No" path', !a.has('.zmark')]);
  // only these places, across every screen
- const allowed=['home','phone-down','ob-about','plan','song-list','cozy-end'];   // cozy-end: owner request (Zags in a small blanket)
+ const allowed=['home','phone-down','ob-about','plan','song-list','cozy-end','sad'];   // cozy-end: owner request (Zags in a small blanket); sad: 6.23 (Zags under a small cloud)
  const where=[]; for(const s of a.G('Object.keys(SCREENS)')){ try{ a.G('ui=freshUi(); ui.faithKey="hope"; ui.editSection="warningSigns"; prefs.strength="bible"; store.sensitive.plan=emptyPlan(); store.sensitive.songs=[]'); show(a,s); if(a.has('main .zmark')) where.push(s); }catch(e){} }
  r.push(['the brand mark appears in those places only', where.every(s=>allowed.includes(s)), where.join()]);}
 

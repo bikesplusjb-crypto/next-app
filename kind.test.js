@@ -43,7 +43,7 @@ const SHOWS=t=>t.includes(A1) || t.includes('Helping someone else') || /Somethin
 {const a=boot(); a.click('header .help-pill[data-act="crisis"]'); r.push(['Help pill → crisis screen has neither text', !SHOWS(a.T())]);}
 
 // ---- Do something kind: I feel low only, never first or only ----
-{const a=boot(); a.click(act('flow','low')); a.click(act('beforeSkip'));
+{const a=boot(); a.click(act('flow','low')); a.click(act('sadTiny'));   /* 6.23: the sad first screen */ a.click(act('beforeSkip'));
  const cards=[...a.doc.querySelectorAll('#app .list .card')];
  r.push(['I feel low offers it as one tiny step, last, never first or only', cards.length>=4 && cards.at(-1).dataset.act==='kindStart' && cards[0].dataset.act!=='kindStart']);
  r.push(['framed as optional, not a duty', a.T().includes('Only if you have the energy.') && !/should|have to|must/i.test(cards.at(-1).textContent)]);}
@@ -51,7 +51,7 @@ const SHOWS=t=>t.includes(A1) || t.includes('Helping someone else') || /Somethin
  a.G('session.currentState="anxious"'); a.G('ACTIONS.kindStart()'); r.push(['outside I feel low it does nothing', a.S().screen!=='kind']);}
 
 // ---- the flow ----
-const low=()=>{ const a=boot(); a.G('ACTIONS.loadSample()'); a.click(act('flow','low')); a.click(act('beforeSkip')); a.click(act('kindStart')); return a; };
+const low=()=>{ const a=boot(); a.G('ACTIONS.loadSample()'); a.click(act('flow','low')); a.click(act('sadTiny'));   /* 6.23: the sad first screen */ a.click(act('beforeSkip')); a.click(act('kindStart')); return a; };
 {const a=low();
  r.push(['start: kind text or something without my phone; Not right now', a.S().screen==='kind' && !!a.doc.querySelector(act('kindPhone')) && !!a.doc.querySelector(act('kindOffline')) && !!a.doc.querySelector(act('kindBack'))]);
  r.push(['Help one tap away', !!a.doc.querySelector('header .help-pill[data-act="crisis"]')]);
@@ -90,7 +90,7 @@ const low=()=>{ const a=boot(); a.G('ACTIONS.loadSample()'); a.click(act('flow',
  r.push(['no-phone list: hold a door, a compliment, a neighbor', a.S().screen==='kind-offline' && ['Hold a door for someone.','Give someone a compliment.','Help a neighbor with something small.'].every(x=>a.T().includes(x))]);
  r.push(['no ticking off or counting', !a.doc.querySelector('#app [aria-pressed]') && !/\d/.test(a.doc.querySelector('.kind-list').textContent)]);
  a.click(act('kindDone')); r.push(['...Done → check-in', a.S().screen==='checkin']);}
-{const a=boot(); a.click(act('flow','low')); a.click(act('beforeSkip')); a.click(act('kindStart')); a.click(act('kindPhone'));
+{const a=boot(); a.click(act('flow','low')); a.click(act('sadTiny'));   /* 6.23: the sad first screen */ a.click(act('beforeSkip')); a.click(act('kindStart')); a.click(act('kindPhone'));
  r.push(['nobody in My Plan: offers the no-phone list instead', a.S().screen==='kind-person' && !!a.doc.querySelector(act('kindOffline'))]);}
 {const a=low(); a.click(act('kindBack')); r.push(['Not right now → back to the tiny steps, nothing recorded', a.S().screen==='low-choose' && a.S().sessionHistory.length===0]);}
 

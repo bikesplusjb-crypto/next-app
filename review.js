@@ -287,6 +287,17 @@ P(''); P('G. "Help near me (Treasure Coast)" (**hidden until the owner verifies 
 list(G('NEAR_ME').map(e=>`${e.name}: "${e.what}"${e.phone?' · '+e.phone:''} (verified: ${e.verified})`));
 P(''); P('H. Simplicity audit: report only, nothing applied (docs/SIMPLICITY_AUDIT.md).');
 
+H(3,'Stage 6.23: I feel sad or low (CLINICIAN REVIEW REQUIRED for all of it)');
+const SA=G('SAD');
+list([
+  'Home chip renamed: "'+G('l10n("home.low")')+'" (was "I feel low").',
+  'First screen (Zags under a small soft-gray cloud; the cloud drifts gently, still with reduced motion, never on crisis screens): "'+SA.q+'" / "'+SA.ok+'" / small: "'+SA.sky+'" → "'+SA.letOut+'" · "'+SA.tiny+'" (the existing low path: optional rating, then the same tiny things)',
+  '"'+SA.letOut+'", one idea at a time ("'+SA.another+'" · "'+SA.doneForNow+'"): '+SA.ideas.map(([,t,m])=>`"${t}" ("${m}")`).join(' · '),
+  'Sit with it: "'+SA.sitTitle+'" / "'+SA.sitSub+'" → "'+SA.sitDone+'" (no timer)',
+  'Put it somewhere: "'+SA.putDiary+'" · "'+SA.putDoodle+'" · "'+SA.putSong+'"; Find a gap: "'+SA.gapGo+'" (the tiny-things list); songs: no links or recommendations',
+  'Ending: "'+SA.end+'" → Put the phone down · Talk to someone · '+SA.tiny
+]);
+
 H(3,'Stage 6.22: Doodle');
 P('Get out of my head → "Doodle" ("Draw anything. No skill needed."). SENSE, real world; Let\'s Zig may pick it ("'+G('findIntervention("doodle").description')+'"). Nothing analyzed or sent; kept only on Keep.');
 const DO=G('DOODLE');

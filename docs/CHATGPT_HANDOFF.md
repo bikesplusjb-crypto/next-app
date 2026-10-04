@@ -26,7 +26,7 @@ It is NOT therapy, diagnosis, treatment, a chatbot, or an emergency service. Adu
 
 ## What's on Home now
 
-Help (top right) · Zags + "ZigZag Mind" · "It's okay not to be okay." · **I don't feel safe** · I don't know what I need · Calm down · Get out of my head · Connect · Change the scene · "Or tell me what's happening": I'm anxious / I'm spiraling / I have an urge to use (drink or drugs) / I feel low / I feel alone / Just out of the ER / I lost someone · Tech check (AI, scrolling, or checking) · Worried about someone? How to help → · tabs incl. My Plan.
+Help (top right) · Zags + "ZigZag Mind" · "It's okay not to be okay." · **I don't feel safe** · I don't know what I need · Calm down · Get out of my head · Connect · Change the scene · "Or tell me what's happening": I'm anxious / I'm spiraling / I have an urge to use (drink or drugs) / I feel sad or low / I feel alone / Just out of the ER / I lost someone · Tech check (AI, scrolling, or checking) · Worried about someone? How to help → · tabs incl. My Plan.
 
 ## What's built
 
