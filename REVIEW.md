@@ -983,6 +983,20 @@ About: "When something isn't helping, ZigZag doesn't tell you to try harder. It 
 
 **Find something real** (Calm): "Find something you can hold." · "Find something cooler." · "Find something warmer." · "Put both feet on the floor." · "Change your position." · "Wash your hands." · "Turn on a light.". Optional textures: smooth, rough, warm, cool, soft, hard, heavy, light. With an anchor in My Plan: "Do you have your anchor nearby?" Yes: "Hold it for a moment." No: "Find something else you can safely hold." Ends: "You found something real."
 
+### Faith & hope (6.15, opt-in)
+
+Off by default. Settings → "What gives you strength?" (optional; "Only on this phone. Tap again to clear."): Bible · Another faith or tradition · Spiritual but not religious · Nature · Family · Personal values · Something else. Only "Bible" turns on a "Need a little hope?" link on Calm and Connect; the other answers change nothing for now. Clinician or chaplain review required: for some people, religious content in distress brings guilt rather than comfort. Verses are King James Version (public domain); some are the well-known part of the verse, not the whole verse.
+- When I'm afraid: "Fear thou not; for I am with thee: be not dismayed; for I am thy God: I will strengthen thee." (Isaiah 41:10, KJV)
+- When I'm overwhelmed: "Come unto me, all ye that labour and are heavy laden, and I will give you rest." (Matthew 11:28, KJV)
+- When I'm lonely: "I will never leave thee, nor forsake thee." (Hebrews 13:5, KJV)
+- When I need hope: "Weeping may endure for a night, but joy cometh in the morning." (Psalm 30:5, KJV)
+- When I need strength: "I can do all things through Christ which strengtheneth me." (Philippians 4:13, KJV)
+- When my thoughts won't stop: "Be still, and know that I am God." (Psalm 46:10, KJV)
+
+Each passage screen: one passage, "Take this with you. Then:" Pray · Text someone · Take a walk · Ground myself · Open my plan. No scrolling, no reading plans, no daily verses.
+
+Pray: "Take a quiet moment. Pray in your own words, or just sit with it. There's no wrong way." [Done] [I'd like to talk to someone]
+
 ### Tech check (6.14)
 
 From the Tech check row on Home. Copy rule: no shame, ever. Nothing typed or tapped here is saved. Each path ends at a person or a real-world step, then the usual "How do you feel now?" check-in. Option 6, "I'm not sure what's real" (ai_reality), is NOT built: it needs clinician review first.
@@ -1781,6 +1795,81 @@ _When: distraction_
 - **Button:** Add daily reminders
 - Getting help is a strength, not a weakness. Seeing a psychiatrist, therapist or counselor is care for your mind, the same way you'd see a doctor for your body. It doesn't mean you're 'crazy', broken or weak. Lots of people get help at some point, and many feel better for it. If medication is suggested, that's a choice you make together with a professional, and it's okay either way.
 
+### `faith`
+
+- **Button:** Help _(screen reader: "Get help now")_
+- **Button:** ZigZag Mind
+- **Heading:** It's okay not to be okay.
+- You don't have to figure everything out right now.
+- **Button:** I don't feel safe — Get to a real person fast
+- **Button:** I don't know what I need
+- **Button:** Calm down
+- **Button:** Get out of my head
+- **Button:** Connect
+- **Button:** Change the scene
+- Or tell me what's happening
+- **Button:** I'm anxious
+- **Button:** I'm spiraling
+- **Button:** I have an urge to use (drink or drugs)
+- **Button:** I feel low
+- **Button:** I feel alone
+- **Button:** Just out of the ER
+- **Button:** Tech check — AI, scrolling, or checking is getting to me
+- **Button:** Home
+- **Button:** My Plan
+- **Button:** Progress
+- **Button:** Settings
+
+### `faith-passage`
+
+- **Button:** Help _(screen reader: "Get help now")_
+- **Button:** ZigZag Mind
+- **Heading:** It's okay not to be okay.
+- You don't have to figure everything out right now.
+- **Button:** I don't feel safe — Get to a real person fast
+- **Button:** I don't know what I need
+- **Button:** Calm down
+- **Button:** Get out of my head
+- **Button:** Connect
+- **Button:** Change the scene
+- Or tell me what's happening
+- **Button:** I'm anxious
+- **Button:** I'm spiraling
+- **Button:** I have an urge to use (drink or drugs)
+- **Button:** I feel low
+- **Button:** I feel alone
+- **Button:** Just out of the ER
+- **Button:** Tech check — AI, scrolling, or checking is getting to me
+- **Button:** Home
+- **Button:** My Plan
+- **Button:** Progress
+- **Button:** Settings
+
+### `faith-pray`
+
+- **Button:** Help _(screen reader: "Get help now")_
+- **Button:** ZigZag Mind
+- **Heading:** It's okay not to be okay.
+- You don't have to figure everything out right now.
+- **Button:** I don't feel safe — Get to a real person fast
+- **Button:** I don't know what I need
+- **Button:** Calm down
+- **Button:** Get out of my head
+- **Button:** Connect
+- **Button:** Change the scene
+- Or tell me what's happening
+- **Button:** I'm anxious
+- **Button:** I'm spiraling
+- **Button:** I have an urge to use (drink or drugs)
+- **Button:** I feel low
+- **Button:** I feel alone
+- **Button:** Just out of the ER
+- **Button:** Tech check — AI, scrolling, or checking is getting to me
+- **Button:** Home
+- **Button:** My Plan
+- **Button:** Progress
+- **Button:** Settings
+
 ### `tech`
 
 - **Button:** × _(screen reader: "Close and go to home")_
@@ -2330,6 +2419,15 @@ _When: distraction_
 - **Button:** In the US
 - **Button:** Outside the US
 - Auto uses your phone's time zone and language as a hint. Right now it doesn't add "Find a helpline in your country". 911 and 988 always stay on screen.
+- **Heading:** What gives you strength?
+- Optional. Only on this phone. Tap again to clear.
+- **Button:** Bible
+- **Button:** Another faith or tradition
+- **Button:** Spiritual but not religious
+- **Button:** Nature
+- **Button:** Family
+- **Button:** Personal values
+- **Button:** Something else
 - **Heading:** Your data
 - Save on this device
 - **Button:** On

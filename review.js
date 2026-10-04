@@ -232,6 +232,12 @@ P(''); P(`**Find something alive**: "Find something alive." / "Do you have a pet
 P(''); P('**Ridiculous mode** (Get out of my head only; hidden in YELLOW and after any crisis screen this visit; two per visit): "Make this less serious. Just for a moment." '+G('RIDICULOUS_LINES').map(x=>`"${x}"`).join(' · ')+' → "Okay. Back to reality."');
 P(''); P('**Find something real** (Calm): '+G('TOUCH_PROMPTS').map(x=>`"${x}"`).join(' · ')+'. Optional textures: '+G('TEXTURES').join(', ')+'. With an anchor in My Plan: "Do you have your anchor nearby?" Yes: "Hold it for a moment." No: "Find something else you can safely hold." Ends: "You found something real."');
 
+H(3,'Faith & hope (6.15, opt-in)');
+P('Off by default. Settings → "What gives you strength?" (optional; "Only on this phone. Tap again to clear."): '+G('STRENGTH_OPTIONS').map(([,l])=>l).join(' · ')+'. Only "Bible" turns on a "Need a little hope?" link on Calm and Connect; the other answers change nothing for now. Clinician or chaplain review required: for some people, religious content in distress brings guilt rather than comfort. Verses are King James Version (public domain); some are the well-known part of the verse, not the whole verse.');
+list(G('FAITH_PASSAGES').map(([,m,t,ref])=>`${m}: "${t}" (${ref}, KJV)`));
+P(''); P('Each passage screen: one passage, "Take this with you. Then:" Pray · Text someone · Take a walk · Ground myself · Open my plan. No scrolling, no reading plans, no daily verses.');
+P(''); P(`Pray: "${G('FAITH_PRAY')}" [Done] [I'd like to talk to someone]`);
+
 H(3,'Tech check (6.14)');
 P('From the Tech check row on Home. Copy rule: no shame, ever. Nothing typed or tapped here is saved. Each path ends at a person or a real-world step, then the usual "How do you feel now?" check-in. Option 6, "I\'m not sure what\'s real" (ai_reality), is NOT built: it needs clinician review first.');
 P(''); P(`Intro: "${G('TC_INTRO')}"`);

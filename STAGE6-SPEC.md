@@ -438,6 +438,8 @@ Store verse text in one constant for review. **Clinician or chaplain review requ
 
 **Tests:** off by default; only Bible unlocks it; every passage screen ends at a next action; no network calls.
 
+**As built (2026-10-04):** as above. Hebrews 13:5, Psalm 30:5, Psalm 46:10 and Isaiah 41:10 show the well-known part of the verse (KJV wording), not the whole verse; the chaplain/clinician should confirm. Pray opens a quiet moment ("Pray in your own words, or just sit with it. There's no wrong way.") with Done or "I'd like to talk to someone". Tap the same answer again to clear it. The answer is not written to the phone while saving is off, and Delete everything clears it. Tests: `faith.test.js`.
+
 ---
 
 ## Storage additions (all in `store.sensitive`)

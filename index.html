@@ -336,6 +336,11 @@ a.cw-open,a.ci-open{text-decoration:none;display:flex;align-items:center;justify
 .cw-words{margin-top:14px}
 .cw-words .sit[aria-pressed="true"]{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
 
+/* Stage 6.15: Faith & hope */
+.faith-link{display:block;margin:14px auto 0}
+.faith-next{margin-top:8px}
+.faith-next a.sit{display:inline-flex;align-items:center;text-decoration:none;color:var(--text)}
+
 /* Stage 6.14: Tech check */
 .tech-row{margin-top:14px;width:100%}
 .tc-sda .panel{margin:0}
@@ -789,6 +794,21 @@ const AFTER_NO_APPT = "No appointment yet? Ask the place you were seen to help s
 const AFTER_DAILY_TITLE = "One small thing today";
 const AFTER_DAILY_TEXT = "One small thing is enough today. Your plan is in ZigZag Mind if you need it, and 988 is there any time.";
 const AFTER_END_NOTE = "Your first 30 days are over. Your plan and your people are still here whenever you need them.";
+/* 6.15 Faith & hope. Off by default; only the person's own choice of "Bible" in Settings turns it on.
+   King James Version only (public domain). One short passage for the moment, then a next action.
+   Clinician or chaplain review required: for some people, religious content in distress brings guilt, not comfort. */
+const STRENGTH_OPTIONS = [["bible","Bible"],["faith","Another faith or tradition"],["spiritual","Spiritual but not religious"],["nature","Nature"],["family","Family"],["values","Personal values"],["other","Something else"]];
+const FAITH_PASSAGES = [
+  ["afraid","When I'm afraid","Fear thou not; for I am with thee: be not dismayed; for I am thy God: I will strengthen thee.","Isaiah 41:10"],
+  ["overwhelmed","When I'm overwhelmed","Come unto me, all ye that labour and are heavy laden, and I will give you rest.","Matthew 11:28"],
+  ["lonely","When I'm lonely","I will never leave thee, nor forsake thee.","Hebrews 13:5"],
+  ["hope","When I need hope","Weeping may endure for a night, but joy cometh in the morning.","Psalm 30:5"],
+  ["strength","When I need strength","I can do all things through Christ which strengtheneth me.","Philippians 4:13"],
+  ["thoughts","When my thoughts won't stop","Be still, and know that I am God.","Psalm 46:10"]
+];
+const FAITH_PRAY = "Take a quiet moment. Pray in your own words, or just sit with it. There's no wrong way.";
+function faithOn(){ return prefs.strength === "bible"; }
+
 /* 6.14 Tech check. No shame, ever: never "addicted", "dependent", "unhealthy" or "wrong", and never
    that feelings aren't real. The goal is more human connection and less looping, not less technology.
    Option 6 ("I'm not sure what's real", ai_reality) is on hold until a clinician reviews it. */
@@ -1311,6 +1331,7 @@ function loadStore(){
     const p = JSON.parse(localStorage.getItem(PREFS_KEY) || "null");
     if (p){
       Object.assign(prefs, p.prefs || {});
+      if (!STRENGTH_OPTIONS.some(x => x[0] === prefs.strength)) prefs.strength = null;
       savedTheme = p.theme || null;
       persistOn = p.persist !== false;
     }
@@ -1338,7 +1359,7 @@ function saveStore(){
 }
 function savePrefs(){
   if (!STORAGE_OK) return;
-  try { localStorage.setItem(PREFS_KEY, JSON.stringify({ prefs, theme:ui.theme, persist:persistOn })); } catch (_){}
+  try { localStorage.setItem(PREFS_KEY, JSON.stringify({ prefs:persistOn ? prefs : { ...prefs, strength:null }, theme:ui.theme, persist:persistOn })); } catch (_){}   // with saving off, the faith answer stays in memory
 }
 function clearSaved(){
   if (!STORAGE_OK) return;
@@ -1355,7 +1376,7 @@ function logActivity(type){
   store.sensitive.activity.push({ type, ts:Date.now() }); saveStore();
 }
 
-const prefs = { reduce:false, haptics:false, homeTipDismissed:false, onboarded:false, country:"auto", under18:false };   // under18: remembered on this device
+const prefs = { reduce:false, haptics:false, homeTipDismissed:false, onboarded:false, country:"auto", under18:false, strength:null };   // strength: 6.15, the person's own answer; null until they choose   // under18: remembered on this device
 function finishOnboarding(){ prefs.onboarded = true; savePrefs(); }   // remembered in prefs only
 
 /* Outside the US? Only ever ADDS "Find a helpline in your country" next to 988; never hides 911 or 988.
@@ -1941,7 +1962,8 @@ const SCREENS = {
       <button class="card wide zcard" data-act="zags" data-arg="calm">${zagsFace()}<span>Calm down with Zags<span class="meta">Breathe together for a few minutes</span></span></button>
       <div class="list">${opts.map(([arg, ic, t, m]) =>
         `<button class="card" data-act="calmPick" data-arg="${arg}">${icon(ic)}<span>${t}<span class="meta">${m}</span></span></button>`).join("")}
-      </div>`,
+      </div>
+      ${faithOn() ? `<button class="link faith-link" data-act="faith">Need a little hope?</button>` : ""}`,
       actions:`<button class="btn btn-secondary" data-act="route" data-arg="connect">I'd rather talk to someone</button>` };
   },
 
@@ -2543,6 +2565,7 @@ const SCREENS = {
       </div>
       <button class="card wide zcard" data-act="zags" data-arg="connect" style="margin-top:14px">${zagsFace()}<span>Stay with Zags for a few minutes<span class="meta">Until someone calls back</span></span></button>
       <button class="link" data-act="songStart" data-arg="connect">Make a song while you wait</button>
+      ${faithOn() ? `<button class="link faith-link" data-act="faith">Need a little hope?</button>` : ""}
       <p class="lbl">If it gets heavier</p>
       ${row988()}` };
   },
@@ -2587,6 +2610,39 @@ const SCREENS = {
       ${item("daily", `<span class="small">Adds them to your own calendar.</span><button class="btn btn-secondary after-btn" data-act="afterDaily">Add daily reminders</button>`)}
       ${ui.flash ? `<p class="flash" role="status">${esc(ui.flash)}</p>` : ""}
       <p class="small" style="margin-top:18px">${HELP_IS_STRENGTH}</p>` };
+  },
+
+  /* 6.15 Faith & hope (opt-in) */
+  faith(){
+    if (!faithOn()) return SCREENS.home();
+    return { close:true, body:`
+      <p class="step-count">Faith &amp; hope</p>
+      ${title("Need a little hope?")}
+      <p class="sub">Pick what fits right now.</p>
+      <div class="list">${FAITH_PASSAGES.map(([k, m]) => `<button class="card" data-act="faithPick" data-arg="${k}"><span>${m}</span></button>`).join("")}</div>` };
+  },
+  "faith-passage"(){
+    const f = FAITH_PASSAGES.find(x => x[0] === ui.faithKey);
+    if (!faithOn() || !f) return SCREENS.home();
+    const p = person();
+    return { close:true, body:`
+      <p class="step-count">${f[1]}</p>
+      ${stepTitle(`“${f[2]}”`, true)}
+      <p class="small">${f[3]} (KJV)</p>
+      <p class="sub" style="margin-top:18px">Take this with you. Then:</p>
+      <div class="sits faith-next">
+        <button class="sit" data-act="faithPray">Pray</button>
+        ${p ? `<a class="sit" href="${smsLink(p.phone, HARD_TIME_MSG)}">Text someone</a>` : `<button class="sit" data-act="route" data-arg="connect">Text someone</button>`}
+        <button class="sit" data-act="lowPick" data-arg="walking">Take a walk</button>
+        <button class="sit" data-act="lowPick" data-arg="grounding">Ground myself</button>
+        <button class="sit" data-act="planNow">Open my plan</button>
+      </div>` };
+  },
+  "faith-pray"(){
+    if (!faithOn()) return SCREENS.home();
+    return { close:true, body:`${stepTitle(FAITH_PRAY, true)}`,
+      actions:`<button class="btn btn-primary" data-act="home">Done</button>
+        <button class="btn btn-secondary" data-act="route" data-arg="connect">I'd like to talk to someone</button>` };
   },
 
   /* 6.14 Tech check */
@@ -3254,6 +3310,12 @@ const SCREENS = {
       <p class="small" style="margin-top:8px">${prefs.country === "auto"
         ? `Auto uses your phone's time zone and language as a hint. Right now it ${likelyOutsideUS() ? "adds" : "doesn't add"} "Find a helpline in your country".`
         : prefs.country === "other" ? `Crisis screens add "Find a helpline in your country".` : "Crisis screens show US numbers."} 911 and 988 always stay on screen.</p>
+      <h2>What gives you strength?</h2>
+      <p class="small" style="margin:4px 0 8px">Optional. Only on this phone. Tap again to clear.</p>
+      <div class="chips" role="group" aria-label="What gives you strength" style="margin-top:0">
+        ${STRENGTH_OPTIONS.map(([k, l]) => `<button class="hchip" data-act="strength" data-arg="${k}" aria-pressed="${prefs.strength === k}">${l}</button>`).join("")}
+      </div>
+      ${faithOn() ? `<p class="small" style="margin-top:8px">Faith &amp; hope is on: a "Need a little hope?" link on Calm and Connect.</p>` : ""}
       <h2>Your data</h2>
       ${STORAGE_OK ? `
       <p class="small" style="margin-bottom:8px">Save on this device</p>
@@ -4088,6 +4150,15 @@ const ACTIONS = {
   },
   afterEnd(){ store.sensitive.afterCrisis = null; saveStore(); ui.flash = "The first 30 days mode has ended."; render(); },
   afterEndOk(){ store.sensitive.afterCrisis = null; saveStore(); render(); },
+  /* 6.15 Faith & hope */
+  strength(arg){
+    if (!STRENGTH_OPTIONS.some(x => x[0] === arg)) return;
+    prefs.strength = prefs.strength === arg ? null : arg;   // tap again to clear
+    savePrefs(); render();
+  },
+  faith(){ if (blockIfRed()) return; if (!faithOn()) return; go("faith"); },
+  faithPick(arg){ if (blockIfRed()) return; if (!faithOn() || !FAITH_PASSAGES.some(x => x[0] === arg)) return; ui.faithKey = arg; go("faith-passage"); },
+  faithPray(){ if (blockIfRed()) return; if (!faithOn()) return; go("faith-pray"); },
   /* 6.14 Tech check */
   techStart(){ if (blockIfRed()) return; logActivity("moment"); go("tech"); },
   tcPick(arg){
@@ -4434,6 +4505,7 @@ const ACTIONS = {
   deleteAll(){
     store.sensitive = { plan:emptyPlan(), baseHistory:[], activity:[], afterCrisis:null, songs:[] };
     saveStore();
+    prefs.strength = null; savePrefs();   // 6.15: a faith answer is personal, so it goes too
     dispatch({ type:"DELETE_DATA" });
     ui.engine = null;
     ui.flash = "Everything was deleted.";

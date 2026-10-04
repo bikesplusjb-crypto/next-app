@@ -94,6 +94,7 @@ All data stays in the browser on the phone (unencrypted). The app makes no netwo
 11. "Getting help is a strength" note (`HELP_IS_STRENGTH`, shown in About, My Plan, Connect and the first 30 days checklist). It says seeing a professional "doesn't mean you're 'crazy', broken or weak" and mentions medication ("If medication is suggested, that's a choice you make together with a professional"). The intent is good, but naming "crazy", even to reject it, and saying anything about medication should be worded by a clinician. Approve, reword, or remove those two parts.
 12. Turn it into a song (6.16): the prompts, the after-song copy, the replay reflections (Lighter / About the same / Heavier), and whether replaying a hard song helps or hurts.
 13. Tech check (6.14): all copy, especially "My AI changed or is gone" ("What you felt was real…") and the boundary text for AI custom instructions. Option 6, "I'm not sure what's real" (`ai_reality`: hearing or seeing things others don't, or feeling an AI chose them for a special mission), is **not built**: it needs your wording for the professional-help message before it ships.
+14. Faith & hope (6.15, opt-in, needs a chaplain or clinician): the six KJV passages (some are the well-known part of the verse only, e.g. Psalm 30:5 without "his anger endureth but a moment"), the Pray screen, and whether any religious content during distress should be offered at all for people who chose "Bible".
 
 ## 15. Known technical questions
 

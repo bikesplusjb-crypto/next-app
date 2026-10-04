@@ -16,7 +16,7 @@ Method: read the code in `index.html`, `support/index.html` and `sw.js` at the c
 
 | Store | Used? | Key / name | Contents |
 |---|---|---|---|
-| `localStorage` | Yes | `next.v1.prefs` | Settings: reduce motion, haptics, home-screen tip dismissed, onboarded (true/false), country, theme, saving on/off, and since F6 **`under18` (true once someone answers "No, I'm under 18")**. |
+| `localStorage` | Yes | `next.v1.prefs` | Settings: reduce motion, haptics, home-screen tip dismissed, onboarded (true/false), country, theme, saving on/off, and since F6 **`under18` (true once someone answers "No, I'm under 18")**. Since 6.15, **`strength`**: the person's answer to "What gives you strength?" (for example "bible"), only if they choose one; not written while saving is off; cleared by Delete everything. |
 | `localStorage` | Yes | `next.v1.sensitive` | **My Plan** (warning signs, things that help, places, trusted people: names, relationships, phone numbers; professional; time and distance plan; things to avoid; reminders; code word with the person's phone digits; who was asked for check-ins, with phone digits) · **check-in outcomes** (state, intervention id, before/after ratings, game/Zags/scene answers, timestamp; last 500) · **activity** (type `moment` / `plan` / `reach`, timestamp; last 500; never from crisis screens or while RED, since F3) · **your first name** for check-in reminders (optional, `myName`, since F1) · **first 30 days mode** when the person turns it on (6.13: start date, end date, which optional items are ticked; nothing about the hospital visit itself) · **songs** the person chose to Keep (6.16: mood, their three lines and any added lines, date; max 50) |
 | `sessionStorage` | No | | |
 | IndexedDB | No | | |
