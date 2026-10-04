@@ -1220,6 +1220,17 @@ function fsDropPhoto(){ if (ui.fsPhoto){ try { URL.revokeObjectURL(ui.fsPhoto); 
 /* "Something that's yours": the person's own things from My Plan's "Things that help me" (not the app's own steps). */
 function yourThings(){ return (getPlan().helps || []).filter(h => !findIntervention(h)).map(helpLabel); }
 
+/* WARM & COMFORT (owner handoff, 2026-10-04): an ordinary ritual, not a treatment. The ritual is the point, not
+   caffeine: decaf and caffeine-free come first and regular coffee isn't suggested. No timer, every step skippable,
+   no tracking, no medical claims. Not offered in the craving flow. */
+const WARM_DRINKS = [["decaf","☕","Decaf coffee"],["tea","🍵","Caffeine-free tea"],["cocoa","🍫","Hot cocoa"],["milk","🥛","Warm milk"],["water","💧","Warm water"],["cider","🍎","Warm cider"],["else","","Something else"]];
+const WARM_TITLE = "Make something warm.";
+const WARM_SUB = "Nothing needs to be solved right now.";
+const WARM_HOT = "Make it comfortably warm, not dangerously hot. Set it down before you walk around with it.";
+const WARM_STEPS = ["Hold the cup for a moment.","Notice the warmth.","Take your time with the first sip."];
+const WARM_SLOW = ["Look at the drink for a moment.","Notice the smell.","Notice the warmth of the cup.","Take one slow sip."];
+const WARM_END = ["That's enough.","You don't have to stay here. Go enjoy your drink."];
+
 /* 6.19 G: Help near me (Treasure Coast). Every entry starts verified:false and is hidden; the owner confirms each by
    phone or official website (CRISIS_RESOURCE_VERIFICATION.md), fills in phone/url, and sets verified:true.
    If no entry is verified, the screen and its links are hidden entirely. */
@@ -1433,6 +1444,12 @@ INTERVENTION_LIBRARY.push(
     states:["anxious","spiraling","low","distraction","alone"], intensityRange:[0,10], needsMobility:true, realWorld:true,
     steps:["Find something worth looking at.","Take a photo if you want.","Put the phone down."], completion:"tap_done" }
 );
+// WARM & COMFORT (SENSE, real world).
+INTERVENTION_LIBRARY.push(
+  { id:"warm_comfort", name:"Make something warm", tryLabel:"Make something warm", description:"Nothing needs to be solved right now. Make something warm and take a few quiet minutes.", durationSec:300,
+    states:["anxious","spiraling","low","alone","distraction"], intensityRange:[0,10], needsMobility:true, realWorld:true,
+    steps:["Make something warm.","Hold the cup for a moment.","Take your time with the first sip."], completion:"tap_done" }
+);
 // 6.18 E5: "Be around people, no talking needed" (PEOPLE), opened from Connect only.
 INTERVENTION_LIBRARY.push(
   { id:"be_around_people", name:"Be around people", tryLabel:"Be around people", description:"No talking needed.", durationSec:900, states:[], intensityRange:[0,10], needsMobility:true,
@@ -1450,7 +1467,7 @@ const CHANNEL_OF = {
   grounding:"BODY", breathing:"BODY", hydration:"BODY", walking:"BODY", touch_real_world:"BODY",
   change_scene:"SPACE", environment_change:"SPACE", find_alive:"SPACE", craving_delay:"SPACE",
   distraction_game:"SENSE", distraction_color_hunt:"SENSE", distraction_around_me:"SENSE", distraction_categories:"SENSE",
-  distraction_memory:"SENSE", distraction_pattern:"SENSE", distraction_60_second:"SENSE", ridiculous_mode:"SENSE", zags:"SENSE", song:"SENSE", break_the_loop:"SPACE", ai_relationship_check:"PEOPLE", be_around_people:"PEOPLE", find_something:"SENSE", ai_loss:"PEOPLE", ai_reliance_check:"ACTION", ai_fomo:"ACTION",
+  distraction_memory:"SENSE", distraction_pattern:"SENSE", distraction_60_second:"SENSE", ridiculous_mode:"SENSE", zags:"SENSE", song:"SENSE", break_the_loop:"SPACE", ai_relationship_check:"PEOPLE", be_around_people:"PEOPLE", find_something:"SENSE", warm_comfort:"SENSE", ai_loss:"PEOPLE", ai_reliance_check:"ACTION", ai_fomo:"ACTION",
   connection:"PEOPLE",
   thought_parking:"ACTION", still_true:"ACTION", true_sentence:"ACTION", kind_stranger:"ACTION", borrow_ten:"ACTION", behavioral_activation:"ACTION"
 };
@@ -2468,6 +2485,7 @@ function startIntervention(interventionId, opts = {}){
     ui.touchPhase = interventionId === "touch_real_world" && getPlan().anchor ? "anchor" : null;
     route = R617[interventionId];
   }
+  if (interventionId === "warm_comfort"){ route = "warm"; ui.warmDrink = null; ui.warmStep = 0; ui.warmSlow = false; }
   if (interventionId === "find_something"){ route = "fs"; fsDropPhoto(); ui.fsIdx = opts.mission != null ? opts.mission : 1; ui.fsYours = opts.yours || null; ui.fsCaption = ""; ui.fsKept = false; ui.msg = ""; }
   if (interventionId === "song"){ route = "song"; ui.songMood = null; ui.songIdx = 0; ui.songLines = ["", "", ""]; ui.song = null; ui.songEnded = false; ui.songKept = false; ui.songReplay = false; ui.msg = ""; }
   if (interventionId === "zags"){ route = "zags"; if (!ui.zags || ui.zags.phase !== "hello") ui.zags = { phase:"hello", step:0, rounds:0, hard:0, breath:0, half:null }; }
@@ -2695,6 +2713,7 @@ const SCREENS = {
     return { close:true, body:`
       ${title(l10n("calm.title"))}
       <p class="sub">${l10n("calm.sub")}</p>
+      <button class="card wide warm-card" data-act="warmStart">${icon("calm")}<span>Make something warm<span class="meta">Nothing needs to be solved right now</span></span></button>
       <button class="card wide zcard" data-act="zags" data-arg="calm">${zagsFace()}<span>${l10n("calm.zags")}<span class="meta">${l10n("calm.zagsMeta")}</span></span></button>
       <div class="list">${opts.map(([arg, ic, t, m]) =>
         `<button class="card" data-act="calmPick" data-arg="${arg}">${icon(ic)}<span>${t}<span class="meta">${m}</span></span></button>`).join("")}
@@ -2845,6 +2864,43 @@ const SCREENS = {
       : `<button class="btn btn-primary" data-act="recTry">${esc(it.tryLabel)}</button>
         <button class="btn btn-secondary" data-act="recElse">Something else</button>
         <button class="link" data-act="phoneDown">I'm good for now</button>` };
+  },
+
+  /* WARM & COMFORT */
+  warm(){
+    return { close:true, body:`
+      <p class="step-count">Warm &amp; comfort</p>
+      ${title(WARM_TITLE)}
+      <p class="sub">${WARM_SUB}</p>
+      <div class="list warm-opts">${WARM_DRINKS.map(([k, e, l]) => `<button class="card" data-act="warmPick" data-arg="${k}">${e ? `<span class="em" aria-hidden="true">${e}</span>` : ""}<span>${l}</span></button>`).join("")}</div>` };
+  },
+  "warm-go"(){
+    return { close:true, body:`
+      ${stepTitle("Go make it.", true)}
+      <p class="sub" style="font-size:19px">Take your time.</p>
+      <p class="small warm-hot">${WARM_HOT}</p>
+      <button class="link" data-act="warmFind" style="margin-top:14px">While it's getting ready, find something around you</button>`,
+      actions:`<button class="btn btn-primary" data-act="warmReady">It's ready</button>
+        <button class="link" data-act="warmEnough">That's enough</button>` };
+  },
+  "warm-step"(){
+    const steps = ui.warmSlow ? WARM_SLOW : WARM_STEPS;
+    const i = Math.min(ui.warmStep || 0, steps.length - 1);
+    const last = i === steps.length - 1;
+    return { close:true, body:`
+      ${stepTitle(steps[i], true)}
+      ${!ui.warmSlow && i === 0 ? `<button class="link" data-act="warmSlow" style="margin-top:12px">A slower version</button>` : ""}`,
+      actions:`<button class="btn btn-primary" data-act="${last ? "warmEnough" : "warmNext"}">${last ? "Done" : "Next"}</button>
+        ${last ? "" : `<button class="link" data-act="warmEnough">That's enough</button>`}` };
+  },
+  "warm-end"(){
+    const yours = yourThings().length > 0;
+    return { close:true, body:`
+      ${stepTitle(WARM_END[0], true)}
+      <p class="sub" style="font-size:19px">${WARM_END[1]}</p>`,
+      actions:`${yours ? `<button class="btn btn-secondary" data-act="yourThings">Now go do something that's yours</button>` : ""}
+        <button class="btn btn-primary" data-act="fsDone">I'm done</button>
+        <button class="link" data-act="stepCheckin">How do I feel now?</button>` };
   },
 
   /* FIND SOMETHING */
@@ -5278,6 +5334,15 @@ const ACTIONS = {
     window.addEventListener("afterprint", clear);
     try { if (typeof window.print === "function") window.print(); } catch (_){}
   },
+  /* WARM & COMFORT */
+  warmStart(){ if (blockIfRed()) return; startIntervention("warm_comfort"); },
+  warmPick(arg){ if (blockIfRed()) return; if (!WARM_DRINKS.some(d => d[0] === arg)) return; ui.warmDrink = arg; go("warm-go"); },   // never saved
+  warmReady(){ if (blockIfRed()) return; ui.warmStep = 0; ui.warmSlow = false; go("warm-step"); },
+  warmSlow(){ if (blockIfRed()) return; ui.warmSlow = true; ui.warmStep = 0; lastRendered = null; render(); },
+  warmNext(){ if (blockIfRed()) return; ui.warmStep = (ui.warmStep || 0) + 1; lastRendered = null; render(); },
+  warmEnough(){ if (blockIfRed()) return; go("warm-end"); },
+  warmFind(){ if (blockIfRed()) return; startIntervention("find_something"); },
+
   /* FIND SOMETHING */
   fsStart(){ if (blockIfRed()) return; ui.flash = ""; startIntervention("find_something"); },
   fsAnother(){ if (blockIfRed()) return; fsDropPhoto(); ui.fsYours = null; ui.fsIdx = ((ui.fsIdx || 0) + 1) % PHOTO_MISSIONS.length; ui.fsKept = false; ui.fsCaption = ""; ui.msg = ""; lastRendered = null; go("fs"); },

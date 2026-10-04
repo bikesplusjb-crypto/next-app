@@ -512,6 +512,17 @@ Steps:
 2. Take a photo if you want.
 3. Put the phone down.
 
+### Make something warm (`warm_comfort`)
+
+- Button: "Make something warm"
+- Description: "Nothing needs to be solved right now. Make something warm and take a few quiet minutes."
+- For: anxious, spiraling, low, alone, distraction · about 5 min · needs moving around
+
+Steps:
+1. Make something warm.
+2. Hold the cup for a moment.
+3. Take your time with the first sip.
+
 ### Be around people (`be_around_people`)
 
 - Button: "Be around people"
@@ -1007,7 +1018,7 @@ On the guide when a name is given: "[name] would like you to check in now and th
 **Let's Zig** is a simple product rule, not a clinical method: after "I still feel bad" or a game's "No", the next suggestion comes from a different channel when one is available. After a recent rating of 8 or more, BODY, SPACE and PEOPLE steps come first. Safety routing always comes first: RED stops everything, and the YELLOW order (connection, own plan, grounding, fresh air) still wins.
 - `BODY`: grounding, breathing, hydration, walking, touch_real_world
 - `SPACE`: change_scene, environment_change, find_alive, craving_delay, break_the_loop
-- `SENSE`: distraction_game, distraction_color_hunt, distraction_around_me, distraction_categories, distraction_memory, distraction_pattern, distraction_60_second, ridiculous_mode, zags, song, find_something
+- `SENSE`: distraction_game, distraction_color_hunt, distraction_around_me, distraction_categories, distraction_memory, distraction_pattern, distraction_60_second, ridiculous_mode, zags, song, find_something, warm_comfort
 - `PEOPLE`: ai_relationship_check, be_around_people, ai_loss, connection
 - `ACTION`: ai_reliance_check, ai_fomo, thought_parking, still_true, true_sentence, kind_stranger, borrow_ten, behavioral_activation
 
@@ -1052,6 +1063,18 @@ With one of the person's own things: "Find something from one of your things: [t
 No camera: "No camera? That's okay." / "Just find something and look at it for a moment." [I found something] [Try something else]. After: "You found it." / "Want to write one sentence about it? Optional." (safety-checked) [Keep it] [Try another] [I'm done] / "How do I feel now?" → "Kept in Things I noticed." → "You can put the phone down now." [I'm done]
 
 Things I noticed: "Only on this phone. Not a feed, not shared." Each photo can be deleted (asks once). "Something that's yours" (used by the next features): the person's own entries from My Plan's "Things that help me", then "Go do your thing. You don't need to accomplish anything. Just spend a few minutes doing it." [I'm heading out]
+
+### Warm & comfort (owner handoff)
+
+An ordinary ritual, not a treatment; the ritual is the point, not caffeine (decaf and caffeine-free first; regular coffee isn't suggested). On Calm ("Make something warm" / "Nothing needs to be solved right now") and as a SENSE step the engine can pick (not in the craving flow). No timer, every step skippable, nothing saved.
+
+"Make something warm." / "Nothing needs to be solved right now." ☕ Decaf coffee · 🍵 Caffeine-free tea · 🍫 Hot cocoa · 🥛 Warm milk · 💧 Warm water · 🍎 Warm cider · Something else
+
+"Go make it." / "Take your time." / "Make it comfortably warm, not dangerously hot. Set it down before you walk around with it." / "While it's getting ready, find something around you" [It's ready] [That's enough]
+
+Steps: "Hold the cup for a moment." → "Notice the warmth." → "Take your time with the first sip." ("A slower version": "Look at the drink for a moment." → "Notice the smell." → "Notice the warmth of the cup." → "Take one slow sip.")
+
+End: "That's enough." / "You don't have to stay here. Go enjoy your drink." [Now go do something that's yours] [I'm done → "You can put the phone down now."] / "How do I feel now?"
 
 ### Stage 6.19: reach, trust and simplicity
 
@@ -1363,6 +1386,7 @@ Rendered for each state where the screen changes by state. Identical renders are
 - **Button:** Help _(screen reader: "Get help now")_
 - **Heading:** Let's slow things down.
 - Pick one. You can stop any time.
+- **Button:** Make something warm — Nothing needs to be solved right now
 - **Button:** Calm down with Zags — Breathe together for a few minutes
 - **Button:** Breathe for 1 minute — In for 4, out for 6
 - **Button:** 5-4-3-2-1 grounding — Notice what's around you
@@ -1565,6 +1589,51 @@ _When: distraction_
 - **Button:** Try grounding
 - **Button:** Something else
 - **Button:** I'm good for now
+
+### `warm`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Warm & comfort
+- **Heading:** Make something warm.
+- Nothing needs to be solved right now.
+- **Button:** Decaf coffee
+- **Button:** Caffeine-free tea
+- **Button:** Hot cocoa
+- **Button:** Warm milk
+- **Button:** Warm water
+- **Button:** Warm cider
+- **Button:** Something else
+
+### `warm-go`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Go make it.
+- Take your time.
+- Make it comfortably warm, not dangerously hot. Set it down before you walk around with it.
+- **Button:** While it's getting ready, find something around you
+- **Button:** It's ready
+- **Button:** That's enough
+
+### `warm-step`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Hold the cup for a moment.
+- **Button:** A slower version
+- **Button:** Next
+- **Button:** That's enough
+
+### `warm-end`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** That's enough.
+- You don't have to stay here. Go enjoy your drink.
+- **Button:** Now go do something that's yours
+- **Button:** I'm done
+- **Button:** How do I feel now?
 
 ### `fs`
 
@@ -3057,6 +3126,14 @@ _When: distraction_
 - **Button:** Help _(screen reader: "Get help now")_
 - Find something · Step 1 of 3
 - **Heading:** Find something worth looking at.
+- **Button:** Next
+
+#### Make something warm
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Make something warm · Step 1 of 3
+- **Heading:** Make something warm.
 - **Button:** Next
 
 #### Be around people

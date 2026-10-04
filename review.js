@@ -240,6 +240,13 @@ P(''); P(`With one of the person\'s own things: "Find something from one of your
 P(''); P(`No camera: "${G('FS_NOCAM[0]')}" / "${G('FS_NOCAM[1]')}" [I found something] [Try something else]. After: "${G('FS_FOUND')}" / "${G('FS_CAPTION')} Optional." (safety-checked) [Keep it] [Try another] [I\'m done] / "How do I feel now?" → "Kept in Things I noticed." → "${G('PUT_DOWN_NOW')}" [I\'m done]`);
 P(''); P('Things I noticed: "Only on this phone. Not a feed, not shared." Each photo can be deleted (asks once). "Something that\'s yours" (used by the next features): the person\'s own entries from My Plan\'s "Things that help me", then "Go do your thing. You don\'t need to accomplish anything. Just spend a few minutes doing it." [I\'m heading out]');
 
+H(3,'Warm & comfort (owner handoff)');
+P('An ordinary ritual, not a treatment; the ritual is the point, not caffeine (decaf and caffeine-free first; regular coffee isn\'t suggested). On Calm ("Make something warm" / "Nothing needs to be solved right now") and as a SENSE step the engine can pick (not in the craving flow). No timer, every step skippable, nothing saved.');
+P(''); P(`"${G('WARM_TITLE')}" / "${G('WARM_SUB')}" `+G('WARM_DRINKS').map(([,e,l])=>`${e} ${l}`.trim()).join(' · '));
+P(''); P(`"Go make it." / "Take your time." / "${G('WARM_HOT')}" / "While it\'s getting ready, find something around you" [It\'s ready] [That\'s enough]`);
+P(''); P('Steps: '+G('WARM_STEPS').map(x=>`"${x}"`).join(' → ')+' ("A slower version": '+G('WARM_SLOW').map(x=>`"${x}"`).join(' → ')+')');
+P(''); P(`End: "${G('WARM_END[0]')}" / "${G('WARM_END[1]')}" [Now go do something that\'s yours] [I\'m done → "You can put the phone down now."] / "How do I feel now?"`);
+
 H(3,'Stage 6.19: reach, trust and simplicity');
 P('A. Home, below everything else: "Worried about someone? How to help →" (opens the supporter guide at support/#worried). Supporter guide, very top: "Take it seriously, even if they seem fine. Listen more than you talk." Opening section, shown only when arriving that way: "Someone you care about is struggling." / "You don\'t need the right words. Being there and taking it seriously matters most." / "What to say →".');
 P(''); P('B. My Plan: "Print my plan" / "A full page and a wallet card to cut out. Printed from this phone; nothing is uploaded." / [ ] "Include my code word" (off by default, never saved). Printed page: "My plan for hard moments", each filled-in section, then "988 Suicide & Crisis Lifeline: call or text 988. Free, 24/7." / "911 if someone is hurt or in danger." / "✂ Cut along the dashed line" and a wallet card: first trusted person and number, "988 — call or text", "911 if someone is hurt or in danger", first reason to stay.');
