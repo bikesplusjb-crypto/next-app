@@ -65,6 +65,8 @@ Everything below happens only when the person taps something:
 
 - **Calendar files (6.13 and check-ins):** built on the phone and handed to the phone's own calendar. Nothing is sent by the app.
 
+- **Copy buttons (desktop, no phone):** the prepared message or code word goes to the clipboard only when the person taps Copy. The clipboard may sync to their other devices. Nothing is sent by the app.
+
 ## 5. Not verified here (need a person or the host)
 
 - What Render logs (IP, query strings) and for how long.

@@ -492,3 +492,7 @@ Store verse text in one constant for review. **Clinician or chaplain review requ
 ## Zags brand mark (owner request, 2026-10-04)
 
 A small, still Zags (the exact character from zags-preview.html) in these places only: next to the wordmark on Home (tap → Calm down with Zags; no talking or animation there), waving on "You're ready" (a gentle side-to-side sway three times, since the character has no arms; none with reduced motion), the onboarding welcome, empty My Plan, and empty My songs. Never on crisis, crisis-full, crisis-no, safety-check or "I need my plan" (`BRAND_ZAGS_NEVER`). On narrow screens (large text) he sits beside "Mind" so Home doesn't grow; `home-viewport.test.js` still passes. Tests: `zags-mark.test.js`.
+
+## Desktop support (owner request, 2026-10-04)
+
+Phone stays the priority. Only when the device is clearly a desktop or laptop (desktop browser, no touch; unsure means phone, `canPhone()`): every "Text 988" becomes "Chat with 988 online" (https://988lifeline.org/chat), every call button also shows the number it dials, and code word / trusted-person texts show the prepared message with a Copy button instead of an sms: link. The crisis flow and the NO-branch safety-check rule are unchanged: a Copy button from the NO branch still sets "Do you feel safer?" in the same tap. The supporter guide swaps its "Text 988" the same way. Tests: `desktop.test.js` (phone and desktop).

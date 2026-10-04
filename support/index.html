@@ -78,7 +78,7 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--focus);outline-offs
     <p>Call or text 988 together. 988 helps people who are supporting someone, too. It's free and open 24/7.</p>
     <div class="pair">
       <a class="btn" href="tel:988">Call 988</a>
-      <a class="btn" href="sms:988">Text 988</a>
+      <a class="btn" id="text988" href="sms:988">Text 988</a>
     </div>
     <a class="btn wide" href="tel:911">Call 911 if they're in danger or took something</a>
   </section>
@@ -110,6 +110,22 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--focus);outline-offs
 <footer>ZigZag Mind is a self-help support tool, not an emergency service.</footer>
 <script>
 "use strict";
+/* Desktop (no phone or SMS): "Text 988" becomes "Chat with 988 online". Phone stays the priority: unsure means phone. */
+(function(){
+  function canPhone(){
+    if (typeof window.__zzPhone === "boolean") return window.__zzPhone;
+    try {
+      var ua = navigator.userAgent || "";
+      if (navigator.userAgentData && navigator.userAgentData.mobile) return true;
+      if (/Android|iPhone|iPad|iPod|Mobi|Windows Phone|BlackBerry|webOS/i.test(ua)) return true;
+      if ((navigator.maxTouchPoints || 0) > 1) return true;
+      return !/Windows NT|Macintosh|CrOS|X11/.test(ua);
+    } catch (_){ return true; }
+  }
+  var t = document.getElementById("text988");
+  if (t && !canPhone()){ t.href = "https://988lifeline.org/chat"; t.target = "_blank"; t.rel = "noopener"; t.textContent = "Chat with 988 online"; }
+})();
+
 /* 6.10 Check-in reminders: builds an .ics calendar file (RFC 5545) on this phone. Nothing is sent or stored. */
 (function(){
   const IDEAS = ["Thinking of you. No need to reply.", "Want to grab food this week?", "How's your week going?"];

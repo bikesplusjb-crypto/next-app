@@ -983,6 +983,15 @@ About: "When something isn't helping, ZigZag doesn't tell you to try harder. It 
 
 **Find something real** (Calm): "Find something you can hold." · "Find something cooler." · "Find something warmer." · "Put both feet on the floor." · "Change your position." · "Wash your hands." · "Turn on a light.". Optional textures: smooth, rough, warm, cool, soft, hard, heavy, light. With an anchor in My Plan: "Do you have your anchor nearby?" Yes: "Hold it for a moment." No: "Find something else you can safely hold." Ends: "You found something real."
 
+### Desktop support (no phone or SMS)
+
+Phone stays the priority: links stay as they are unless the device is clearly a desktop or laptop (desktop browser, no touch). Unsure means phone. The crisis flow and the NO-branch safety-check rule are unchanged; a Copy button from the NO branch still sets "Do you feel safer?" in the same tap.
+- "Text 988" → "Chat with 988 online" (https://988lifeline.org/chat, new tab). On crisis-full and Talk the separate "Chat online with 988" button is not shown twice.
+- Call buttons add the number: "Call Jordan · 555-0142", "Call the Warm Line · 1-800-945-1355".
+- Prepared texts: "Text [name] ([number]) from your phone, or paste this anywhere:" then the message and [Copy message]. With no message: "… from your phone." [Copy number]. After copying: "Copied" (or "Couldn't copy. Select the text above.").
+- Code word setup and check-in asks: "Send it to [name] ([number]) from your phone, or paste it anywhere." [Copy message]. Connect ideas: "Tap one to copy it:".
+- About: "In crisis right now?" Call 988 · Chat with 988 online. Supporter guide: "Text 988" → "Chat with 988 online".
+
 ### Faith & hope (6.15, opt-in)
 
 Off by default. Settings → "What gives you strength?" (optional; "Only on this phone. Tap again to clear."): Bible · Another faith or tradition · Spiritual but not religious · Nature · Family · Personal values · Something else. Only "Bible" turns on a "Need a little hope?" link on Calm and Connect; the other answers change nothing for now. Clinician or chaplain review required: for some people, religious content in distress brings guilt rather than comfort. Verses are King James Version (public domain); some are the well-known part of the verse, not the whole verse.

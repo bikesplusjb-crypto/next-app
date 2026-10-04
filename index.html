@@ -237,7 +237,7 @@ textarea.field{min-height:150px;resize:vertical}
 .about-hero{padding:28px 0 8px}
 .about-hero .brand{font-size:44px;line-height:1.05}
 .about-hero .tag{font-size:24px;line-height:1.25;font-weight:600;margin:14px 0 8px}
-.crisis-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;border-radius:14px;padding:10px 14px;background:var(--safety-soft);border:1.5px solid var(--safety);margin-top:16px;font-size:15px;font-weight:600}
+.crisis-bar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;border-radius:14px;padding:10px 14px;background:var(--safety-soft);border:1.5px solid var(--safety);margin-top:16px;font-size:15px;font-weight:600}
 .crisis-bar a{white-space:nowrap}
 .how{counter-reset:how;list-style:none;padding:0;margin:8px 0 0}
 .how li{display:grid;grid-template-columns:40px 1fr;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
@@ -353,6 +353,12 @@ a.cw-open,a.ci-open{text-decoration:none;display:flex;align-items:center;justify
   .plan-head{flex-wrap:wrap;gap:6px}
   .plan-head h3{min-width:0;overflow-wrap:anywhere}
 }
+
+/* Desktop (no phone): prepared messages with a Copy button */
+.copy-msg{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+.copy-msg .small{margin:0}
+.copy-text{margin:0;padding:10px 12px;border-radius:12px;background:var(--surface);border:1px solid var(--line);font-size:15px;user-select:text;-webkit-user-select:text;overflow-wrap:anywhere}
+.desk-stack{margin-top:8px}
 
 /* Zags brand mark (still; waves only on "You're ready") */
 .brand-row{display:flex;align-items:center;gap:8px}
@@ -552,6 +558,7 @@ const HARD_TIME_MSG = "I'm having a really hard time. Can you call me?";
 const WARMLINE = {
   name:"Florida Warm Line",
   tel:"tel:18009451355",
+  number:"1-800-945-1355",
   hours:"Every day, 4pm–10pm Eastern.",
   about:"Not a crisis line. Just real people who've been through it.",
   elsewhere:"After 10pm or outside Florida: find a warmline near you",
@@ -619,6 +626,49 @@ function smsLink(phone, body){
   return body ? `sms:${digits}?&body=${encodeURIComponent(body)}` : `sms:${digits}`;
 }
 function telLink(phone){ return `tel:${String(phone).replace(/\D/g, "")}`; }
+/* Desktop support. Phone stays the priority: tel:/sms: links stay exactly as they are unless the device is
+   clearly a desktop or laptop with no phone (no touch, desktop browser). Then: "Text 988" becomes "Chat with
+   988 online", call buttons also show the number (to dial from another phone), and prepared texts show the
+   message with a Copy button. The crisis flow and the NO-branch safety-check rule (data-noexit) are unchanged. */
+function canPhone(){
+  if (typeof window.__zzPhone === "boolean") return window.__zzPhone;   // tests
+  try {
+    const ua = navigator.userAgent || "";
+    if (navigator.userAgentData && navigator.userAgentData.mobile) return true;
+    if (/Android|iPhone|iPad|iPod|Mobi|Windows Phone|BlackBerry|webOS/i.test(ua)) return true;
+    if ((navigator.maxTouchPoints || 0) > 1) return true;   // tablets, iPads that report as a Mac, touch laptops
+    return !/Windows NT|Macintosh|CrOS|X11/.test(ua);       // unsure: treat it as a phone
+  } catch (_){ return true; }
+}
+function callText(label, phone){ return canPhone() ? label : `${label} · ${esc(String(phone || "").trim())}`; }
+function pairOrStack(a, b, style = ""){ return `<div class="${canPhone() ? "pair" : "stack desk-stack"}"${style ? ` style="${style}"` : ""}>${a}${b}</div>`; }
+function copyButton(text, cls, label, attr = ""){ return `<button type="button" class="${cls}" data-copy="${esc(text)}"${attr ? " " + attr : ""}>${label}</button>`; }
+function textOrCopy({ phone, body = "", label, cls, attr = "", aria = "", extra = "" }){
+  if (canPhone()) return `<a class="${cls}" href="${smsLink(phone, body)}"${attr ? " " + attr : ""}${aria ? ` aria-label="${aria}"` : ""}${extra}>${label}</a>`;
+  const num = String(phone || "").trim();
+  return `<div class="copy-msg">
+    <p class="small">${label}${num ? ` (${esc(num)})` : ""} from your phone${body ? ", or paste this anywhere:" : "."}</p>
+    ${body ? `<p class="copy-text">${esc(body)}</p>` : ""}
+    ${copyButton(body || num, cls, body ? "Copy message" : "Copy number", attr)}</div>`;
+}
+function text988Btn(cls = "btn btn-safety"){
+  return canPhone() ? `<a class="${cls}" href="${LINKS.text988}" aria-label="Text 988, the Suicide and Crisis Lifeline">Text 988</a>`
+    : `<a class="${cls}" href="${LINKS.chat988}" target="_blank" rel="noopener" aria-label="Chat with 988 online, the Suicide and Crisis Lifeline">Chat with 988 online</a>`;
+}
+function text988Inline(){ return canPhone() ? `<a href="${LINKS.text988}">Text 988</a>` : `<a href="${LINKS.chat988}" target="_blank" rel="noopener">Chat with 988 online</a>`; }
+function copyMsg(el){
+  const text = el.getAttribute("data-copy") || "";
+  logActivity("reach");
+  const label = el.textContent;
+  const show = t => { el.textContent = t; setTimeout(() => { if (el.isConnected) el.textContent = label; }, 1800); };
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(() => show("Copied"), () => show("Couldn't copy. Select the text above."));
+      return;
+    }
+  } catch (_){}
+  show("Couldn't copy. Select the text above.");
+}
 
 /* ---------- INTERVENTION LIBRARY (array; look up with .find) ---------- */
 const INTERVENTION_LIBRARY = [
@@ -886,7 +936,7 @@ function tcTick(){
 }
 function tcPersonButtons(msg){
   const p = person();
-  return p ? `<div class="pair"><a class="btn btn-secondary" href="${smsLink(p.phone, msg)}">Text ${esc(p.name)}</a><a class="btn btn-secondary" href="${telLink(p.phone)}">Call ${esc(p.name)}</a></div>`
+  return p ? pairOrStack(textOrCopy({ phone:p.phone, body:msg, label:`Text ${esc(p.name)}`, cls:"btn btn-secondary" }), `<a class="btn btn-secondary" href="${telLink(p.phone)}">${callText(`Call ${esc(p.name)}`, p.phone)}</a>`)
     : `<button class="btn btn-secondary" data-act="route" data-arg="connect">Reach someone</button>`;
 }
 
@@ -1189,7 +1239,7 @@ function afterBar(){
   if (!afterActive() || CRISIS_SCREENS.includes(session.screen)) return "";
   return `<div class="after-bar" role="region" aria-label="First 30 days">
     <button class="after-open" data-act="afterOpen">First 30 days · support is close</button>
-    <div class="after-row"><a class="chip safety" href="${LINKS.call988}" aria-label="Call 988">Call 988</a>${codeWordButton(false, "chip")}</div></div>`;
+    <div class="${canPhone() ? "after-row" : "stack desk-stack"}"><a class="chip safety" href="${LINKS.call988}" aria-label="Call 988">Call 988</a>${codeWordButton(false, "chip")}</div></div>`;
 }
 
 /* 6.17 real-world steps: all copy, for clinician review. */
@@ -1889,7 +1939,7 @@ function codeWordButton(noexit, cls = "btn btn-outline"){
   const cw = codeWord();
   if (!cw) return "";
   const attr = noexit ? `data-act="noContact" data-noexit="1"` : "";
-  return `<a class="${cls} codeword" href="${smsLink(cw.person.phone, cw.word)}" ${attr}>Send my code word to ${esc(cw.person.name)}</a>`;
+  return textOrCopy({ phone:cw.person.phone, body:cw.word, label:`Send my code word to ${esc(cw.person.name)}`, cls:`${cls} codeword`, attr });
 }
 
 function ratingRow(selected, legendLow, legendHigh){
@@ -1903,7 +1953,7 @@ function ratingRow(selected, legendLow, legendHigh){
 function row988(){
   return `<div class="pair" style="margin-top:12px">
     <a class="btn btn-safety" href="${LINKS.call988}" aria-label="Call 988, the Suicide and Crisis Lifeline">Call 988</a>
-    <a class="btn btn-safety" href="${LINKS.text988}" aria-label="Text 988, the Suicide and Crisis Lifeline">Text 988</a>
+    ${text988Btn()}
   </div>${likelyOutsideUS() ? `
   <a class="btn btn-secondary" style="margin-top:10px" href="${LINKS.findHelpline}" target="_blank" rel="noopener">Find a helpline in your country</a>` : ""}`;
 }
@@ -1911,10 +1961,8 @@ function personButtons(msg, noexit){
   const p = person();
   if (!p) return `<p class="note">Add someone you trust in My Plan.</p>`;
   const attr = noexit ? `data-act="noContact" data-noexit="1"` : "";
-  return `<div class="pair">
-    <a class="btn btn-outline" href="${telLink(p.phone)}" ${attr} aria-label="Call ${esc(p.name)}">Call ${esc(p.name)}</a>
-    <a class="btn btn-outline" href="${smsLink(p.phone, msg)}" ${attr} aria-label="Text ${esc(p.name)}">Text ${esc(p.name)}</a>
-  </div>`;
+  return pairOrStack(`<a class="btn btn-outline" href="${telLink(p.phone)}" ${attr} aria-label="${callText(`Call ${esc(p.name)}`, p.phone)}">${callText(`Call ${esc(p.name)}`, p.phone)}</a>`,
+    textOrCopy({ phone:p.phone, body:msg, label:`Text ${esc(p.name)}`, cls:"btn btn-outline", attr, aria:`Text ${esc(p.name)}` }));
 }
 const title = t => `<h1 id="screen-title" tabindex="-1">${t}</h1>`;
 /* The ZigZag mark (Stage 7): decorative, used sparingly (Home, About, first welcome screen). */
@@ -2178,7 +2226,7 @@ const SCREENS = {
       extra += `<div class="safety-row" role="note">
         <a href="${LINKS.call911}">Already used, or took too much? Call 911.</a>
         <span>Shaking, sweating, confused, or seeing things? Withdrawal can be a medical emergency. Get medical help.</span>
-        <span>For support: <a href="${LINKS.call988}">Call 988</a> · <a href="${LINKS.text988}">Text 988</a></span>
+        <span>For support: <a href="${LINKS.call988}">Call 988</a> · ${text988Inline()}</span>
       </div>`;
     }
     return { close:true, body:`
@@ -2248,7 +2296,7 @@ const SCREENS = {
       ${stepTitle(`Your message to ${esc(p.name)}`, true)}
       <p class="kind-preview">${esc(text)}</p>
       <p class="sub">Tap below to open Messages with this ready. You decide whether to send it.</p>
-      <a class="btn btn-primary kind-open" href="${smsLink(p.phone, text)}" data-kind="1">Open Messages</a>`,
+      ${canPhone() ? `<a class="btn btn-primary kind-open" href="${smsLink(p.phone, text)}" data-kind="1">Open Messages</a>` : copyButton(text, "btn btn-primary kind-open", "Copy message")}`,
       actions:`<button class="btn btn-secondary" data-act="kindDone">Done</button>
         <button class="link" data-act="kindBack">Not right now</button>` };
   },
@@ -2367,7 +2415,8 @@ const SCREENS = {
       <p class="small">Any of these, in any order. Skip what doesn't fit.</p>
       ${todo}
       <button class="todo" data-act="crvFocus"><span class="ck" aria-hidden="true"></span><span class="tx">Play the 1-minute Focus game</span></button>
-      ${p ? `<a class="todo" href="${smsLink(p.phone, "Can you talk for a few minutes?")}"><span class="ck" aria-hidden="true"></span><span class="tx">Text ${esc(p.name)}</span></a>` : ""}
+      ${p ? (canPhone() ? `<a class="todo" href="${smsLink(p.phone, "Can you talk for a few minutes?")}"><span class="ck" aria-hidden="true"></span><span class="tx">Text ${esc(p.name)}</span></a>`
+        : textOrCopy({ phone:p.phone, body:"Can you talk for a few minutes?", label:`Text ${esc(p.name)}`, cls:"btn btn-secondary" })) : ""}
       <button class="btn btn-secondary" style="margin-top:16px" data-act="crvWave" aria-expanded="${!!ui.waveOpen}">${ui.waveOpen ? "Hide the wave" : "Ride the wave"}</button>
       ${ui.waveOpen ? `<div class="wave">
         <svg viewBox="0 0 400 90" preserveAspectRatio="none" aria-hidden="true"><g class="mv"><path d="M0 60 Q 50 20 100 60 T 200 60 T 300 60 T 400 60 T 500 60 T 600 60 T 700 60 T 800 60 V 90 H 0 Z"/></g></svg>
@@ -2376,7 +2425,7 @@ const SCREENS = {
       <div class="safety-row" role="note">
         <a href="${LINKS.call911}">Already used, or took too much? Call 911.</a>
         <span>Shaking, sweating, confused, or seeing things? Withdrawal can be a medical emergency. Get medical help.</span>
-        <span>For support: <a href="${LINKS.call988}">Call 988</a> · <a href="${LINKS.text988}">Text 988</a></span>
+        <span>For support: <a href="${LINKS.call988}">Call 988</a> · ${text988Inline()}</span>
       </div>
       <div style="display:flex;justify-content:center;margin-top:8px"><button class="link" data-act="crvBorrow">Or borrow ten minutes instead</button></div>
       <div style="display:flex;justify-content:center"><button class="link" data-act="crvUsed">I already used</button></div>`,
@@ -2391,7 +2440,7 @@ const SCREENS = {
       <div class="safety-row" role="note">
         <a href="${LINKS.call911}">Took too much, or feel unwell? Call 911.</a>
         <span>Shaking, sweating, confused, or seeing things? Withdrawal can be a medical emergency. Get medical help.</span>
-        <span>For support: <a href="${LINKS.call988}">Call 988</a> · <a href="${LINKS.text988}">Text 988</a></span>
+        <span>For support: <a href="${LINKS.call988}">Call 988</a> · ${text988Inline()}</span>
       </div>
       <h2>Want to do one small thing for the next 10 minutes?</h2>`,
       actions:`<button class="btn btn-primary" data-act="usedYes">Yes</button>
@@ -2417,10 +2466,9 @@ const SCREENS = {
     const voice = ("speechSynthesis" in window)
       ? `<button class="chip zvoice" data-act="zagsVoice" aria-pressed="${!!ui.zagsVoice}">${ui.zagsVoice ? "Voice on" : "Voice off"}</button>` : "";
     const p = person();
-    const people = `${p ? `<div class="pair">
-        <a class="btn btn-secondary" href="${smsLink(p.phone)}">Text ${esc(p.name)}</a>
-        <a class="btn btn-secondary" href="${telLink(p.phone)}">Call ${esc(p.name)}</a></div>` : ""}
-      <a class="btn btn-secondary" href="${WARMLINE.tel}">Call the Warm Line</a>
+    const people = `${p ? pairOrStack(textOrCopy({ phone:p.phone, label:`Text ${esc(p.name)}`, cls:"btn btn-secondary" }),
+        `<a class="btn btn-secondary" href="${telLink(p.phone)}">${callText(`Call ${esc(p.name)}`, p.phone)}</a>`) : ""}
+      <a class="btn btn-secondary" href="${WARMLINE.tel}">${callText("Call the Warm Line", WARMLINE.number)}</a>
       ${p ? "" : `<button class="btn btn-secondary" data-act="route" data-arg="connect">Find someone to talk to</button>`}`;
     let sub = "", actions = "";
     switch (z.phase){
@@ -2501,7 +2549,7 @@ const SCREENS = {
       <p class="lbl">Set up with your people · Code word</p>
       ${title(`Your message to ${esc(p.name)}`)}
       <p class="msg-preview">${esc(text)}</p>
-      <a class="btn btn-primary cw-open" href="${smsLink(p.phone, text)}">Open Messages</a>
+      ${canPhone() ? `<a class="btn btn-primary cw-open" href="${smsLink(p.phone, text)}">Open Messages</a>` : `<p class="small">Send it to ${esc(p.name)} (${esc(p.phone)}) from your phone, or paste it anywhere.</p>${copyButton(text, "btn btn-primary cw-open", "Copy message")}`}
       <p class="note">ZigZag Mind never sends anything for you. You tap Send.</p>
       <h2>Did you send it?</h2>`,
       actions:`<button class="btn btn-primary" data-act="cwSaved">Yes, I sent it</button>
@@ -2539,7 +2587,7 @@ const SCREENS = {
       <p class="lbl">Set up with your people · Check-in reminders</p>
       ${title(`Your message to ${esc(p.name)}`)}
       <p class="msg-preview">${esc(text)}</p>
-      <a class="btn btn-primary ci-open" href="${smsLink(p.phone, text)}">Text it to ${esc(p.name)}</a>
+      ${canPhone() ? `<a class="btn btn-primary ci-open" href="${smsLink(p.phone, text)}">Text it to ${esc(p.name)}</a>` : `<p class="small">Send it to ${esc(p.name)} (${esc(p.phone)}) from your phone, or paste it anywhere.</p>${copyButton(text, "btn btn-primary ci-open", "Copy message")}`}
       <button class="btn btn-secondary" style="margin-top:10px" data-act="ciShare">Share another way</button>
       ${ui.flash ? `<p class="flash" role="status">${esc(ui.flash)}</p>` : ""}
       <p class="note">ZigZag Mind never sends anything for you. ${firstName(getPlan().myName) ? `The link has only your first name, ${esc(firstName(getPlan().myName))}, nothing else from your plan.` : "The link has no name and nothing from your plan. Their reminders will say \"your friend\"."}</p>
@@ -2562,9 +2610,8 @@ const SCREENS = {
       <div class="panel pn"><p class="lbl">Do this first</p><p class="pn-first">${esc(firstStep())}</p></div>
       <div class="panel pn"><p class="lbl">Reach a person</p>
         ${codeWord() ? codeWordButton(no, "btn btn-primary") : ""}
-        ${people.length ? people.map(p => `<div class="pair" style="margin-top:10px">
-            <a class="btn btn-outline" href="${telLink(p.phone)}"${attr} aria-label="Call ${esc(p.name)}">Call ${esc(p.name)}</a>
-            <a class="btn btn-outline" href="${smsLink(p.phone, HARD_TIME_MSG)}"${attr} aria-label="Text ${esc(p.name)}">Text ${esc(p.name)}</a></div>`).join("")
+        ${people.length ? people.map(p => pairOrStack(`<a class="btn btn-outline" href="${telLink(p.phone)}"${attr} aria-label="${callText(`Call ${esc(p.name)}`, p.phone)}">${callText(`Call ${esc(p.name)}`, p.phone)}</a>`,
+            textOrCopy({ phone:p.phone, body:HARD_TIME_MSG, label:`Text ${esc(p.name)}`, cls:"btn btn-outline", attr:attr.trim(), aria:`Text ${esc(p.name)}` }), "margin-top:10px")).join("")
           : `<p class="small" style="margin:6px 0 0">No one in your plan yet. 988 is below, any time.</p>`}</div>
       ${pb.places.length ? `<div class="panel pn"><p class="lbl">Places I can go</p><p>${pb.places.map(esc).join(" · ")}</p></div>` : ""}
       ${tdLines ? `<div class="panel pn"><p class="lbl">My time and distance plan</p>${tdLines}</div>` : ""}
@@ -2586,19 +2633,17 @@ const SCREENS = {
         <p class="lbl">Talk to someone who's been there</p>
         <h3>${WARMLINE.name}</h3>
         <p class="small">${WARMLINE.hours} ${WARMLINE.about}</p>
-        <a class="btn btn-primary" href="${WARMLINE.tel}">Call the Warm Line</a>
+        <a class="btn btn-primary" href="${WARMLINE.tel}">${callText("Call the Warm Line", WARMLINE.number)}</a>
         <a class="conn-more" href="${WARMLINE.elsewhereUrl}" target="_blank" rel="noopener">${WARMLINE.elsewhere}</a>
       </div>
       <div class="panel conn" id="connPeople">
         <p class="lbl">Reach one of your people</p>
         ${people.length ? people.map(p => `<h3>${esc(p.name)}${p.relationship ? ` <span class="small">· ${esc(p.relationship)}</span>` : ""}</h3>
-          <div class="pair">
-            <a class="btn btn-secondary" href="${smsLink(p.phone)}" aria-label="Text ${esc(p.name)}">Text</a>
-            <a class="btn btn-secondary" href="${telLink(p.phone)}" aria-label="Call ${esc(p.name)}">Call</a>
-          </div>`).join("") + `
+          ${pairOrStack(textOrCopy({ phone:p.phone, label:canPhone() ? "Text" : `Text ${esc(p.name)}`, cls:"btn btn-secondary", aria:`Text ${esc(p.name)}` }),
+            `<a class="btn btn-secondary" href="${telLink(p.phone)}" aria-label="${callText(`Call ${esc(p.name)}`, p.phone)}">${callText("Call", p.phone)}</a>`)}`).join("") + `
           ${codeWordButton(false)}
-          <p class="small" style="margin:14px 0 8px">Don't know what to say${people.length > 1 ? ` to ${esc(first.name)}` : ""}? Tap one:</p>
-          <div class="sits">${MESSAGE_IDEAS.map(m => `<a class="sit idea" href="${smsLink(first.phone, m)}">${esc(m)}</a>`).join("")}</div>`
+          <p class="small" style="margin:14px 0 8px">Don't know what to say${people.length > 1 ? ` to ${esc(first.name)}` : ""}? ${canPhone() ? "Tap one:" : "Tap one to copy it:"}</p>
+          <div class="sits">${MESSAGE_IDEAS.map(m => canPhone() ? `<a class="sit idea" href="${smsLink(first.phone, m)}">${esc(m)}</a>` : copyButton(m, "sit idea", esc(m))).join("")}</div>`
         : `<p class="small">Add someone you trust, and they'll be here with Text and Call.</p>
           <button class="btn btn-secondary" data-act="planFromConnect">Add someone to My Plan</button>`}
       </div>
@@ -2611,8 +2656,8 @@ const SCREENS = {
 
   "human-first"(){
     const p = person();
-    const call = p ? `<a class="btn btn-primary" href="${telLink(p.phone)}">Call someone</a>` : `<button class="btn btn-primary" data-act="route" data-arg="connect">Call someone</button>`;
-    const text = p ? `<a class="btn btn-secondary" href="${smsLink(p.phone)}">Text someone</a>` : `<button class="btn btn-secondary" data-act="route" data-arg="connect">Text someone</button>`;
+    const call = p ? `<a class="btn btn-primary" href="${telLink(p.phone)}">${callText("Call someone", p.phone)}</a>` : `<button class="btn btn-primary" data-act="route" data-arg="connect">Call someone</button>`;
+    const text = p ? textOrCopy({ phone:p.phone, label:"Text someone", cls:"btn btn-secondary" }) : `<button class="btn btn-secondary" data-act="route" data-arg="connect">Text someone</button>`;
     return { close:true, body:`
       ${title("Would talking to a person help more than another answer?")}
       ${p ? `<p class="sub">${esc(p.name)} is in your plan.</p>` : ""}`,
@@ -2638,7 +2683,7 @@ const SCREENS = {
       ${afterBar()}
       ${title("Welcome home. One small thing at a time.")}
       <p class="sub">All optional. Any order.</p>
-      ${item("tell", p ? `<a class="btn btn-secondary after-btn" href="${smsLink(p.phone, AFTER_HOME_MSG)}">Text ${esc(p.name)}</a>`
+      ${item("tell", p ? textOrCopy({ phone:p.phone, body:AFTER_HOME_MSG, label:`Text ${esc(p.name)}`, cls:"btn btn-secondary after-btn" })
         : `<button class="btn btn-secondary after-btn" data-act="planEdit" data-arg="trustedPeople">Add someone to My Plan</button>`)}
       ${item("code", codeWord() ? `<span class="small">Done · ${esc(codeWord().word)} with ${esc(codeWord().person.name)}</span>` : `<button class="btn btn-secondary after-btn" data-act="cwStart">Set it up</button>`)}
       ${item("appt", `<span class="small">${AFTER_NO_APPT}</span>
@@ -2671,7 +2716,7 @@ const SCREENS = {
       <p class="sub" style="margin-top:18px">Take this with you. Then:</p>
       <div class="sits faith-next">
         <button class="sit" data-act="faithPray">Pray</button>
-        ${p ? `<a class="sit" href="${smsLink(p.phone, HARD_TIME_MSG)}">Text someone</a>` : `<button class="sit" data-act="route" data-arg="connect">Text someone</button>`}
+        ${p ? (canPhone() ? `<a class="sit" href="${smsLink(p.phone, HARD_TIME_MSG)}">Text someone</a>` : copyButton(HARD_TIME_MSG, "sit", "Copy a text for someone")) : `<button class="sit" data-act="route" data-arg="connect">Text someone</button>`}
         <button class="sit" data-act="lowPick" data-arg="walking">Take a walk</button>
         <button class="sit" data-act="lowPick" data-arg="grounding">Ground myself</button>
         <button class="sit" data-act="planNow">Open my plan</button>
@@ -2752,7 +2797,7 @@ const SCREENS = {
       <p class="small" style="margin-top:8px">Just for you to notice. Not saved.</p>
       <h2>Would one real-world connection help right now?</h2>
       <div class="list tc-real">
-        ${p ? `<a class="btn btn-secondary" href="${smsLink(p.phone, "hey")}">Text someone</a><a class="btn btn-secondary" href="${telLink(p.phone)}">Call someone</a>`
+        ${p ? `${textOrCopy({ phone:p.phone, body:"hey", label:"Text someone", cls:"btn btn-secondary" })}<a class="btn btn-secondary" href="${telLink(p.phone)}">${callText("Call someone", p.phone)}</a>`
           : `<button class="btn btn-secondary" data-act="route" data-arg="connect">Text someone</button><button class="btn btn-secondary" data-act="route" data-arg="connect">Call someone</button>`}
         <button class="btn btn-secondary" data-act="hfPeople">Be around people</button>
         <button class="btn btn-secondary" data-act="route" data-arg="scene">Go somewhere</button>
@@ -2832,7 +2877,7 @@ const SCREENS = {
       const p = person();
       after = `<p class="sub song-made">${SONG_MADE}</p>`;
       acts = `<button class="btn btn-primary" data-act="songKeep"${ui.songKept ? " disabled" : ""}>${ui.songKept ? "Kept in My songs" : "Keep it in My songs"}</button>
-        <a class="btn btn-secondary" href="${smsLink(p ? p.phone : "", SONG_SHARE_MSG)}">Share how you're doing with someone</a>
+        ${canPhone() ? `<a class="btn btn-secondary" href="${smsLink(p ? p.phone : "", SONG_SHARE_MSG)}">Share how you're doing with someone</a>` : copyButton(SONG_SHARE_MSG, "btn btn-secondary", "Copy a message for someone")}
         <button class="btn btn-secondary" data-act="songDone">Done</button>
         <button class="link" data-act="songAgain">Make another</button>`;
     } else if (ui.songEnded){
@@ -2858,8 +2903,8 @@ const SCREENS = {
     const p = person();
     return { close:true, body:`
       ${stepTitle((SONG_REFLECT[k] || SONG_REFLECT.same)[1], true)}
-      ${heavier ? `<div class="pair" style="margin-top:14px"><a class="btn btn-safety" href="tel:988">Call 988</a><a class="btn btn-safety" href="sms:988">Text 988</a></div>
-        ${p ? `<a class="btn btn-secondary" style="margin-top:10px" href="${smsLink(p.phone, HARD_TIME_MSG)}">Text ${esc(p.name)}</a>`
+      ${heavier ? `<div class="pair" style="margin-top:14px"><a class="btn btn-safety" href="tel:988">Call 988</a>${text988Btn()}</div>
+        ${p ? `<div style="margin-top:10px">${textOrCopy({ phone:p.phone, body:HARD_TIME_MSG, label:`Text ${esc(p.name)}`, cls:"btn btn-secondary" })}</div>`
           : `<button class="btn btn-secondary" style="margin-top:10px" data-act="route" data-arg="connect">Text someone you trust</button>`}` : ""}
       <h2>Add something that's still true today</h2>
       <p class="sub">It becomes a new last line, so the song grows with you.</p>
@@ -2899,7 +2944,7 @@ const SCREENS = {
     return { close:true, body:`
       <p class="step-count">Borrow ten minutes</p>
       ${stepTitle(o[2])}
-      ${o[0] === "call" && p ? `<a class="btn btn-secondary" href="${telLink(p.phone)}">Call ${esc(p.name)}</a>` : ""}
+      ${o[0] === "call" && p ? `<a class="btn btn-secondary" href="${telLink(p.phone)}">${callText(`Call ${esc(p.name)}`, p.phone)}</a>` : ""}
       ${running ? `<p class="borrow-time" id="borrowTime" role="timer" aria-label="Time left">${fmtTime(ui.borrowEnd - Date.now())}</p><p class="sub" style="text-align:center">Leave any time.</p>`
         : `<button class="btn btn-secondary" data-act="borrowTimer">Start a gentle 10-minute timer</button><p class="sub" style="margin-top:8px">Optional. Leave any time.</p>`}`,
       actions:`<button class="btn btn-primary" data-act="borrowDone">I'm done</button>` };
@@ -3127,7 +3172,7 @@ const SCREENS = {
       <h2>988 Suicide &amp; Crisis Lifeline</h2>
       <p class="small">Free, 24/7. Also for substance-use crises.</p>
       ${row988()}
-      <a class="btn btn-secondary" style="margin-top:10px" href="${LINKS.chat988}" target="_blank" rel="noopener">Chat online with 988</a>`,
+      ${canPhone() ? `<a class="btn btn-secondary" style="margin-top:10px" href="${LINKS.chat988}" target="_blank" rel="noopener">Chat online with 988</a>` : ""}`,
       actions:`<button class="btn btn-secondary" data-act="talkBack">Back</button>` };
   },
 
@@ -3155,7 +3200,7 @@ const SCREENS = {
       <div class="stack" style="margin-top:12px">
         <a class="btn btn-safety two-line" href="${LINKS.call911}">Call 911<span class="cap">If someone is hurt, or someone else is in danger</span></a>
         ${row988().replace('style="margin-top:12px"', "")}
-        <a class="btn btn-secondary" href="${LINKS.chat988}" target="_blank" rel="noopener">Chat online with 988</a>
+        ${canPhone() ? `<a class="btn btn-secondary" href="${LINKS.chat988}" target="_blank" rel="noopener">Chat online with 988</a>` : ""}
         ${codeWordButton(false)}
         ${p ? personButtons(HARD_TIME_MSG, false) : `<p class="note">Add someone you trust in My Plan.</p>`}
         <button class="btn btn-secondary" data-act="cPlaces" aria-expanded="${ui.placesOpen}">Go where other people are</button>
@@ -3202,13 +3247,11 @@ const SCREENS = {
     const head = (key, t) => `<div class="plan-head"><h3>${t}</h3>${editable ? `<button class="edit-btn" data-act="planEdit" data-arg="${key}" aria-label="Edit: ${t}">Edit</button>` : ""}</div>`;
     const people = pb.trustedPeople.length ? pb.trustedPeople.map(p => `
         <p style="margin:12px 0 8px"><strong>${esc(p.name)}</strong>${p.relationship ? ` · ${esc(p.relationship)}` : ""} · ${esc(p.phone)}</p>
-        <div class="pair">
-          <a class="btn btn-outline" href="${telLink(p.phone)}" aria-label="Call ${esc(p.name)}">Call</a>
-          <a class="btn btn-outline" href="${smsLink(p.phone, HARD_TIME_MSG)}" aria-label="Text ${esc(p.name)}">Text</a>
-        </div>
+        ${pairOrStack(`<a class="btn btn-outline" href="${telLink(p.phone)}" aria-label="${callText(`Call ${esc(p.name)}`, p.phone)}">${callText("Call", p.phone)}</a>`,
+          textOrCopy({ phone:p.phone, body:HARD_TIME_MSG, label:canPhone() ? "Text" : `Text ${esc(p.name)}`, cls:"btn btn-outline", aria:`Text ${esc(p.name)}` }))}
         ${editable ? `<button class="link share-guide" data-act="shareGuide" aria-label="Share the supporter guide with ${esc(p.name)}">Share the supporter guide</button>` : ""}`).join("") : `<p class="empty">Nobody added yet.</p>`;
     const pro = pb.professional && pb.professional.name ? `<p style="margin:14px 0 8px"><strong>${esc(pb.professional.name)}</strong>${pb.professional.phone ? ` · ${esc(pb.professional.phone)}` : ""}</p>
-        ${pb.professional.phone ? `<a class="btn btn-secondary" href="${telLink(pb.professional.phone)}">Call ${esc(pb.professional.name)}</a>` : ""}` : "";
+        ${pb.professional.phone ? `<a class="btn btn-secondary" href="${telLink(pb.professional.phone)}">${callText(`Call ${esc(pb.professional.name)}`, pb.professional.phone)}</a>` : ""}` : "";
     return { nav:editable, close:false, body:`
       ${title("My plan for hard moments")}
       ${editable && planEmpty() ? `<div class="zmark-empty">${zagsMark("zmark-lg")}</div>` : ""}
@@ -3237,7 +3280,8 @@ const SCREENS = {
         <p class="small" style="margin:4px 0 0">Private. Only on this phone.</p>
         ${TD_FIELDS.map(([k, t]) => `<p class="td-q">${t}</p>${(pb.timeDistance || {})[k] ? `<p class="td-a">${esc(pb.timeDistance[k])}</p>` : `<p class="empty">Nothing here yet.</p>`}`).join("")}
         ${editable && pb.trustedPeople.length ? `<p class="small" style="margin:14px 0 6px">Ask someone to hold onto a few things:</p>
-          <div class="sits">${pb.trustedPeople.map(p => `<a class="sit" href="${smsLink(p.phone, TD_ASK)}" aria-label="Ask ${esc(p.name)} to hold onto a few things">Ask ${esc(p.name)}</a>`).join("")}</div>` : ""}</div>
+          ${canPhone() ? `<div class="sits">${pb.trustedPeople.map(p => `<a class="sit" href="${smsLink(p.phone, TD_ASK)}" aria-label="Ask ${esc(p.name)} to hold onto a few things">Ask ${esc(p.name)}</a>`).join("")}</div>`
+            : `<p class="copy-text">${esc(TD_ASK)}</p>${copyButton(TD_ASK, "btn btn-secondary", "Copy message")}`}` : ""}</div>
       ${editable ? `<div class="panel"><div class="setup-row"><span><b>My songs</b><span class="small">${songs().length ? `${songs().length} saved on this phone` : "Songs you make and keep show up here."}</span></span>
           <button class="edit-btn" data-act="${songs().length ? "songList" : "songNew"}">${songs().length ? "Open" : "Make one"}</button></div></div>` : ""}
       <div class="panel">${head("avoid", "Things to avoid when I'm struggling")}${ul(pb.avoid)}</div>
@@ -3455,7 +3499,7 @@ const SCREENS = {
         <p class="tag" id="screen-title" tabindex="-1">Get through what's happening right now.</p>
         <p class="sub" style="font-size:17px">Small actions. Real support. One moment at a time.</p>
       </div>
-      <div class="crisis-bar"><span>In crisis right now?</span><a href="${LINKS.call988}">Call or text 988</a></div>
+      <div class="crisis-bar"><span>In crisis right now?</span>${canPhone() ? `<a href="${LINKS.call988}">Call or text 988</a>` : `<a href="${LINKS.call988}">Call 988</a> · <a href="${LINKS.chat988}" target="_blank" rel="noopener">Chat with 988 online</a>`}</div>
       <div class="stack" style="margin-top:20px">
         <button class="btn btn-primary" data-act="home">Try ZigZag Mind</button>
         <button class="btn btn-secondary" data-act="howScroll">How it works</button>
@@ -4604,6 +4648,8 @@ document.addEventListener("click", e => {
   const link = e.target.closest("a[href]");
   if (link && !link.hasAttribute("data-kind") && /^(tel:|sms:|https:\/\/988lifeline)/.test(link.getAttribute("href"))) logActivity("reach");
   if (session.screen === "zags" && ui.zagsVoice) zagsHush();   // Zags's voice stops the moment the person taps anything
+  const cp = e.target.closest("[data-copy]");
+  if (cp) copyMsg(cp);   // desktop: copy the prepared message (a data-noexit copy still goes to the safety check below)
   const el = e.target.closest("[data-act]");
   if (!el) return;
   const act = el.getAttribute("data-act");
