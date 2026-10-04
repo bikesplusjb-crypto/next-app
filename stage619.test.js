@@ -118,6 +118,27 @@ const SCREENS_ALL=w=>w.eval('Object.keys(SCREENS)');
  r.push(['A4: supporter guide "Get help together" gets the line when verified', /id="ctl"[^\n]*Text HOME to 741741/.test(synced(ON)) && !/741741/.test(synced(HTML))]);
  r.push(['A4: supporter guide is in sync with the constant (npm run sync-support)', synced()===SUPPORT]);}
 
+// ---- E. Spanish scaffolding ----
+{const w=bootSrc(HTML); const L=w.eval('L10N');
+ const used=[...new Set([...HTML.matchAll(/l10n\("([^"]+)"\)/g)].map(m=>m[1]))];
+ r.push(['E1: every string used on the listed screens is in the English table', used.length>=200 && used.every(k=>k in L.en), used.filter(k=>!(k in L.en)).join()]);
+ r.push(['E1: no unused English entries', Object.keys(L.en).every(k=>used.includes(k))]);
+ r.push(['E1: covers onboarding, Home, crisis, crisis-full, crisis-no, safety-check, Calm, Connect, My Plan, Help, Settings labels', ['ob.','home.','crisis.','crisisfull.','crisisno.','safety.','calm.','connect.','plan.','help.','set.'].every(p=>Object.keys(L.en).some(k=>k.startsWith(p)))]);
+ r.push(['E1: English stays exactly as it was (spot checks)', w.eval('l10n("crisis.title")')==="I'm glad you told me." && w.eval('l10n("home.unsafe")')==="I don't feel safe" && w.eval('l10n("crisis.back")')==="That's not what I meant — go back" && w.eval('VETERAN_LINE')==="Veteran or service member? Call 988 and press 1."]);
+ r.push(['E2: a Spanish entry for every English one, all draft:true', Object.keys(L.en).every(k=>L.es[k] && L.es[k].text && L.es[k].draft===true)]);
+ r.push(['E2/E3: SPANISH_ENABLED is false; everything renders in English', w.eval('SPANISH_ENABLED')===false && w.eval('l10nLang()')==='en' && Object.keys(L.en).every(k=>w.eval(`l10n(${JSON.stringify(k)})`)===L.en[k])]);
+ w.eval('prefs.lang="es"'); r.push(['E3: even with a saved "es" preference, nothing changes while disabled', w.eval('l10n("home.unsafe")')==="I don't feel safe"]);
+ w.eval('ACTIONS.tab("settings")'); r.push(['E3: no language switch', !/Español|Spanish|Idioma/i.test(w.document.getElementById('app').textContent) && !w.document.querySelector('[data-act="lang"], [data-act="language"], select') && !/data-act="lang/.test(HTML)]);
+ const {build}=require('./spanish-review.js');
+ r.push(['E4: docs/SPANISH_REVIEW.md is up to date (npm run spanish-review)', build()===fs.readFileSync(path.join(__dirname,'docs','SPANISH_REVIEW.md'),'utf8')]);
+ r.push(['E4: it lists every string, English and Spanish side by side', Object.keys(L.en).every(k=>build().includes('`'+k+'`'))]);
+ // E5: the guard
+ const draftCrisis=w.eval('l10nDraftCrisis()');
+ r.push(['E5: no crisis-screen string is draft when SPANISH_ENABLED is true', !w.eval('SPANISH_ENABLED') || draftCrisis.length===0, draftCrisis.slice(0,5).join()]);
+ r.push(['E5: the guard sees the current drafts (so turning Spanish on today would fail the test above)', draftCrisis.length>=40 && draftCrisis.includes('crisis.title') && draftCrisis.includes('r988.call')]);
+ const on=bootSrc(HTML.replace('const SPANISH_ENABLED = false;','const SPANISH_ENABLED = true;')); on.eval('prefs.lang="es"; openCrisis()');
+ r.push(['E5: even if it were turned on, a draft crisis line falls back to English (never shown)', on.document.getElementById('screen-title').textContent==="I'm glad you told me." && on.eval('l10n("calm.title")')==='Vamos a bajar el ritmo.']);}
+
 //@@NEXT@@
 console.log(r.map(x=>(x[1]?'PASS ':'FAIL ')+x[0]+(x[1]||!x[2]?'':' — '+x[2])).join('\n'));
 process.exit(0);

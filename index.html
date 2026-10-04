@@ -604,6 +604,449 @@ function safetyCheck(text){
   return "GREEN";
 }
 
+/* ---------- 6.19 E: STRINGS (scaffolding) ----------
+   User-facing strings for onboarding, Home, the crisis screens, Calm, Connect, My Plan, Help and Settings labels.
+   English is exactly today's wording. Spanish is a DRAFT (not reviewed by a translator or clinician): see
+   docs/SPANISH_REVIEW.md (npm run spanish-review). While SPANISH_ENABLED is false there is no language switch and
+   nothing changes for anyone. A draft crisis-screen line is never shown, even when Spanish is on. */
+const SPANISH_ENABLED = false;
+const L10N_CRISIS_PREFIXES = ["help.","r988.","person.","cw.","copy.","crisis.","crisisfull.","crisisno.","safety."];
+const L10N = {
+  en:{
+    "help.close":"Close and go to home",
+    "help.aria":"Get help now",
+    "help.label":"Help",
+    "tab.home":"Home",
+    "tab.plan":"My Plan",
+    "tab.progress":"Progress",
+    "tab.settings":"Settings",
+    "tab.aria":"Main",
+    "r988.callAria":"Call 988, the Suicide and Crisis Lifeline",
+    "r988.call":"Call 988",
+    "r988.findHelpline":"Find a helpline in your country",
+    "r988.textAria":"Text 988, the Suicide and Crisis Lifeline",
+    "r988.text":"Text 988",
+    "r988.chatAria":"Chat with 988 online, the Suicide and Crisis Lifeline",
+    "r988.chat":"Chat with 988 online",
+    "person.addSomeone":"Add someone you trust in My Plan.",
+    "person.call":"Call",
+    "person.text":"Text",
+    "cw.send":"Send my code word to",
+    "copy.fromPhone":" from your phone",
+    "copy.pasteAnywhere":", or paste this anywhere:",
+    "copy.message":"Copy message",
+    "copy.number":"Copy number",
+    "home.tagline":"It's okay not to be okay.",
+    "home.sub":"You don't have to figure everything out right now.",
+    "home.night":"It's late. Everything feels heavier at night. You don't have to decide anything before morning.",
+    "home.unsafe":"I don't feel safe",
+    "home.unsafeMeta":"Get to a real person fast",
+    "home.dontKnow":"I don't know what I need",
+    "home.calm":"Calm down",
+    "home.head":"Get out of my head",
+    "home.connect":"Connect",
+    "home.scene":"Change the scene",
+    "home.sitLabel":"Or tell me what's happening",
+    "home.anxious":"I'm anxious",
+    "home.spiraling":"I'm spiraling",
+    "home.craving":"I have an urge to use (drink or drugs)",
+    "home.low":"I feel low",
+    "home.alone":"I feel alone",
+    "home.er":"Just out of the ER",
+    "home.tech":"Tech check",
+    "home.techMeta":"AI, scrolling, or checking is getting to me",
+    "home.tip":"Add ZigZag Mind to your home screen so your plan stays with you. Tap Share, then Add to Home Screen.",
+    "home.tipOk":"Got it",
+    "home.buildPlan":"Build your plan for hard moments",
+    "home.buildPlanMeta":"Do it on a good day. It takes a few minutes.",
+    "home.worried":"Worried about someone? How to help →",
+    "ob.welcome":"Welcome to ZigZag Mind.",
+    "ob.tagline":"Your mind doesn't move in a straight line.",
+    "ob.help":"Help for hard moments, one small step at a time.",
+    "ob.danger":"In danger or thinking about suicide? Call or text 988. It's free and open 24/7.",
+    "ob.whatIs":"What it is",
+    "ob.is1":"A self-help tool for anxiety, spiraling thoughts, cravings, and low moods.",
+    "ob.is2":"Small, concrete things to try, and a plan you make yourself.",
+    "ob.is3":"Private. What you write stays on this phone.",
+    "ob.whatIsnt":"What it isn't",
+    "ob.isnt1":"Not an emergency service. Call 911 if someone is hurt or in danger.",
+    "ob.isnt2":"Not therapy, medical care, or a diagnosis.",
+    "ob.isnt3":"Not a person. It never contacts anyone for you.",
+    "privacy.link":"Privacy &amp; terms",
+    "ob.next":"Next",
+    "ob.age":"Are you 18 or older?",
+    "ob.adults":"ZigZag Mind is made for adults.",
+    "ob.adult":"Yes, I'm 18 or older",
+    "ob.minor":"No, I'm under 18",
+    "common.back":"Back",
+    "ob.minor1":"You still deserve support that fits you. If things are hard right now, 988 is free, open 24/7, and there for people of any age.",
+    "ob.minor2":"You can also talk to an adult you trust: a parent, a teacher, a school counselor, or a doctor.",
+    "ob.call911":"Call 911 if someone is hurt or in danger.",
+    "ob.planTitle":"Want to make your plan now?",
+    "ob.plan1":"Your plan holds what helps on a hard day: the early signs, things that help, people to reach, and what you want to remember.",
+    "ob.plan2":"It's easiest to make on a good day. It takes a few minutes, and it's saved only on this phone.",
+    "ob.plan3":"You'll find it any time under My Plan.",
+    "ob.planNow":"Make my plan now",
+    "ob.later":"Later",
+    "crisis.title":"I'm glad you told me.",
+    "crisis.question":"Are you in danger of hurting yourself or someone else right now?",
+    "crisis.yes":"Yes",
+    "crisis.no":"No",
+    "crisis.notSure":"I'm not sure",
+    "crisis.disclaimer":"ZigZag Mind is not an emergency service.",
+    "crisis.back":"That's not what I meant — go back",
+    "crisisfull.title":"Please reach a person right now.",
+    "crisisfull.call911":"Call 911",
+    "crisisfull.call911Cap":"If someone is hurt, or someone else is in danger",
+    "crisisfull.chat":"Chat online with 988",
+    "crisisfull.notPoliceHead":"Want someone to come to you who isn't police?",
+    "crisisfull.notPoliceText":"In many Florida counties, 211 can connect you to a mobile crisis team.",
+    "crisisfull.call211":"Call 211",
+    "crisisfull.places":"Go where other people are",
+    "crisisfull.placesDefault":"A shop, a library, a friend's place — anywhere with people.",
+    "crisisfull.reasons":"Your reasons to stay",
+    "crisis.openPlan":"Open my plan",
+    "crisisfull.distance":"If you can, put distance between yourself and anything you could use to hurt yourself.",
+    "crisis.using":"Been drinking or using? Alcohol and drugs can make hard moments feel more final. Don't decide anything tonight, and try to be near someone.",
+    "crisisno.title":"Okay. Thank you for checking in with yourself.",
+    "crisisno.help":"What would help right now?",
+    "crisisno.talk":"Talk to someone",
+    "crisisno.never":"ZigZag Mind never contacts anyone for you. These buttons open your phone.",
+    "crisisno.ground":"Do something grounding",
+    "safety.title":"Do you feel safer than a few minutes ago?",
+    "safety.notSure":"Not sure",
+    "crisis.veteran":"Veteran or service member? Call 988 and press 1.",
+    "calm.breathe":"Breathe for 1 minute",
+    "calm.breatheMeta":"In for 4, out for 6",
+    "calm.ground":"5-4-3-2-1 grounding",
+    "calm.groundMeta":"Notice what's around you",
+    "calm.feet":"Feet on the floor",
+    "calm.feetMeta":"Three tiny steps, 2 minutes",
+    "calm.true":"What's still true?",
+    "calm.trueMeta":"Start with what you know",
+    "calm.real":"Find something real",
+    "calm.realMeta":"Something you can hold, cooler, warmer",
+    "calm.also":"What's also true",
+    "calm.alsoMeta":"The sentence on repeat, and what else is true",
+    "calm.title":"Let's slow things down.",
+    "calm.sub":"Pick one. You can stop any time.",
+    "calm.zags":"Calm down with Zags",
+    "calm.zagsMeta":"Breathe together for a few minutes",
+    "common.hope":"Need a little hope?",
+    "calm.talk":"I'd rather talk to someone",
+    "connect.warmLbl":"Talk to someone who's been there",
+    "connect.warmNight":"Usually closed right now · opens at 4pm Eastern",
+    "connect.callWarm":"Call the Warm Line",
+    "connect.heavier":"If it gets heavier",
+    "connect.title":"You don't have to sit with this alone.",
+    "connect.people":"Reach one of your people",
+    "connect.dontKnow":"Don't know what to say",
+    "connect.to":"to",
+    "connect.tapOne":"Tap one:",
+    "connect.tapCopy":"Tap one to copy it:",
+    "connect.ideasNote":"You don't have to explain anything.",
+    "connect.addHint":"Add someone you trust, and they'll be here with Text and Call.",
+    "connect.addSomeone":"Add someone to My Plan",
+    "connect.around":"Be around people, no talking needed",
+    "connect.zags":"Calm down with Zags while you wait",
+    "connect.song":"Make a song while you wait",
+    "plan.h.warningSigns":"How I know a hard moment is starting",
+    "plan.h.helps":"Things that help me on my own",
+    "plan.h.reasons":"Reasons to stay",
+    "plan.h.places":"People and places that take my mind off things",
+    "plan.h.trustedPeople":"My trusted people",
+    "plan.h.professional":"Professional and crisis support",
+    "plan.h.timeDistance":"My time and distance plan",
+    "plan.h.avoid":"Things to avoid when I'm struggling",
+    "plan.h.reminders":"What I want ZigZag Mind to remind me",
+    "plan.nothing":"Nothing here yet.",
+    "plan.edit":"Edit",
+    "plan.shareGuideWith":"Share the supporter guide with",
+    "plan.shareGuide":"Share the supporter guide",
+    "plan.nobody":"Nobody added yet.",
+    "plan.title":"My plan for hard moments",
+    "plan.now":"I need my plan now",
+    "plan.subTab":"Build it on a good day, so it's ready on a hard one. Each part saves on its own.",
+    "plan.subNow":"Your plan, for right now.",
+    "plan.anchor":"My anchor:",
+    "plan.songsToo":"Your songs are here too.",
+    "plan.neverContact":"ZigZag Mind will never contact these people for you. These buttons only open your phone's call or text app.",
+    "plan.988":"988 Suicide &amp; Crisis Lifeline, free and 24/7. Always in your plan.",
+    "plan.readMore":"Read more",
+    "plan.setup":"Set up with your people",
+    "plan.codeWord":"Code word",
+    "plan.with":"with",
+    "plan.codeWordHint":"One word that means: I'm struggling, call me.",
+    "plan.change":"Change",
+    "plan.setUp":"Set up",
+    "plan.removeCode":"Remove code word",
+    "plan.td":"Time and distance plan",
+    "plan.done":"Done",
+    "plan.tdHint":"What you'll keep away during hard times, and who holds it.",
+    "plan.checkins":"Check-in reminders",
+    "plan.asked":"Asked:",
+    "plan.checkinsHint":"Ask someone to check in on you now and then.",
+    "plan.askSomeone":"Ask someone",
+    "plan.private":"Private. Only on this phone.",
+    "plan.holdAsk":"Ask someone to hold onto a few things:",
+    "plan.ask":"Ask",
+    "plan.holdAria":"to hold onto a few things",
+    "plan.print":"Print my plan",
+    "plan.printHint":"A full page and a wallet card to cut out. Printed from this phone; nothing is uploaded.",
+    "plan.printCode":"Include my code word",
+    "plan.songs":"My songs",
+    "plan.songsSaved":"saved on this phone",
+    "plan.songsHint":"Songs you make and keep show up here.",
+    "plan.open":"Open",
+    "plan.makeOne":"Make one",
+    "plan.imDone":"I'm done",
+    "set.appearance":"Appearance",
+    "set.auto":"Auto",
+    "set.light":"Light",
+    "set.dark":"Dark",
+    "set.motion":"Motion",
+    "set.matchPhone":"Match my phone",
+    "set.reduce":"Reduce motion",
+    "set.haptics":"Haptics",
+    "set.off":"Off",
+    "set.on":"On",
+    "set.hapticsHint":"A light tap when you finish a step. Not every phone supports this.",
+    "set.where":"Where you are",
+    "set.inUS":"In the US",
+    "set.outsideUS":"Outside the US",
+    "set.strength":"What gives you strength?",
+    "set.strengthHint":"Optional. Only on this phone. Tap again to clear.",
+    "set.data":"Your data",
+    "set.save":"Save on this device",
+    "set.export":"Export my data",
+    "set.sample":"Load sample data",
+    "set.delete":"Delete everything",
+    "set.afterEnd":"End the first 30 days mode",
+    "set.about":"About",
+    "set.aboutApp":"About ZigZag Mind"
+  },
+  es:{
+    "help.close":{ text:"Cerrar e ir al inicio", draft:true },
+    "help.aria":{ text:"Conseguir ayuda ahora", draft:true },
+    "help.label":{ text:"Ayuda", draft:true },
+    "tab.home":{ text:"Inicio", draft:true },
+    "tab.plan":{ text:"Mi plan", draft:true },
+    "tab.progress":{ text:"Progreso", draft:true },
+    "tab.settings":{ text:"Ajustes", draft:true },
+    "tab.aria":{ text:"Principal", draft:true },
+    "r988.callAria":{ text:"Llamar al 988, la Línea de Prevención del Suicidio y Crisis", draft:true },
+    "r988.call":{ text:"Llamar al 988", draft:true },
+    "r988.findHelpline":{ text:"Buscar una línea de ayuda en tu país", draft:true },
+    "r988.textAria":{ text:"Enviar un mensaje al 988, la Línea de Prevención del Suicidio y Crisis", draft:true },
+    "r988.text":{ text:"Mensaje al 988", draft:true },
+    "r988.chatAria":{ text:"Chatear en línea con el 988, la Línea de Prevención del Suicidio y Crisis", draft:true },
+    "r988.chat":{ text:"Chatear con el 988 en línea", draft:true },
+    "person.addSomeone":{ text:"Agrega a alguien de confianza en Mi plan.", draft:true },
+    "person.call":{ text:"Llamar a", draft:true },
+    "person.text":{ text:"Mensaje a", draft:true },
+    "cw.send":{ text:"Enviar mi palabra clave a", draft:true },
+    "copy.fromPhone":{ text:" desde tu teléfono", draft:true },
+    "copy.pasteAnywhere":{ text:", o pega esto donde quieras:", draft:true },
+    "copy.message":{ text:"Copiar mensaje", draft:true },
+    "copy.number":{ text:"Copiar número", draft:true },
+    "home.tagline":{ text:"Está bien no estar bien.", draft:true },
+    "home.sub":{ text:"No tienes que resolverlo todo ahora mismo.", draft:true },
+    "home.night":{ text:"Es tarde. De noche todo pesa más. No tienes que decidir nada antes de la mañana.", draft:true },
+    "home.unsafe":{ text:"No me siento a salvo", draft:true },
+    "home.unsafeMeta":{ text:"Hablar con una persona real, rápido", draft:true },
+    "home.dontKnow":{ text:"No sé qué necesito", draft:true },
+    "home.calm":{ text:"Calmarme", draft:true },
+    "home.head":{ text:"Salir de mi cabeza", draft:true },
+    "home.connect":{ text:"Conectar", draft:true },
+    "home.scene":{ text:"Cambiar de ambiente", draft:true },
+    "home.sitLabel":{ text:"O dime qué está pasando", draft:true },
+    "home.anxious":{ text:"Tengo ansiedad", draft:true },
+    "home.spiraling":{ text:"Mis pensamientos no paran", draft:true },
+    "home.craving":{ text:"Tengo ganas de consumir (alcohol o drogas)", draft:true },
+    "home.low":{ text:"Me siento decaído", draft:true },
+    "home.alone":{ text:"Me siento solo", draft:true },
+    "home.er":{ text:"Acabo de salir de urgencias", draft:true },
+    "home.tech":{ text:"Revisión de tecnología", draft:true },
+    "home.techMeta":{ text:"La IA, las redes o revisar el teléfono me están afectando", draft:true },
+    "home.tip":{ text:"Agrega ZigZag Mind a tu pantalla de inicio para tener tu plan a mano. Toca Compartir y luego Agregar a inicio.", draft:true },
+    "home.tipOk":{ text:"Entendido", draft:true },
+    "home.buildPlan":{ text:"Haz tu plan para los momentos difíciles", draft:true },
+    "home.buildPlanMeta":{ text:"Hazlo en un buen día. Toma unos minutos.", draft:true },
+    "home.worried":{ text:"¿Te preocupa alguien? Cómo ayudar →", draft:true },
+    "ob.welcome":{ text:"Te damos la bienvenida a ZigZag Mind.", draft:true },
+    "ob.tagline":{ text:"Tu mente no se mueve en línea recta.", draft:true },
+    "ob.help":{ text:"Ayuda para los momentos difíciles, un pequeño paso a la vez.", draft:true },
+    "ob.danger":{ text:"¿Estás en peligro o pensando en el suicidio? Llama o envía un mensaje al 988. Es gratis y está abierto las 24 horas.", draft:true },
+    "ob.whatIs":{ text:"Qué es", draft:true },
+    "ob.is1":{ text:"Una herramienta de autoayuda para la ansiedad, los pensamientos que no paran, las ganas de consumir y el ánimo bajo.", draft:true },
+    "ob.is2":{ text:"Cosas pequeñas y concretas para probar, y un plan que haces tú.", draft:true },
+    "ob.is3":{ text:"Privado. Lo que escribes se queda en este teléfono.", draft:true },
+    "ob.whatIsnt":{ text:"Qué no es", draft:true },
+    "ob.isnt1":{ text:"No es un servicio de emergencia. Llama al 911 si alguien está herido o en peligro.", draft:true },
+    "ob.isnt2":{ text:"No es terapia, atención médica ni un diagnóstico.", draft:true },
+    "ob.isnt3":{ text:"No es una persona. Nunca contacta a nadie por ti.", draft:true },
+    "privacy.link":{ text:"Privacidad y condiciones", draft:true },
+    "ob.next":{ text:"Siguiente", draft:true },
+    "ob.age":{ text:"¿Tienes 18 años o más?", draft:true },
+    "ob.adults":{ text:"ZigZag Mind está hecho para adultos.", draft:true },
+    "ob.adult":{ text:"Sí, tengo 18 años o más", draft:true },
+    "ob.minor":{ text:"No, tengo menos de 18", draft:true },
+    "common.back":{ text:"Atrás", draft:true },
+    "ob.minor1":{ text:"Igual mereces apoyo hecho para ti. Si las cosas están difíciles ahora, el 988 es gratis, está abierto las 24 horas y es para personas de cualquier edad.", draft:true },
+    "ob.minor2":{ text:"También puedes hablar con un adulto de confianza: tu mamá o papá, un maestro, un consejero escolar o un médico.", draft:true },
+    "ob.call911":{ text:"Llama al 911 si alguien está herido o en peligro.", draft:true },
+    "ob.planTitle":{ text:"¿Quieres hacer tu plan ahora?", draft:true },
+    "ob.plan1":{ text:"Tu plan guarda lo que te ayuda en un día difícil: las primeras señales, lo que te ayuda, las personas a quienes acudir y lo que quieres recordar.", draft:true },
+    "ob.plan2":{ text:"Es más fácil hacerlo en un buen día. Toma unos minutos y se guarda solo en este teléfono.", draft:true },
+    "ob.plan3":{ text:"Lo encontrarás siempre en Mi plan.", draft:true },
+    "ob.planNow":{ text:"Hacer mi plan ahora", draft:true },
+    "ob.later":{ text:"Más tarde", draft:true },
+    "crisis.title":{ text:"Me alegra que me lo dijeras.", draft:true },
+    "crisis.question":{ text:"¿Estás en peligro de hacerte daño o de hacerle daño a alguien ahora mismo?", draft:true },
+    "crisis.yes":{ text:"Sí", draft:true },
+    "crisis.no":{ text:"No", draft:true },
+    "crisis.notSure":{ text:"No estoy seguro", draft:true },
+    "crisis.disclaimer":{ text:"ZigZag Mind no es un servicio de emergencia.", draft:true },
+    "crisis.back":{ text:"No era eso lo que quise decir — volver", draft:true },
+    "crisisfull.title":{ text:"Por favor, busca a una persona ahora mismo.", draft:true },
+    "crisisfull.call911":{ text:"Llamar al 911", draft:true },
+    "crisisfull.call911Cap":{ text:"Si alguien está herido, o si otra persona está en peligro", draft:true },
+    "crisisfull.chat":{ text:"Chatear en línea con el 988", draft:true },
+    "crisisfull.notPoliceHead":{ text:"¿Quieres que venga alguien que no sea la policía?", draft:true },
+    "crisisfull.notPoliceText":{ text:"En muchos condados de Florida, el 211 puede conectarte con un equipo móvil de crisis.", draft:true },
+    "crisisfull.call211":{ text:"Llamar al 211", draft:true },
+    "crisisfull.places":{ text:"Ir a donde haya otras personas", draft:true },
+    "crisisfull.placesDefault":{ text:"Una tienda, una biblioteca, la casa de un amigo — cualquier lugar con gente.", draft:true },
+    "crisisfull.reasons":{ text:"Tus razones para quedarte", draft:true },
+    "crisis.openPlan":{ text:"Abrir mi plan", draft:true },
+    "crisisfull.distance":{ text:"Si puedes, pon distancia entre tú y cualquier cosa que pudieras usar para hacerte daño.", draft:true },
+    "crisis.using":{ text:"¿Has bebido o consumido? El alcohol y las drogas pueden hacer que los momentos difíciles se sientan más definitivos. No decidas nada esta noche y trata de estar cerca de alguien.", draft:true },
+    "crisisno.title":{ text:"Está bien. Gracias por tomarte un momento para ver cómo estás.", draft:true },
+    "crisisno.help":{ text:"¿Qué te ayudaría ahora mismo?", draft:true },
+    "crisisno.talk":{ text:"Hablar con alguien", draft:true },
+    "crisisno.never":{ text:"ZigZag Mind nunca contacta a nadie por ti. Estos botones abren tu teléfono.", draft:true },
+    "crisisno.ground":{ text:"Hacer algo para centrarme", draft:true },
+    "safety.title":{ text:"¿Te sientes más a salvo que hace unos minutos?", draft:true },
+    "safety.notSure":{ text:"No estoy seguro", draft:true },
+    "crisis.veteran":{ text:"¿Eres veterano o militar? Llama al 988 y oprime 1.", draft:true },
+    "calm.breathe":{ text:"Respirar 1 minuto", draft:true },
+    "calm.breatheMeta":{ text:"Inhala en 4, exhala en 6", draft:true },
+    "calm.ground":{ text:"Ejercicio 5-4-3-2-1", draft:true },
+    "calm.groundMeta":{ text:"Fíjate en lo que te rodea", draft:true },
+    "calm.feet":{ text:"Pies en el suelo", draft:true },
+    "calm.feetMeta":{ text:"Tres pasos pequeños, 2 minutos", draft:true },
+    "calm.true":{ text:"¿Qué sigue siendo cierto?", draft:true },
+    "calm.trueMeta":{ text:"Empieza con lo que sabes", draft:true },
+    "calm.real":{ text:"Encuentra algo real", draft:true },
+    "calm.realMeta":{ text:"Algo que puedas sostener, más fresco, más tibio", draft:true },
+    "calm.also":{ text:"Lo que también es cierto", draft:true },
+    "calm.alsoMeta":{ text:"La frase que se repite, y qué más es cierto", draft:true },
+    "calm.title":{ text:"Vamos a bajar el ritmo.", draft:true },
+    "calm.sub":{ text:"Elige una. Puedes parar cuando quieras.", draft:true },
+    "calm.zags":{ text:"Calmarme con Zags", draft:true },
+    "calm.zagsMeta":{ text:"Respirar juntos unos minutos", draft:true },
+    "common.hope":{ text:"¿Necesitas un poco de esperanza?", draft:true },
+    "calm.talk":{ text:"Prefiero hablar con alguien", draft:true },
+    "connect.warmLbl":{ text:"Habla con alguien que ha pasado por esto", draft:true },
+    "connect.warmNight":{ text:"Normalmente cerrado a esta hora · abre a las 4pm hora del Este", draft:true },
+    "connect.callWarm":{ text:"Llamar a la Warm Line", draft:true },
+    "connect.heavier":{ text:"Si se pone más difícil", draft:true },
+    "connect.title":{ text:"No tienes que pasar por esto a solas.", draft:true },
+    "connect.people":{ text:"Busca a una de tus personas", draft:true },
+    "connect.dontKnow":{ text:"¿No sabes qué decir", draft:true },
+    "connect.to":{ text:"a", draft:true },
+    "connect.tapOne":{ text:"Toca uno:", draft:true },
+    "connect.tapCopy":{ text:"Toca uno para copiarlo:", draft:true },
+    "connect.ideasNote":{ text:"No tienes que explicar nada.", draft:true },
+    "connect.addHint":{ text:"Agrega a alguien de confianza y aparecerá aquí con Mensaje y Llamar.", draft:true },
+    "connect.addSomeone":{ text:"Agregar a alguien a Mi plan", draft:true },
+    "connect.around":{ text:"Estar cerca de gente, sin tener que hablar", draft:true },
+    "connect.zags":{ text:"Calmarme con Zags mientras espero", draft:true },
+    "connect.song":{ text:"Hacer una canción mientras espero", draft:true },
+    "plan.h.warningSigns":{ text:"Cómo sé que empieza un momento difícil", draft:true },
+    "plan.h.helps":{ text:"Lo que me ayuda por mi cuenta", draft:true },
+    "plan.h.reasons":{ text:"Razones para quedarme", draft:true },
+    "plan.h.places":{ text:"Personas y lugares que me distraen", draft:true },
+    "plan.h.trustedPeople":{ text:"Mis personas de confianza", draft:true },
+    "plan.h.professional":{ text:"Apoyo profesional y de crisis", draft:true },
+    "plan.h.timeDistance":{ text:"Mi plan de tiempo y distancia", draft:true },
+    "plan.h.avoid":{ text:"Lo que debo evitar cuando estoy mal", draft:true },
+    "plan.h.reminders":{ text:"Lo que quiero que ZigZag Mind me recuerde", draft:true },
+    "plan.nothing":{ text:"Todavía no hay nada aquí.", draft:true },
+    "plan.edit":{ text:"Editar", draft:true },
+    "plan.shareGuideWith":{ text:"Compartir la guía para quien apoya con", draft:true },
+    "plan.shareGuide":{ text:"Compartir la guía para quien apoya", draft:true },
+    "plan.nobody":{ text:"Todavía no has agregado a nadie.", draft:true },
+    "plan.title":{ text:"Mi plan para los momentos difíciles", draft:true },
+    "plan.now":{ text:"Necesito mi plan ahora", draft:true },
+    "plan.subTab":{ text:"Hazlo en un buen día para tenerlo listo en uno difícil. Cada parte se guarda sola.", draft:true },
+    "plan.subNow":{ text:"Tu plan, para este momento.", draft:true },
+    "plan.anchor":{ text:"Mi ancla:", draft:true },
+    "plan.songsToo":{ text:"Tus canciones también están aquí.", draft:true },
+    "plan.neverContact":{ text:"ZigZag Mind nunca contactará a estas personas por ti. Estos botones solo abren la app de llamadas o mensajes de tu teléfono.", draft:true },
+    "plan.988":{ text:"988 Línea de Prevención del Suicidio y Crisis, gratis y las 24 horas. Siempre en tu plan.", draft:true },
+    "plan.readMore":{ text:"Leer más", draft:true },
+    "plan.setup":{ text:"Prepáralo con tus personas", draft:true },
+    "plan.codeWord":{ text:"Palabra clave", draft:true },
+    "plan.with":{ text:"con", draft:true },
+    "plan.codeWordHint":{ text:"Una palabra que significa: estoy pasándola mal, llámame.", draft:true },
+    "plan.change":{ text:"Cambiar", draft:true },
+    "plan.setUp":{ text:"Configurar", draft:true },
+    "plan.removeCode":{ text:"Quitar la palabra clave", draft:true },
+    "plan.td":{ text:"Plan de tiempo y distancia", draft:true },
+    "plan.done":{ text:"Listo", draft:true },
+    "plan.tdHint":{ text:"Lo que mantendrás lejos en los momentos difíciles, y quién lo guarda.", draft:true },
+    "plan.checkins":{ text:"Recordatorios para que te pregunten cómo estás", draft:true },
+    "plan.asked":{ text:"Se lo pediste a:", draft:true },
+    "plan.checkinsHint":{ text:"Pídele a alguien que te pregunte cómo estás de vez en cuando.", draft:true },
+    "plan.askSomeone":{ text:"Pedírselo a alguien", draft:true },
+    "plan.private":{ text:"Privado. Solo en este teléfono.", draft:true },
+    "plan.holdAsk":{ text:"Pídele a alguien que guarde algunas cosas por ti:", draft:true },
+    "plan.ask":{ text:"Pedírselo a", draft:true },
+    "plan.holdAria":{ text:"para que guarde algunas cosas", draft:true },
+    "plan.print":{ text:"Imprimir mi plan", draft:true },
+    "plan.printHint":{ text:"Una página completa y una tarjeta para la cartera. Se imprime desde este teléfono; no se sube nada.", draft:true },
+    "plan.printCode":{ text:"Incluir mi palabra clave", draft:true },
+    "plan.songs":{ text:"Mis canciones", draft:true },
+    "plan.songsSaved":{ text:"guardadas en este teléfono", draft:true },
+    "plan.songsHint":{ text:"Las canciones que hagas y guardes aparecerán aquí.", draft:true },
+    "plan.open":{ text:"Abrir", draft:true },
+    "plan.makeOne":{ text:"Hacer una", draft:true },
+    "plan.imDone":{ text:"Terminé", draft:true },
+    "set.appearance":{ text:"Apariencia", draft:true },
+    "set.auto":{ text:"Automático", draft:true },
+    "set.light":{ text:"Claro", draft:true },
+    "set.dark":{ text:"Oscuro", draft:true },
+    "set.motion":{ text:"Movimiento", draft:true },
+    "set.matchPhone":{ text:"Igual que mi teléfono", draft:true },
+    "set.reduce":{ text:"Reducir movimiento", draft:true },
+    "set.haptics":{ text:"Vibración", draft:true },
+    "set.off":{ text:"Apagado", draft:true },
+    "set.on":{ text:"Encendido", draft:true },
+    "set.hapticsHint":{ text:"Una vibración suave al terminar un paso. No todos los teléfonos lo permiten.", draft:true },
+    "set.where":{ text:"Dónde estás", draft:true },
+    "set.inUS":{ text:"En EE. UU.", draft:true },
+    "set.outsideUS":{ text:"Fuera de EE. UU.", draft:true },
+    "set.strength":{ text:"¿Qué te da fuerza?", draft:true },
+    "set.strengthHint":{ text:"Opcional. Solo en este teléfono. Toca de nuevo para borrar.", draft:true },
+    "set.data":{ text:"Tus datos", draft:true },
+    "set.save":{ text:"Guardar en este dispositivo", draft:true },
+    "set.export":{ text:"Exportar mis datos", draft:true },
+    "set.sample":{ text:"Cargar datos de ejemplo", draft:true },
+    "set.delete":{ text:"Borrar todo", draft:true },
+    "set.afterEnd":{ text:"Terminar el modo de los primeros 30 días", draft:true },
+    "set.about":{ text:"Acerca de", draft:true },
+    "set.aboutApp":{ text:"Acerca de ZigZag Mind", draft:true }
+  }
+};
+function l10nLang(){ return SPANISH_ENABLED && prefs.lang === "es" ? "es" : "en"; }
+function l10nIsCrisis(k){ return L10N_CRISIS_PREFIXES.some(p => k.startsWith(p)); }
+function l10n(key){
+  if (l10nLang() === "es"){ const e = L10N.es[key]; if (e && !(e.draft && l10nIsCrisis(key))) return e.text; }   // never a draft crisis line
+  return L10N.en[key] !== undefined ? L10N.en[key] : key;
+}
+function l10nDraftCrisis(){ return Object.keys(L10N.es).filter(k => l10nIsCrisis(k) && L10N.es[k].draft); }
+
 /* ---------- CRISIS CONTACTS ---------- */
 const LINKS = {
   call988: "tel:988",
@@ -680,19 +1123,19 @@ function firstStep(){
 const MESSAGE_IDEAS = ["Can't sleep, you up?","Rough night. Can you talk for 5 minutes?","Want to catch up this week?","Hey. Just saying hi.","Got a minute?"];   // last two: 6.18 E4 tiny signals
 /* 6.18 D: research-backed additions. OWNER-APPROVED INTERIM, pending clinician. Nothing here is saved or tracked. */
 /* 6.18 E: small copy additions. */
-const TAGLINE_ZIG = "Your mind doesn't move in a straight line.";
+const TAGLINE_ZIG = L10N.en["ob.tagline"];
 const PROMISE = "We'll help you find something you can do next. If one direction doesn't help, we'll try another.";
 const DIRECTIONS = [["BODY","Body","Change something physical"],["SPACE","Space","Change where you are"],["SENSE","Sense","Give your senses something to do"],["PEOPLE","People","Reach a person"],["ACTION","Action","One tiny thing"]];
-const IDEAS_NOTE = "You don't have to explain anything.";
+const IDEAS_NOTE = L10N.en["connect.ideasNote"];
 const AROUND_PEOPLE = "You don't have to talk. Sit with someone at home, or go somewhere familiar with people around.";
 const MINUTE_MS = 60 * 1000;
 const NIGHT_IDEA = MESSAGE_IDEAS[0];   // "Can't sleep, you up?" (already a message idea): first at night
-const VETERAN_LINE = "Veteran or service member? Call 988 and press 1.";
-const NIGHT_HOME_LINE = "It's late. Everything feels heavier at night. You don't have to decide anything before morning.";
-const WARMLINE_NIGHT = "Usually closed right now · opens at 4pm Eastern";
-const USING_LINE = "Been drinking or using? Alcohol and drugs can make hard moments feel more final. Don't decide anything tonight, and try to be near someone.";
-const NOT_POLICE_HEAD = "Want someone to come to you who isn't police?";
-const NOT_POLICE_TEXT = "In many Florida counties, 211 can connect you to a mobile crisis team.";   // clinician review; owner to confirm local availability
+const VETERAN_LINE = L10N.en["crisis.veteran"];
+const NIGHT_HOME_LINE = L10N.en["home.night"];
+const WARMLINE_NIGHT = L10N.en["connect.warmNight"];
+const USING_LINE = L10N.en["crisis.using"];
+const NOT_POLICE_HEAD = L10N.en["crisisfull.notPoliceHead"];
+const NOT_POLICE_TEXT = L10N.en["crisisfull.notPoliceText"];   // clinician review; owner to confirm local availability
 const REASONS_HINT = "People, plans, things you're looking forward to, songs, anything.";
 const GUN_LINE = "If there's a gun at home: the safest step during hard times is to store it away from the person for a while — with someone you trust, or at a gun shop, range, or police department that offers temporary storage. It's temporary, and it's yours.";   // clinician review; never on crisis screens
 // Night: 00:00–05:59 by the phone's clock, read on each render. Nothing about it is saved.
@@ -707,7 +1150,7 @@ function ctlLine(){
   if (!ctlShown()) return "";
   return `<p class="note ctl-line">Rather text a stranger? ${canPhone() ? `<a href="${CRISIS_TEXT_LINE.sms}">${CRISIS_TEXT_LINE.instruction}</a>` : CRISIS_TEXT_LINE.instruction} (${CRISIS_TEXT_LINE.name}).</p>`;
 }
-const vetLine = () => `<p class="note vet-line">${VETERAN_LINE}</p>`;
+const vetLine = () => `<p class="note vet-line">${l10n("crisis.veteran")}</p>`;
 /* Human First (session only, never saved): after 2 taps on "Something else", or 2 finished steps without
    "That helped", ask once per visit whether a person would help more. */
 const HUMAN_FIRST_AFTER = 2;
@@ -737,13 +1180,13 @@ function textOrCopy({ phone, body = "", label, cls, attr = "", aria = "", extra 
   if (canPhone()) return `<a class="${cls}" href="${smsLink(phone, body)}"${attr ? " " + attr : ""}${aria ? ` aria-label="${aria}"` : ""}${extra}>${label}</a>`;
   const num = String(phone || "").trim();
   return `<div class="copy-msg">
-    <p class="small">${label}${num ? ` (${esc(num)})` : ""} from your phone${body ? ", or paste this anywhere:" : "."}</p>
+    <p class="small">${label}${num ? ` (${esc(num)})` : ""}${l10n("copy.fromPhone")}${body ? l10n("copy.pasteAnywhere") : "."}</p>
     ${body ? `<p class="copy-text">${esc(body)}</p>` : ""}
-    ${copyButton(body || num, cls, body ? "Copy message" : "Copy number", attr)}</div>`;
+    ${copyButton(body || num, cls, body ? l10n("copy.message") : l10n("copy.number"), attr)}</div>`;
 }
 function text988Btn(cls = "btn btn-safety"){
-  return canPhone() ? `<a class="${cls}" href="${LINKS.text988}" aria-label="Text 988, the Suicide and Crisis Lifeline">Text 988</a>`
-    : `<a class="${cls}" href="${LINKS.chat988}" target="_blank" rel="noopener" aria-label="Chat with 988 online, the Suicide and Crisis Lifeline">Chat with 988 online</a>`;
+  return canPhone() ? `<a class="${cls}" href="${LINKS.text988}" aria-label="${l10n("r988.textAria")}">${l10n("r988.text")}</a>`
+    : `<a class="${cls}" href="${LINKS.chat988}" target="_blank" rel="noopener" aria-label="${l10n("r988.chatAria")}">${l10n("r988.chat")}</a>`;
 }
 function text988Inline(){ return canPhone() ? `<a href="${LINKS.text988}">Text 988</a>` : `<a href="${LINKS.chat988}" target="_blank" rel="noopener">Chat with 988 online</a>`; }
 function copyMsg(el){
@@ -2050,7 +2493,7 @@ function codeWordButton(noexit, cls = "btn btn-outline"){
   const cw = codeWord();
   if (!cw) return "";
   const attr = noexit ? `data-act="noContact" data-noexit="1"` : "";
-  return textOrCopy({ phone:cw.person.phone, body:cw.word, label:`Send my code word to ${esc(cw.person.name)}`, cls:`${cls} codeword`, attr });
+  return textOrCopy({ phone:cw.person.phone, body:cw.word, label:`${l10n("cw.send")} ${esc(cw.person.name)}`, cls:`${cls} codeword`, attr });
 }
 
 function ratingRow(selected, legendLow, legendHigh){
@@ -2063,17 +2506,17 @@ function ratingRow(selected, legendLow, legendHigh){
 }
 function row988(){
   return `<div class="pair" style="margin-top:12px">
-    <a class="btn btn-safety" href="${LINKS.call988}" aria-label="Call 988, the Suicide and Crisis Lifeline">Call 988</a>
+    <a class="btn btn-safety" href="${LINKS.call988}" aria-label="${l10n("r988.callAria")}">${l10n("r988.call")}</a>
     ${text988Btn()}
   </div>${likelyOutsideUS() ? `
-  <a class="btn btn-secondary" style="margin-top:10px" href="${LINKS.findHelpline}" target="_blank" rel="noopener">Find a helpline in your country</a>` : ""}`;
+  <a class="btn btn-secondary" style="margin-top:10px" href="${LINKS.findHelpline}" target="_blank" rel="noopener">${l10n("r988.findHelpline")}</a>` : ""}`;
 }
 function personButtons(msg, noexit){
   const p = person();
-  if (!p) return `<p class="note">Add someone you trust in My Plan.</p>`;
+  if (!p) return `<p class="note">${l10n("person.addSomeone")}</p>`;
   const attr = noexit ? `data-act="noContact" data-noexit="1"` : "";
-  return pairOrStack(`<a class="btn btn-outline" href="${telLink(p.phone)}" ${attr} aria-label="${callText(`Call ${esc(p.name)}`, p.phone)}">${callText(`Call ${esc(p.name)}`, p.phone)}</a>`,
-    textOrCopy({ phone:p.phone, body:msg, label:`Text ${esc(p.name)}`, cls:"btn btn-outline", attr, aria:`Text ${esc(p.name)}` }));
+  return pairOrStack(`<a class="btn btn-outline" href="${telLink(p.phone)}" ${attr} aria-label="${callText(`${l10n("person.call")} ${esc(p.name)}`, p.phone)}">${callText(`${l10n("person.call")} ${esc(p.name)}`, p.phone)}</a>`,
+    textOrCopy({ phone:p.phone, body:msg, label:`${l10n("person.text")} ${esc(p.name)}`, cls:"btn btn-outline", attr, aria:`${l10n("person.text")} ${esc(p.name)}` }));
 }
 const title = t => `<h1 id="screen-title" tabindex="-1">${t}</h1>`;
 /* The ZigZag mark (Stage 7): decorative, used sparingly (Home, About, first welcome screen). */
@@ -2112,58 +2555,58 @@ const SCREENS = {
           <button class="zmark-btn" data-act="zags" data-arg="calm" aria-label="Calm down with Zags">${zagsMark()}</button>
         </div>
         ${zigzag()}
-        <h1 id="screen-title" tabindex="-1" class="home-tag">It's okay not to be okay.</h1>
-        <p class="home-sub">You don't have to figure everything out right now.</p>
-        ${isNight() ? `<p class="home-sub home-night">${NIGHT_HOME_LINE}</p>` : ""}
+        <h1 id="screen-title" tabindex="-1" class="home-tag">${l10n("home.tagline")}</h1>
+        <p class="home-sub">${l10n("home.sub")}</p>
+        ${isNight() ? `<p class="home-sub home-night">${l10n("home.night")}</p>` : ""}
       </div>
-      <button class="card wide safety home-safe" data-act="crisis">${icon("shield", "safety")}<span>I don't feel safe<span class="meta">Get to a real person fast</span></span></button>
+      <button class="card wide safety home-safe" data-act="crisis">${icon("shield", "safety")}<span>${l10n("home.unsafe")}<span class="meta">${l10n("home.unsafeMeta")}</span></span></button>
       ${afterBar()}
       ${afterEnded() ? `<div class="panel after-end" role="note"><p style="margin:0">${AFTER_END_NOTE}</p>
         <div style="display:flex;justify-content:flex-end"><button class="link" data-act="afterEndOk">Okay</button></div></div>` : ""}
-      <button class="btn btn-primary btn-big" data-act="dontKnow">I don't know what I need</button>
+      <button class="btn btn-primary btn-big" data-act="dontKnow">${l10n("home.dontKnow")}</button>
       <div class="routes">
-        <button class="route" data-act="route" data-arg="calm">${icon("calm")}Calm down</button>
-        <button class="route" data-act="route" data-arg="head">${icon("head", true)}Get out of my head</button>
-        <button class="route" data-act="route" data-arg="connect">${icon("people")}Connect</button>
-        <button class="route" data-act="route" data-arg="scene">${icon("door")}Change the scene</button>
+        <button class="route" data-act="route" data-arg="calm">${icon("calm")}${l10n("home.calm")}</button>
+        <button class="route" data-act="route" data-arg="head">${icon("head", true)}${l10n("home.head")}</button>
+        <button class="route" data-act="route" data-arg="connect">${icon("people")}${l10n("home.connect")}</button>
+        <button class="route" data-act="route" data-arg="scene">${icon("door")}${l10n("home.scene")}</button>
       </div>
-      <p class="lbl" id="sitLabel">Or tell me what's happening</p>
+      <p class="lbl" id="sitLabel">${l10n("home.sitLabel")}</p>
       <div class="sits" role="group" aria-labelledby="sitLabel">
-        <button class="sit" data-act="flow" data-arg="anxious">I'm anxious</button>
-        <button class="sit" data-act="flow" data-arg="spiraling">I'm spiraling</button>
-        <button class="sit" data-act="flow" data-arg="craving">I have an urge to use (drink or drugs)</button>
-        <button class="sit" data-act="flow" data-arg="low">I feel low</button>
-        <button class="sit" data-act="route" data-arg="connect">I feel alone</button>
-        <button class="sit" data-act="afterStart">Just out of the ER</button>
+        <button class="sit" data-act="flow" data-arg="anxious">${l10n("home.anxious")}</button>
+        <button class="sit" data-act="flow" data-arg="spiraling">${l10n("home.spiraling")}</button>
+        <button class="sit" data-act="flow" data-arg="craving">${l10n("home.craving")}</button>
+        <button class="sit" data-act="flow" data-arg="low">${l10n("home.low")}</button>
+        <button class="sit" data-act="route" data-arg="connect">${l10n("home.alone")}</button>
+        <button class="sit" data-act="afterStart">${l10n("home.er")}</button>
       </div>
-      <button class="card wide tech-row" data-act="techStart">${icon("phone")}<span>Tech check<span class="meta">AI, scrolling, or checking is getting to me</span></span></button>
+      <button class="card wide tech-row" data-act="techStart">${icon("phone")}<span>${l10n("home.tech")}<span class="meta">${l10n("home.techMeta")}</span></span></button>
       ${showHomeTip() ? `<div class="panel" id="homeTip" role="note">
-        <p style="margin:0">Add ZigZag Mind to your home screen so your plan stays with you. Tap Share, then Add to Home Screen.</p>
-        <div style="display:flex;justify-content:flex-end"><button class="link" data-act="dismissHomeTip">Got it</button></div>
+        <p style="margin:0">${l10n("home.tip")}</p>
+        <div style="display:flex;justify-content:flex-end"><button class="link" data-act="dismissHomeTip">${l10n("home.tipOk")}</button></div>
       </div>` : ""}
-      ${!getPlan().trustedPeople.length && !getPlan().helps.length ? `<button class="card wide" data-act="tab" data-arg="plan" style="margin:14px 0 16px;width:100%">${icon("plan")}<span>Build your plan for hard moments<span class="meta">Do it on a good day. It takes a few minutes.</span></span></button>` : ""}
-      <p class="worried-row"><a class="worried-link" href="support/#worried" target="_blank" rel="noopener">Worried about someone? How to help →</a></p>` };   // 6.19 A: a door for friends and family
+      ${!getPlan().trustedPeople.length && !getPlan().helps.length ? `<button class="card wide" data-act="tab" data-arg="plan" style="margin:14px 0 16px;width:100%">${icon("plan")}<span>${l10n("home.buildPlan")}<span class="meta">${l10n("home.buildPlanMeta")}</span></span></button>` : ""}
+      <p class="worried-row"><a class="worried-link" href="support/#worried" target="_blank" rel="noopener">${l10n("home.worried")}</a></p>` };   // 6.19 A: a door for friends and family
   },
 
   /* 6.3: Calm. (Zags, 6.7, will be the featured card here.) */
   calm(){
     const opts = [
-      ["breathe","calm","Breathe for 1 minute","In for 4, out for 6"],
-      ["ground","leaf","5-4-3-2-1 grounding","Notice what's around you"],
-      ["feet","check","Feet on the floor","Three tiny steps, 2 minutes"],
-      ["true","anchor","What's still true?","Start with what you know"],
-      ["real","leaf","Find something real","Something you can hold, cooler, warmer"],
-      ["also","anchor","What's also true","The sentence on repeat, and what else is true"]
+      ["breathe","calm",l10n("calm.breathe"),l10n("calm.breatheMeta")],
+      ["ground","leaf",l10n("calm.ground"),l10n("calm.groundMeta")],
+      ["feet","check",l10n("calm.feet"),l10n("calm.feetMeta")],
+      ["true","anchor",l10n("calm.true"),l10n("calm.trueMeta")],
+      ["real","leaf",l10n("calm.real"),l10n("calm.realMeta")],
+      ["also","anchor",l10n("calm.also"),l10n("calm.alsoMeta")]
     ];
     return { close:true, body:`
-      ${title("Let's slow things down.")}
-      <p class="sub">Pick one. You can stop any time.</p>
-      <button class="card wide zcard" data-act="zags" data-arg="calm">${zagsFace()}<span>Calm down with Zags<span class="meta">Breathe together for a few minutes</span></span></button>
+      ${title(l10n("calm.title"))}
+      <p class="sub">${l10n("calm.sub")}</p>
+      <button class="card wide zcard" data-act="zags" data-arg="calm">${zagsFace()}<span>${l10n("calm.zags")}<span class="meta">${l10n("calm.zagsMeta")}</span></span></button>
       <div class="list">${opts.map(([arg, ic, t, m]) =>
         `<button class="card" data-act="calmPick" data-arg="${arg}">${icon(ic)}<span>${t}<span class="meta">${m}</span></span></button>`).join("")}
       </div>
-      ${faithOn() ? `<button class="link faith-link" data-act="faith">Need a little hope?</button>` : ""}`,
-      actions:`<button class="btn btn-secondary" data-act="route" data-arg="connect">I'd rather talk to someone</button>` };
+      ${faithOn() ? `<button class="link faith-link" data-act="faith">${l10n("common.hope")}</button>` : ""}`,
+      actions:`<button class="btn btn-secondary" data-act="route" data-arg="connect">${l10n("calm.talk")}</button>` };
   },
 
   "still-true"(){
@@ -2779,37 +3222,37 @@ const SCREENS = {
     const night = isNight();   // 6.18 D2: at night 988 comes first and the Warm Line moves below your people
     const ideas = night ? [NIGHT_IDEA, ...MESSAGE_IDEAS.filter(m => m !== NIGHT_IDEA)] : MESSAGE_IDEAS;
     const warm = `<div class="panel conn" id="connWarm">
-        <p class="lbl">Talk to someone who's been there</p>
+        <p class="lbl">${l10n("connect.warmLbl")}</p>
         <h3>${WARMLINE.name}</h3>
         <p class="small">${WARMLINE.hours} ${WARMLINE.about}</p>
-        ${night ? `<p class="small warm-night">${WARMLINE_NIGHT}</p>` : ""}
-        <a class="btn btn-primary" href="${WARMLINE.tel}">${callText("Call the Warm Line", WARMLINE.number)}</a>
+        ${night ? `<p class="small warm-night">${l10n("connect.warmNight")}</p>` : ""}
+        <a class="btn btn-primary" href="${WARMLINE.tel}">${callText(l10n("connect.callWarm"), WARMLINE.number)}</a>
         <a class="conn-more" href="${WARMLINE.elsewhereUrl}" target="_blank" rel="noopener">${WARMLINE.elsewhere}</a>
       </div>`;
-    const crisis988 = `<p class="lbl">If it gets heavier</p>
+    const crisis988 = `<p class="lbl">${l10n("connect.heavier")}</p>
       ${row988()}
       ${vetLine()}
       ${ctlLine()}`;
     return { close:true, body:`
-      ${title("You don't have to sit with this alone.")}
+      ${title(l10n("connect.title"))}
       ${night ? crisis988 : warm}
       <div class="panel conn" id="connPeople">
-        <p class="lbl">Reach one of your people</p>
+        <p class="lbl">${l10n("connect.people")}</p>
         ${people.length ? people.map(p => `<h3>${esc(p.name)}${p.relationship ? ` <span class="small">· ${esc(p.relationship)}</span>` : ""}</h3>
-          ${pairOrStack(textOrCopy({ phone:p.phone, label:canPhone() ? "Text" : `Text ${esc(p.name)}`, cls:"btn btn-secondary", aria:`Text ${esc(p.name)}` }),
-            `<a class="btn btn-secondary" href="${telLink(p.phone)}" aria-label="${callText(`Call ${esc(p.name)}`, p.phone)}">${callText("Call", p.phone)}</a>`)}`).join("") + `
+          ${pairOrStack(textOrCopy({ phone:p.phone, label:canPhone() ? l10n("person.text") : `${l10n("person.text")} ${esc(p.name)}`, cls:"btn btn-secondary", aria:`${l10n("person.text")} ${esc(p.name)}` }),
+            `<a class="btn btn-secondary" href="${telLink(p.phone)}" aria-label="${callText(`${l10n("person.call")} ${esc(p.name)}`, p.phone)}">${callText(l10n("person.call"), p.phone)}</a>`)}`).join("") + `
           ${codeWordButton(false)}
-          <p class="small" style="margin:14px 0 8px">Don't know what to say${people.length > 1 ? ` to ${esc(first.name)}` : ""}? ${canPhone() ? "Tap one:" : "Tap one to copy it:"}</p>
-          <p class="small ideas-note" style="margin:0 0 8px">${IDEAS_NOTE}</p>
+          <p class="small" style="margin:14px 0 8px">${l10n("connect.dontKnow")}${people.length > 1 ? ` ${l10n("connect.to")} ${esc(first.name)}` : ""}? ${canPhone() ? l10n("connect.tapOne") : l10n("connect.tapCopy")}</p>
+          <p class="small ideas-note" style="margin:0 0 8px">${l10n("connect.ideasNote")}</p>
           <div class="sits">${ideas.map(m => canPhone() ? `<a class="sit idea" href="${smsLink(first.phone, m)}">${esc(m)}</a>` : copyButton(m, "sit idea", esc(m))).join("")}</div>`
-        : `<p class="small">Add someone you trust, and they'll be here with Text and Call.</p>
-          <button class="btn btn-secondary" data-act="planFromConnect">Add someone to My Plan</button>`}
+        : `<p class="small">${l10n("connect.addHint")}</p>
+          <button class="btn btn-secondary" data-act="planFromConnect">${l10n("connect.addSomeone")}</button>`}
       </div>
       ${night ? warm : ""}
-      <button class="card wide around-card" data-act="aroundPeople" style="margin-top:14px">${icon("people")}<span>Be around people, no talking needed</span></button>
-      <button class="card wide zcard" data-act="zags" data-arg="connect" style="margin-top:10px">${zagsFace()}<span>Calm down with Zags while you wait</span></button>
-      <button class="link" data-act="songStart" data-arg="connect">Make a song while you wait</button>
-      ${faithOn() ? `<button class="link faith-link" data-act="faith">Need a little hope?</button>` : ""}
+      <button class="card wide around-card" data-act="aroundPeople" style="margin-top:14px">${icon("people")}<span>${l10n("connect.around")}</span></button>
+      <button class="card wide zcard" data-act="zags" data-arg="connect" style="margin-top:10px">${zagsFace()}<span>${l10n("connect.zags")}</span></button>
+      <button class="link" data-act="songStart" data-arg="connect">${l10n("connect.song")}</button>
+      ${faithOn() ? `<button class="link faith-link" data-act="faith">${l10n("common.hope")}</button>` : ""}
       ${night ? "" : crisis988}` };
   },
 
@@ -3337,128 +3780,128 @@ const SCREENS = {
 
   crisis(){
     return { close:false, body:`
-      ${title("I'm glad you told me.")}
+      ${title(l10n("crisis.title"))}
       ${row988()}
       ${vetLine()}
       ${codeWord() ? `<div style="margin-top:10px">${codeWordButton(false)}</div>` : ""}
       <div class="panel">
-        <h3 style="font-size:20px;line-height:1.3">Are you in danger of hurting yourself or someone else right now?</h3>
+        <h3 style="font-size:20px;line-height:1.3">${l10n("crisis.question")}</h3>
         <div class="stack" style="margin-top:14px">
-          <button class="btn btn-secondary" data-act="cYes">Yes</button>
-          <button class="btn btn-secondary" data-act="cNo">No</button>
-          <button class="btn btn-secondary" data-act="cNotSure">I'm not sure</button>
+          <button class="btn btn-secondary" data-act="cYes">${l10n("crisis.yes")}</button>
+          <button class="btn btn-secondary" data-act="cNo">${l10n("crisis.no")}</button>
+          <button class="btn btn-secondary" data-act="cNotSure">${l10n("crisis.notSure")}</button>
         </div>
       </div>
-      <p class="disclaimer">ZigZag Mind is not an emergency service.</p>
-      <div style="display:flex;justify-content:center"><button class="link" data-act="cBack">That's not what I meant — go back</button></div>` };
+      <p class="disclaimer">${l10n("crisis.disclaimer")}</p>
+      <div style="display:flex;justify-content:center"><button class="link" data-act="cBack">${l10n("crisis.back")}</button></div>` };
   },
 
   "crisis-full"(){
     const p = person();
     return { close:false, body:`
-      ${title("Please reach a person right now.")}
+      ${title(l10n("crisisfull.title"))}
       <div class="stack" style="margin-top:12px">
-        <a class="btn btn-safety two-line" href="${LINKS.call911}">Call 911<span class="cap">If someone is hurt, or someone else is in danger</span></a>
+        <a class="btn btn-safety two-line" href="${LINKS.call911}">${l10n("crisisfull.call911")}<span class="cap">${l10n("crisisfull.call911Cap")}</span></a>
         ${row988().replace('style="margin-top:12px"', "")}
-        ${canPhone() ? `<a class="btn btn-secondary" href="${LINKS.chat988}" target="_blank" rel="noopener">Chat online with 988</a>` : ""}
+        ${canPhone() ? `<a class="btn btn-secondary" href="${LINKS.chat988}" target="_blank" rel="noopener">${l10n("crisisfull.chat")}</a>` : ""}
         ${vetLine()}
         ${ctlLine()}
-        <div class="panel not-police" style="margin-top:0"><p style="margin:0"><b>${NOT_POLICE_HEAD}</b> ${NOT_POLICE_TEXT}</p>
-          <a class="btn btn-secondary" style="margin-top:10px" href="${LINKS.call211}">Call 211</a></div>
+        <div class="panel not-police" style="margin-top:0"><p style="margin:0"><b>${l10n("crisisfull.notPoliceHead")}</b> ${l10n("crisisfull.notPoliceText")}</p>
+          <a class="btn btn-secondary" style="margin-top:10px" href="${LINKS.call211}">${l10n("crisisfull.call211")}</a></div>
         ${codeWordButton(false)}
         ${p ? personButtons(HARD_TIME_MSG, false) : `<p class="note">Add someone you trust in My Plan.</p>`}
-        <button class="btn btn-secondary" data-act="cPlaces" aria-expanded="${ui.placesOpen}">Go where other people are</button>
-        ${ui.placesOpen ? `<div class="panel" style="margin-top:0"><ul>${getPlan().places.length ? getPlan().places.map(x => `<li>${esc(x)}</li>`).join("") : "<li>A shop, a library, a friend's place — anywhere with people.</li>"}</ul></div>` : ""}
-        ${(getPlan().reasons || []).length ? `<div class="panel reasons-card" style="margin-top:0"><p class="lbl">Your reasons to stay</p>${getPlan().reasons.map(x => `<p style="margin:4px 0 0">${esc(x)}</p>`).join("")}</div>` : ""}
-        <button class="btn btn-secondary" data-act="cPlan">Open my plan</button>
+        <button class="btn btn-secondary" data-act="cPlaces" aria-expanded="${ui.placesOpen}">${l10n("crisisfull.places")}</button>
+        ${ui.placesOpen ? `<div class="panel" style="margin-top:0"><ul>${getPlan().places.length ? getPlan().places.map(x => `<li>${esc(x)}</li>`).join("") : `<li>${l10n("crisisfull.placesDefault")}</li>`}</ul></div>` : ""}
+        ${(getPlan().reasons || []).length ? `<div class="panel reasons-card" style="margin-top:0"><p class="lbl">${l10n("crisisfull.reasons")}</p>${getPlan().reasons.map(x => `<p style="margin:4px 0 0">${esc(x)}</p>`).join("")}</div>` : ""}
+        <button class="btn btn-secondary" data-act="cPlan">${l10n("crisis.openPlan")}</button>
       </div>
-      <p class="note">If you can, put distance between yourself and anything you could use to hurt yourself.</p>
-      <p class="note using-line">${USING_LINE}</p>
-      <p class="disclaimer">ZigZag Mind is not an emergency service.</p>
-      <div style="display:flex;justify-content:center"><button class="link" data-act="cFullBack">That's not what I meant — go back</button></div>` };
+      <p class="note">${l10n("crisisfull.distance")}</p>
+      <p class="note using-line">${l10n("crisis.using")}</p>
+      <p class="disclaimer">${l10n("crisis.disclaimer")}</p>
+      <div style="display:flex;justify-content:center"><button class="link" data-act="cFullBack">${l10n("crisis.back")}</button></div>` };
   },
 
   "crisis-no"(){
     return { close:false, body:`
-      ${title("Okay. Thank you for checking in with yourself.")}
+      ${title(l10n("crisisno.title"))}
       ${row988()}
       ${codeWord() ? `<div style="margin-top:10px">${codeWordButton(true)}</div>` : ""}
-      <h2>What would help right now?</h2>
+      <h2>${l10n("crisisno.help")}</h2>
       <div class="stack">
-        <button class="btn btn-secondary" data-act="noTalk" aria-expanded="${ui.talkOpen}">Talk to someone</button>
+        <button class="btn btn-secondary" data-act="noTalk" aria-expanded="${ui.talkOpen}">${l10n("crisisno.talk")}</button>
         ${ui.talkOpen ? `<div class="panel" style="margin-top:0">${personButtons(HARD_TIME_MSG, true)}
-          <p class="note" style="margin-bottom:0">ZigZag Mind never contacts anyone for you. These buttons open your phone.</p></div>` : ""}
-        <button class="btn btn-secondary" data-act="noPlan">Open my plan</button>
-        <button class="btn btn-secondary" data-act="noGround">Do something grounding</button>
+          <p class="note" style="margin-bottom:0">${l10n("crisisno.never")}</p></div>` : ""}
+        <button class="btn btn-secondary" data-act="noPlan">${l10n("crisis.openPlan")}</button>
+        <button class="btn btn-secondary" data-act="noGround">${l10n("crisisno.ground")}</button>
       </div>
-      <p class="note using-line">${USING_LINE}</p>
-      <p class="disclaimer">ZigZag Mind is not an emergency service.</p>` };
+      <p class="note using-line">${l10n("crisis.using")}</p>
+      <p class="disclaimer">${l10n("crisis.disclaimer")}</p>` };
   },
 
   "safety-check"(){
     return { close:false, body:`
-      ${title("Do you feel safer than a few minutes ago?")}
+      ${title(l10n("safety.title"))}
       ${row988()}
       <div class="stack" style="margin-top:20px">
-        <button class="btn btn-secondary" data-act="safeYes">Yes</button>
-        <button class="btn btn-secondary" data-act="safeNo">No</button>
-        <button class="btn btn-secondary" data-act="safeNotSure">Not sure</button>
+        <button class="btn btn-secondary" data-act="safeYes">${l10n("crisis.yes")}</button>
+        <button class="btn btn-secondary" data-act="safeNo">${l10n("crisis.no")}</button>
+        <button class="btn btn-secondary" data-act="safeNotSure">${l10n("safety.notSure")}</button>
       </div>
-      <p class="disclaimer">ZigZag Mind is not an emergency service.</p>` };
+      <p class="disclaimer">${l10n("crisis.disclaimer")}</p>` };
   },
 
   plan(){
     const pb = getPlan();
     const editable = ui.planFrom === "tab";
-    const ul = arr => arr.length ? `<ul>${arr.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : `<p class="empty">Nothing here yet.</p>`;
-    const head = (key, t) => `<div class="plan-head"><h3>${t}</h3>${editable ? `<button class="edit-btn" data-act="planEdit" data-arg="${key}" aria-label="Edit: ${t}">Edit</button>` : ""}</div>`;
+    const ul = arr => arr.length ? `<ul>${arr.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : `<p class="empty">${l10n("plan.nothing")}</p>`;
+    const head = (key, t) => `<div class="plan-head"><h3>${t}</h3>${editable ? `<button class="edit-btn" data-act="planEdit" data-arg="${key}" aria-label="${l10n("plan.edit")}: ${t}">${l10n("plan.edit")}</button>` : ""}</div>`;
     const people = pb.trustedPeople.length ? pb.trustedPeople.map(p => `
         <p style="margin:12px 0 8px"><strong>${esc(p.name)}</strong>${p.relationship ? ` · ${esc(p.relationship)}` : ""} · ${esc(p.phone)}</p>
-        ${pairOrStack(`<a class="btn btn-outline" href="${telLink(p.phone)}" aria-label="${callText(`Call ${esc(p.name)}`, p.phone)}">${callText("Call", p.phone)}</a>`,
-          textOrCopy({ phone:p.phone, body:HARD_TIME_MSG, label:canPhone() ? "Text" : `Text ${esc(p.name)}`, cls:"btn btn-outline", aria:`Text ${esc(p.name)}` }))}
-        ${editable ? `<button class="link share-guide" data-act="shareGuide" aria-label="Share the supporter guide with ${esc(p.name)}">Share the supporter guide</button>` : ""}`).join("") : `<p class="empty">Nobody added yet.</p>`;
+        ${pairOrStack(`<a class="btn btn-outline" href="${telLink(p.phone)}" aria-label="${callText(`${l10n("person.call")} ${esc(p.name)}`, p.phone)}">${callText(l10n("person.call"), p.phone)}</a>`,
+          textOrCopy({ phone:p.phone, body:HARD_TIME_MSG, label:canPhone() ? l10n("person.text") : `${l10n("person.text")} ${esc(p.name)}`, cls:"btn btn-outline", aria:`${l10n("person.text")} ${esc(p.name)}` }))}
+        ${editable ? `<button class="link share-guide" data-act="shareGuide" aria-label="${l10n("plan.shareGuideWith")} ${esc(p.name)}">${l10n("plan.shareGuide")}</button>` : ""}`).join("") : `<p class="empty">${l10n("plan.nobody")}</p>`;
     const pro = pb.professional && pb.professional.name ? `<p style="margin:14px 0 8px"><strong>${esc(pb.professional.name)}</strong>${pb.professional.phone ? ` · ${esc(pb.professional.phone)}` : ""}</p>
-        ${pb.professional.phone ? `<a class="btn btn-secondary" href="${telLink(pb.professional.phone)}">${callText(`Call ${esc(pb.professional.name)}`, pb.professional.phone)}</a>` : ""}` : "";
+        ${pb.professional.phone ? `<a class="btn btn-secondary" href="${telLink(pb.professional.phone)}">${callText(`${l10n("person.call")} ${esc(pb.professional.name)}`, pb.professional.phone)}</a>` : ""}` : "";
     return { nav:editable, close:false, body:`
-      ${title("My plan for hard moments")}
+      ${title(l10n("plan.title"))}
       ${editable && planEmpty() ? `<div class="zmark-empty">${zagsMark("zmark-lg")}</div>` : ""}
-      ${editable ? `<button class="btn btn-primary btn-big plan-now-btn" data-act="planNow">I need my plan now</button>` : ""}
-      <p class="sub">${editable ? "Build it on a good day, so it's ready on a hard one. Each part saves on its own." : "Your plan, for right now."}</p>
+      ${editable ? `<button class="btn btn-primary btn-big plan-now-btn" data-act="planNow">${l10n("plan.now")}</button>` : ""}
+      <p class="sub">${editable ? l10n("plan.subTab") : l10n("plan.subNow")}</p>
       ${ui.flash && editable ? `<p class="flash" role="status">${esc(ui.flash)}</p>` : ""}
-      <div class="panel">${head("warningSigns", "How I know a hard moment is starting")}${ul(pb.warningSigns)}</div>
-      <div class="panel">${head("helps", "Things that help me on my own")}${ul(pb.helps.map(helpLabel))}
-        ${pb.anchor ? `<p class="small" style="margin:8px 0 0">My anchor: ${esc(pb.anchor)}</p>` : ""}</div>
-      <div class="panel">${head("reasons", "Reasons to stay")}${ul(pb.reasons || [])}
-        ${editable && songs().length ? `<button class="link" data-act="songList">Your songs are here too.</button>` : ""}</div>
-      <div class="panel">${head("places", "People and places that take my mind off things")}${ul(pb.places)}</div>
-      <div class="panel">${head("trustedPeople", "My trusted people")}
-        <p class="note" style="margin-top:6px">ZigZag Mind will never contact these people for you. These buttons only open your phone's call or text app.</p>
+      <div class="panel">${head("warningSigns", l10n("plan.h.warningSigns"))}${ul(pb.warningSigns)}</div>
+      <div class="panel">${head("helps", l10n("plan.h.helps"))}${ul(pb.helps.map(helpLabel))}
+        ${pb.anchor ? `<p class="small" style="margin:8px 0 0">${l10n("plan.anchor")} ${esc(pb.anchor)}</p>` : ""}</div>
+      <div class="panel">${head("reasons", l10n("plan.h.reasons"))}${ul(pb.reasons || [])}
+        ${editable && songs().length ? `<button class="link" data-act="songList">${l10n("plan.songsToo")}</button>` : ""}</div>
+      <div class="panel">${head("places", l10n("plan.h.places"))}${ul(pb.places)}</div>
+      <div class="panel">${head("trustedPeople", l10n("plan.h.trustedPeople"))}
+        <p class="note" style="margin-top:6px">${l10n("plan.neverContact")}</p>
         ${people}</div>
-      <div class="panel">${head("professional", "Professional and crisis support")}
-        <p class="small" style="margin-top:6px">988 Suicide &amp; Crisis Lifeline, free and 24/7. Always in your plan.</p>${row988()}${pro}
-        ${editable ? `<p class="small strength-short" style="margin:14px 0 0">${HELP_IS_STRENGTH_SHORT} <button class="link inline" data-act="readStrength">Read more</button></p>` : ""}</div>
-      ${editable ? `<div class="panel" id="setupPeople"><h3>Set up with your people</h3>
-        <div class="setup-row"><span><b>Code word</b><span class="small">${codeWord() ? `${esc(codeWord().word)} · with ${esc(codeWord().person.name)}` : "One word that means: I'm struggling, call me."}</span></span>
-          <button class="edit-btn" data-act="cwStart">${codeWord() ? "Change" : "Set up"}</button></div>
-        ${codeWord() ? `<button class="link" data-act="cwRemove" style="margin-top:4px">Remove code word</button>` : ""}
-        <div class="setup-row"><span><b>Time and distance plan</b><span class="small">${(pb.timeDistance || {}).keepAway ? "Done" : "What you'll keep away during hard times, and who holds it."}</span></span>
-          <button class="edit-btn" data-act="planEdit" data-arg="timeDistance">${(pb.timeDistance || {}).keepAway ? "Change" : "Set up"}</button></div>
-        <div class="setup-row"><span><b>Check-in reminders</b><span class="small">${checkinAsked().length ? `Asked: ${checkinAsked().map(p => esc(p.name)).join(", ")}` : "Ask someone to check in on you now and then."}</span></span>
-          <button class="edit-btn" data-act="ciStart">${checkinAsked().length ? "Ask someone" : "Set up"}</button></div></div>` : ""}
-      <div class="panel" id="tdPanel">${head("timeDistance", "My time and distance plan")}
-        <p class="small" style="margin:4px 0 0">Private. Only on this phone.</p>
-        ${TD_FIELDS.map(([k, t]) => `<p class="td-q">${t}</p>${(pb.timeDistance || {})[k] ? `<p class="td-a">${esc(pb.timeDistance[k])}</p>` : `<p class="empty">Nothing here yet.</p>`}`).join("")}
-        ${editable && pb.trustedPeople.length ? `<p class="small" style="margin:14px 0 6px">Ask someone to hold onto a few things:</p>
-          ${canPhone() ? `<div class="sits">${pb.trustedPeople.map(p => `<a class="sit" href="${smsLink(p.phone, TD_ASK)}" aria-label="Ask ${esc(p.name)} to hold onto a few things">Ask ${esc(p.name)}</a>`).join("")}</div>`
-            : `<p class="copy-text">${esc(TD_ASK)}</p>${copyButton(TD_ASK, "btn btn-secondary", "Copy message")}`}` : ""}</div>
-      ${editable ? `<div class="panel print-row" id="printPanel"><div class="setup-row"><span><b>Print my plan</b><span class="small">A full page and a wallet card to cut out. Printed from this phone; nothing is uploaded.</span></span></div>
-        ${codeWord() ? `<label class="print-check"><input type="checkbox" id="printCode"> Include my code word</label>` : ""}
-        <button class="btn btn-secondary" data-act="printPlan">Print my plan</button></div>` : ""}
-      ${editable ? `<div class="panel"><div class="setup-row"><span><b>My songs</b><span class="small">${songs().length ? `${songs().length} saved on this phone` : "Songs you make and keep show up here."}</span></span>
-          <button class="edit-btn" data-act="${songs().length ? "songList" : "songNew"}">${songs().length ? "Open" : "Make one"}</button></div></div>` : ""}
-      <div class="panel">${head("avoid", "Things to avoid when I'm struggling")}${ul(pb.avoid)}</div>
-      <div class="panel">${head("reminders", "What I want ZigZag Mind to remind me")}${ul(pb.reminders)}</div>`,
-      actions: editable ? "" : `<button class="btn btn-primary" data-act="planDone">${ui.planFrom === "no" ? "I'm done" : "Back"}</button>` };
+      <div class="panel">${head("professional", l10n("plan.h.professional"))}
+        <p class="small" style="margin-top:6px">${l10n("plan.988")}</p>${row988()}${pro}
+        ${editable ? `<p class="small strength-short" style="margin:14px 0 0">${HELP_IS_STRENGTH_SHORT} <button class="link inline" data-act="readStrength">${l10n("plan.readMore")}</button></p>` : ""}</div>
+      ${editable ? `<div class="panel" id="setupPeople"><h3>${l10n("plan.setup")}</h3>
+        <div class="setup-row"><span><b>${l10n("plan.codeWord")}</b><span class="small">${codeWord() ? `${esc(codeWord().word)} · ${l10n("plan.with")} ${esc(codeWord().person.name)}` : l10n("plan.codeWordHint")}</span></span>
+          <button class="edit-btn" data-act="cwStart">${codeWord() ? l10n("plan.change") : l10n("plan.setUp")}</button></div>
+        ${codeWord() ? `<button class="link" data-act="cwRemove" style="margin-top:4px">${l10n("plan.removeCode")}</button>` : ""}
+        <div class="setup-row"><span><b>${l10n("plan.td")}</b><span class="small">${(pb.timeDistance || {}).keepAway ? l10n("plan.done") : l10n("plan.tdHint")}</span></span>
+          <button class="edit-btn" data-act="planEdit" data-arg="timeDistance">${(pb.timeDistance || {}).keepAway ? l10n("plan.change") : l10n("plan.setUp")}</button></div>
+        <div class="setup-row"><span><b>${l10n("plan.checkins")}</b><span class="small">${checkinAsked().length ? `${l10n("plan.asked")} ${checkinAsked().map(p => esc(p.name)).join(", ")}` : l10n("plan.checkinsHint")}</span></span>
+          <button class="edit-btn" data-act="ciStart">${checkinAsked().length ? l10n("plan.askSomeone") : l10n("plan.setUp")}</button></div></div>` : ""}
+      <div class="panel" id="tdPanel">${head("timeDistance", l10n("plan.h.timeDistance"))}
+        <p class="small" style="margin:4px 0 0">${l10n("plan.private")}</p>
+        ${TD_FIELDS.map(([k, t]) => `<p class="td-q">${t}</p>${(pb.timeDistance || {})[k] ? `<p class="td-a">${esc(pb.timeDistance[k])}</p>` : `<p class="empty">${l10n("plan.nothing")}</p>`}`).join("")}
+        ${editable && pb.trustedPeople.length ? `<p class="small" style="margin:14px 0 6px">${l10n("plan.holdAsk")}</p>
+          ${canPhone() ? `<div class="sits">${pb.trustedPeople.map(p => `<a class="sit" href="${smsLink(p.phone, TD_ASK)}" aria-label="${l10n("plan.ask")} ${esc(p.name)} ${l10n("plan.holdAria")}">${l10n("plan.ask")} ${esc(p.name)}</a>`).join("")}</div>`
+            : `<p class="copy-text">${esc(TD_ASK)}</p>${copyButton(TD_ASK, "btn btn-secondary", l10n("copy.message"))}`}` : ""}</div>
+      ${editable ? `<div class="panel print-row" id="printPanel"><div class="setup-row"><span><b>${l10n("plan.print")}</b><span class="small">${l10n("plan.printHint")}</span></span></div>
+        ${codeWord() ? `<label class="print-check"><input type="checkbox" id="printCode"> ${l10n("plan.printCode")}</label>` : ""}
+        <button class="btn btn-secondary" data-act="printPlan">${l10n("plan.print")}</button></div>` : ""}
+      ${editable ? `<div class="panel"><div class="setup-row"><span><b>${l10n("plan.songs")}</b><span class="small">${songs().length ? `${songs().length} ${l10n("plan.songsSaved")}` : l10n("plan.songsHint")}</span></span>
+          <button class="edit-btn" data-act="${songs().length ? "songList" : "songNew"}">${songs().length ? l10n("plan.open") : l10n("plan.makeOne")}</button></div></div>` : ""}
+      <div class="panel">${head("avoid", l10n("plan.h.avoid"))}${ul(pb.avoid)}</div>
+      <div class="panel">${head("reminders", l10n("plan.h.reminders"))}${ul(pb.reminders)}</div>`,
+      actions: editable ? "" : `<button class="btn btn-primary" data-act="planDone">${ui.planFrom === "no" ? l10n("plan.imDone") : l10n("common.back")}</button>` };
   },
 
   "plan-edit"(){
@@ -3546,53 +3989,53 @@ const SCREENS = {
     const t = ui.theme;
     const seg = (act, val, cur, label) => `<button data-act="${act}" data-arg="${val}" aria-pressed="${cur === val}">${label}</button>`;
     return { nav:true, close:false, body:`
-      ${title("Settings")}
+      ${title(l10n("tab.settings"))}
       ${ui.flash ? `<p class="flash" role="status">${esc(ui.flash)}</p>` : ""}
-      <h2>Appearance</h2>
-      <div class="seg-theme" role="group" aria-label="Appearance">
-        ${seg("theme","auto",t,"Auto")}${seg("theme","light",t,"Light")}${seg("theme","dark",t,"Dark")}
+      <h2>${l10n("set.appearance")}</h2>
+      <div class="seg-theme" role="group" aria-label="${l10n("set.appearance")}">
+        ${seg("theme","auto",t,l10n("set.auto"))}${seg("theme","light",t,l10n("set.light"))}${seg("theme","dark",t,l10n("set.dark"))}
       </div>
-      <h2>Motion</h2>
-      <div class="seg-theme" role="group" aria-label="Motion" style="grid-template-columns:1fr 1fr">
-        ${seg("motion","auto",prefs.reduce ? "reduce" : "auto","Match my phone")}${seg("motion","reduce",prefs.reduce ? "reduce" : "auto","Reduce motion")}
+      <h2>${l10n("set.motion")}</h2>
+      <div class="seg-theme" role="group" aria-label="${l10n("set.motion")}" style="grid-template-columns:1fr 1fr">
+        ${seg("motion","auto",prefs.reduce ? "reduce" : "auto",l10n("set.matchPhone"))}${seg("motion","reduce",prefs.reduce ? "reduce" : "auto",l10n("set.reduce"))}
       </div>
-      <h2>Haptics</h2>
-      <div class="seg-theme" role="group" aria-label="Haptics" style="grid-template-columns:1fr 1fr">
-        ${seg("haptics","off",prefs.haptics ? "on" : "off","Off")}${seg("haptics","on",prefs.haptics ? "on" : "off","On")}
+      <h2>${l10n("set.haptics")}</h2>
+      <div class="seg-theme" role="group" aria-label="${l10n("set.haptics")}" style="grid-template-columns:1fr 1fr">
+        ${seg("haptics","off",prefs.haptics ? "on" : "off",l10n("set.off"))}${seg("haptics","on",prefs.haptics ? "on" : "off",l10n("set.on"))}
       </div>
-      <p class="small" style="margin-top:8px">A light tap when you finish a step. Not every phone supports this.</p>
-      <h2>Where you are</h2>
-      <div class="seg-theme" role="group" aria-label="Where you are">
-        ${seg("country","auto",prefs.country,"Auto")}${seg("country","us",prefs.country,"In the US")}${seg("country","other",prefs.country,"Outside the US")}
+      <p class="small" style="margin-top:8px">${l10n("set.hapticsHint")}</p>
+      <h2>${l10n("set.where")}</h2>
+      <div class="seg-theme" role="group" aria-label="${l10n("set.where")}">
+        ${seg("country","auto",prefs.country,l10n("set.auto"))}${seg("country","us",prefs.country,l10n("set.inUS"))}${seg("country","other",prefs.country,l10n("set.outsideUS"))}
       </div>
       <p class="small" style="margin-top:8px">${prefs.country === "auto"
         ? `Auto uses your phone's time zone and language as a hint. Right now it ${likelyOutsideUS() ? "adds" : "doesn't add"} "Find a helpline in your country".`
         : prefs.country === "other" ? `Crisis screens add "Find a helpline in your country".` : "Crisis screens show US numbers."} 911 and 988 always stay on screen.</p>
-      <h2>What gives you strength?</h2>
-      <p class="small" style="margin:4px 0 8px">Optional. Only on this phone. Tap again to clear.</p>
+      <h2>${l10n("set.strength")}</h2>
+      <p class="small" style="margin:4px 0 8px">${l10n("set.strengthHint")}</p>
       <div class="chips" role="group" aria-label="What gives you strength" style="margin-top:0">
         ${STRENGTH_OPTIONS.map(([k, l]) => `<button class="hchip" data-act="strength" data-arg="${k}" aria-pressed="${prefs.strength === k}">${l}</button>`).join("")}
       </div>
       ${faithOn() ? `<p class="small" style="margin-top:8px">Faith &amp; hope is on: a "Need a little hope?" link on Calm and Connect.</p>` : ""}
-      <h2>Your data</h2>
+      <h2>${l10n("set.data")}</h2>
       ${STORAGE_OK ? `
-      <p class="small" style="margin-bottom:8px">Save on this device</p>
-      <div class="seg-theme" role="group" aria-label="Save on this device" style="grid-template-columns:1fr 1fr;margin-top:0">
-        ${seg("persist","on",persistOn ? "on" : "off","On")}${seg("persist","off",persistOn ? "on" : "off","Off")}
+      <p class="small" style="margin-bottom:8px">${l10n("set.save")}</p>
+      <div class="seg-theme" role="group" aria-label="${l10n("set.save")}" style="grid-template-columns:1fr 1fr;margin-top:0">
+        ${seg("persist","on",persistOn ? "on" : "off",l10n("set.on"))}${seg("persist","off",persistOn ? "on" : "off",l10n("set.off"))}
       </div>
       <p class="small" style="margin-top:8px">${persistOn
         ? "Your plan and check-ins are saved only in this browser on this phone. Nothing is sent anywhere."
         : "Nothing is saved. Everything is gone when you close or reload. Useful on a shared phone."}</p>`
       : `<p class="small">This browser isn't letting ZigZag Mind save, so everything is gone when you reload. Nothing is sent anywhere.</p>`}
       <div class="stack" style="margin-top:12px">
-        <button class="btn btn-secondary" data-act="exportData">Export my data</button>
-        <button class="btn btn-secondary" data-act="loadSample">Load sample data</button>
-        <button class="btn btn-outline" data-act="askDelete">Delete everything</button>
-        ${afterActive() ? `<button class="btn btn-secondary" data-act="afterEnd">End the first 30 days mode</button>` : ""}
+        <button class="btn btn-secondary" data-act="exportData">${l10n("set.export")}</button>
+        <button class="btn btn-secondary" data-act="loadSample">${l10n("set.sample")}</button>
+        <button class="btn btn-outline" data-act="askDelete">${l10n("set.delete")}</button>
+        ${afterActive() ? `<button class="btn btn-secondary" data-act="afterEnd">${l10n("set.afterEnd")}</button>` : ""}
       </div>
-      <h2>About</h2>
-      <button class="btn btn-secondary" data-act="about">About ZigZag Mind</button>
-      <button class="btn btn-secondary" style="margin-top:10px" data-act="privacyOpen">Privacy &amp; terms</button>
+      <h2>${l10n("set.about")}</h2>
+      <button class="btn btn-secondary" data-act="about">${l10n("set.aboutApp")}</button>
+      <button class="btn btn-secondary" style="margin-top:10px" data-act="privacyOpen">${l10n("privacy.link")}</button>
       <p class="disclaimer" style="margin-bottom:16px">ZigZag Mind is a self-help support tool. It is not therapy, medical care, or an emergency service. If you're in danger, call 911 or call or text 988.</p>
       ${donateUrl() ? `<div class="donate-row"><a class="donate" href="${esc(donateUrl())}" target="_blank" rel="noopener">Support ZigZag Mind</a>
         <p class="small" style="margin:2px 0 0">Free for everyone, always. If it helped, you can help keep it running.</p></div>` : ""}` };
@@ -3621,51 +4064,51 @@ const SCREENS = {
   /* First launch only. Help stays in the top bar on every step, and 988 is on the first screen. */
   "ob-about"(){
     return { close:false, body:`
-      <div class="ob-hello">${zagsMark("zmark-lg")}${title("Welcome to ZigZag Mind.")}</div>
-      <p class="sub tagline-zig">${TAGLINE_ZIG}</p>
+      <div class="ob-hello">${zagsMark("zmark-lg")}${title(l10n("ob.welcome"))}</div>
+      <p class="sub tagline-zig">${l10n("ob.tagline")}</p>
       ${zigzag()}
-      <p class="sub">Help for hard moments, one small step at a time.</p>
-      <p class="small" style="margin:16px 0 0">In danger or thinking about suicide? Call or text 988. It's free and open 24/7.</p>
+      <p class="sub">${l10n("ob.help")}</p>
+      <p class="small" style="margin:16px 0 0">${l10n("ob.danger")}</p>
       ${row988()}
-      <div class="panel"><h3>What it is</h3><ul>
-        <li>A self-help tool for anxiety, spiraling thoughts, cravings, and low moods.</li>
-        <li>Small, concrete things to try, and a plan you make yourself.</li>
-        <li>Private. What you write stays on this phone.</li></ul></div>
-      <div class="panel" style="margin-top:10px"><h3>What it isn't</h3><ul>
-        <li>Not an emergency service. Call 911 if someone is hurt or in danger.</li>
-        <li>Not therapy, medical care, or a diagnosis.</li>
-        <li>Not a person. It never contacts anyone for you.</li></ul></div>
-      <p class="small ob-privacy" style="margin:12px 0 0"><button class="link inline" data-act="privacyOpen">Privacy &amp; terms</button></p>`,
-      actions:`<button class="btn btn-primary" data-act="obNext">Next</button>` };
+      <div class="panel"><h3>${l10n("ob.whatIs")}</h3><ul>
+        <li>${l10n("ob.is1")}</li>
+        <li>${l10n("ob.is2")}</li>
+        <li>${l10n("ob.is3")}</li></ul></div>
+      <div class="panel" style="margin-top:10px"><h3>${l10n("ob.whatIsnt")}</h3><ul>
+        <li>${l10n("ob.isnt1")}</li>
+        <li>${l10n("ob.isnt2")}</li>
+        <li>${l10n("ob.isnt3")}</li></ul></div>
+      <p class="small ob-privacy" style="margin:12px 0 0"><button class="link inline" data-act="privacyOpen">${l10n("privacy.link")}</button></p>`,
+      actions:`<button class="btn btn-primary" data-act="obNext">${l10n("ob.next")}</button>` };
   },
 
   "ob-age"(){
     return { close:false, body:`
-      ${title("Are you 18 or older?")}
-      <p class="sub">ZigZag Mind is made for adults.</p>`,
-      actions:`<button class="btn btn-primary" data-act="obAdult">Yes, I'm 18 or older</button>
-        <button class="btn btn-secondary" data-act="obMinor">No, I'm under 18</button>
-        <button class="btn btn-secondary" data-act="obBack">Back</button>` };
+      ${title(l10n("ob.age"))}
+      <p class="sub">${l10n("ob.adults")}</p>`,
+      actions:`<button class="btn btn-primary" data-act="obAdult">${l10n("ob.adult")}</button>
+        <button class="btn btn-secondary" data-act="obMinor">${l10n("ob.minor")}</button>
+        <button class="btn btn-secondary" data-act="obBack">${l10n("common.back")}</button>` };
   },
 
   "ob-minor"(){
     return { close:false, body:`
-      ${title("ZigZag Mind is made for adults.")}
-      <p>You still deserve support that fits you. If things are hard right now, 988 is free, open 24/7, and there for people of any age.</p>
+      ${title(l10n("ob.adults"))}
+      <p>${l10n("ob.minor1")}</p>
       ${row988()}
-      <p style="margin-top:16px">You can also talk to an adult you trust: a parent, a teacher, a school counselor, or a doctor.</p>
-      <p class="disclaimer">Call 911 if someone is hurt or in danger.</p>`,
+      <p style="margin-top:16px">${l10n("ob.minor2")}</p>
+      <p class="disclaimer">${l10n("ob.call911")}</p>`,
       actions:"" };
   },
 
   "ob-plan"(){
     return { close:false, body:`
-      ${title("Want to make your plan now?")}
-      <p>Your plan holds what helps on a hard day: the early signs, things that help, people to reach, and what you want to remember.</p>
-      <p class="sub">It's easiest to make on a good day. It takes a few minutes, and it's saved only on this phone.</p>
-      <p class="small" style="margin-top:12px">You'll find it any time under My Plan.</p>`,
-      actions:`<button class="btn btn-primary" data-act="obPlanNow">Make my plan now</button>
-        <button class="btn btn-secondary" data-act="obLater">Later</button>` };
+      ${title(l10n("ob.planTitle"))}
+      <p>${l10n("ob.plan1")}</p>
+      <p class="sub">${l10n("ob.plan2")}</p>
+      <p class="small" style="margin-top:12px">${l10n("ob.plan3")}</p>`,
+      actions:`<button class="btn btn-primary" data-act="obPlanNow">${l10n("ob.planNow")}</button>
+        <button class="btn btn-secondary" data-act="obLater">${l10n("ob.later")}</button>` };
   },
 
   about(){
@@ -4043,11 +4486,11 @@ function patternTap(i){
 }
 
 function topBar(def){
-  const left = def.close ? `<button class="icon-btn" data-act="home" aria-label="Close and go to home">×</button>` : `<span class="spacer"></span>`;
+  const left = def.close ? `<button class="icon-btn" data-act="home" aria-label="${l10n("help.close")}">×</button>` : `<span class="spacer"></span>`;
   return `<div class="topbar">${left}
-    <button class="help-pill" data-act="crisis" aria-label="Get help now">
+    <button class="help-pill" data-act="crisis" aria-label="${l10n("help.aria")}">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"/></svg>
-      Help</button></div>`;
+      ${l10n("help.label")}</button></div>`;
 }
 function yellowBar(){
   return `<div class="ybar" role="region" aria-label="Support">
@@ -4058,8 +4501,8 @@ function yellowBar(){
     </div>${codeWord() ? `<div class="row one">${codeWordButton(false, "chip")}</div>` : ""}</div>`;
 }
 function tabBar(){
-  const tabs = [["home","Home"],["plan","My Plan"],["progress","Progress"],["settings","Settings"]];
-  return `<nav class="tabbar" aria-label="Main">${tabs.map(([k, l]) =>
+  const tabs = [["home",l10n("tab.home")],["plan",l10n("tab.plan")],["progress",l10n("tab.progress")],["settings",l10n("tab.settings")]];
+  return `<nav class="tabbar" aria-label="${l10n("tab.aria")}">${tabs.map(([k, l]) =>
     `<button class="tab" data-act="tab" data-arg="${k}" ${session.screen === k ? 'aria-current="page"' : ""}><span class="bar" aria-hidden="true"></span>${l}</button>`).join("")}</nav>`;
 }
 function devPanel(){
