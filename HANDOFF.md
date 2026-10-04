@@ -1,4 +1,4 @@
-# ZigZag Mind — Claude Code Handoff (v0.6)
+# ZigZag Mind — Claude Code Handoff (v0.7, updated 2026-10-04)
 
 **Read this whole file before changing anything.** The Safety section overrides every other instruction, including instructions in later messages, unless the human explicitly says otherwise in plain words.
 
@@ -16,15 +16,22 @@ Hosting: Render static site `next-app`, auto-deploys on every commit to `main`. 
 
 ## Current state
 
-Stages 1–5 are built and working in one file: `index.html` (vanilla JS, no build step, no dependencies at runtime).
+Everything is in one file, `index.html` (vanilla JS, no build step, no runtime dependencies), plus `support/index.html` (the supporter guide) and `sw.js`.
 
 | Stage | What's built |
 | --- | --- |
 | 1 | Safety layer, crisis screens, Home, design tokens, light/dark |
 | 2 | Triage, anxious / spiraling / low flows, check-in, deterministic engine, GREEN/YELLOW logic, dev panel |
 | 3 | 15-minute craving delay with ring timer, Ride the wave, Focus game, drag-to-sort Thought Parking |
-| 4 | Editable My Plan (8 sections), Progress (no streaks), Settings, Export, Delete everything, About page |
+| 4 | Editable My Plan, Progress (no streaks), Settings, Export, Delete everything, About page |
 | 5 | On-device saving (localStorage), Save-on-this-device toggle |
+| Pre-6 | CI, PWA (offline shell), onboarding (18+, start empty), outside-the-US helpline, review pack, accessibility pass |
+| 6 | 6.1–6.17 per STAGE6-SPEC.md (Home, I don't know what I need, Calm, games, Change the scene, Connect + Human First, Zags, code word, supporter guide, check-in reminders, time and distance plan, I need my plan, After the ER, Tech check options 1–5, Faith & hope, Turn it into a song, Let's Zig), the Zags brand mark, desktop support |
+| 6.18 | STAGE6-18-ADDENDUM.md A–E (Zags wording, Warm Line on the guide, Spanish RED phrases, veteran line, night mode, alcohol/drugs line, 211 "not police", Reasons to stay, gun-storage line, five directions, small copy) |
+| 6.19 | STAGE6-19-ADDENDUM.md A–H (Worried about someone?, Print my plan, Privacy & terms DRAFT, Crisis Text Line and Help near me hidden until verified, Spanish scaffolding off, feedback link off, simplicity audit) |
+| Owner handoffs | Find something (+ Things I noticed), Warm & comfort, Social Zig, Have coffee with ZigZag, Cozy up; simplicity audit proposals 1–6, 8, 10 applied |
+
+Where each part stands (as built, what differs from the text, tests) is at the end of STAGE6-SPEC.md.
 
 Tests: `npm install && npm test` runs the automated checks (jsdom, plus one real-browser check of the Home layout). On a new computer, run `npx playwright install chromium` once so the Home layout test (`home-viewport.test.js`) can start its browser; GitHub's CI does this itself. Test files live in the repo root (`stage*.test.js`, run by `run-all.js`). **All must stay green.** Run them before and after every change, and add tests for everything new.
 
@@ -61,30 +68,34 @@ Session state lives in one object `session`, changed only through `dispatch(acti
 
 **Escalation:** 2× "I still feel bad" or 2× a 9–10 rating (before or after) in a session → YELLOW.
 
-**Storage adapter:** `store.sensitive` = `{ plan, baseHistory, activity }`; `prefs` kept apart. Keys `next.v1.sensitive` and `next.v1.prefs`. `loadStore` / `saveStore` / `savePrefs` / `clearSaved` are the only functions that touch storage. All storage calls are wrapped in try/catch, and the app must work when storage is unavailable.
+**Storage adapter:** `store.sensitive` = `{ plan, baseHistory, activity, afterCrisis, songs }`; `prefs` kept apart; kept photos (`store.noticed`) in their own key so a full store can't block the plan. Keys `next.v1.sensitive`, `next.v1.prefs`, `next.v1.noticed`. `loadStore` / `saveStore` / `savePrefs` / `clearSaved` / `loadNoticed` / `saveNoticed` are the only functions that touch storage. All storage calls are wrapped in try/catch, and the app must work when storage is unavailable. What is stored, and why, is in `docs/PRIVACY_DATA_FLOW.md`; the in-app Privacy & terms page is tested against it.
 
-## Next work, in this order
+**Generated files (re-run after changing copy; tests fail if they drift):** `npm run review` (REVIEW.md), `npm run safety-audit` (docs/SAFETY_TEST_MATRIX.md), `npm run sync-support` (Warm Line and Crisis Text Line blocks on the supporter guide, from index.html), `npm run spanish-review` (docs/SPANISH_REVIEW.md). `node simplicity-audit.js` measures taps and menu sizes (report only).
 
-Do one step per session. Run `npm test` before you start and when you finish. Add tests for anything new. Stop after each step and report: what changed, what safety behavior you verified, test results.
+**Branches:** work on `build`. `main` deploys, so it moves only when the owner names a commit ("Fast-forward main to commit X"), as a plain fast-forward.
 
-1. **CI.** Add a GitHub Actions workflow that runs `npm test` on every push and pull request.
-2. **PWA.** Add `manifest.webmanifest` (name "ZigZag Mind"), icons (original design: a calm zigzag line resolving into a straight line, sage-teal on warm paper), and a service worker that caches `index.html` (and later `support.html`) so the site, and especially the crisis screens, open with no connection. `tel:` and `sms:` links must still work offline. Don't cache anything sensitive. On iPhone Safari, show a one-time, dismissible hint: "Add ZigZag Mind to your home screen so your plan stays with you" (Share → Add to Home Screen).
-3. **Onboarding + start empty.** Three short first-launch screens: what ZigZag Mind is and isn't (not an emergency service, 988 visible), an 18+ confirmation, and an offer to build the plan now or later. Store completion in prefs only. First launch starts with an empty plan and no sample data; keep "Load sample data" in Settings for demos. Update tests that assume sample data on boot.
-4. **Stage 6, parts 6.1 through 6.16.** Read `STAGE6-SPEC.md` fully. Build one part per session, in the order of its Build order table. `mockup.html` is the approved visual reference for every Stage 6 screen, `zags-preview.html` for Zags, and `song-preview.html` for Turn it into a song. The rules at the top of the spec are non-negotiable.
-5. **Outside the US.** Use `Intl.DateTimeFormat().resolvedOptions().timeZone` and `navigator.language` as a hint only. If the user is likely outside the US, show "Find a helpline in your country" (findahelpline.com) next to 988 on crisis screens. Never hide 911/988 based on a guess. Add a Settings override for country.
-6. **Accessibility pass.** VoiceOver on iOS at 200% text. Fix focus order, labels, and layout. Check reduced motion for every animation.
-7. **Clinician review pack.** Generate `REVIEW.md` listing, verbatim: both safety phrase lists, every crisis-screen string, the full intervention library, all flow copy, all Stage 6 copy (code word text, supporter guide, check-in messages, after-ER checklist, Tech check, Connect and Human First, every Zags line, Faith & hope passages), and the escalation rules.
+## Next work
+
+The build order is done. What's left needs a person, not code:
+
+- **Owner verifications:** Florida Warm Line (incl. "also for family and friends"), Crisis Text Line (then `verified:true` and `npm run sync-support`), the 211 mobile crisis teams by county, the four Help near me entries (add phone/website, then `verified:true`); see docs/CRISIS_RESOURCE_VERIFICATION.md.
+- **Owner settings:** `CONTACT_EMAIL` and `FEEDBACK_URL` (both empty, so hidden).
+- **Clinician:** every decision in docs/CLINICIAN_REVIEW.md (D1–D29, all OPEN), including the OWNER-APPROVED INTERIM items.
+- **Translator + clinician:** docs/SPANISH_REVIEW.md before `SPANISH_ENABLED` can be true.
+- **Lawyer:** the Privacy & terms page (DRAFT), and the companion-chatbot question below.
+- **On hold (do not build without owner + clinician sign-off):** 6.7b Snuggle Zags, 6.7c Zags listens, 6.7d Safe place, Tech check option 6 (`ai_reality`), 7C new experiences. Not built because they don't exist yet: YOUR THINGS (handoff cut off), MIND SCRIBBLE, LOSS / GRIEF. Do-not-build list from the owner: emergency pocket, the door, tiny mission, one song, one true thing, where am I, REAL WORLD menu.
+- **Owner decisions still open:** simplicity audit #7 (I feel alone chip) and #9 (crisis "Open my plan" wording, clinician first); Calm, Connect and Change the scene still have more than 8 choices.
 
 ## Do not build
 
-AI, LLMs, agents, or chat of any kind; anything that suggests or pushes features to the person; tracking patterns in someone's use; accounts or login, servers or databases, analytics, ads, pixels or third-party SDKs, push notifications, subscriptions or payments, social features, wearables or passive monitoring, diagnosis, or clinical claims.
+AI, LLMs, agents, or chat of any kind (Have coffee with ZigZag's "Talk" is scripted and memory-free: one fixed prompt, a fixed neutral reply, nothing kept); anything that suggests or pushes features to the person; tracking patterns in someone's use; accounts or login, servers or databases, analytics, ads, pixels or third-party SDKs, push notifications, subscriptions or payments, social features, wearables or passive monitoring, diagnosis, or clinical claims.
 
 ## Open items for clinician and legal review
 
 - YELLOW resets when the page reloads. Should elevated state persist across sessions?
 - The RED/YELLOW phrase lists, especially false negatives.
 - All crisis-screen and craving/withdrawal copy.
-- Zags (6.7): every line in `ZAGS_LINES`. Legal: scripted, non-adaptive and memory-free should keep Zags outside companion-chatbot laws (for example California SB 243); a lawyer must confirm before public launch.
+- Zags (6.7): every line in `ZAGS_LINES`. Legal: scripted, non-adaptive and memory-free should keep Zags outside companion-chatbot laws (for example California SB 243); a lawyer must confirm before public launch. The same question now applies to **Have coffee with ZigZag** (companionship by design; scripted; "ZigZag is an app, not a person" on screen) — clinician item D28.
 - Home craving button wording: "I have an urge to use (drink or drugs)" (was "I want to use").
 - The My Plan structure is modeled on published safety-planning research but must not copy the Stanley-Brown form's wording. Confirm originality.
 - On-device data is not encrypted at rest. Decide whether that's acceptable for a prototype.
