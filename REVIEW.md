@@ -522,6 +522,17 @@ Steps:
 1. Is this helping?
 2. Choose a different direction.
 
+### Have coffee with ZigZag (`coffee_with_zigzag`)
+
+- Button: "Have coffee with ZigZag"
+- Description: "Make something warm and take a few quiet minutes. ZigZag has a cup too."
+- For: anxious, low, spiraling · about 5 min · needs moving around
+
+Steps:
+1. Make something warm.
+2. Sit for a few minutes.
+3. Put the phone down.
+
 ### Make something warm (`warm_comfort`)
 
 - Button: "Make something warm"
@@ -1028,7 +1039,7 @@ On the guide when a name is given: "[name] would like you to check in now and th
 **Let's Zig** is a simple product rule, not a clinical method: after "I still feel bad" or a game's "No", the next suggestion comes from a different channel when one is available. After a recent rating of 8 or more, BODY, SPACE and PEOPLE steps come first. Safety routing always comes first: RED stops everything, and the YELLOW order (connection, own plan, grounding, fresh air) still wins.
 - `BODY`: grounding, breathing, hydration, walking, touch_real_world
 - `SPACE`: change_scene, environment_change, find_alive, craving_delay, break_the_loop
-- `SENSE`: distraction_game, distraction_color_hunt, distraction_around_me, distraction_categories, distraction_memory, distraction_pattern, distraction_60_second, ridiculous_mode, zags, song, find_something, warm_comfort
+- `SENSE`: distraction_game, distraction_color_hunt, distraction_around_me, distraction_categories, distraction_memory, distraction_pattern, distraction_60_second, ridiculous_mode, zags, song, find_something, warm_comfort, coffee_with_zigzag
 - `PEOPLE`: ai_relationship_check, be_around_people, ai_loss, connection
 - `ACTION`: social_zig, ai_reliance_check, ai_fomo, thought_parking, still_true, true_sentence, kind_stranger, borrow_ten, behavioral_activation
 
@@ -1073,6 +1084,19 @@ With one of the person's own things: "Find something from one of your things: [t
 No camera: "No camera? That's okay." / "Just find something and look at it for a moment." [I found something] [Try something else]. After: "You found it." / "Want to write one sentence about it? Optional." (safety-checked) [Keep it] [Try another] [I'm done] / "How do I feel now?" → "Kept in Things I noticed." → "You can put the phone down now." [I'm done]
 
 Things I noticed: "Only on this phone. Not a feed, not shared." Each photo can be deleted (asks once). "Something that's yours" (used by the next features): the person's own entries from My Plan's "Things that help me", then "Go do your thing. You don't need to accomplish anything. Just spend a few minutes doing it." [I'm heading out]
+
+### Have coffee with ZigZag (owner handoff) — CLINICIAN REVIEW: companionship wording
+
+A few quiet minutes with a cup, then back to real life. Scripted lines only, no AI; an illustrated cup labelled "ZigZag" (not Zags); "ZigZag is an app, not a person. Nothing you type here is kept." on the screen; finite (after four choices it ends). Typed text is safety-checked and dropped. Calm card and "Have it with ZigZag" from Warm & comfort; the engine can pick it for anxious, low or spiraling (not alone, not craving). Compare 6.18 A ("stay with you" → "guide you") and the on-hold 6.7c "Zags listens".
+
+Entry: "Have coffee with ZigZag" / "Make something warm. I'll sit with you for a few minutes." → drinks → "Go make something warm." / "I'll wait." [I'm ready] → "I made coffee too." … "We don't have to talk about anything." → "What do you want to do?" Talk · Just sit · Tell me something random (hidden while YELLOW or after a crisis screen; three at most) · I need to get something out · I'm not sure
+- Talk (one at a time): "What's going on?" · "What's the hardest part right now?" · "What happened today?" · "What's been stuck in your head?" → replies: "Okay. Thanks for saying it." · "Okay." · "I hear you. Take your time."
+- Just sit (slow, about 9 seconds apart): "☕ sip" → "Still here." → "Look at your coffee for a second." → "I'm still here." → "You don't have to fill the silence."
+- Random: "Somewhere right now, somebody is microwaving something they forgot about." · "There is probably a sock in the world that has been missing its pair for years." · "Some dog is currently convinced it deserves whatever you're eating." · "A refrigerator somewhere is making that weird humming sound again."
+- Get it out: "Okay. Get it out." / "Fragments, the same word again, anything. It won't be kept." → "Okay. Leave the mess here." [Keep going] [Just sit] [Let's Zig]
+- I'm not sure: "That's okay. We can just sit." → Just sit
+- Between choices: "That was a good sip." · "Mine's getting cold." · "Take your time." · "No rush." · "You don't have to figure everything out right now." · "We're just having coffee."
+- End: "I think we've sat here long enough." / "How are you doing now?" A little better · About the same · Still rough · I don't know → better: "Good. You don't have to do anything else right now." · same: "That's okay. You don't have to solve it all right now." · unsure: "That's okay too. Give yourself a few more minutes." · rough: "Okay. Maybe coffee wasn't the whole answer. Let's Zig." → "Go enjoy the rest of your coffee." → "You can put the phone down now." (A little better + own things: "Maybe go do something that's yours." [Go do your thing] [Just enjoy my coffee]; Still rough → Let's Zig)
 
 ### Warm & comfort (owner handoff)
 
@@ -1407,6 +1431,7 @@ Rendered for each state where the screen changes by state. Identical renders are
 - **Button:** Help _(screen reader: "Get help now")_
 - **Heading:** Let's slow things down.
 - Pick one. You can stop any time.
+- **Button:** Have coffee with ZigZag — Make something warm. I'll sit with you for a few minutes.
 - **Button:** Make something warm — Nothing needs to be solved right now
 - **Button:** Calm down with Zags — Breathe together for a few minutes
 - **Button:** Breathe for 1 minute — In for 4, out for 6
@@ -1746,6 +1771,48 @@ _When: distraction_
 - **Button:** About the same
 - **Button:** I don't know
 
+### `coffee`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Have coffee with ZigZag
+- **Heading:** Make something warm.
+- Make something warm. I'll sit with you for a few minutes.
+- **Button:** Decaf coffee
+- **Button:** Caffeine-free tea
+- **Button:** Hot cocoa
+- **Button:** Warm milk
+- **Button:** Warm water
+- **Button:** Warm cider
+- **Button:** Something else
+
+### `coffee-go`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Go make something warm.
+- I'll wait.
+- Make it comfortably warm, not dangerously hot. Set it down before you walk around with it.
+- **Button:** I'm ready
+
+### `coffee-table`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Having coffee with ZigZag
+- ZigZag
+- ZigZag is an app, not a person. Nothing you type here is kept.
+- **Button:** I'm done
+
+### `coffee-end`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** That's okay.
+- You don't have to solve it all right now.
+- Go enjoy the rest of your coffee.
+- **Button:** I'm done
+
 ### `warm`
 
 - **Button:** × _(screen reader: "Close and go to home")_
@@ -1769,6 +1836,7 @@ _When: distraction_
 - Take your time.
 - Make it comfortably warm, not dangerously hot. Set it down before you walk around with it.
 - **Button:** While it's getting ready, find something around you
+- **Button:** Have it with ZigZag
 - **Button:** It's ready
 - **Button:** That's enough
 
@@ -3291,6 +3359,14 @@ _When: distraction_
 - **Button:** Help _(screen reader: "Get help now")_
 - Is this helping? · Step 1 of 2
 - **Heading:** Is this helping?
+- **Button:** Next
+
+#### Have coffee with ZigZag
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Have coffee with ZigZag · Step 1 of 3
+- **Heading:** Make something warm.
 - **Button:** Next
 
 #### Make something warm

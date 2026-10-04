@@ -382,6 +382,21 @@ html.reduce .zmark-wave .zmark-body{animation:none}
 .faith-next{margin-top:8px}
 .faith-next a.sit{display:inline-flex;align-items:center;text-decoration:none;color:var(--text)}
 
+/* Have coffee with ZigZag: a quiet, slow cup; static with reduced motion */
+.coffee-scene{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;padding-top:8px}
+.coffee-cup{width:180px;height:154px}
+.coffee-name{margin:0;font-size:13px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted)}
+.coffee-line{min-height:3.2em;margin:6px 0 0;font-family:var(--serif);font-size:24px;line-height:1.3}
+.coffee-note{margin-top:14px}
+.coffee-scene .field{width:100%;text-align:left}
+.coffee-cup .steam path{animation:steam 7s ease-in-out infinite}
+.coffee-cup .steam .s2{animation-delay:1.4s}.coffee-cup .steam .s3{animation-delay:2.8s}
+@keyframes steam{0%,100%{opacity:.15;transform:translateY(4px)}50%{opacity:.6;transform:translateY(-4px)}}
+.coffee-cup .cup{transform-box:fill-box;transform-origin:50% 100%;animation:sip 16s ease-in-out infinite}
+@keyframes sip{0%,78%,100%{transform:translateY(0) rotate(0)}84%,90%{transform:translateY(-10px) rotate(-8deg)}}
+@media (prefers-reduced-motion:reduce){.coffee-cup .steam path,.coffee-cup .cup{animation:none}}
+html.reduce .coffee-cup .steam path,html.reduce .coffee-cup .cup{animation:none}
+
 /* Find something */
 .fs-photo{display:block;width:100%;max-height:60vh;object-fit:contain;border-radius:14px;margin-top:12px;background:var(--surface)}
 label.fs-start{margin-top:16px;cursor:pointer}
@@ -1256,6 +1271,54 @@ function szOptions(){
   return `<div class="list sz-opts">${o.map(([k, l]) => `<button class="card" data-act="szGo" data-arg="${k}"><span>${l}</span></button>`).join("")}</div>`;
 }
 
+/* HAVE COFFEE WITH ZIGZAG (owner handoff, 2026-10-04): a few quiet minutes with a cup, then back to real life.
+   Not therapy, not a chatbot, not a person: scripted lines only, no AI, nothing typed is kept (safety-checked, then
+   dropped). Finite: after a few choices it ends. Uses an illustrated cup, not Zags (the Zags mark stays in its five
+   places). "Tell me something random" is hidden while YELLOW or after a crisis screen this visit (like Ridiculous mode).
+   Clinician review: companionship wording (compare 6.18 A and the on-hold 6.7c "Zags listens"). */
+const COFFEE = {
+  entry:"Have coffee with ZigZag",
+  entrySub:"Make something warm. I'll sit with you for a few minutes.",
+  go:["Go make something warm.","I'll wait."],
+  note:"ZigZag is an app, not a person. Nothing you type here is kept.",
+  intro:["I made coffee too.","We don't have to talk about anything."],
+  menu:"What do you want to do?",
+  talk:["What's going on?","What's the hardest part right now?","What happened today?","What's been stuck in your head?"],
+  ack:["Okay. Thanks for saying it.","Okay.","I hear you. Take your time."],
+  sit:["☕ sip","Still here.","Look at your coffee for a second.","I'm still here.","You don't have to fill the silence."],
+  random:["Somewhere right now, somebody is microwaving something they forgot about.","There is probably a sock in the world that has been missing its pair for years.","Some dog is currently convinced it deserves whatever you're eating.","A refrigerator somewhere is making that weird humming sound again."],
+  moments:["That was a good sip.","Mine's getting cold.","Take your time.","No rush.","You don't have to figure everything out right now.","We're just having coffee."],
+  unsure:"That's okay. We can just sit.",
+  out:["Okay. Get it out.","Fragments, the same word again, anything. It won't be kept."],
+  outDone:"Okay. Leave the mess here.",
+  enough:["I think we've sat here long enough.","How are you doing now?"],
+  how:[["better","A little better"],["same","About the same"],["rough","Still rough"],["unsure","I don't know"]],
+  reply:{ better:["Good.","You don't have to do anything else right now."], same:["That's okay.","You don't have to solve it all right now."],
+    unsure:["That's okay too.","Give yourself a few more minutes."], rough:["Okay.","Maybe coffee wasn't the whole answer. Let's Zig."] },
+  end:["Go enjoy the rest of your coffee.","You can put the phone down now."],
+  yours:"Maybe go do something that's yours."
+};
+const COFFEE_TURNS = 4, COFFEE_RANDOM_MAX = 3;
+let coffeeTimers = [];
+function coffeeClear(){ coffeeTimers.forEach(clearTimeout); coffeeTimers = []; }
+function coffeeSay(line){ const el = document.getElementById("coffeeLine"); if (el) el.textContent = line; }
+/* The intro and "Just sit" play a few quiet lines with long pauses; leaving the screen (Help, X, RED) stops them. */
+function coffeeSequence(lines, gap, then){
+  coffeeClear();
+  lines.forEach((l, i) => coffeeTimers.push(setTimeout(() => { if (session.screen === "coffee-table") coffeeSay(l); }, i * gap)));
+  if (then) coffeeTimers.push(setTimeout(() => { if (session.screen === "coffee-table") then(); }, lines.length * gap));
+}
+function coffeeRandomOk(){ return !session.yellow && !session.sawCrisis && (ui.coffee.randomUsed || 0) < COFFEE_RANDOM_MAX; }
+function coffeeCup(){
+  return `<svg class="coffee-cup" viewBox="0 0 200 170" role="img" aria-label="ZigZag's cup of coffee, on the table">
+    <g class="steam" fill="none" stroke="var(--text-muted)" stroke-width="3" stroke-linecap="round" opacity=".5">
+      <path class="s1" d="M80 52 C72 40 88 32 80 18"/><path class="s2" d="M100 50 C92 38 108 30 100 14"/><path class="s3" d="M120 52 C112 40 128 32 120 18"/></g>
+    <g class="cup"><path d="M58 64 H142 L134 132 C133 140 126 146 118 146 H82 C74 146 67 140 66 132 Z" fill="var(--surface)" stroke="var(--primary)" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M142 78 C162 78 164 112 138 114" fill="none" stroke="var(--primary)" stroke-width="4" stroke-linecap="round"/>
+      <path d="M62 72 H138" stroke="var(--zag)" stroke-width="6" stroke-linecap="round"/></g>
+    <path d="M20 156 H180" stroke="var(--line)" stroke-width="4" stroke-linecap="round"/></svg>`;
+}
+
 /* WARM & COMFORT (owner handoff, 2026-10-04): an ordinary ritual, not a treatment. The ritual is the point, not
    caffeine: decaf and caffeine-free come first and regular coffee isn't suggested. No timer, every step skippable,
    no tracking, no medical claims. Not offered in the craving flow. */
@@ -1485,6 +1548,12 @@ INTERVENTION_LIBRARY.push(
   { id:"social_zig", name:"Is this helping?", tryLabel:"Is this helping?", description:"Notice whether scrolling is helping right now, and choose a different direction if it isn't.", durationSec:120,
     states:[], intensityRange:[0,10], needsMobility:false, steps:["Is this helping?","Choose a different direction."], completion:"tap_done" }
 );
+// HAVE COFFEE WITH ZIGZAG (SENSE, real world). Not offered for "alone" (people come first there) or craving.
+INTERVENTION_LIBRARY.push(
+  { id:"coffee_with_zigzag", name:"Have coffee with ZigZag", tryLabel:"Have coffee with ZigZag", description:"Make something warm and take a few quiet minutes. ZigZag has a cup too.", durationSec:300,
+    states:["anxious","low","spiraling"], intensityRange:[0,10], needsMobility:true, realWorld:true,
+    steps:["Make something warm.","Sit for a few minutes.","Put the phone down."], completion:"tap_done" }
+);
 // WARM & COMFORT (SENSE, real world).
 INTERVENTION_LIBRARY.push(
   { id:"warm_comfort", name:"Make something warm", tryLabel:"Make something warm", description:"Nothing needs to be solved right now. Make something warm and take a few quiet minutes.", durationSec:300,
@@ -1508,7 +1577,7 @@ const CHANNEL_OF = {
   grounding:"BODY", breathing:"BODY", hydration:"BODY", walking:"BODY", touch_real_world:"BODY",
   change_scene:"SPACE", environment_change:"SPACE", find_alive:"SPACE", craving_delay:"SPACE",
   distraction_game:"SENSE", distraction_color_hunt:"SENSE", distraction_around_me:"SENSE", distraction_categories:"SENSE",
-  distraction_memory:"SENSE", distraction_pattern:"SENSE", distraction_60_second:"SENSE", ridiculous_mode:"SENSE", zags:"SENSE", song:"SENSE", break_the_loop:"SPACE", ai_relationship_check:"PEOPLE", be_around_people:"PEOPLE", find_something:"SENSE", warm_comfort:"SENSE", social_zig:"ACTION", ai_loss:"PEOPLE", ai_reliance_check:"ACTION", ai_fomo:"ACTION",
+  distraction_memory:"SENSE", distraction_pattern:"SENSE", distraction_60_second:"SENSE", ridiculous_mode:"SENSE", zags:"SENSE", song:"SENSE", break_the_loop:"SPACE", ai_relationship_check:"PEOPLE", be_around_people:"PEOPLE", find_something:"SENSE", warm_comfort:"SENSE", social_zig:"ACTION", coffee_with_zigzag:"SENSE", ai_loss:"PEOPLE", ai_reliance_check:"ACTION", ai_fomo:"ACTION",
   connection:"PEOPLE",
   thought_parking:"ACTION", still_true:"ACTION", true_sentence:"ACTION", kind_stranger:"ACTION", borrow_ten:"ACTION", behavioral_activation:"ACTION"
 };
@@ -2527,6 +2596,7 @@ function startIntervention(interventionId, opts = {}){
     ui.touchPhase = interventionId === "touch_real_world" && getPlan().anchor ? "anchor" : null;
     route = R617[interventionId];
   }
+  if (interventionId === "coffee_with_zigzag"){ route = "coffee"; ui.warmDrink = null; ui.coffee = { phase:"intro", turns:0, talkIdx:0, randomUsed:0, line:"" }; }
   if (interventionId === "warm_comfort"){ route = "warm"; ui.warmDrink = null; ui.warmStep = 0; ui.warmSlow = false; }
   if (interventionId === "find_something"){ route = "fs"; fsDropPhoto(); ui.fsIdx = opts.mission != null ? opts.mission : 1; ui.fsYours = opts.yours || null; ui.fsCaption = ""; ui.fsKept = false; ui.msg = ""; }
   if (interventionId === "song"){ route = "song"; ui.songMood = null; ui.songIdx = 0; ui.songLines = ["", "", ""]; ui.song = null; ui.songEnded = false; ui.songKept = false; ui.songReplay = false; ui.msg = ""; }
@@ -2755,6 +2825,7 @@ const SCREENS = {
     return { close:true, body:`
       ${title(l10n("calm.title"))}
       <p class="sub">${l10n("calm.sub")}</p>
+      <button class="card wide coffee-card" data-act="coffeeStart">${icon("calm")}<span>${COFFEE.entry}<span class="meta">${COFFEE.entrySub}</span></span></button>
       <button class="card wide warm-card" data-act="warmStart">${icon("calm")}<span>Make something warm<span class="meta">Nothing needs to be solved right now</span></span></button>
       <button class="card wide zcard" data-act="zags" data-arg="calm">${zagsFace()}<span>${l10n("calm.zags")}<span class="meta">${l10n("calm.zagsMeta")}</span></span></button>
       <div class="list">${opts.map(([arg, ic, t, m]) =>
@@ -2989,6 +3060,76 @@ const SCREENS = {
       actions:SZ.feltChoices.map(([k, l]) => `<button class="btn btn-secondary" data-act="szZig" data-arg="felt">${l}</button>`).join("") };
   },
 
+  /* HAVE COFFEE WITH ZIGZAG */
+  coffee(){
+    return { close:true, body:`
+      <p class="step-count">${COFFEE.entry}</p>
+      ${title("Make something warm.")}
+      <p class="sub">${COFFEE.entrySub}</p>
+      <div class="list warm-opts">${WARM_DRINKS.map(([k, e, l]) => `<button class="card" data-act="coffeePick" data-arg="${k}">${e ? `<span class="em" aria-hidden="true">${e}</span>` : ""}<span>${l}</span></button>`).join("")}</div>` };
+  },
+  "coffee-go"(){
+    return { close:true, body:`
+      ${stepTitle(COFFEE.go[0], true)}
+      <p class="sub" style="font-size:19px">${COFFEE.go[1]}</p>
+      <p class="small warm-hot">${WARM_HOT}</p>`,
+      actions:`<button class="btn btn-primary" data-act="coffeeReady">I'm ready</button>` };
+  },
+  "coffee-table"(){
+    const c = ui.coffee || { phase:"intro" };
+    let actions = "", extra = "";
+    if (c.phase === "menu"){
+      actions = `<button class="btn btn-secondary" data-act="coffeeDo" data-arg="talk">Talk</button>
+        <button class="btn btn-secondary" data-act="coffeeDo" data-arg="sit">Just sit</button>
+        ${coffeeRandomOk() ? `<button class="btn btn-secondary" data-act="coffeeDo" data-arg="random">Tell me something random</button>` : ""}
+        <button class="btn btn-secondary" data-act="coffeeDo" data-arg="out">I need to get something out</button>
+        <button class="btn btn-secondary" data-act="coffeeDo" data-arg="unsure">I'm not sure</button>`;
+    } else if (c.phase === "talk"){
+      extra = `<label class="sr" for="coffeeBox">${esc(COFFEE.talk[c.talkIdx % COFFEE.talk.length])}</label>
+        <textarea class="field" id="coffeeBox" maxlength="500" style="min-height:100px"></textarea>
+        ${ui.msg ? `<p class="err" role="alert">${esc(ui.msg)}</p>` : ""}`;
+      actions = `<button class="btn btn-primary" data-act="coffeeSayIt">Say it</button><button class="btn btn-secondary" data-act="coffeeBack">Back</button>`;
+    } else if (c.phase === "out"){
+      extra = `<p class="sub">${COFFEE.out[1]}</p><label class="sr" for="coffeeBox">Get it out</label>
+        <textarea class="field" id="coffeeBox" maxlength="1000" style="min-height:130px"></textarea>
+        ${ui.msg ? `<p class="err" role="alert">${esc(ui.msg)}</p>` : ""}`;
+      actions = `<button class="btn btn-primary" data-act="coffeeOutDone">Done</button><button class="btn btn-secondary" data-act="coffeeBack">Back</button>`;
+    } else if (c.phase === "outdone"){
+      actions = `<button class="btn btn-secondary" data-act="coffeeBack">Keep going</button>
+        <button class="btn btn-secondary" data-act="coffeeDo" data-arg="sit">Just sit</button>
+        <button class="btn btn-secondary" data-act="coffeeZig">Let's Zig</button>`;
+    } else if (c.phase === "random"){
+      actions = `${coffeeRandomOk() ? `<button class="btn btn-secondary" data-act="coffeeDo" data-arg="random">Another</button>` : ""}<button class="btn btn-secondary" data-act="coffeeBack">Back</button>`;
+    } else if (c.phase === "sit"){
+      actions = `<button class="btn btn-secondary" data-act="coffeeBack">Back</button>`;
+    } else if (c.phase === "enough"){
+      extra = `<p class="sub coffee-how">${COFFEE.enough[1]}</p>`;
+      actions = COFFEE.how.map(([k, l]) => `<button class="btn btn-secondary" data-act="coffeeHow" data-arg="${k}">${l}</button>`).join("");
+    }
+    return { close:true, body:`
+      <div class="coffee-scene">
+        <h1 id="screen-title" tabindex="-1" class="sr">Having coffee with ZigZag</h1>
+        ${coffeeCup()}
+        <p class="coffee-name">ZigZag</p>
+        <p class="coffee-line" id="coffeeLine" aria-live="polite">${esc(c.line || "")}</p>
+        ${extra}
+        <p class="note coffee-note">${COFFEE.note}</p>
+      </div>`,
+      actions:`${actions}${c.phase === "enough" ? "" : `<button class="link" data-act="coffeeEnough">I'm done</button>`}` };
+  },
+  "coffee-end"(){
+    const k = ui.coffeeHow || "same";
+    const [a, b] = COFFEE.reply[k] || COFFEE.reply.same;
+    const yours = k === "better" && yourThings().length > 0;   // not every time: only when it went a little better
+    return { close:true, body:`
+      ${stepTitle(a, true)}
+      <p class="sub" style="font-size:19px">${b}</p>
+      <p class="sub" style="font-size:19px;margin-top:18px">${COFFEE.end[0]}</p>
+      ${yours ? `<p class="sub">${COFFEE.yours}</p>` : ""}`,
+      actions:`${yours ? `<button class="btn btn-secondary" data-act="yourThings">Go do your thing</button>` : ""}
+        <button class="btn btn-primary" data-act="fsDone">${yours ? "Just enjoy my coffee" : "I'm done"}</button>` };
+  },
+
   /* WARM & COMFORT */
   warm(){
     return { close:true, body:`
@@ -3002,7 +3143,8 @@ const SCREENS = {
       ${stepTitle("Go make it.", true)}
       <p class="sub" style="font-size:19px">Take your time.</p>
       <p class="small warm-hot">${WARM_HOT}</p>
-      <button class="link" data-act="warmFind" style="margin-top:14px">While it's getting ready, find something around you</button>`,
+      <button class="link" data-act="warmFind" style="margin-top:14px">While it's getting ready, find something around you</button>
+      <button class="link" data-act="warmCoffee" style="display:block;margin-top:6px">Have it with ZigZag</button>`,
       actions:`<button class="btn btn-primary" data-act="warmReady">It's ready</button>
         <button class="link" data-act="warmEnough">That's enough</button>` };
   },
@@ -4938,6 +5080,7 @@ function render(){
     if (!["fs","fs-found","fs-nocam"].includes(s) && ui.fsPhoto) fsDropPhoto();   // the preview never outlives the activity
     clearInterval(tcTimer); tcTimer = null;
     clearInterval(minuteTimer); minuteTimer = null;
+    if (s !== "coffee-table") coffeeClear();   // leaving (Help, X, RED) stops the coffee lines
     if (s === "minute-down" && ui.minutePhase === "wait") minuteTimer = setInterval(minuteTick, 1000);
     if (s === "tc-loop" && ui.tcLoopEnd) tcTimer = setInterval(tcTick, 1000);   // leaving the player (Help, X, RED) stops the song at once
     if (s === "zags" && ui.zags && ui.zags.phase === "breathe") zagsStartBreathing();
@@ -5518,6 +5661,70 @@ const ACTIONS = {
     if (arg === "talk"){ ACTIONS.route("connect"); return; }
     if (arg === "pick"){ dispatch({ type:"SET_CURRENT_STATE", state:"distraction" }); ui.exclude = ["social_zig"]; ui.dirOpen = false; runEngine(); go("recommendation"); return; }   // the engine decides (YELLOW first)
     if (arg === "down"){ go("sz-enough"); return; }
+  },
+
+  /* HAVE COFFEE WITH ZIGZAG */
+  coffeeStart(){ if (blockIfRed()) return; startIntervention("coffee_with_zigzag"); },
+  coffeePick(arg){ if (blockIfRed()) return; if (!WARM_DRINKS.some(d => d[0] === arg)) return; ui.warmDrink = arg; go("coffee-go"); },   // never saved
+  warmCoffee(){ if (blockIfRed()) return; const d = ui.warmDrink; startIntervention("coffee_with_zigzag"); ui.warmDrink = d; go("coffee-go"); },
+  coffeeReady(){
+    if (blockIfRed()) return;
+    ui.coffee = { phase:"intro", turns:0, talkIdx:0, randomUsed:0, line:"" };
+    go("coffee-table");
+    // a quiet start: two lines with long pauses, then (and only then) the choices
+    coffeeSequence(COFFEE.intro, reducedMotion() ? 5000 : 4000, () => { ui.coffee.line = COFFEE.intro[1]; ui.coffee.phase = "menu"; render(); });
+  },
+  coffeeDo(arg){
+    if (blockIfRed()) return;
+    const c = ui.coffee; if (!c) return;
+    coffeeClear(); ui.msg = "";
+    c.turns++;
+    if (c.turns > COFFEE_TURNS){ ACTIONS.coffeeEnough(); return; }   // finite: no endless loop
+    if (arg === "talk"){ c.phase = "talk"; c.line = COFFEE.talk[c.talkIdx % COFFEE.talk.length]; render(); return; }
+    if (arg === "random"){
+      if (!coffeeRandomOk()){ c.phase = "menu"; render(); return; }
+      c.phase = "random"; c.line = COFFEE.random[(c.randomUsed || 0) % COFFEE.random.length]; c.randomUsed = (c.randomUsed || 0) + 1; render(); return;
+    }
+    if (arg === "out"){ c.phase = "out"; c.line = COFFEE.out[0]; render(); return; }
+    if (arg === "unsure"){ c.phase = "sit"; c.line = COFFEE.unsure; render(); coffeeSequence([COFFEE.unsure, ...COFFEE.sit], 9000); return; }
+    if (arg === "sit"){ c.phase = "sit"; c.line = ""; render(); coffeeSequence(COFFEE.sit, 9000); return; }
+  },
+  coffeeBack(){ if (blockIfRed()) return; const c = ui.coffee; if (!c) return; coffeeClear(); ui.msg = "";
+    c.phase = "menu"; c.line = COFFEE.moments[c.turns % COFFEE.moments.length]; render(); },
+  coffeeSayIt(){
+    if (blockIfRed()) return;
+    const c = ui.coffee; const b = document.getElementById("coffeeBox");
+    const text = ((b && b.value) || "").trim().slice(0, 500);
+    if (b) b.value = "";
+    if (!text){ ui.msg = "Write a few words, or tap Back."; render(); return; }
+    ui.msg = "";
+    const next = () => { c.line = COFFEE.ack[c.talkIdx % COFFEE.ack.length]; c.talkIdx++; c.phase = "menu"; render(); };   // the words are dropped here
+    handleSafeTextSubmit({ text,
+      onRed(){ coffeeClear(); applySafetyResult("RED"); },
+      onYellow(){ applySafetyResult("YELLOW"); next(); },
+      onGreen: next });
+  },
+  coffeeOutDone(){
+    if (blockIfRed()) return;
+    const c = ui.coffee; const b = document.getElementById("coffeeBox");
+    const text = ((b && b.value) || "").trim().slice(0, 1000);
+    if (b) b.value = "";
+    ui.msg = "";
+    const next = () => { c.line = COFFEE.outDone; c.phase = "outdone"; render(); };   // nothing kept
+    if (!text){ next(); return; }
+    handleSafeTextSubmit({ text,
+      onRed(){ coffeeClear(); applySafetyResult("RED"); },
+      onYellow(){ applySafetyResult("YELLOW"); next(); },
+      onGreen: next });
+  },
+  coffeeZig(){ if (blockIfRed()) return; coffeeClear(); completeCheckIn({ after:null, action:"still_bad", change:"no" }); },   // the existing engine, Let's Zig
+  coffeeEnough(){ if (blockIfRed()) return; coffeeClear(); const c = ui.coffee || (ui.coffee = { turns:0 }); c.phase = "enough"; c.line = COFFEE.enough[0]; if (session.screen !== "coffee-table") go("coffee-table"); else render(); },
+  coffeeHow(arg){
+    if (blockIfRed()) return;
+    if (!COFFEE.how.some(h => h[0] === arg)) return;
+    coffeeClear();
+    if (arg === "rough"){ completeCheckIn({ after:null, action:"still_bad", change:"no" }); return; }   // "Let's Zig" through the existing engine
+    ui.coffeeHow = arg; go("coffee-end");   // not a mood score: nothing is calculated or shown
   },
 
   /* WARM & COMFORT */

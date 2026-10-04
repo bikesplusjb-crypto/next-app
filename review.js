@@ -240,6 +240,18 @@ P(''); P(`With one of the person\'s own things: "Find something from one of your
 P(''); P(`No camera: "${G('FS_NOCAM[0]')}" / "${G('FS_NOCAM[1]')}" [I found something] [Try something else]. After: "${G('FS_FOUND')}" / "${G('FS_CAPTION')} Optional." (safety-checked) [Keep it] [Try another] [I\'m done] / "How do I feel now?" → "Kept in Things I noticed." → "${G('PUT_DOWN_NOW')}" [I\'m done]`);
 P(''); P('Things I noticed: "Only on this phone. Not a feed, not shared." Each photo can be deleted (asks once). "Something that\'s yours" (used by the next features): the person\'s own entries from My Plan\'s "Things that help me", then "Go do your thing. You don\'t need to accomplish anything. Just spend a few minutes doing it." [I\'m heading out]');
 
+H(3,'Have coffee with ZigZag (owner handoff) — CLINICIAN REVIEW: companionship wording');
+P('A few quiet minutes with a cup, then back to real life. Scripted lines only, no AI; an illustrated cup labelled "ZigZag" (not Zags); "ZigZag is an app, not a person. Nothing you type here is kept." on the screen; finite (after four choices it ends). Typed text is safety-checked and dropped. Calm card and "Have it with ZigZag" from Warm & comfort; the engine can pick it for anxious, low or spiraling (not alone, not craving). Compare 6.18 A ("stay with you" → "guide you") and the on-hold 6.7c "Zags listens".');
+const C_=G('COFFEE');
+P(''); P(`Entry: "${C_.entry}" / "${C_.entrySub}" → drinks → "${C_.go[0]}" / "${C_.go[1]}" [I\'m ready] → "${C_.intro[0]}" … "${C_.intro[1]}" → "${C_.menu}" Talk · Just sit · Tell me something random (hidden while YELLOW or after a crisis screen; three at most) · I need to get something out · I\'m not sure`);
+list([`Talk (one at a time): `+C_.talk.map(x=>`"${x}"`).join(' · ')+` → replies: `+C_.ack.map(x=>`"${x}"`).join(' · '),
+  `Just sit (slow, about 9 seconds apart): `+C_.sit.map(x=>`"${x}"`).join(' → '),
+  `Random: `+C_.random.map(x=>`"${x}"`).join(' · '),
+  `Get it out: "${C_.out[0]}" / "${C_.out[1]}" → "${C_.outDone}" [Keep going] [Just sit] [Let\'s Zig]`,
+  `I\'m not sure: "${C_.unsure}" → Just sit`,
+  `Between choices: `+C_.moments.map(x=>`"${x}"`).join(' · '),
+  `End: "${C_.enough[0]}" / "${C_.enough[1]}" `+C_.how.map(([,l])=>l).join(' · ')+` → `+Object.entries(C_.reply).map(([k,[a,b]])=>`${k}: "${a} ${b}"`).join(' · ')+` → "${C_.end[0]}" → "${C_.end[1]}" (A little better + own things: "${C_.yours}" [Go do your thing] [Just enjoy my coffee]; Still rough → Let\'s Zig)`]);
+
 H(3,'Warm & comfort (owner handoff)');
 P('An ordinary ritual, not a treatment; the ritual is the point, not caffeine (decaf and caffeine-free first; regular coffee isn\'t suggested). On Calm ("Make something warm" / "Nothing needs to be solved right now") and as a SENSE step the engine can pick (not in the craving flow). No timer, every step skippable, nothing saved.');
 P(''); P(`"${G('WARM_TITLE')}" / "${G('WARM_SUB')}" `+G('WARM_DRINKS').map(([,e,l])=>`${e} ${l}`.trim()).join(' · '));

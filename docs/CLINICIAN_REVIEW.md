@@ -149,5 +149,6 @@ These tests document **current** behavior so that any change is visible. They ar
 | D25 | Find something (photo missions, "Things I noticed", "Something that's yours"): wording, the "find something that reminds you of someone" mission for people who are grieving, and photo safety | §8 | **OPEN** | | | |
 | D26 | Warm & comfort (drink ritual): wording, hot-liquid safety line, and that it's left out of the craving flow | §8, §11 | **OPEN** | | | |
 | D27 | Social Zig ("Is this helping?", come back to your side, don't check again, don't send it yet, the last thing you saw, mute the noise): wording; no shaming or diagnosis | §8, Tech check | **OPEN** | | | |
+| D28 | **Have coffee with ZigZag**: companionship by design ("I'll sit with you for a few minutes", "Still here", "I'm still here", "I made coffee too"), with "ZigZag is an app, not a person" on screen. Conflicts in spirit with 6.18 A (owner removed "stay with you" from Zags) and overlaps the on-hold 6.7c "Zags listens" (typing to a character that replies). Also: "Tell me something random" humor (hidden while YELLOW / after a crisis screen), and whether it should be offered at all to someone who is isolated (it isn't offered for "alone") | §9, §10 | **OPEN** (owner asked for it; clinician to confirm or reword) | | | |
 
 Signed: ______________________ (name, credentials) Date: __________
