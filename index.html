@@ -591,7 +591,7 @@ const PRIVACY_PAGE = [
     "Everything below happens only when the person taps something:"],
   ["", "When this site loads, the web host receives standard request information, like your IP address, browser type, time and the page. How long the host keeps it is up to the host.",
     "The host (Render) receives normal request data: IP address, user agent, time, path. **What Render logs and keeps was not checked.**"],
-  ["Your choices", "In Settings you can export a copy of your data, turn off saving on this device (then nothing is saved), or delete everything. Delete everything erases your plan, check-ins, songs and the first 30 days mode from this phone; display settings stay.",
+  ["Your choices", "In Settings you can export a copy of your data, turn off saving on this device (then nothing is saved), or delete everything. Delete everything erases your plan, check-ins, songs, your diary and the first 30 days mode from this phone; display settings stay.",
     "**Delete everything:** empties the plan, history, activity, the first 30 days mode and kept songs in memory and in `localStorage`"],
   ["What ZigZag Mind is", "A self-help tool for adults 18 and over. It is not therapy, medical care or an emergency service, and it can't promise any outcome. If you're in danger, call 911 or call or text 988.",
     ""],
@@ -1314,7 +1314,8 @@ const DIARY = {
   forgotBtn:"Delete my diary and start over", forgotQ:"Delete your diary? This can't be undone.", forgotYes:"Delete my diary", cancel:"Cancel",
   forgotDone:"Your diary was deleted. You can start a new one.",
   offTitle:"Turn off the lock", offSub:"Type your passcode. Your entries will be saved without a lock, like the rest of your plan.", offBtn:"Turn off the lock", offDone:"The lock is off.",
-  working:"One moment…"
+  working:"One moment…",
+  exportLocked:"Diary not included (locked)."
 };
 const DIARY_ITER = 310000;               // PBKDF2-SHA-256 iterations (at least 310,000)
 const DIARY_CHECK = "zigzag-diary-check-v1";
@@ -5271,6 +5272,8 @@ function buildExport(){
     first30Days:store.sensitive.afterCrisis ? { start:new Date(store.sensitive.afterCrisis.start).toISOString(), until:new Date(store.sensitive.afterCrisis.until).toISOString(), done:store.sensitive.afterCrisis.done } : undefined,
     songs:songs().length ? songs().map(x => ({ date:new Date(x.date).toISOString(), mood:x.mood, lines:x.lines, still:x.still })) : undefined,
     // photos stay on the phone (too large for a text export); the export lists what was kept
+    // 6.21: diary entries only when the diary is open; a locked diary stays locked
+    diary:diaryLockedNow() ? DIARY.exportLocked : diaryEntries().length ? diaryEntries().slice().sort((a, b) => b.date - a.date).map(e => ({ date:new Date(e.date).toISOString(), feelings:e.feelings, words:e.text, stillTrue:e.trueLine })) : undefined,
     thingsINoticed:noticed().length ? noticed().map(n => ({ date:new Date(n.date).toISOString(), mission:n.mission, caption:n.caption || undefined, note:n.text || undefined, photo:n.img ? "kept on this phone, not in the export" : undefined })) : undefined
   };
 }
@@ -6775,6 +6778,7 @@ const ACTIONS = {
     store.sensitive = { plan:emptyPlan(), baseHistory:[], activity:[], afterCrisis:null, songs:[] };
     saveStore();
     store.noticed = []; saveNoticed();   // photos kept in Things I noticed go too
+    store.diary = { entries:[] }; store.diaryLock = null; store.diaryBlob = null; diaryKey = null; clearTimeout(diaryRelockTimer); writeDiary();   // 6.21: the diary, its salt and check value
     prefs.strength = null; savePrefs();   // 6.15: a faith answer is personal, so it goes too
     dispatch({ type:"DELETE_DATA" });
     ui.engine = null;
@@ -6794,7 +6798,7 @@ const ACTIONS = {
   country(arg){ if (["auto","us","other"].includes(arg)){ prefs.country = arg; savePrefs(); } render(); },
   persist(arg){
     persistOn = arg === "on";
-    if (persistOn){ saveStore(); saveNoticed(); ui.flash = "Saving is on. Your data stays on this device."; }
+    if (persistOn){ saveStore(); saveNoticed(); writeDiary(); ui.flash = "Saving is on. Your data stays on this device."; }
     else { clearSaved(); ui.flash = "Saving is off. Saved data was removed from this device."; }
     savePrefs(); render();
   },

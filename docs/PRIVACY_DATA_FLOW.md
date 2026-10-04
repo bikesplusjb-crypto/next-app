@@ -63,8 +63,8 @@ Everything below happens only when the person taps something:
 
 ## 4. Export and delete
 
-- **Export my data:** shows a JSON copy of the plan, check-ins (state, intervention, ratings, date) and activity (type, date), the first 30 days mode if on (`first30Days`), and kept songs (`songs`). Nothing leaves unless the person copies it.
-- **Delete everything:** empties the plan, history, activity, the first 30 days mode and kept songs in memory and in `localStorage` (verified: storage history and activity are 0 afterwards). **Kept:** settings (`next.v1.prefs`, including "onboarded"), and the current visit's safety level (by design: "safety level is never reset").
+- **Export my data:** shows a JSON copy of the plan, check-ins (state, intervention, ratings, date) and activity (type, date), the first 30 days mode if on (`first30Days`), and kept songs (`songs`). Since 6.21 it includes diary entries (`diary`) only when the diary is unlocked; a locked diary shows "Diary not included (locked)." Nothing leaves unless the person copies it.
+- **Delete everything:** empties the plan, history, activity, the first 30 days mode and kept songs in memory and in `localStorage` (since 6.21 also the diary, including the lock's salt and check value) (verified: storage history and activity are 0 afterwards). **Kept:** settings (`next.v1.prefs`, including "onboarded"), and the current visit's safety level (by design: "safety level is never reset").
 
 - **Calendar files (6.13 and check-ins):** built on the phone and handed to the phone's own calendar. Nothing is sent by the app.
 

@@ -157,6 +157,27 @@ async function lockIt(a,pass=PASS){ a.G('ACTIONS.diaryOpen()'); a.click(act('dia
  r.push(['C8: Privacy & terms: the optional diary lock encrypts diary entries; everything else is not encrypted', t.includes('The optional diary lock encrypts diary entries on the phone; everything else is not encrypted')]);
  r.push(['C8: PRIVACY_DATA_FLOW.md matches', /the optional diary lock encrypts diary entries on the phone; everything else is not encrypted/.test(fs.readFileSync(path.join(__dirname,'docs/PRIVACY_DATA_FLOW.md'),'utf8'))]); }
 
+// ================= D. Export, delete, saving off =================
+{const a=boot(); await write(a,{text:'Exported words', still:'Exported still'});
+ const ex=a.G('buildExport()');
+ r.push(['D: export includes diary entries (plain diary)', Array.isArray(ex.diary) && ex.diary[0].words==='Exported words' && ex.diary[0].stillTrue==='Exported still']);
+ await lockIt(a); r.push(['D: export while the locked diary is open includes entries', Array.isArray(a.G('buildExport()').diary)]);
+ a.G('diaryRelock(true)'); const ex2=a.G('buildExport()');
+ r.push(['D: export with the diary locked: "Diary not included (locked)."', ex2.diary==='Diary not included (locked).' && !JSON.stringify(ex2).includes('Exported words')]);
+ a.G('ACTIONS.deleteAll()');
+ r.push(['D: Delete everything removes all diary data, incl. salt and check value', !a.dump()['next.v1.diary'] && a.G('store.diaryLock')===null && a.G('store.diaryBlob')===null && a.G('diaryEntries().length')===0 && a.G('diaryKey')===null]);
+ a.G('ACTIONS.diaryOpen()'); r.push(['D: after Delete everything the diary opens fresh (no passcode)', !a.w.document.getElementById('diaryPass') && a.has(act('diaryLockStart'))]); }
+{const a=boot(); a.G('ACTIONS.persist("off")');
+ a.G('ACTIONS.diaryWrite()'); a.click(act('diaryToWords')); a.fill('diaryText','Visit only'); a.click(act('diaryToTrue'));
+ r.push(['D: saving off → "Keep for now (saving is off)"', a.w.document.querySelector(act('diaryKeep')).textContent.trim()==='Keep for now (saving is off)']);
+ a.click(act('diaryKeep')); await tick(5);
+ r.push(['D: saving off → written for the visit, never stored', a.G('diaryEntries().length')===1 && !a.dump()['next.v1.diary'] && a.T().includes('Kept for this visit.')]);
+ r.push(['D: saving off → no lock offered', !a.has(act('diaryLockStart')) && a.T().includes('Turn on saving in Settings to lock the diary.')]);
+ a.G('ACTIONS.persist("on")'); r.push(['D: turning saving back on stores what was kept this visit', JSON.parse(a.dump()['next.v1.diary']).entries[0].text==='Visit only']); }
+{const a=boot(); await write(a,{text:'Kept before'}); await lockIt(a); const before=a.dump()['next.v1.diary'];
+ a.G('ACTIONS.persist("off")'); r.push(['D: turning saving off removes the stored diary', !a.dump()['next.v1.diary']]);
+ a.G('ACTIONS.persist("on")'); r.push(['D: turning it back on restores the locked diary (still encrypted)', !!a.dump()['next.v1.diary'] && !a.dump()['next.v1.diary'].includes('Kept before') && JSON.parse(a.dump()['next.v1.diary']).lock.salt===JSON.parse(before).lock.salt]); }
+
 for(const [n,ok,info] of r) console.log((ok?'PASS':'FAIL')+' '+n+(ok||info===undefined?'':' ('+info+')'));
 process.exit(0);   // the diary's 5-minute re-lock timer would otherwise keep this process alive
 })().catch(e=>{ console.log('FAIL crashed: '+e.message); process.exit(1); });
