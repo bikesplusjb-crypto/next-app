@@ -64,6 +64,7 @@ Help (top right) · Zags + "ZigZag Mind" · "It's okay not to be okay." · **I d
   - an editable safety plan: warning signs, what helps, people and places, reasons to stay, time and distance plan
   - "I need my plan now"
   - Print my plan (with a wallet card)
+  - A line for today: a private line a day ending on "still true", optional passcode lock (built on `build`, 6.21)
 - **Other:**
   - Faith & hope (optional, KJV verses)
   - After the ER / first 30 days

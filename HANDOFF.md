@@ -30,6 +30,7 @@ Everything is in one file, `index.html` (vanilla JS, no build step, no runtime d
 | 6.18 | STAGE6-18-ADDENDUM.md A–E (Zags wording, Warm Line on the guide, Spanish RED phrases, veteran line, night mode, alcohol/drugs line, 211 "not police", Reasons to stay, gun-storage line, five directions, small copy) |
 | 6.19 | STAGE6-19-ADDENDUM.md A–H (Worried about someone?, Print my plan, Privacy & terms DRAFT, Crisis Text Line and Help near me hidden until verified, Spanish scaffolding off, feedback link off, simplicity audit) |
 | 6.20 | STAGE6-20-ADDENDUM.md (When you've lost someone: Home chip, Tech check link, who/when, acknowledgment, breathe / find / write / tell / hard-date reminder, grief YELLOW phrases, grief resources hidden until verified) |
+| 6.21 | STAGE6-21-ADDENDUM.md (A line for today: feeling words, a few words, "still true"; Looking back; optional passcode lock with PBKDF2 + AES-GCM on the phone; export/delete/saving off) |
 | Owner handoffs | Find something (+ Things I noticed), Warm & comfort, Social Zig, Have coffee with ZigZag, Cozy up; simplicity audit proposals 1–6, 8, 10 applied |
 
 Where each part stands (as built, what differs from the text, tests) is at the end of STAGE6-SPEC.md.
@@ -69,7 +70,7 @@ Session state lives in one object `session`, changed only through `dispatch(acti
 
 **Escalation:** 2× "I still feel bad" or 2× a 9–10 rating (before or after) in a session → YELLOW.
 
-**Storage adapter:** `store.sensitive` = `{ plan, baseHistory, activity, afterCrisis, songs }`; `prefs` kept apart; kept photos (`store.noticed`) in their own key so a full store can't block the plan. Keys `next.v1.sensitive`, `next.v1.prefs`, `next.v1.noticed`. `loadStore` / `saveStore` / `savePrefs` / `clearSaved` / `loadNoticed` / `saveNoticed` are the only functions that touch storage. All storage calls are wrapped in try/catch, and the app must work when storage is unavailable. What is stored, and why, is in `docs/PRIVACY_DATA_FLOW.md`; the in-app Privacy & terms page is tested against it.
+**Storage adapter:** `store.sensitive` = `{ plan, baseHistory, activity, afterCrisis, songs }`; `prefs` kept apart; kept photos and Remembering notes (`store.noticed`) in their own key so a full store can't block the plan; the diary (`store.diary`, or `store.diaryLock` + `store.diaryBlob` when locked) in its own key. Keys `next.v1.sensitive`, `next.v1.prefs`, `next.v1.noticed`, `next.v1.diary`. `loadStore` / `saveStore` / `savePrefs` / `clearSaved` / `loadNoticed` / `saveNoticed` / `loadDiary` / `saveDiary` / `writeDiary` are the only functions that touch storage. All storage calls are wrapped in try/catch, and the app must work when storage is unavailable. What is stored, and why, is in `docs/PRIVACY_DATA_FLOW.md`; the in-app Privacy & terms page is tested against it.
 
 **Generated files (re-run after changing copy; tests fail if they drift):** `npm run review` (REVIEW.md), `npm run safety-audit` (docs/SAFETY_TEST_MATRIX.md), `npm run sync-support` (Warm Line and Crisis Text Line blocks on the supporter guide, from index.html), `npm run spanish-review` (docs/SPANISH_REVIEW.md). `node simplicity-audit.js` measures taps and menu sizes (report only).
 

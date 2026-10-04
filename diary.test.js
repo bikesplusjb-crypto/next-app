@@ -178,6 +178,21 @@ async function lockIt(a,pass=PASS){ a.G('ACTIONS.diaryOpen()'); a.click(act('dia
  a.G('ACTIONS.persist("off")'); r.push(['D: turning saving off removes the stored diary', !a.dump()['next.v1.diary']]);
  a.G('ACTIONS.persist("on")'); r.push(['D: turning it back on restores the locked diary (still encrypted)', !!a.dump()['next.v1.diary'] && !a.dump()['next.v1.diary'].includes('Kept before') && JSON.parse(a.dump()['next.v1.diary']).lock.salt===JSON.parse(before).lock.salt]); }
 
+// ================= E. Remaining checks =================
+{const a=boot(); for(let i=0;i<9;i++) await write(a,{text:'Line '+i, still:i%2?'True '+i:''});
+ const BAD=/streak|in a row|\b\d+\s+(entries|entry|days|lines|times)\b|chart|graph|remind|haven'?t written|you'?ve written|average|mood score|score|points?\b|badge|notification|keep it up|don'?t break|missed a day|come back tomorrow/i;
+ const copy=JSON.stringify(a.G('DIARY'));
+ r.push(['E: no counts, streaks, charts or reminder strings in the diary copy', !BAD.test(copy), (copy.match(BAD)||[])[0]]);
+ let hit='';
+ for(const sc of ['diary','diary-feel','diary-words','diary-true','diary-back','diary-lock-warn','diary-forgot']){ a.G(`session.screen=${JSON.stringify(sc)}; lastRendered=null; render()`); const t=a.T(); if(BAD.test(t)) hit=sc+': '+t.match(BAD)[0]; }
+ a.G('ACTIONS.tab("plan")'); const row=a.w.document.querySelector('.diary-row').textContent; if(BAD.test(row) || /\d/.test(row)) hit='plan row: '+row;
+ r.push(['E: no counts, streaks, charts or reminders on any diary screen or the My Plan row (9 entries kept)', !hit, hit]); }
+{const a=boot();
+ r.push(['E: Home unchanged: "I don\'t feel safe" is still the first choice, no diary on Home', [...a.w.document.querySelectorAll('#app main [data-act]')].find(e=>!['wordmark','zags'].includes(e.dataset.act)).dataset.act==='crisis' && !a.has(act('diaryOpen')) && !a.has(act('diaryWrite'))]);
+ r.push(['E: never suggested: the engine can\'t pick it', a.G('INTERVENTION_LIBRARY.every(i=>!/diary/.test(i.id) && !/^diary/.test(String(i.route||"")))')]);
+ a.G('session.screen="crisis-full"; lastRendered=null; render()'); r.push(['E: never reachable from crisis screens', !/data-act="diary/.test(a.w.document.getElementById('app').innerHTML)]); }
+{const a=boot(); r.push(['E: no script errors', a.errs.length===0]); }
+
 for(const [n,ok,info] of r) console.log((ok?'PASS':'FAIL')+' '+n+(ok||info===undefined?'':' ('+info+')'));
 process.exit(0);   // the diary's 5-minute re-lock timer would otherwise keep this process alive
 })().catch(e=>{ console.log('FAIL crashed: '+e.message); process.exit(1); });

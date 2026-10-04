@@ -564,3 +564,12 @@ Built per STAGE6-20-ADDENDUM.md A–E. Screens `grief-who` → `grief-when` → 
 - **Something else** on the ending runs the existing engine for state "low" (Let's Zig recommendation).
 - **Resources**: `GRIEF_RESOURCES` (all `verified:false`, hidden); "If it gets heavier" + 988 is always on the choices screen.
 Tests: `grief.test.js`.
+
+## 6.21 A line for today (as built, 2026-10-04)
+
+Built per STAGE6-21-ADDENDUM.md A–E, one commit per part. Entry: My Plan → "A line for today", and "Write a line about today?" under Put the phone down (only on the `phone-down` screen). Screens `diary`, `diary-feel`, `diary-words`, `diary-true`, `diary-back`, `diary-entry`, `diary-unlock`, `diary-lock-warn`, `diary-lock-set`, `diary-lock-off`, `diary-forgot`. Copy in `DIARY`. Own key `next.v1.diary` (`loadDiary` / `saveDiary` / `writeDiary`). Not in `INTERVENTION_LIBRARY`. Differences from the text, and why:
+- **Safety check on Keep:** each field runs through `handleSafeTextSubmit` on its own (so words at the end of one field and the start of the other can't form a phrase). RED → crisis, nothing saved (clinician D-diary); YELLOW → support bar, saved.
+- **Storage full:** the step-3 screen stays, with the message and the few words shown under it, and the "still true" field filled.
+- **Lock:** the key is a non-extractable `CryptoKey` kept in memory only while the diary is open; the check value is an AES-GCM-encrypted constant. While locked, every diary screen shows the passcode field (and "Forgot my passcode"); after unlocking, the person lands back on the screen they were on. A half-written line survives a re-lock (memory only). The lock isn't offered while saving is off (nothing would be stored) or in browsers without Web Crypto.
+- **Saving off then on:** whatever is in memory is stored again (a locked diary stays encrypted), like photos.
+Tests: `diary.test.js`.
