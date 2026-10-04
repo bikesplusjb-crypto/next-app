@@ -922,6 +922,8 @@ A static page for the people in someone's plan: no scripts, no storage, no track
 
 **Look after yourself**
 - This is heavy. You can call or text 988 for yourself, too.
+- Talk to someone who gets it. The Florida Warm Line is free and is also for family and friends supporting someone: 1-800-945-1355, every day 4pm–10pm Eastern. Not a crisis line. For a crisis, call or text 988.
+- **Link → `tel:18009451355`:** 1-800-945-1355
 
 Footer: "ZigZag Mind is a self-help support tool, not an emergency service."
 
