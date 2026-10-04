@@ -496,3 +496,9 @@ A small, still Zags (the exact character from zags-preview.html) in these places
 ## Desktop support (owner request, 2026-10-04)
 
 Phone stays the priority. Only when the device is clearly a desktop or laptop (desktop browser, no touch; unsure means phone, `canPhone()`): every "Text 988" becomes "Chat with 988 online" (https://988lifeline.org/chat), every call button also shows the number it dials, and code word / trusted-person texts show the prepared message with a Copy button instead of an sms: link. The crisis flow and the NO-branch safety-check rule are unchanged: a Copy button from the NO branch still sets "Do you feel safer?" in the same tap. The supporter guide swaps its "Text 988" the same way. Tests: `desktop.test.js` (phone and desktop).
+
+## Owner decisions (2026-10-04)
+
+- **7B Home:** keep "I don't know what I need" on Home. No further 7B changes ("Find my next step" / "I'm stuck" are not built).
+- **Tech check:** no Keep button for now. Nothing typed or tapped in Tech check is saved.
+- **Still on hold:** 6.7b Snuggle Zags, 6.7c Zags listens, 6.7d Safe place, Tech check option 6 (`ai_reality`), and 7C new experiences.
