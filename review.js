@@ -238,6 +238,7 @@ P(''); P('B. My Plan: "Print my plan" / "A full page and a wallet card to cut ou
 P(''); P('C. **Privacy & terms — DRAFT, lawyer review required** (the page itself does not say "draft"). Linked from Settings, About and the first onboarding screen. Every paragraph, with the PRIVACY_DATA_FLOW.md sentence that supports it:');
 list(G('PRIVACY_PAGE').map(([h,t,src])=>`${h?`**${h}:** `:''}"${t}"${src?` — source: "${src.replace(/\*\*/g,'').replace(/`/g,'')}"`:' — (product terms, no data claim)'}`));
 P(''); P('Contact line (only when CONTACT_EMAIL is set): "Questions? Email [address]."');
+P(''); P('D. Crisis Text Line (**hidden until the owner verifies it**; CRISIS_TEXT_LINE.verified is '+G('CRISIS_TEXT_LINE.verified')+'): one line below the 988 buttons on the full crisis screen and Connect, on the printed plan, and in the supporter guide\'s "Get help together": "'+G('CTL_LINE')+'" (phones: Text HOME to 741741 is a text link; computers: shown as text).');
 //@@619@@
 
 H(3,'Stage 6.18 owner-approved updates (OWNER-APPROVED INTERIM, pending clinician)');

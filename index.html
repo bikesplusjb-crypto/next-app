@@ -384,6 +384,7 @@ html.reduce .zmark-wave .zmark-body{animation:none}
 
 /* Stage 6.19 */
 .privacy-p{margin:8px 0 0}
+.ctl-line{margin:8px 0 0}
 /* B. Print my plan: a print-only view. Black on white, large plain type. Nothing is sent anywhere. */
 #printView{display:none}
 @media print{
@@ -696,6 +697,16 @@ const REASONS_HINT = "People, plans, things you're looking forward to, songs, an
 const GUN_LINE = "If there's a gun at home: the safest step during hard times is to store it away from the person for a while — with someone you trust, or at a gun shop, range, or police department that offers temporary storage. It's temporary, and it's yours.";   // clinician review; never on crisis screens
 // Night: 00:00–05:59 by the phone's clock, read on each render. Nothing about it is saved.
 function isNight(){ const h = new Date().getHours(); return h >= 0 && h < 6; }
+/* 6.19 D: Crisis Text Line. Hidden everywhere until the owner sets verified:true (CRISIS_RESOURCE_VERIFICATION.md).
+   When shown: one line below the 988 buttons, never above or instead of 988. The supporter guide's line is written
+   from this constant by sync-support.js. */
+const CRISIS_TEXT_LINE = { name:"Crisis Text Line", instruction:"Text HOME to 741741", hours:"24/7", sms:"sms:741741?&body=HOME", verified:false };
+const CTL_LINE = "Rather text a stranger? Text HOME to 741741 (Crisis Text Line).";
+function ctlShown(){ return CRISIS_TEXT_LINE.verified === true; }
+function ctlLine(){
+  if (!ctlShown()) return "";
+  return `<p class="note ctl-line">Rather text a stranger? ${canPhone() ? `<a href="${CRISIS_TEXT_LINE.sms}">${CRISIS_TEXT_LINE.instruction}</a>` : CRISIS_TEXT_LINE.instruction} (${CRISIS_TEXT_LINE.name}).</p>`;
+}
 const vetLine = () => `<p class="note vet-line">${VETERAN_LINE}</p>`;
 /* Human First (session only, never saved): after 2 taps on "Something else", or 2 finished steps without
    "That helped", ask once per visit whether a person would help more. */
@@ -2777,7 +2788,8 @@ const SCREENS = {
       </div>`;
     const crisis988 = `<p class="lbl">If it gets heavier</p>
       ${row988()}
-      ${vetLine()}`;
+      ${vetLine()}
+      ${ctlLine()}`;
     return { close:true, body:`
       ${title("You don't have to sit with this alone.")}
       ${night ? crisis988 : warm}
@@ -3350,6 +3362,7 @@ const SCREENS = {
         ${row988().replace('style="margin-top:12px"', "")}
         ${canPhone() ? `<a class="btn btn-secondary" href="${LINKS.chat988}" target="_blank" rel="noopener">Chat online with 988</a>` : ""}
         ${vetLine()}
+        ${ctlLine()}
         <div class="panel not-police" style="margin-top:0"><p style="margin:0"><b>${NOT_POLICE_HEAD}</b> ${NOT_POLICE_TEXT}</p>
           <a class="btn btn-secondary" style="margin-top:10px" href="${LINKS.call211}">Call 211</a></div>
         ${codeWordButton(false)}
@@ -3962,7 +3975,7 @@ function printPlanHTML(includeCode){
     <div class="pv-crisis">
       <p><b>988 Suicide &amp; Crisis Lifeline: call or text 988.</b> Free, 24/7.</p>
       <p><b>911</b> if someone is hurt or in danger.</p>
-      ${typeof ctlShown === "function" && ctlShown() ? `<p>${esc(CTL_LINE)}</p>` : ""}
+      ${ctlShown() ? `<p>${esc(CTL_LINE)}</p>` : ""}
     </div>
     <p class="cut">✂ Cut along the dashed line</p>
     <div class="wallet">

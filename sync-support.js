@@ -16,9 +16,21 @@ function block(W){
     <p id="warmline"><strong>Talk to someone who gets it.</strong> The ${esc(W.name)} is free and is also for family and friends supporting someone: <a href="${esc(W.tel)}">${esc(W.number)}</a>, ${esc(shortHours(W.hours))}. Not a crisis line. For a crisis, call or text 988.</p>
     <!-- WARMLINE:end -->`;
 }
-function synced(){
+// 6.19 A4/D: Crisis Text Line in "Get help together", only once CRISIS_TEXT_LINE.verified is true.
+function ctl(src){
+  const m=(src||fs.readFileSync(APP,'utf8')).match(/const CRISIS_TEXT_LINE = (\{[^\n]*\});/);
+  if(!m) throw new Error('CRISIS_TEXT_LINE not found in index.html');
+  return vm.runInNewContext('('+m[1]+')');
+}
+function ctlBlock(C){
+  const inner = C.verified===true ? `\n    <p id="ctl">Rather text a stranger? <a href="${esc(C.sms)}">${esc(C.instruction)}</a> (${esc(C.name)}), ${esc(C.hours)}.</p>` : '';
+  return `    <!-- CTL:start (written by sync-support.js from CRISIS_TEXT_LINE in index.html; empty until verified) -->${inner}
+    <!-- CTL:end -->`;
+}
+function synced(appSrc){
   const sup=fs.readFileSync(SUP,'utf8');
-  return sup.replace(/    <!-- WARMLINE:start[\s\S]*?<!-- WARMLINE:end -->/, block(warmline()));
+  return sup.replace(/    <!-- WARMLINE:start[\s\S]*?<!-- WARMLINE:end -->/, block(warmline()))
+            .replace(/    <!-- CTL:start[\s\S]*?<!-- CTL:end -->/, ctlBlock(ctl(appSrc)));
 }
 if(require.main===module){ fs.writeFileSync(SUP, synced()); console.log('Wrote the Warm Line block in support/index.html'); }
-module.exports={synced,warmline,SUP};
+module.exports={synced,warmline,ctl,ctlBlock,SUP};

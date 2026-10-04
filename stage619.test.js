@@ -94,6 +94,30 @@ const r=[];
  const m=withMail.document.querySelector('.privacy-contact a');
  r.push(['C2: contact line appears when CONTACT_EMAIL is set', !!m && m.getAttribute('href')==='mailto:hello@example.org']);}
 
+// ---- D. Crisis Text Line ----
+function bootSrc(src,{phone}={}){ const w=new JSDOM(src,{url:'https://zigzagmind.com/',runScripts:'dangerously',pretendToBeVisual:true,beforeParse(w){w.scrollTo=()=>{}; w.print=()=>{}; if(typeof phone==='boolean') w.__zzPhone=phone;}}).window; w.HTMLElement.prototype.scrollIntoView=()=>{}; w.eval('prefs.onboarded=true; ACTIONS.loadSample(); lastRendered=null; render()'); return w; }
+const SCREENS_ALL=w=>w.eval('Object.keys(SCREENS)');
+{const w=bootSrc(HTML);
+ r.push(['D1: resource constant (Text HOME to 741741, 24/7, sms:741741?&body=HOME)', JSON.stringify(w.eval('CRISIS_TEXT_LINE'))===JSON.stringify({name:"Crisis Text Line",instruction:"Text HOME to 741741",hours:"24/7",sms:"sms:741741?&body=HOME",verified:false})]);
+ const seen=[]; for(const s of SCREENS_ALL(w)){ try{ w.eval(`ui=freshUi(); ui.talkOpen=true; lastRendered=null; session={...session, screen:${JSON.stringify(s)}}; render()`); if(/741741|Crisis Text Line/.test(w.document.getElementById('app').innerHTML)) seen.push(s); }catch(e){} }
+ r.push(['D2: hidden everywhere while verified:false', seen.length===0, seen.join()]);
+ w.eval('ACTIONS.tab("plan"); ACTIONS.printPlan()'); r.push(['D2: not on the printed plan either', !/741741/.test(w.document.getElementById('printView').innerHTML)]);
+ r.push(['D2: not on the supporter guide', !/741741/.test(SUPPORT)]);
+ r.push(['D2: a row for the owner in CRISIS_RESOURCE_VERIFICATION.md', /Crisis Text Line \(6\.19 D\)[^\n]*OPEN: OWNER to confirm/.test(fs.readFileSync(path.join(__dirname,'docs','CRISIS_RESOURCE_VERIFICATION.md'),'utf8'))]);}
+{const ON=HTML.replace('sms:"sms:741741?&body=HOME", verified:false }','sms:"sms:741741?&body=HOME", verified:true }');
+ for(const phone of [true,false]){ const w=bootSrc(ON,{phone}); const m=phone?'phone':'computer';
+  const check=s=>{ w.eval(`lastRendered=null; session={...session, screen:${JSON.stringify(s)}, safetyLevel:${s==='crisis-full'?'"RED"':'"GREEN"'}}; render()`);
+    const l=w.document.querySelector('.ctl-line'), c=w.document.querySelector('a[href="tel:988"]');
+    return !!l && l.textContent==="Rather text a stranger? Text HOME to 741741 (Crisis Text Line)." && !!(c.compareDocumentPosition(l)&4); };
+  r.push([`D3 (${m}): when verified, one line below 988 on the full crisis screen and Connect`, check('crisis-full') && check('connect')]);
+  w.eval('lastRendered=null; session={...session, screen:"crisis-full"}; render()');
+  r.push([`D1 (${m}): ${phone?'an sms: link with HOME':'the instruction as text, no sms: link'}`, phone ? !!w.document.querySelector('.ctl-line a[href="sms:741741?&body=HOME"]') : !w.document.querySelector('.ctl-line a')]);
+  r.push([`D3 (${m}): 988 stays first on the full crisis screen (911, then 988)`, [...w.document.querySelectorAll('.content a.btn')].slice(0,2).map(a=>a.getAttribute('href')).join()==='tel:911,tel:988']); }
+ const w=bootSrc(ON); w.eval('ACTIONS.tab("plan"); ACTIONS.printPlan()'); r.push(['D3: on the printed plan when verified', w.document.getElementById('printView').textContent.includes('Text HOME to 741741')]);
+ const {synced,ctlBlock}=require('./sync-support.js');
+ r.push(['A4: supporter guide "Get help together" gets the line when verified', /id="ctl"[^\n]*Text HOME to 741741/.test(synced(ON)) && !/741741/.test(synced(HTML))]);
+ r.push(['A4: supporter guide is in sync with the constant (npm run sync-support)', synced()===SUPPORT]);}
+
 //@@NEXT@@
 console.log(r.map(x=>(x[1]?'PASS ':'FAIL ')+x[0]+(x[1]||!x[2]?'':' — '+x[2])).join('\n'));
 process.exit(0);

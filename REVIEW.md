@@ -1038,6 +1038,8 @@ C. **Privacy & terms — DRAFT, lawyer review required** (the page itself does n
 
 Contact line (only when CONTACT_EMAIL is set): "Questions? Email [address]."
 
+D. Crisis Text Line (**hidden until the owner verifies it**; CRISIS_TEXT_LINE.verified is false): one line below the 988 buttons on the full crisis screen and Connect, on the printed plan, and in the supporter guide's "Get help together": "Rather text a stranger? Text HOME to 741741 (Crisis Text Line)." (phones: Text HOME to 741741 is a text link; computers: shown as text).
+
 ### Stage 6.18 owner-approved updates (OWNER-APPROVED INTERIM, pending clinician)
 
 A. Zags: first line now "Hi, I'm Zags. I'm not a person, just a little guide. I can guide you through the next few minutes."; Connect: "Calm down with Zags while you wait" (no subtitle).
