@@ -472,6 +472,17 @@ Steps:
 1. Find something you can hold.
 2. Notice how it feels.
 
+### Turn it into a song (`song`)
+
+- Button: "Turn it into a song"
+- Description: "Three short lines in your own words, made into a short song on your phone."
+- For: anxious, low, spiraling, distraction, alone · about 4 min
+
+Steps:
+1. Pick how it feels.
+2. Write three short lines.
+3. Listen to your song.
+
 ### Engine messages (the line shown with a suggestion)
 
 - "Reaching out to someone can help when things feel heavy."
@@ -893,7 +904,7 @@ On the guide when a name is given: "[name] would like you to check in now and th
 **Let's Zig** is a simple product rule, not a clinical method: after "I still feel bad" or a game's "No", the next suggestion comes from a different channel when one is available. After a recent rating of 8 or more, BODY, SPACE and PEOPLE steps come first. Safety routing always comes first: RED stops everything, and the YELLOW order (connection, own plan, grounding, fresh air) still wins.
 - `BODY`: grounding, breathing, hydration, walking, touch_real_world
 - `SPACE`: change_scene, environment_change, find_alive, craving_delay
-- `SENSE`: distraction_game, distraction_color_hunt, distraction_around_me, distraction_categories, distraction_memory, distraction_pattern, distraction_60_second, ridiculous_mode, zags
+- `SENSE`: distraction_game, distraction_color_hunt, distraction_around_me, distraction_categories, distraction_memory, distraction_pattern, distraction_60_second, ridiculous_mode, zags, song
 - `PEOPLE`: connection
 - `ACTION`: thought_parking, still_true, true_sentence, kind_stranger, borrow_ten, behavioral_activation
 
@@ -916,6 +927,30 @@ About: "When something isn't helping, ZigZag doesn't tell you to try harder. It 
 **Ridiculous mode** (Get out of my head only; hidden in YELLOW and after any crisis screen this visit; two per visit): "Make this less serious. Just for a moment." "Find the most boring object in the room." · "Decide whether your refrigerator is judging you." · "Find the object that looks most like a face." · "Give the nearest chair a completely unnecessary name." · "Find something that would make a terrible hat." → "Okay. Back to reality."
 
 **Find something real** (Calm): "Find something you can hold." · "Find something cooler." · "Find something warmer." · "Put both feet on the floor." · "Change your position." · "Wash your hands." · "Turn on a light.". Optional textures: smooth, rough, warm, cool, soft, hard, heavy, light. With an anchor in My Plan: "Do you have your anchor nearby?" Yes: "Hold it for a moment." No: "Find something else you can safely hold." Ends: "You found something real."
+
+### Turn it into a song (6.16)
+
+The person picks a mood and writes three short lines; the phone turns them into a short song (Web Audio). No AI, no server, no recording, no in-browser speech recognition. Every line is safety-checked: RED goes to the crisis screen and no song is made. Saved only when the person taps Keep (max 50; each can be deleted; in Export; removed by Delete everything). Entry: the top card in Get out of my head, "Make a song while you wait" on Connect, and My songs in My Plan.
+
+Intro: "Three short lines in your own words. ZigZag Mind turns them into a song that starts where you are and ends somewhere steadier."
+
+Moods: Heavy · Anxious · Angry · Numb · Mixed. Lines 1 and 2 are in a minor key; line 3 and any added lines move to the relative major; the anxious song slows from 96 to 66 bpm.
+- "What's happening?" / "Say it plainly. A few words is enough." (example: "I can't stop thinking about work")
+- "What do you need right now?" / "Not forever. Just right now." (example: "I need to slow down")
+- "One thing that's still true" / "Something real, even if small." (example: "My sister still picks up when I call")
+
+Under each line: "Type it, or tap the mic on your keyboard to say it." Under Play: "No sound? Check your phone's silent switch and volume." Voice is off by default.
+
+After the song: "You turned a hard moment into something you made." [Keep it in My songs] [Share how you're doing with someone: "Rough day, but I'm working through it. Can we talk later?"] [Done → "Did the intensity change?"] [Make another]
+
+Replaying a kept song ends with "How does this feel now?"
+- Lighter: "That's worth noticing. You've been here before, and it moved."
+- About the same: "That's okay. Some things take longer."
+- Heavier: "Thank you for being honest. This might be a moment for a person, not a song." (Call 988 · Text 988 · Text someone you trust shown first)
+
+Then: "Add something that's still true today" / "It becomes a new last line, so the song grows with you." [Add it and play] [Not now]
+
+My songs: "Saved only on this phone. Listen back and notice what's changed." Delete asks once: "Delete this song?"
 
 ### After the ER or hospital: first 30 days (6.13)
 
@@ -1614,6 +1649,7 @@ _When: distraction_
 - **Link → `sms:5550142?&body=Rough night. Can you talk for 5 minutes?`:** Rough night. Can you talk for 5 minutes?
 - **Link → `sms:5550142?&body=Want to catch up this week?`:** Want to catch up this week?
 - **Button:** Stay with Zags for a few minutes — Until someone calls back
+- **Button:** Make a song while you wait
 - If it gets heavier
 - **Link → `tel:988`:** Call 988 _(screen reader: "Call 988, the Suicide and Crisis Lifeline")_
 - **Link → `sms:988`:** Text 988 _(screen reader: "Text 988, the Suicide and Crisis Lifeline")_
@@ -1662,6 +1698,64 @@ _When: distraction_
 - Adds them to your own calendar.
 - **Button:** Add daily reminders
 - Getting help is a strength, not a weakness. Seeing a psychiatrist, therapist or counselor is care for your mind, the same way you'd see a doctor for your body. It doesn't mean you're 'crazy', broken or weak. Lots of people get help at some point, and many feel better for it. If medication is suggested, that's a choice you make together with a professional, and it's okay either way.
+
+### `song`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Turn it into a song.
+- Three short lines in your own words. ZigZag Mind turns them into a song that starts where you are and ends somewhere steadier.
+- **Heading:** How does it feel right now?
+- **Button:** Heavy
+- **Button:** Anxious
+- **Button:** Angry
+- **Button:** Numb
+- **Button:** Mixed
+- **Button:** Next
+
+### `song-line`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Line 1 of 3
+- **Heading:** What's happening?
+- Say it plainly. A few words is enough.
+- Type it, or tap the mic on your keyboard to say it.
+- **Button:** Next
+
+### `song-play`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Turn it into a song.
+- Three short lines in your own words. ZigZag Mind turns them into a song that starts where you are and ends somewhere steadier.
+- **Heading:** How does it feel right now?
+- **Button:** Heavy
+- **Button:** Anxious
+- **Button:** Angry
+- **Button:** Numb
+- **Button:** Mixed
+- **Button:** Next
+
+### `song-reflect`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** That's okay. Some things take longer.
+- **Heading:** Add something that's still true today
+- It becomes a new last line, so the song grows with you.
+- Something that's still true today
+- **Button:** Add it and play
+- **Button:** Not now
+
+### `song-list`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** My songs
+- Saved only on this phone. Listen back and notice what's changed.
+- No songs yet.
+- **Button:** Make a new song
 
 ### `borrow`
 
@@ -1797,6 +1891,7 @@ _When: distraction_
 - **Button:** Help _(screen reader: "Get help now")_
 - **Heading:** Get out of my head.
 - Quick games to interrupt the loop. 1 to 5 minutes. No points, no levels.
+- **Button:** Turn it into a song — Three lines in your words, made into a short song
 - **Button:** Color hunt — Find 5 blue things, then 3 red
 - **Button:** Around me — Something soft, cold, older than you
 - **Button:** Rapid categories — 5 animals, 5 cities, 5 foods
@@ -1931,6 +2026,8 @@ _When: distraction_
 - Nothing here yet.
 - Ask someone to hold onto a few things:
 - **Link → `sms:5550142?&body=Would you be willing to hold onto a few things for me for a while? I'll explain when we talk.`:** Ask Jordan _(screen reader: "Ask Jordan to hold onto a few things")_
+- Songs you make and keep show up here.
+- **Button:** Make one
 - **Heading:** Things to avoid when I'm struggling
 - **Button:** Edit _(screen reader: "Edit: Things to avoid when I'm struggling")_
 - Scrolling in bed late at night.
@@ -2337,6 +2434,14 @@ _When: distraction_
 - **Button:** Help _(screen reader: "Get help now")_
 - Find something real · Step 1 of 2
 - **Heading:** Find something you can hold.
+- **Button:** Next
+
+#### Turn it into a song
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Turn it into a song · Step 1 of 3
+- **Heading:** Pick how it feels.
 - **Button:** Next
 
 ### Home, iPhone Safari (shows the add-to-home-screen tip)

@@ -306,6 +306,8 @@ The person writes three short lines in their own words, and ZigZag Mind turns th
 
 **Tests:** RED line → crisis and no song; same lines → identical melody; key changes to relative major at line 3; anxious tempo decreases across sections; voice off by default; nothing saved without Keep; Delete everything removes songs; replay "Heavier" shows 988 first.
 
+**As built (2026-10-04):** as above, with the engine from song-preview.html. "Done" after a new song leads to "Did the intensity change?" (outcome `song`, never the words). Without Web Audio the words still play through silently. Deleting a song asks once. Leaving the player for any reason (Help, X, RED) stops the song. `song` is in the SENSE channel for Let's Zig. Tests: `song.test.js`.
+
 ---
 
 ## Phase 3 — People and safety

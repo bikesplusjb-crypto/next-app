@@ -91,6 +91,8 @@ All data stays in the browser on the phone (unencrypted). The app makes no netwo
 8. Supporter guide "go to them if you can" (§12).
 9. Progress counts "Hard moments handled" from flows; since F3, crisis-screen opens are no longer recorded or counted. Appropriate?
 10. Age policy: self-attested 18+; since F6 an under-18 answer is remembered on the device (it can only be undone by clearing the browser's data). (Also legal.)
+11. "Getting help is a strength" note (`HELP_IS_STRENGTH`, shown in About, My Plan, Connect and the first 30 days checklist). It says seeing a professional "doesn't mean you're 'crazy', broken or weak" and mentions medication ("If medication is suggested, that's a choice you make together with a professional"). The intent is good, but naming "crazy", even to reject it, and saying anything about medication should be worded by a clinician. Approve, reword, or remove those two parts.
+12. Turn it into a song (6.16): the prompts, the after-song copy, the replay reflections (Lighter / About the same / Heavier), and whether replaying a hard song helps or hurts.
 
 ## 15. Known technical questions
 

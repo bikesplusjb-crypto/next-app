@@ -232,6 +232,18 @@ P(''); P(`**Find something alive**: "Find something alive." / "Do you have a pet
 P(''); P('**Ridiculous mode** (Get out of my head only; hidden in YELLOW and after any crisis screen this visit; two per visit): "Make this less serious. Just for a moment." '+G('RIDICULOUS_LINES').map(x=>`"${x}"`).join(' · ')+' → "Okay. Back to reality."');
 P(''); P('**Find something real** (Calm): '+G('TOUCH_PROMPTS').map(x=>`"${x}"`).join(' · ')+'. Optional textures: '+G('TEXTURES').join(', ')+'. With an anchor in My Plan: "Do you have your anchor nearby?" Yes: "Hold it for a moment." No: "Find something else you can safely hold." Ends: "You found something real."');
 
+H(3,'Turn it into a song (6.16)');
+P('The person picks a mood and writes three short lines; the phone turns them into a short song (Web Audio). No AI, no server, no recording, no in-browser speech recognition. Every line is safety-checked: RED goes to the crisis screen and no song is made. Saved only when the person taps Keep (max 50; each can be deleted; in Export; removed by Delete everything). Entry: the top card in Get out of my head, "Make a song while you wait" on Connect, and My songs in My Plan.');
+P(''); P(`Intro: "${G('SONG_INTRO')}"`);
+P(''); P('Moods: '+Object.values(G('SONG_MOODS')).map(m=>m.label).join(' · ')+'. Lines 1 and 2 are in a minor key; line 3 and any added lines move to the relative major; the anxious song slows from 96 to 66 bpm.');
+list(G('SONG_PROMPTS').map(([q,sub,ph])=>`"${q}" / "${sub}" (example: "${ph}")`));
+P(''); P(`Under each line: "${G('SONG_TYPE_HINT')}" Under Play: "${G('SONG_SILENT')}" Voice is off by default.`);
+P(''); P(`After the song: "${G('SONG_MADE')}" [Keep it in My songs] [Share how you're doing with someone: "${G('SONG_SHARE_MSG')}"] [Done → "Did the intensity change?"] [Make another]`);
+P(''); P('Replaying a kept song ends with "How does this feel now?"');
+list(Object.values(G('SONG_REFLECT')).map(([l,m])=>`${l}: "${m}"`+(l==='Heavier'?' (Call 988 · Text 988 · Text someone you trust shown first)':'')));
+P(''); P('Then: "Add something that\'s still true today" / "It becomes a new last line, so the song grows with you." [Add it and play] [Not now]');
+P(''); P('My songs: "Saved only on this phone. Listen back and notice what\'s changed." Delete asks once: "Delete this song?"');
+
 H(3,'After the ER or hospital: first 30 days (6.13)');
 P('A mode the person turns on from Home ("Just out of the ER"); nothing prompts it. Saved on the phone because the person chose it (not safety state). Ends by itself after 30 days, or from Settings ("End the first 30 days mode") or Delete everything. Never shown on crisis screens. No counting, no streaks, no celebration; every item is optional.');
 P(''); P('Setup: "When did you leave?" '+G('AFTER_LEFT').map(([,l])=>`"${l}"`).join(' · '));

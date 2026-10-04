@@ -336,6 +336,28 @@ a.cw-open,a.ci-open{text-decoration:none;display:flex;align-items:center;justify
 .cw-words{margin-top:14px}
 .cw-words .sit[aria-pressed="true"]{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
 
+/* Stage 6.16: Turn it into a song */
+.song-player{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.song-player .zags{width:140px;height:140px}
+.song-zags.bob{animation:songbob .9s ease-in-out infinite}
+@keyframes songbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.song-bars{display:flex;gap:4px;align-items:flex-end;height:36px}
+.song-bar{width:6px;border-radius:3px;background:var(--accent);height:6px;transition:height .12s}
+.song-bar.major{background:var(--primary)}
+.lyrics{width:100%;display:flex;flex-direction:column;gap:10px;margin:6px 0}
+.lyric{margin:0;font-size:21px;line-height:1.35;font-weight:700;color:var(--muted);opacity:.6;transition:opacity .3s,color .3s}
+.lyric.now{opacity:1;color:var(--text)}
+.lyric.still.now{color:var(--primary)}
+.lyric .w.on{color:var(--accent-ink);text-decoration:underline;text-underline-offset:4px}
+.song-player .btn{width:100%}
+.song-made,.song-q{margin-top:8px}
+.song-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-top:1px solid var(--line)}
+.song-row:first-child{border-top:none}
+.song-row>span:first-child{display:flex;flex-direction:column;min-width:0;overflow-wrap:anywhere}
+.song-btns{display:flex;gap:6px;flex:none}
+.song-card{margin-bottom:12px}
+@media (prefers-reduced-motion:reduce){.song-zags.bob{animation:none}.song-bar,.lyric{transition:none}}
+
 /* Stage 6.13: After the ER or hospital */
 .after-bar{margin-top:12px;padding:12px 14px;border-radius:16px;background:var(--primary-soft);display:flex;flex-direction:column;gap:8px}
 .after-open{background:none;border:none;padding:0;text-align:left;font-weight:650;min-height:44px;color:var(--text)}
@@ -683,11 +705,17 @@ INTERVENTION_LIBRARY.push(
    "When something isn't helping, ZigZag doesn't tell you to try harder. It helps you try a different direction."
    A simple product rule (not a clinical method, and it does not understand the person). Not listed in the addendum,
    assigned to the closest channel: craving_delay → SPACE (distance from the thing), behavioral_activation → ACTION. */
+INTERVENTION_LIBRARY.push(
+  { id:"song", name:"Turn it into a song", tryLabel:"Turn it into a song",
+    description:"Three short lines in your own words, made into a short song on your phone.", durationSec:240,
+    states:["anxious","low","spiraling","distraction","alone"], intensityRange:[0,10], needsMobility:false,
+    steps:["Pick how it feels.","Write three short lines.","Listen to your song."], completion:"tap_done" }
+);
 const CHANNEL_OF = {
   grounding:"BODY", breathing:"BODY", hydration:"BODY", walking:"BODY", touch_real_world:"BODY",
   change_scene:"SPACE", environment_change:"SPACE", find_alive:"SPACE", craving_delay:"SPACE",
   distraction_game:"SENSE", distraction_color_hunt:"SENSE", distraction_around_me:"SENSE", distraction_categories:"SENSE",
-  distraction_memory:"SENSE", distraction_pattern:"SENSE", distraction_60_second:"SENSE", ridiculous_mode:"SENSE", zags:"SENSE",
+  distraction_memory:"SENSE", distraction_pattern:"SENSE", distraction_60_second:"SENSE", ridiculous_mode:"SENSE", zags:"SENSE", song:"SENSE",
   connection:"PEOPLE",
   thought_parking:"ACTION", still_true:"ACTION", true_sentence:"ACTION", kind_stranger:"ACTION", borrow_ten:"ACTION", behavioral_activation:"ACTION"
 };
@@ -746,6 +774,248 @@ const AFTER_NO_APPT = "No appointment yet? Ask the place you were seen to help s
 const AFTER_DAILY_TITLE = "One small thing today";
 const AFTER_DAILY_TEXT = "One small thing is enough today. Your plan is in ZigZag Mind if you need it, and 988 is there any time.";
 const AFTER_END_NOTE = "Your first 30 days are over. Your plan and your people are still here whenever you need them.";
+/* 6.16 Turn it into a song. The person's own three lines become a short song made on the phone
+   (Web Audio only; no AI, no server, no recording). The melody is deterministic: the same words
+   always make the same song. Saved only when the person taps Keep. All copy is for clinician review. */
+const SONG_MOODS = {
+  heavy:   { label:"Heavy",   root:57, bpm:[68,62], cutoff:900,  kick:"soft",  hat:false, verb:.45 },
+  anxious: { label:"Anxious", root:62, bpm:[96,66], cutoff:1400, kick:"pulse", hat:true,  verb:.35 },
+  angry:   { label:"Angry",   root:52, bpm:[92,72], cutoff:1800, kick:"hard",  hat:true,  verb:.3  },
+  numb:    { label:"Numb",    root:60, bpm:[72,66], cutoff:800,  kick:"none",  hat:false, verb:.6  },
+  mixed:   { label:"Mixed",   root:55, bpm:[84,70], cutoff:1200, kick:"soft",  hat:true,  verb:.4  }
+};
+const SONG_PROMPTS = [
+  ["What's happening?", "Say it plainly. A few words is enough.", "I can't stop thinking about work"],
+  ["What do you need right now?", "Not forever. Just right now.", "I need to slow down"],
+  ["One thing that's still true", "Something real, even if small.", "My sister still picks up when I call"]
+];
+const SONG_INTRO = "Three short lines in your own words. ZigZag Mind turns them into a song that starts where you are and ends somewhere steadier.";
+const SONG_TYPE_HINT = "Type it, or tap the mic on your keyboard to say it.";
+const SONG_SILENT = "No sound? Check your phone's silent switch and volume.";
+const SONG_MADE = "You turned a hard moment into something you made.";
+const SONG_SHARE_MSG = "Rough day, but I'm working through it. Can we talk later?";
+const SONG_REFLECT = {
+  lighter:["Lighter", "That's worth noticing. You've been here before, and it moved."],
+  same:["About the same", "That's okay. Some things take longer."],
+  heavier:["Heavier", "Thank you for being honest. This might be a moment for a person, not a song."]
+};
+const SONG_CAP = 50, SONG_LINE_MAX = 120;
+const SONG_SECTION = ["What's happening", "What I need", "Still true"];
+
+function songClean(t){ return String(t || "").trim().replace(/\s+/g, " ").slice(0, SONG_LINE_MAX); }
+function validSongs(a){
+  if (!Array.isArray(a)) return [];
+  const str = x => typeof x === "string" && x.trim() && x.length <= SONG_LINE_MAX;
+  return a.filter(s => s && typeof s.id === "string" && typeof s.date === "number" && SONG_MOODS[s.mood]
+    && Array.isArray(s.lines) && s.lines.length === 3 && s.lines.every(str) && Array.isArray(s.still) && s.still.every(str)).slice(0, SONG_CAP);
+}
+function songs(){ return store.sensitive.songs || (store.sensitive.songs = []); }
+
+/* Melody and arrangement: pure functions, so tests can check them without audio. */
+const SONG_MINOR_PROG = [[0,3,7],[8,12,15],[3,7,10],[10,14,17]];   // i  VI  III  VII
+const SONG_PRE_PROG   = [[8,12,15],[10,14,17],[0,3,7],[0,3,7]];    // VI VII i  i
+const SONG_MAJOR_PROG = [[0,4,7],[7,11,14],[9,12,16],[5,9,12]];    // I  V   vi IV
+const SONG_MIN_PENTA = [0,3,5,7,10], SONG_MAJ_PENTA = [0,2,4,7,9];
+function songHash(s){ let h = 2166136261; for (let i = 0; i < s.length; i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+function songSyllables(w){ const m = w.toLowerCase().replace(/[^a-z]/g, "").match(/[aeiouy]+/g); return Math.min(4, Math.max(1, m ? m.length : 1)); }
+function songMelody(text, scaleRoot, penta){
+  const words = text.split(" ").filter(Boolean);
+  const notes = []; let pos = 0, deg = 4;
+  words.forEach((w, wi) => {
+    const syl = songSyllables(w), h = songHash(w);
+    for (let s = 0; s < syl; s++){
+      const step = ((h >> (s * 3)) % 5) - 2;
+      deg = Math.max(0, Math.min(9, deg + step));
+      const lastOfWord = s === syl - 1;
+      const endPhrase = lastOfWord && (wi === words.length - 1 || /[,.!?]$/.test(w));
+      const dur = endPhrase ? 1.5 : (lastOfWord ? 0.75 : 0.5);
+      notes.push({ beat:pos, dur, pitch:scaleRoot + 12 + penta[deg % 5] + 12 * Math.floor(deg / 5), word:wi });
+      pos += dur;
+    }
+  });
+  return { notes, beats:pos };
+}
+// intro → line 1 (minor) → line 2 (minor) → line 3 and any added "still true" lines (relative major) → outro (major)
+function songPlan(song){
+  const mood = SONG_MOODS[song.mood];
+  const minorRoot = mood.root - 12, majorRoot = mood.root + 3 - 12;
+  const lines = [...song.lines, ...(song.still || [])];
+  const secs = [{ name:"", bars:2, prog:SONG_MINOR_PROG, root:minorRoot, major:false, line:-1 }];
+  lines.forEach((t, i) => {
+    const major = i >= 2;
+    secs.push({ name:SONG_SECTION[Math.min(i, 2)], text:t, line:i,
+      prog:major ? SONG_MAJOR_PROG : (i === 1 ? SONG_PRE_PROG : SONG_MINOR_PROG), root:major ? majorRoot : minorRoot, major });
+  });
+  secs.push({ name:"", bars:2, prog:SONG_MAJOR_PROG, root:majorRoot, major:true, line:-1, outro:true });
+  secs.forEach((sec, si) => {
+    sec.bpm = mood.bpm[0] + (mood.bpm[1] - mood.bpm[0]) * (si / (secs.length - 1));
+    if (sec.text){
+      sec.mel = songMelody(sec.text, sec.root + 12, sec.major ? SONG_MAJ_PENTA : SONG_MIN_PENTA);
+      sec.bars = Math.max(2, Math.ceil((sec.mel.beats + 1) / 4));
+    }
+  });
+  return { mood, minorRoot, majorRoot, secs };
+}
+
+/* Music engine (Web Audio). Without Web Audio the words still play through, silently. */
+let songCtx = null, songMaster = null, songVerb = null, songNodes = [], songTimers = [], songNoise = null;
+let songPlaying = false;
+const songMtof = m => 440 * Math.pow(2, (m - 69) / 12);
+function songAudio(mood){
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if (!AC) return false;
+  try {
+    if (!songCtx) songCtx = new AC();
+    if (songCtx.state === "suspended") songCtx.resume();
+    const ctx = songCtx;
+    songMaster = ctx.createGain(); songMaster.gain.value = 0.9;
+    const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -18; comp.ratio.value = 3;
+    songMaster.connect(comp); comp.connect(ctx.destination);
+    songVerb = ctx.createConvolver();
+    const len = Math.floor(ctx.sampleRate * 2.6), ir = ctx.createBuffer(2, len, ctx.sampleRate);
+    for (let c = 0; c < 2; c++){ const d = ir.getChannelData(c); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.4); }
+    songVerb.buffer = ir;
+    const vg = ctx.createGain(); vg.gain.value = mood.verb;
+    songVerb.connect(vg); vg.connect(songMaster);
+    songNodes.push(songMaster, comp, songVerb, vg);
+    return true;
+  } catch (_){ return false; }
+}
+function songEnv(g, t, a, peak, hold, r){
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(peak, t + a);
+  g.gain.setValueAtTime(peak, t + a + hold);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + a + hold + r);
+}
+function songPad(notes, t, dur, cutoff){
+  const ctx = songCtx;
+  const f = ctx.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = cutoff;
+  const g = ctx.createGain(); songEnv(g, t, 0.7, 0.07, Math.max(0.1, dur - 0.7), 1.2);
+  f.connect(g); g.connect(songMaster); g.connect(songVerb);
+  notes.forEach(n => ["triangle","sawtooth"].forEach((type, k) => {
+    const o = ctx.createOscillator(); o.type = type; o.frequency.value = songMtof(n); o.detune.value = k ? 7 : -5;
+    const og = ctx.createGain(); og.gain.value = k ? 0.35 : 0.6;
+    o.connect(og); og.connect(f); o.start(t); o.stop(t + dur + 1.4); songNodes.push(o);
+  }));
+}
+function songBass(n, t, dur){
+  const ctx = songCtx;
+  const o = ctx.createOscillator(); o.type = "sine"; o.frequency.value = songMtof(n);
+  const g = ctx.createGain(); songEnv(g, t, 0.03, 0.22, Math.max(0.05, dur - 0.2), 0.3);
+  o.connect(g); g.connect(songMaster); o.start(t); o.stop(t + dur + 0.4); songNodes.push(o);
+}
+function songLead(n, t, dur){
+  const ctx = songCtx;
+  const o = ctx.createOscillator(); o.type = "triangle"; o.frequency.value = songMtof(n);
+  const o2 = ctx.createOscillator(); o2.type = "sine"; o2.frequency.value = songMtof(n + 12);
+  const lfo = ctx.createOscillator(); lfo.frequency.value = 5; const lg = ctx.createGain(); lg.gain.value = 4;
+  lfo.connect(lg); lg.connect(o.detune);
+  const g = ctx.createGain(); songEnv(g, t, 0.015, 0.16, Math.max(0.02, dur * 0.55), Math.max(0.15, dur * 0.6));
+  const g2 = ctx.createGain(); g2.gain.value = 0.25;
+  o.connect(g); o2.connect(g2); g2.connect(g); g.connect(songMaster); g.connect(songVerb);
+  [o, o2, lfo].forEach(x => { x.start(t); x.stop(t + dur * 1.3 + 0.3); songNodes.push(x); });
+}
+function songKick(t, strength){
+  const ctx = songCtx;
+  const o = ctx.createOscillator(); o.type = "sine";
+  o.frequency.setValueAtTime(110, t); o.frequency.exponentialRampToValueAtTime(42, t + 0.16);
+  const g = ctx.createGain(); songEnv(g, t, 0.005, strength, 0.02, 0.22);
+  o.connect(g); g.connect(songMaster); o.start(t); o.stop(t + 0.35); songNodes.push(o);
+}
+function songHat(t, vol){
+  const ctx = songCtx;
+  if (!songNoise){ songNoise = ctx.createBuffer(1, Math.floor(ctx.sampleRate * 0.1), ctx.sampleRate); const d = songNoise.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
+  const s = ctx.createBufferSource(); s.buffer = songNoise;
+  const f = ctx.createBiquadFilter(); f.type = "highpass"; f.frequency.value = 7000;
+  const g = ctx.createGain(); songEnv(g, t, 0.002, vol, 0.01, 0.05);
+  s.connect(f); f.connect(g); g.connect(songMaster); s.start(t); s.stop(t + 0.1); songNodes.push(s);
+}
+function songBars(major){
+  for (let i = 0; i < 12; i++){
+    const b = document.getElementById("sb" + i); if (!b) return;
+    b.style.height = (6 + Math.round(Math.random() * (major ? 30 : 20))) + "px";
+    b.classList.toggle("major", !!major);
+  }
+}
+function songSay(text){
+  if (!ui.songVoice || !("speechSynthesis" in window)) return;
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.rate = 0.82; u.pitch = 1.05; speechSynthesis.speak(u); } catch (_){}
+}
+function songPlay(song, onEnd){
+  songStop();
+  const plan = songPlan(song), mood = plan.mood;
+  const audio = songAudio(mood);
+  songPlaying = true;
+  const now = audio ? songCtx.currentTime : 0;
+  let t = now + 0.15;
+  const startAt = t;
+  const at = (time, fn) => songTimers.push(setTimeout(() => { if (songPlaying) fn(); }, Math.max(0, (time - startAt) * 1000 + 150)));
+  const $ = id => document.getElementById(id);
+  plan.secs.forEach(sec => {
+    const spb = 60 / sec.bpm;
+    const secStart = t;
+    for (let b = 0; b < sec.bars; b++){
+      const bt = t + b * 4 * spb;
+      const last = sec.outro && b === sec.bars - 1;
+      if (audio){
+        songPad(sec.prog[b % 4].map(x => sec.root + 12 + x), bt, 4 * spb * (last ? 2 : 1), mood.cutoff + (sec.major ? 500 : 0));
+        songBass(sec.root + sec.prog[b % 4][0], bt, 4 * spb * 0.95);
+      }
+      for (let q = 0; q < 4; q++){
+        const qt = bt + q * spb;
+        if (audio){
+          if (mood.kick === "hard" && (q === 0 || q === 2)) songKick(qt, 0.55);
+          else if (mood.kick === "pulse" && q % 2 === 0) songKick(qt, 0.35);
+          else if (mood.kick === "soft" && q === 0) songKick(qt, 0.3);
+          if (mood.hat && !last){ songHat(qt + spb / 2, 0.035); if (!sec.major) songHat(qt, 0.02); }
+        }
+        if (!reducedMotion()) at(qt, () => songBars(sec.major));
+      }
+    }
+    if (sec.mel){
+      const off = secStart + spb;
+      at(secStart, () => {
+        document.querySelectorAll(".lyric").forEach(e => e.classList.remove("now"));
+        const ly = $("ly" + sec.line); if (ly){ ly.classList.add("now"); ly.scrollIntoView({ block:"nearest", behavior:reducedMotion() ? "auto" : "smooth" }); }
+        const se = $("songSec"); if (se) se.textContent = sec.name;
+        if (reducedMotion()) songBars(sec.major);
+        songSay(sec.text);
+      });
+      sec.mel.notes.forEach(n => {
+        const nt = off + n.beat * spb;
+        if (audio) songLead(n.pitch, nt, n.dur * spb);
+        at(nt, () => {
+          document.querySelectorAll(".lyric .w.on").forEach(e => e.classList.remove("on"));
+          const w = $(`sw${sec.line}_${n.word}`); if (w) w.classList.add("on");
+          const m = $("songMouth"); if (m){ m.setAttribute("ry", "6"); songTimers.push(setTimeout(() => m.setAttribute("ry", "2"), Math.min(220, n.dur * spb * 600))); }
+        });
+      });
+    }
+    if (sec.outro) at(secStart, () => { document.querySelectorAll(".lyric .w.on").forEach(e => e.classList.remove("on")); const se = $("songSec"); if (se) se.textContent = ""; });
+    t += sec.bars * 4 * spb;
+  });
+  const z = $("songZags"); if (z && !reducedMotion()) z.classList.add("bob");
+  at(t + 2.2, () => { songStop(); onEnd(); });
+}
+function songStop(){
+  songTimers.forEach(clearTimeout); songTimers = [];
+  songNodes.forEach(n => { try { if (n.stop) n.stop(); } catch (_){} try { n.disconnect(); } catch (_){} });
+  songNodes = []; songPlaying = false;
+  try { if ("speechSynthesis" in window) speechSynthesis.cancel(); } catch (_){}
+  const z = document.getElementById("songZags"); if (z) z.classList.remove("bob");
+}
+function songZagsSvg(){
+  return `<svg class="zags song-zags" id="songZags" viewBox="0 0 220 220" role="img" aria-label="Zags, singing">
+    <path d="M92 52 L102 30 L110 46 L120 24 L128 52" fill="none" stroke="var(--zag-dark)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M110 48 C160 48 186 84 186 128 C186 170 154 196 110 196 C66 196 34 170 34 128 C34 84 60 48 110 48 Z" fill="var(--zag)"/>
+    <ellipse cx="110" cy="160" rx="44" ry="26" fill="#FFFFFF" opacity=".28"/>
+    <path d="M77 120 Q86 112 95 120" fill="none" stroke="var(--zag-eye)" stroke-width="4" stroke-linecap="round"/>
+    <path d="M125 120 Q134 112 143 120" fill="none" stroke="var(--zag-eye)" stroke-width="4" stroke-linecap="round"/>
+    <ellipse cx="70" cy="138" rx="10" ry="6" fill="var(--zag-cheek)" opacity=".55"/><ellipse cx="150" cy="138" rx="10" ry="6" fill="var(--zag-cheek)" opacity=".55"/>
+    <ellipse id="songMouth" cx="110" cy="143" rx="7" ry="2" fill="var(--zag-eye)"/></svg>`;
+}
+function songDate(ts){ try { return new Date(ts).toLocaleDateString(undefined, { month:"short", day:"numeric" }); } catch (_){ return ""; } }
+
 function startOfDay(t){ const d = new Date(t); d.setHours(0, 0, 0, 0); return d.getTime(); }
 function validAfterCrisis(a){
   if (!a || typeof a.start !== "number" || typeof a.until !== "number" || a.until <= a.start) return null;
@@ -986,7 +1256,8 @@ function loadStore(){
         plan:migratePlan({ ...emptyPlan(), ...(d.plan || {}) }),
         baseHistory:Array.isArray(d.history) ? d.history : [],
         activity:Array.isArray(d.activity) ? d.activity : [],
-        afterCrisis:validAfterCrisis(d.afterCrisis)
+        afterCrisis:validAfterCrisis(d.afterCrisis),
+        songs:validSongs(d.songs)
       };
     }
   } catch (_){ /* corrupted data: keep defaults */ }
@@ -997,7 +1268,7 @@ function saveStore(){
     const history = [ ...store.sensitive.baseHistory, ...session.sessionHistory ].slice(-HISTORY_CAP);
     const activity = store.sensitive.activity.slice(-HISTORY_CAP);
     const ac = store.sensitive.afterCrisis;
-    localStorage.setItem(STORE_KEY, JSON.stringify({ v:1, plan:store.sensitive.plan, history, activity, ...(ac ? { afterCrisis:ac } : {}) }));
+    localStorage.setItem(STORE_KEY, JSON.stringify({ v:1, plan:store.sensitive.plan, history, activity, ...(ac ? { afterCrisis:ac } : {}), ...(songs().length ? { songs:songs() } : {}) }));
   } catch (_){}
 }
 function savePrefs(){
@@ -1379,6 +1650,7 @@ function startIntervention(interventionId, opts = {}){
     ui.touchPhase = interventionId === "touch_real_world" && getPlan().anchor ? "anchor" : null;
     route = R617[interventionId];
   }
+  if (interventionId === "song"){ route = "song"; ui.songMood = null; ui.songIdx = 0; ui.songLines = ["", "", ""]; ui.song = null; ui.songEnded = false; ui.songKept = false; ui.songReplay = false; ui.msg = ""; }
   if (interventionId === "zags"){ route = "zags"; if (!ui.zags || ui.zags.phase !== "hello") ui.zags = { phase:"hello", step:0, rounds:0, hard:0, breath:0, half:null }; }
   if (!route) route = interventionId === "thought_parking" ? "spiral-input"
     : interventionId === "craving_delay" ? "craving-delay"
@@ -2203,6 +2475,7 @@ const SCREENS = {
           <button class="btn btn-secondary" data-act="planFromConnect">Add someone to My Plan</button>`}
       </div>
       <button class="card wide zcard" data-act="zags" data-arg="connect" style="margin-top:14px">${zagsFace()}<span>Stay with Zags for a few minutes<span class="meta">Until someone calls back</span></span></button>
+      <button class="link" data-act="songStart" data-arg="connect">Make a song while you wait</button>
       <p class="lbl">If it gets heavier</p>
       ${row988()}` };
   },
@@ -2247,6 +2520,97 @@ const SCREENS = {
       ${item("daily", `<span class="small">Adds them to your own calendar.</span><button class="btn btn-secondary after-btn" data-act="afterDaily">Add daily reminders</button>`)}
       ${ui.flash ? `<p class="flash" role="status">${esc(ui.flash)}</p>` : ""}
       <p class="small" style="margin-top:18px">${HELP_IS_STRENGTH}</p>` };
+  },
+
+  /* 6.16 Turn it into a song. */
+  song(){
+    const kept = songs().length;
+    return { close:true, body:`
+      ${title("Turn it into a song.")}
+      <p class="sub">${SONG_INTRO}</p>
+      <h2>How does it feel right now?</h2>
+      <div class="chips" role="group" aria-label="How it feels">
+        ${Object.entries(SONG_MOODS).map(([k, m]) => `<button class="hchip" data-act="songMood" data-arg="${k}" aria-pressed="${ui.songMood === k}">${m.label}</button>`).join("")}
+      </div>`,
+      actions:`<button class="btn btn-primary" data-act="songNext"${ui.songMood ? "" : " disabled"}>Next</button>
+        ${kept ? `<button class="link" data-act="songList">My songs</button>` : ""}` };
+  },
+  "song-line"(){
+    const i = ui.songIdx || 0;
+    const [q, sub, ph] = SONG_PROMPTS[i];
+    return { close:true, body:`
+      <p class="step-count">Line ${i + 1} of 3</p>
+      ${title(q)}
+      <p class="sub">${sub}</p>
+      <label class="small" for="songBox" style="display:block;margin-top:14px">${SONG_TYPE_HINT}</label>
+      <textarea class="field" id="songBox" maxlength="${SONG_LINE_MAX}" placeholder="${esc(ph)}">${esc((ui.songLines || [])[i] || "")}</textarea>
+      ${ui.msg ? `<p class="err" role="alert">${esc(ui.msg)}</p>` : ""}`,
+      actions:`<button class="btn btn-primary" data-act="songLine">${i < 2 ? "Next" : "Make my song"}</button>
+        ${i > 0 ? `<button class="btn btn-secondary" data-act="songBack">Back</button>` : ""}` };
+  },
+  "song-play"(){
+    const s = ui.song;
+    if (!s) return SCREENS.song();
+    const all = [...s.lines, ...s.still];
+    const lyric = (t, i) => `<p class="lyric${i >= 2 ? " still" : ""}${ui.songEnded ? " now" : ""}" id="ly${i}">${t.split(" ").map((w, j) => `<span class="w" id="sw${i}_${j}">${esc(w)}</span>`).join(" ")}</p>`;
+    const voice = ("speechSynthesis" in window)
+      ? `<button class="chip zvoice" data-act="songVoice" aria-pressed="${!!ui.songVoice}">${ui.songVoice ? "Voice on" : "Voice off"}</button>` : "";
+    let after = "", acts = "";
+    if (ui.songEnded && !ui.songReplay){
+      const p = person();
+      after = `<p class="sub song-made">${SONG_MADE}</p>`;
+      acts = `<button class="btn btn-primary" data-act="songKeep"${ui.songKept ? " disabled" : ""}>${ui.songKept ? "Kept in My songs" : "Keep it in My songs"}</button>
+        <a class="btn btn-secondary" href="${smsLink(p ? p.phone : "", SONG_SHARE_MSG)}">Share how you're doing with someone</a>
+        <button class="btn btn-secondary" data-act="songDone">Done</button>
+        <button class="link" data-act="songAgain">Make another</button>`;
+    } else if (ui.songEnded){
+      after = `<h2 class="song-q">How does this feel now?</h2>`;
+      acts = Object.entries(SONG_REFLECT).map(([k, [l]]) => `<button class="btn btn-secondary" data-act="songReflect" data-arg="${k}">${l}</button>`).join("");
+    } else acts = "";
+    return { close:true, body:`
+      <div class="song-player">
+        ${songZagsSvg()}
+        <div class="song-bars" aria-hidden="true">${Array.from({ length:12 }, (_, i) => `<span class="song-bar" id="sb${i}"></span>`).join("")}</div>
+        <p class="step-count" id="songSec" aria-live="polite">${ui.songEnded ? "That's your song." : `${SONG_MOODS[s.mood].label} · ${s.date ? "from " + esc(songDate(s.date)) : "your song"}`}</p>
+        <h1 id="screen-title" tabindex="-1" class="sr">Your song</h1>
+        <div class="lyrics">${all.map(lyric).join("")}</div>
+        <button class="btn btn-primary" id="songPlayBtn" data-act="songToggle">${ui.songEnded ? "▶ Play again" : "▶ Play my song"}</button>
+        <p class="small">${SONG_SILENT}</p>
+        ${voice}
+        ${after}
+      </div>`,
+      actions:acts };
+  },
+  "song-reflect"(){
+    const k = ui.songNow, heavier = k === "heavier";
+    const p = person();
+    return { close:true, body:`
+      ${stepTitle((SONG_REFLECT[k] || SONG_REFLECT.same)[1], true)}
+      ${heavier ? `<div class="pair" style="margin-top:14px"><a class="btn btn-safety" href="tel:988">Call 988</a><a class="btn btn-safety" href="sms:988">Text 988</a></div>
+        ${p ? `<a class="btn btn-secondary" style="margin-top:10px" href="${smsLink(p.phone, HARD_TIME_MSG)}">Text ${esc(p.name)}</a>`
+          : `<button class="btn btn-secondary" style="margin-top:10px" data-act="route" data-arg="connect">Text someone you trust</button>`}` : ""}
+      <h2>Add something that's still true today</h2>
+      <p class="sub">It becomes a new last line, so the song grows with you.</p>
+      <label class="sr" for="songBox">Something that's still true today</label>
+      <textarea class="field" id="songBox" maxlength="${SONG_LINE_MAX}" placeholder="I made it through that week"></textarea>
+      ${ui.msg ? `<p class="err" role="alert">${esc(ui.msg)}</p>` : ""}`,
+      actions:`<button class="btn btn-primary" data-act="songAdd">Add it and play</button>
+        <button class="btn btn-secondary" data-act="songList">Not now</button>` };
+  },
+  "song-list"(){
+    const list = songs();
+    return { close:true, body:`
+      ${title("My songs")}
+      <p class="sub">Saved only on this phone. Listen back and notice what's changed.</p>
+      ${ui.flash ? `<p class="flash" role="status">${esc(ui.flash)}</p>` : ""}
+      <div class="panel">${list.length ? list.map(s => {
+        const name = s.lines[0].length > 40 ? s.lines[0].slice(0, 40) + "…" : s.lines[0];
+        if (ui.songDel === s.id) return `<div class="song-row"><span><b>Delete this song?</b><span class="small">${esc(name)}</span></span>
+          <span class="song-btns"><button class="edit-btn" data-act="songDelYes" data-arg="${esc(s.id)}">Delete</button><button class="edit-btn" data-act="songDelNo">Keep</button></span></div>`;
+        return `<div class="song-row"><span><b>${esc(name)}</b><span class="small">${esc(songDate(s.date))} · ${SONG_MOODS[s.mood].label}${s.still.length ? ` · ${s.still.length} added later` : ""}</span></span>
+          <span class="song-btns"><button class="edit-btn" data-act="songOpen" data-arg="${esc(s.id)}" aria-label="Play: ${esc(name)}">Play</button><button class="edit-btn" data-act="songDel" data-arg="${esc(s.id)}" aria-label="Delete: ${esc(name)}">Delete</button></span></div>`;
+      }).join("") : `<p class="empty">No songs yet.</p>`}</div>`,
+      actions:`<button class="btn btn-primary" data-act="songNew">Make a new song</button>` };
   },
 
   /* 6.17 C: Borrow ten minutes. Leaving early is never failing. */
@@ -2380,6 +2744,7 @@ const SCREENS = {
     return { close:true, body:`
       ${title("Get out of my head.")}
       <p class="sub">Quick games to interrupt the loop. 1 to 5 minutes. No points, no levels.</p>
+      <button class="card wide song-card" data-act="songStart" data-arg="head">${icon("head", true)}<span>Turn it into a song<span class="meta">Three lines in your words, made into a short song</span></span></button>
       <div class="list">${GAMES.map(([arg, , t, m]) =>
         `<button class="card" data-act="game" data-arg="${arg}">${icon("head", true)}<span>${t}<span class="meta">${m}</span></span></button>`).join("")}
         <button class="card" data-act="distFocus">${icon("head", true)}<span>Focus<span class="meta">Tap when the dot reaches the ring. One minute.</span></span></button>
@@ -2600,6 +2965,8 @@ const SCREENS = {
         ${TD_FIELDS.map(([k, t]) => `<p class="td-q">${t}</p>${(pb.timeDistance || {})[k] ? `<p class="td-a">${esc(pb.timeDistance[k])}</p>` : `<p class="empty">Nothing here yet.</p>`}`).join("")}
         ${editable && pb.trustedPeople.length ? `<p class="small" style="margin:14px 0 6px">Ask someone to hold onto a few things:</p>
           <div class="sits">${pb.trustedPeople.map(p => `<a class="sit" href="${smsLink(p.phone, TD_ASK)}" aria-label="Ask ${esc(p.name)} to hold onto a few things">Ask ${esc(p.name)}</a>`).join("")}</div>` : ""}</div>
+      ${editable ? `<div class="panel"><div class="setup-row"><span><b>My songs</b><span class="small">${songs().length ? `${songs().length} saved on this phone` : "Songs you make and keep show up here."}</span></span>
+          <button class="edit-btn" data-act="${songs().length ? "songList" : "songNew"}">${songs().length ? "Open" : "Make one"}</button></div></div>` : ""}
       <div class="panel">${head("avoid", "Things to avoid when I'm struggling")}${ul(pb.avoid)}</div>
       <div class="panel">${head("reminders", "What I want ZigZag Mind to remind me")}${ul(pb.reminders)}</div>`,
       actions: editable ? "" : `<button class="btn btn-primary" data-act="planDone">${ui.planFrom === "no" ? "I'm done" : "Back"}</button>` };
@@ -2882,7 +3249,8 @@ function buildExport(){
     plan:getPlan(),
     checkIns:[ ...store.sensitive.baseHistory, ...session.sessionHistory ].map(strip),
     activity:store.sensitive.activity.map(a => ({ type:a.type, date:new Date(a.ts).toISOString(), sample:a.sample || undefined })),
-    first30Days:store.sensitive.afterCrisis ? { start:new Date(store.sensitive.afterCrisis.start).toISOString(), until:new Date(store.sensitive.afterCrisis.until).toISOString(), done:store.sensitive.afterCrisis.done } : undefined
+    first30Days:store.sensitive.afterCrisis ? { start:new Date(store.sensitive.afterCrisis.start).toISOString(), until:new Date(store.sensitive.afterCrisis.until).toISOString(), done:store.sensitive.afterCrisis.done } : undefined,
+    songs:songs().length ? songs().map(x => ({ date:new Date(x.date).toISOString(), mood:x.mood, lines:x.lines, still:x.still })) : undefined
   };
 }
 
@@ -3193,6 +3561,7 @@ function render(){
     clearInterval(borrowTimer); borrowTimer = null;
     if (s === "borrow-step" && ui.borrowEnd) borrowTimer = setInterval(borrowTick, 1000);
     if (s !== "zags") zagsHush();
+    if (s !== "song-play") songStop();   // leaving the player (Help, X, RED) stops the song at once
     if (s === "zags" && ui.zags && ui.zags.phase === "breathe") zagsStartBreathing();
     if (s !== "g-pattern"){ clearTimeout(patTimer); patTimer = null; }
     if (s === "craving-delay") cravingTimer = setInterval(cravingTick, 1000);
@@ -3540,6 +3909,89 @@ const ACTIONS = {
   },
   afterEnd(){ store.sensitive.afterCrisis = null; saveStore(); ui.flash = "The first 30 days mode has ended."; render(); },
   afterEndOk(){ store.sensitive.afterCrisis = null; saveStore(); render(); },
+  /* 6.16 Turn it into a song */
+  songStart(arg){
+    if (blockIfRed()) return;
+    const state = arg === "connect" ? "alone" : arg === "head" ? "distraction" : null;
+    if (state) dispatch({ type:"SET_CURRENT_STATE", state });
+    startIntervention("song");
+  },
+  songMood(arg){ if (blockIfRed()) return; if (!SONG_MOODS[arg]) return; ui.songMood = arg; render(); },
+  songNext(){ if (blockIfRed()) return; if (!ui.songMood) return; ui.songIdx = 0; ui.msg = ""; go("song-line"); },
+  songBack(){
+    const b = document.getElementById("songBox");
+    if (b) ui.songLines[ui.songIdx] = b.value.slice(0, SONG_LINE_MAX);
+    ui.songIdx = Math.max(0, ui.songIdx - 1); ui.msg = ""; lastRendered = null; render();
+  },
+  songLine(){
+    if (blockIfRed()) return;
+    const b = document.getElementById("songBox");
+    const text = songClean(b && b.value);
+    if (!text){ ui.msg = "Write a few words first. Anything is okay."; render(); return; }
+    ui.msg = "";
+    const next = () => {
+      ui.songLines[ui.songIdx] = text;
+      if (ui.songIdx < 2){ ui.songIdx++; lastRendered = null; render(); return; }
+      ui.song = { mood:ui.songMood, lines:ui.songLines.slice(0, 3), still:[] };
+      ui.songReplay = false; ui.songEnded = false; ui.songKept = false;
+      go("song-play");
+    };
+    handleSafeTextSubmit({ text,
+      onRed(){ ui.songLines = ["", "", ""]; ui.song = null; applySafetyResult("RED"); },   // no song is made
+      onYellow(){ applySafetyResult("YELLOW"); next(); },
+      onGreen: next });
+  },
+  songToggle(){
+    if (blockIfRed()) return;
+    if (!ui.song) return;
+    const btn = document.getElementById("songPlayBtn");
+    if (songPlaying){ songStop(); if (btn) btn.textContent = "▶ Play again"; return; }
+    if (ui.songEnded){ ui.songEnded = false; render(); }
+    const b2 = document.getElementById("songPlayBtn"); if (b2) b2.textContent = "■ Stop";
+    songPlay(ui.song, () => { if (session.screen !== "song-play") return; ui.songEnded = true; render(); });
+  },
+  songVoice(){ ui.songVoice = !ui.songVoice; const b = document.querySelector('[data-act="songVoice"]'); if (b){ b.setAttribute("aria-pressed", String(ui.songVoice)); b.textContent = ui.songVoice ? "Voice on" : "Voice off"; } if (!ui.songVoice) try { speechSynthesis.cancel(); } catch (_){} },
+  songKeep(){
+    if (blockIfRed()) return;
+    if (!ui.song || ui.songKept) return;
+    const d = Date.now();
+    ui.song.id = String(d); ui.song.date = d;
+    store.sensitive.songs = [{ id:ui.song.id, date:d, mood:ui.song.mood, lines:ui.song.lines.slice(), still:ui.song.still.slice() }, ...songs()].slice(0, SONG_CAP);
+    saveStore();
+    ui.songKept = true; render();
+  },
+  songDone(){ if (blockIfRed()) return; songStop(); go("game-check"); },
+  songAgain(){ if (blockIfRed()) return; songStop(); ui.songMood = null; ui.songLines = ["", "", ""]; ui.song = null; go("song"); },
+  songNew(){ if (blockIfRed()) return; ui.flash = ""; ui.songDel = null; startIntervention("song"); },
+  songList(){ if (blockIfRed()) return; songStop(); ui.msg = ""; ui.songDel = null; ui.flash = ""; go("song-list"); },
+  songOpen(arg){
+    if (blockIfRed()) return;
+    const s = songs().find(x => x.id === arg); if (!s) return;
+    ui.song = { id:s.id, date:s.date, mood:s.mood, lines:s.lines.slice(), still:s.still.slice() };
+    ui.songReplay = true; ui.songEnded = false; ui.songKept = true;
+    go("song-play");
+  },
+  songReflect(arg){ if (blockIfRed()) return; if (!SONG_REFLECT[arg]) return; ui.songNow = arg; ui.msg = ""; go("song-reflect"); },
+  songAdd(){
+    if (blockIfRed()) return;
+    const b = document.getElementById("songBox");
+    const text = songClean(b && b.value);
+    if (!text){ ui.msg = "Write a few words, or tap Not now."; render(); return; }
+    ui.msg = "";
+    const add = () => {
+      ui.song.still.push(text);
+      const saved = songs().find(x => x.id === ui.song.id);
+      if (saved){ saved.still.push(text); saveStore(); }
+      ui.songEnded = false; go("song-play");
+    };
+    handleSafeTextSubmit({ text,
+      onRed(){ applySafetyResult("RED"); },
+      onYellow(){ applySafetyResult("YELLOW"); add(); },
+      onGreen: add });
+  },
+  songDel(arg){ ui.songDel = arg; render(); },
+  songDelNo(){ ui.songDel = null; render(); },
+  songDelYes(arg){ store.sensitive.songs = songs().filter(x => x.id !== arg); saveStore(); ui.songDel = null; ui.flash = "Song deleted."; render(); },
   /* ---- 6.17 ---- */
   phoneDown(){ if (blockIfRed()) return; ui.fromHelped = false; go("phone-down"); },
   putDown(){ ui.fromHelped = false; clearInterval(borrowTimer); go("home"); },   // quiet; never starts anything
@@ -3752,7 +4204,7 @@ const ACTIONS = {
   toSettings(){ ui.flash = ""; go("settings"); },
   askDelete(){ ui.flash = ""; go("confirm-delete"); },
   deleteAll(){
-    store.sensitive = { plan:emptyPlan(), baseHistory:[], activity:[], afterCrisis:null };
+    store.sensitive = { plan:emptyPlan(), baseHistory:[], activity:[], afterCrisis:null, songs:[] };
     saveStore();
     dispatch({ type:"DELETE_DATA" });
     ui.engine = null;
@@ -3760,7 +4212,7 @@ const ACTIONS = {
     go("settings");
   },
   loadSample(){
-    store.sensitive = { plan:samplePlan(), baseHistory:seedHistory(), activity:seedActivity(), afterCrisis:store.sensitive.afterCrisis || null };
+    store.sensitive = { plan:samplePlan(), baseHistory:seedHistory(), activity:seedActivity(), afterCrisis:store.sensitive.afterCrisis || null, songs:songs() };
     saveStore();
     ui.flash = "Sample data loaded.";
     render();
