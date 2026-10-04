@@ -86,7 +86,7 @@ const HF="Would talking to a person help more than another answer?";
  r.push(['two finished steps without "That helped" → Human First', a.S().screen==='human-first']);
  r.push(['with a person in the plan: Call and Text open the phone for them', hrefs(a).includes('tel:5550142') && hrefs(a).includes('sms:5550142')]);}
 {const a=boot(); finishStep(a,'ciHelped'); finishStep(a,'ciHelped'); finishStep(a,'ciHelped');
- r.push(['"That helped" never counts toward it', a.S().screen==='recommendation' && a.S().unhelpedCount===0]);}
+ r.push(['"That helped" never counts toward it', a.S().screen==='phone-down' && a.S().unhelpedCount===0]);}
 {const a=boot(); a.G('session.currentState="distraction"; startIntervention("distraction_around_me")'); a.G('ACTIONS.gDone()'); a.click(act('gameChange','no'));
  a.G('startIntervention("distraction_color_hunt")'); a.G('ACTIONS.gDone()'); a.click(act('gameChange','no'));
  r.push(['two games answered "No" also count', a.S().screen==='human-first']);}

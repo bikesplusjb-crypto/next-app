@@ -54,6 +54,7 @@ ZigZag Mind is comfortable with people leaving. That is the goal, not a failure.
 | 2 Zags | 6.7c | Zags listens (on hold: needs owner + clinician sign-off) |
 | 2 Zags | 6.7d | Safe place (on hold: needs owner + clinician sign-off) |
 | 2 Zags | 6.16 | Turn it into a song |
+| 2 Real world | 6.17 | Let's Zig + real-world steps |
 | 3 People & safety | 6.8 | Code word |
 | 3 People & safety | 6.9 | Supporter guide page |
 | 3 People & safety | 6.10 | Check-in reminders |
@@ -258,6 +259,12 @@ Zags: "I'm listening. Go ahead." over a large text box. **No AI; Zags never repl
 - Note: My Plan already has "People and places that take my mind off things". Decide whether Part B replaces, extends, or sits beside it.
 
 **Tests (when built):** "Stop" on every step goes to grounding; Help on every step; Directions uses only the typed text and no location; nothing leaves the device.
+
+### 6.17 Let's Zig + real-world steps (built)
+
+Built from the owner's addendum (the revised version with five channels). **Let's Zig:** every intervention has a `channel` (BODY, SPACE, SENSE, PEOPLE, ACTION). After "I still feel bad" or a game's "No", the next suggestion comes from a different channel when one is eligible; after a latest rating of 8+, BODY/SPACE/PEOPLE come first. RED and the YELLOW order always win. Copy: "Okay. That wasn't it. / Let's Zig." plus one channel line. "What would make this 10% easier?" on I don't know what I need and the recommendation screen; the two signature lines on About. **Ending:** "You're ready." after "That helped" (and game Yes / A little), "I'm good for now", and at the end of the new steps; "Something else" stays available after "That helped". **New steps:** `borrow_ten` (I feel low, the craving delay, Get out of my head), `true_sentence` (Calm, spiraling), `kind_stranger` (I feel low), `find_alive` (I feel low, Change the scene), `ridiculous_mode` (Get out of my head only; hidden in YELLOW and after any crisis screen; two per visit), `touch_real_world` (Calm; optional anchor in My Plan → Things that help).
+
+> **As built, closest-channel assignments:** `craving_delay` → SPACE, `behavioral_activation` → ACTION. "Not really" is not an answer anywhere in the app, so it isn't used. Not built (per the addendum): emergency pocket, the door, tiny mission, one song, one true thing, where am I, any REAL WORLD menu.
 
 ### 6.16 Turn it into a song (reference: song-preview.html)
 

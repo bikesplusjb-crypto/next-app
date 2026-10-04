@@ -47,7 +47,7 @@ const SHOWS=t=>t.includes(A1) || t.includes('Helping someone else') || /Somethin
  const cards=[...a.doc.querySelectorAll('#app .list .card')];
  r.push(['I feel low offers it as one tiny step, last, never first or only', cards.length>=4 && cards.at(-1).dataset.act==='kindStart' && cards[0].dataset.act!=='kindStart']);
  r.push(['framed as optional, not a duty', a.T().includes('Only if you have the energy.') && !/should|have to|must/i.test(cards.at(-1).textContent)]);}
-{const a=boot(); r.push(['the engine never picks it (not in the library)', a.G('!findIntervention("kind_act") && INTERVENTION_LIBRARY.every(i=>!/kind/.test(i.id))')]);
+{const a=boot(); r.push(['the engine never picks it (not in the library)', a.G('!findIntervention("kind_act") && INTERVENTION_LIBRARY.every(i=>i.id!=="kind_act")')]);
  a.G('session.currentState="anxious"'); a.G('ACTIONS.kindStart()'); r.push(['outside I feel low it does nothing', a.S().screen!=='kind']);}
 
 // ---- the flow ----
@@ -68,7 +68,7 @@ const low=()=>{ const a=boot(); a.G('ACTIONS.loadSample()'); a.click(act('flow',
  r.push(['the kind text is not counted', a.G('store.sensitive.activity.length')===acts]);
  a.click(act('kindDone'));
  r.push(['Done → the usual check-in', a.S().screen==='checkin']);
- a.click(act('ciHelped'));
+ a.click(act('ciHelped')); a.click(act('phoneDownElse'));
  const o=a.S().sessionHistory.at(-1); const saved=JSON.parse(a.dump()['next.v1.sensitive']).history.at(-1);
  r.push(['outcome recorded with no person and no message', o.interventionId==='kind_act' && JSON.stringify(saved).indexOf('Jordan')===-1 && JSON.stringify(saved).indexOf('5550142')===-1 && !/body|message|person|to"/.test(JSON.stringify(saved))]);
  const all=Object.values(a.dump()).join('\n');

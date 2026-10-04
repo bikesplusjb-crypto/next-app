@@ -414,6 +414,64 @@ Steps:
 1. Pick one tiny task: make the bed, wash one dish, or put on clean socks.
 2. Do just that one thing.
 
+### Borrow ten minutes (`borrow_ten`)
+
+- Button: "Borrow ten minutes"
+- Description: "You don't have to decide the rest of your day. Just the next ten minutes."
+- For: low, craving, distraction, anxious · about 10 min · needs moving around
+
+Steps:
+1. Pick one thing for the next ten minutes.
+2. Do just that. Leave any time.
+
+### What's also true (`true_sentence`)
+
+- Button: "Write what's also true"
+- Description: "Name the sentence your brain keeps repeating, then what's also true."
+- For: spiraling, anxious · about 3 min
+
+Steps:
+1. Write the sentence your brain keeps repeating.
+2. Write what's also true.
+
+### Talk to yourself like a friend (`kind_stranger`)
+
+- Button: "Try a kinder voice"
+- Description: "What would you tell someone you care about?"
+- For: low, spiraling · about 1 min
+
+Steps:
+1. Pick what you'd tell someone you cared about.
+
+### Find something alive (`find_alive`)
+
+- Button: "Find something alive"
+- Description: "A pet, a bird, a tree, anything growing."
+- For: low, anxious, distraction · about 2 min · needs moving around
+
+Steps:
+1. Find a pet, or look outside for something alive.
+2. Notice what it's doing.
+
+### Ridiculous mode (`ridiculous_mode`)
+
+- Button: "Make this less serious"
+- Description: "One absurd little mission. Just for a moment."
+- For: distraction · about 1 min
+
+Steps:
+1. Do one absurd mission.
+
+### Find something real (`touch_real_world`)
+
+- Button: "Find something real"
+- Description: "Something you can hold, something cooler, something warmer."
+- For: anxious, spiraling, craving · about 2 min
+
+Steps:
+1. Find something you can hold.
+2. Notice how it feels.
+
 ### Engine messages (the line shown with a suggestion)
 
 - "Reaching out to someone can help when things feel heavy."
@@ -829,6 +887,35 @@ Each reminder: "Check in on [first name]" (or "Check in on your person"), 6pm, w
 
 On the guide when a name is given: "[name] would like you to check in now and then." After a choice: "[Gentle/Close] reminders are ready. Open the file to add them to your calendar."
 
+### Let's Zig + real-world steps (6.17)
+
+**Let's Zig** is a simple product rule, not a clinical method: after "I still feel bad" or a game's "No", the next suggestion comes from a different channel when one is available. After a recent rating of 8 or more, BODY, SPACE and PEOPLE steps come first. Safety routing always comes first: RED stops everything, and the YELLOW order (connection, own plan, grounding, fresh air) still wins.
+- `BODY`: grounding, breathing, hydration, walking, touch_real_world
+- `SPACE`: change_scene, environment_change, find_alive, craving_delay
+- `SENSE`: distraction_game, distraction_color_hunt, distraction_around_me, distraction_categories, distraction_memory, distraction_pattern, distraction_60_second, ridiculous_mode, zags
+- `PEOPLE`: connection
+- `ACTION`: thought_parking, still_true, true_sentence, kind_stranger, borrow_ten, behavioral_activation
+
+After "didn't help": "Okay. That wasn't it. / Let's Zig." then one of: "Let's try something with your body." · "Let's change the space." · "Let's give your senses something to do." · "Let's reach a person." · "Let's do one tiny thing."
+
+Framing on "I don't know what I need" and the recommendation screen: "What would make this 10% easier?"
+
+About: "When something isn't helping, ZigZag doesn't tell you to try harder. It helps you try a different direction." / "Don't fight the feeling. Change one variable."
+
+**Ending** (after "That helped", "I'm good for now", and at the end of the steps below): "You're ready." / "You can put me away for a few minutes." / [Put the phone down]. Returns Home; never suggests anything.
+
+**Borrow ten minutes**: "You don't have to decide the rest of your day." / "Just borrow the next ten minutes." Options: Walk ("Take a walk. Anywhere is fine.") · Shower ("Take a shower.") · Sit outside ("Sit outside for a while.") · Put on music ("Put on some music.") · Drink water ("Get a glass of water and drink it slowly.") · Call someone ("Call someone. Even a short call.") · Tidy one thing ("Tidy one thing. Just one.") · Change rooms ("Go to a different room."). Optional 10-minute timer; "Leave any time." Ends: "The ten minutes are yours."
+
+**What's also true** (both lines safety-checked; nothing saved): "What's the sentence your brain keeps repeating?" then "What's also true?" Optional examples: "I'm having a really hard night." · "I've gotten through hard nights before." · "I don't have to solve this tonight."
+
+**A kinder voice**: "If someone you cared about felt like this, what would you tell them?" "I'd listen." · "I'd tell them to take a break." · "I'd tell them to call someone." · "I'd give them some space." · "I'd sit with them." → "You can give yourself the same."
+
+**Find something alive**: "Find something alive." / "Do you have a pet nearby?" Yes: "Go find them. Notice what they're doing, how they move, what they sound like." No: "Look outside. Find a bird, a tree, an insect, or anything growing." → "You spent a moment noticing something outside yourself."
+
+**Ridiculous mode** (Get out of my head only; hidden in YELLOW and after any crisis screen this visit; two per visit): "Make this less serious. Just for a moment." "Find the most boring object in the room." · "Decide whether your refrigerator is judging you." · "Find the object that looks most like a face." · "Give the nearest chair a completely unnecessary name." · "Find something that would make a terrible hat." → "Okay. Back to reality."
+
+**Find something real** (Calm): "Find something you can hold." · "Find something cooler." · "Find something warmer." · "Put both feet on the floor." · "Change your position." · "Wash your hands." · "Turn on a light.". Optional textures: smooth, rough, warm, cool, soft, hard, heavy, light. With an anchor in My Plan: "Do you have your anchor nearby?" Yes: "Hold it for a moment." No: "Find something else you can safely hold." Ends: "You found something real."
+
 ### Zags: every line he can say (ZAGS_LINES)
 
 Scripted, not AI. Taps only. Says he is not a person in every session's first line. No relationship language, no pressure to stay, no memory between sessions, never the person's name. Every session ends at a person. RED stops Zags. At most two breathing rounds per session (4 breaths each: in 4 seconds, out 6; 3 breaths with reduced motion). Voice is off by default and uses the device's own speech only.
@@ -981,6 +1068,8 @@ Rendered for each state where the screen changes by state. Identical renders are
 - **Button:** 5-4-3-2-1 grounding — Notice what's around you
 - **Button:** Feet on the floor — Three tiny steps, 2 minutes
 - **Button:** What's still true? — Start with what you know
+- **Button:** Find something real — Something you can hold, cooler, warmer
+- **Button:** What's also true — The sentence on repeat, and what else is true
 - **Button:** I'd rather talk to someone
 
 ### `still-true`
@@ -998,7 +1087,7 @@ Rendered for each state where the screen changes by state. Identical renders are
 - **Button:** × _(screen reader: "Close and go to home")_
 - **Button:** Help _(screen reader: "Get help now")_
 - **Heading:** That's okay. One question.
-- Do you want to calm down, get distracted, connect with someone, or get out of where you are?
+- What would make this 10% easier? Do you want to calm down, get distracted, connect with someone, or get out of where you are?
 - **Button:** Calm down — Slow my body down
 - **Button:** Get distracted — Interrupt the loop for a few minutes
 - **Button:** Connect with someone — A person, not another answer
@@ -1142,37 +1231,48 @@ _When: anxious_
 
 - **Button:** × _(screen reader: "Close and go to home")_
 - **Button:** Help _(screen reader: "Get help now")_
+- What would make this 10% easier?
 - **Heading:** Walking helped you before.
 - Want to try it first?
 - **Heading:** Something that helped you before: Music.
 - **Button:** I'll do that
 - **Button:** Try walking
 - **Button:** Something else
-- **Button:** That's enough for now
+- **Button:** I'm good for now
 
 _When: spiraling, low, craving_
 
 - **Button:** × _(screen reader: "Close and go to home")_
 - **Button:** Help _(screen reader: "Get help now")_
+- What would make this 10% easier?
 - **Heading:** Walking
 - This is on your list of things that help. A short, slow walk.
 - **Heading:** Something that helped you before: Music.
 - **Button:** I'll do that
 - **Button:** Try walking
 - **Button:** Something else
-- **Button:** That's enough for now
+- **Button:** I'm good for now
 
 _When: distraction_
 
 - **Button:** × _(screen reader: "Close and go to home")_
 - **Button:** Help _(screen reader: "Get help now")_
+- What would make this 10% easier?
 - **Heading:** Grounding
 - One small step to try. Notice what's around you, one sense at a time.
 - **Heading:** Something that helped you before: Music.
 - **Button:** I'll do that
 - **Button:** Try grounding
 - **Button:** Something else
-- **Button:** That's enough for now
+- **Button:** I'm good for now
+
+### `phone-down`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** You're ready.
+- You can put me away for a few minutes.
+- **Button:** Put the phone down
 
 ### `suggestion`
 
@@ -1237,6 +1337,9 @@ _When: distraction_
 - **Button:** Body — Drink water.
 - **Button:** Space — Open a window or step outside.
 - **Button:** Connection — Text someone: hey
+- **Button:** Borrow ten minutes — Just the next ten minutes.
+- **Button:** A kinder voice — What would you tell a friend?
+- **Button:** Find something alive — A pet, a bird, a tree.
 - **Button:** Something kind — Only if you have the energy.
 
 ### `kind`
@@ -1301,6 +1404,7 @@ _When: distraction_
 - **Heading:** Let's get it out of your head.
 - What's running through your mind? One thought per line.
 - **Button:** Make cards
+- **Button:** Or: one sentence and what's also true
 
 ### `spiral-sort`
 
@@ -1358,6 +1462,7 @@ _When: distraction_
 - **Link → `tel:911`:** Already used, or took too much? Call 911.
 - Shaking, sweating, confused, or seeing things? Withdrawal can be a medical emergency. Get medical help.
 - For support: Call 988 · Text 988
+- **Button:** Or borrow ten minutes instead
 - **Button:** I already used
 - **Button:** Check in early
 
@@ -1503,6 +1608,103 @@ _When: distraction_
 - **Button:** Be around people
 - **Button:** Not right now
 
+### `borrow`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** You don't have to decide the rest of your day.
+- Just borrow the next ten minutes.
+- **Button:** Walk
+- **Button:** Shower
+- **Button:** Sit outside
+- **Button:** Put on music
+- **Button:** Drink water
+- **Button:** Call someone
+- **Button:** Tidy one thing
+- **Button:** Change rooms
+
+### `borrow-step`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Borrow ten minutes
+- **Heading:** Take a walk. Anywhere is fine.
+- **Button:** Start a gentle 10-minute timer
+- Optional. Leave any time.
+- **Button:** I'm done
+
+### `borrow-end`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** The ten minutes are yours.
+- **Button:** Next
+- **Button:** Put the phone down
+
+### `ts`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- What's also true
+- **Heading:** What's the sentence your brain keeps repeating?
+- The sentence your brain keeps repeating
+- **Text box**
+- **Button:** Next
+
+### `ts-show`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- What's also true
+- **Button:** Next
+- **Button:** Put the phone down
+
+### `stranger`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** If someone you cared about felt like this, what would you tell them?
+- **Button:** I'd listen.
+- **Button:** I'd tell them to take a break.
+- **Button:** I'd tell them to call someone.
+- **Button:** I'd give them some space.
+- **Button:** I'd sit with them.
+
+### `alive`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Find something alive.
+- Do you have a pet nearby?
+- **Button:** Yes
+- **Button:** No
+
+### `ridiculous`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Make this less serious. Just for a moment.
+- **Heading:** Find the most boring object in the room.
+- **Button:** Okay. Back to reality.
+
+### `touch`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Find something real.
+- Find something you can hold.
+- Optional: how does it feel?
+- **Button:** smooth
+- **Button:** rough
+- **Button:** warm
+- **Button:** cool
+- **Button:** soft
+- **Button:** hard
+- **Button:** heavy
+- **Button:** light
+- **Button:** Next
+- **Button:** Done
+
 ### `scene`
 
 - **Button:** × _(screen reader: "Close and go to home")_
@@ -1514,6 +1716,7 @@ _When: distraction_
 - **Button:** Sit somewhere different
 - **Button:** Take a shower
 - **Button:** Get something to drink
+- **Button:** Find something alive
 - **Heading:** Somewhere to go
 - Opens your phone's Maps. ZigZag Mind never sees your location.
 - **Link → `https://www.google.com/maps/search/library`:** Library
@@ -1546,6 +1749,8 @@ _When: distraction_
 - **Button:** Pattern break — Watch a pattern, tap it back
 - **Button:** 60-second challenge — Your only job: beat the timer
 - **Button:** Focus — Tap when the dot reaches the ring. One minute.
+- **Button:** Make this less serious — One absurd little mission
+- **Button:** Borrow ten minutes — Just the next ten minutes
 - **Button:** Calm down with Zags — Breathe together for a few minutes
 
 ### `g-color`
@@ -1854,6 +2059,8 @@ _When: distraction_
 - Take one tiny action.
 - **Heading:** When things feel unsafe
 - Get to a real person fast.
+- When something isn't helping, ZigZag doesn't tell you to try harder. It helps you try a different direction.
+- Don't fight the feeling. Change one variable.
 - **Heading:** How it works
 - Tell ZigZag Mind what's happening, in one tap.
 - Do one small, concrete thing.
@@ -2027,6 +2234,54 @@ _When: distraction_
 - **Button:** Help _(screen reader: "Get help now")_
 - One tiny task · Step 1 of 2
 - **Heading:** Pick one tiny task: make the bed, wash one dish, or put on clean socks.
+- **Button:** Next
+
+#### Borrow ten minutes
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Borrow ten minutes · Step 1 of 2
+- **Heading:** Pick one thing for the next ten minutes.
+- **Button:** Next
+
+#### What's also true
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- What's also true · Step 1 of 2
+- **Heading:** Write the sentence your brain keeps repeating.
+- **Button:** Next
+
+#### Talk to yourself like a friend
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Talk to yourself like a friend
+- **Heading:** Pick what you'd tell someone you cared about.
+- **Button:** Done
+
+#### Find something alive
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Find something alive · Step 1 of 2
+- **Heading:** Find a pet, or look outside for something alive.
+- **Button:** Next
+
+#### Ridiculous mode
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Ridiculous mode
+- **Heading:** Do one absurd mission.
+- **Button:** Done
+
+#### Find something real
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Find something real · Step 1 of 2
+- **Heading:** Find something you can hold.
 - **Button:** Next
 
 ### Home, iPhone Safari (shows the add-to-home-screen tip)

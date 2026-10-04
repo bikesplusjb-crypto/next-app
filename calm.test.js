@@ -15,7 +15,7 @@ const r=[];
 
 {const a=calm(); const t=a.T();
  r.push(['Calm opens from Home', a.S().screen==='calm' && a.doc.getElementById('screen-title').textContent==="Let's slow things down."]);
- r.push(['short menu: breathe, 5-4-3-2-1, feet on the floor, what\'s still true', [...a.doc.querySelectorAll('[data-act="calmPick"]')].map(b=>b.dataset.arg).join()==='breathe,ground,feet,true']);
+ r.push(['short menu: breathe, 5-4-3-2-1, feet on the floor, what\'s still true, + 6.17 find something real, what\'s also true', [...a.doc.querySelectorAll('[data-act="calmPick"]')].map(b=>b.dataset.arg).join()==='breathe,ground,feet,true,real,also']);
  r.push(['"I\'d rather talk to someone" goes to Connect', !!a.doc.querySelector('.actions [data-act="route"][data-arg="connect"]') && t.includes("I'd rather talk to someone")]);
  r.push(['no emoji; Help in the top bar', !/\p{Extended_Pictographic}/u.test(t) && !!a.doc.querySelector('header .help-pill')]);
  r.push(['Zags is the featured card, first on the menu (6.7)', /^Calm down with Zags/.test(a.doc.querySelector('#app .zcard').textContent.trim()) && a.doc.querySelector('#app .zcard').compareDocumentPosition(a.doc.querySelector('[data-act="calmPick"]'))===4]);
@@ -28,7 +28,7 @@ const r=[];
  r.push(['Breathe → breathing steps', a.S().screen==='intervention' && a.S().currentInterventionId==='breathing']);
  let n=0; while(a.doc.querySelector(act('ivNext')) && n<6){ a.click(act('ivNext')); n++; } a.click(act('ivDone'));
  r.push(['...then the check-in', a.S().screen==='checkin']);
- a.click(act('rate','3')); a.click(act('ciHelped'));
+ a.click(act('rate','3')); a.click(act('ciHelped')); a.click(act('phoneDownElse'));
  const o=a.S().sessionHistory.at(-1); r.push(['...and the outcome is recorded', o.interventionId==='breathing' && o.after===3 && o.state==='anxious']);}
 {const a=calm(); a.click(act('calmPick','ground'));
  r.push(['5-4-3-2-1 → grounding game', a.S().screen==='ground' && a.S().currentInterventionId==='grounding']);
@@ -49,7 +49,7 @@ const r=[];
  r.push(['Not true for me → just the next statement, no arguing', a.T().includes(STILL[1]) && !/but |actually|try to|should/i.test(a.T())]);
  a.click(act('trueYes')); a.click(act('trueYes')); a.click(act('trueYes'));
  r.push(['3 true → "You found something that was true for you."', a.T().includes('You found something that was true for you.')]);
- a.click(act('trueDone')); a.click(act('rate','4')); a.click(act('ciHelped'));
+ a.click(act('trueDone')); a.click(act('rate','4')); a.click(act('ciHelped')); a.click(act('phoneDownElse'));
  r.push(['...Next → check-in, recorded as still_true', a.S().sessionHistory.at(-1).interventionId==='still_true']);
  r.push(['nothing about the answers is saved', !/I am here|trueCount|My feet/.test(JSON.stringify(a.dump()))]);}
 {const a=calm(); a.click(act('calmPick','true'));

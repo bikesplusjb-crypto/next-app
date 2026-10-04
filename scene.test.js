@@ -32,7 +32,7 @@ for(const [k,label] of OPTS){
     && a.doc.querySelectorAll('#app .card, #app a.sit').length===0;
   a.click(act('sceneDone'));
   const ci=a.S().screen==='checkin';
-  a.click(act('rate','4')); a.click(act('ciHelped'));
+  a.click(act('rate','4')); a.click(act('ciHelped')); a.click(act('phoneDownElse'));
   const o=a.S().sessionHistory.at(-1);
   r.push([`"${label}": full-screen, Done, check-in, outcome saved`, full && ci && o.interventionId==='change_scene' && o.option===k && o.after===4 && a.S().screen==='recommendation']);
 }

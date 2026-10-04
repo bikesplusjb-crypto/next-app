@@ -13,7 +13,7 @@ const r=[];
 let saved;
 {const a=boot();
  a.click(act('tab','plan')); a.click(act('planEdit','reminders')); a.w.document.getElementById('edList').value='Call Jordan first'; a.click(act('planSave'));
- a.click(act('tab','home')); a.click(act('flow','low')); a.click(act('rate','6')); a.click(act('beforeContinue')); a.click(act('lowPick','hydration')); a.click(act('ivNext')); a.click(act('ivDone')); a.click(act('rate','4')); a.click(act('ciHelped'));
+ a.click(act('tab','home')); a.click(act('flow','low')); a.click(act('rate','6')); a.click(act('beforeContinue')); a.click(act('lowPick','hydration')); a.click(act('ivNext')); a.click(act('ivDone')); a.click(act('rate','4')); a.click(act('ciHelped')); a.click(act('phoneDownElse'));
  a.click(act('crisis')); a.click(act('cBack'));   // YELLOW this session
  a.click(act('tab','settings')); a.click(act('theme','dark'));
  saved=a.dump();

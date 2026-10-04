@@ -218,6 +218,20 @@ P(''); P(`The ask: "${G('CHECKIN_ASK')}"`);
 P(''); P('Each reminder: "Check in on [first name]" (or "Check in on your person"), 6pm, with: "A short, no-pressure message is enough. Ideas: Thinking of you. No need to reply. · Want to grab food this week? · How\'s your week going?"');
 P(''); P('On the guide when a name is given: "[name] would like you to check in now and then." After a choice: "[Gentle/Close] reminders are ready. Open the file to add them to your calendar."');
 
+H(3,'Let\'s Zig + real-world steps (6.17)');
+P('**Let\'s Zig** is a simple product rule, not a clinical method: after "I still feel bad" or a game\'s "No", the next suggestion comes from a different channel when one is available. After a recent rating of 8 or more, BODY, SPACE and PEOPLE steps come first. Safety routing always comes first: RED stops everything, and the YELLOW order (connection, own plan, grounding, fresh air) still wins.');
+list(Object.entries(G('CHANNEL_OF')).reduce((m,[id,c])=>{ (m[c]=m[c]||[]).push(id); return m; },{}) ? Object.entries(Object.entries(G('CHANNEL_OF')).reduce((m,[id,c])=>{ (m[c]=m[c]||[]).push(id); return m; },{})).map(([c,ids])=>`${code(c)}: ${ids.join(', ')}`) : []);
+P(''); P('After "didn\'t help": "Okay. That wasn\'t it. / Let\'s Zig." then one of: '+Object.values(G('CHANNEL_LINE')).map(x=>`"${x}"`).join(' · '));
+P(''); P(`Framing on "I don\'t know what I need" and the recommendation screen: "${G('TEN_PERCENT')}"`);
+P(''); P('About: "When something isn\'t helping, ZigZag doesn\'t tell you to try harder. It helps you try a different direction." / "Don\'t fight the feeling. Change one variable."');
+P(''); P('**Ending** (after "That helped", "I\'m good for now", and at the end of the steps below): "You\'re ready." / "You can put me away for a few minutes." / [Put the phone down]. Returns Home; never suggests anything.');
+P(''); P('**Borrow ten minutes**: "You don\'t have to decide the rest of your day." / "Just borrow the next ten minutes." Options: '+G('BORROW_OPTIONS').map(([,b,l])=>`${b} ("${l}")`).join(' · ')+'. Optional 10-minute timer; "Leave any time." Ends: "The ten minutes are yours."');
+P(''); P('**What\'s also true** (both lines safety-checked; nothing saved): "What\'s the sentence your brain keeps repeating?" then "What\'s also true?" Optional examples: '+G('TS_EXAMPLES').map(x=>`"${x}"`).join(' · '));
+P(''); P('**A kinder voice**: "If someone you cared about felt like this, what would you tell them?" '+G('STRANGER_OPTIONS').map(x=>`"${x}"`).join(' · ')+' → "You can give yourself the same."');
+P(''); P(`**Find something alive**: "Find something alive." / "Do you have a pet nearby?" Yes: "${G('ALIVE_PET')}" No: "${G('ALIVE_OUTSIDE')}" → "You spent a moment noticing something outside yourself."`);
+P(''); P('**Ridiculous mode** (Get out of my head only; hidden in YELLOW and after any crisis screen this visit; two per visit): "Make this less serious. Just for a moment." '+G('RIDICULOUS_LINES').map(x=>`"${x}"`).join(' · ')+' → "Okay. Back to reality."');
+P(''); P('**Find something real** (Calm): '+G('TOUCH_PROMPTS').map(x=>`"${x}"`).join(' · ')+'. Optional textures: '+G('TEXTURES').join(', ')+'. With an anchor in My Plan: "Do you have your anchor nearby?" Yes: "Hold it for a moment." No: "Find something else you can safely hold." Ends: "You found something real."');
+
 H(3,'Zags: every line he can say (ZAGS_LINES)');
 P('Scripted, not AI. Taps only. Says he is not a person in every session\'s first line. No relationship language, no pressure to stay, no memory between sessions, never the person\'s name. Every session ends at a person. RED stops Zags. At most two breathing rounds per session (4 breaths each: in 4 seconds, out 6; 3 breaths with reduced motion). Voice is off by default and uses the device\'s own speech only.');
 list(Object.entries(G('ZAGS_LINES')).map(([k,v])=>`${code(k)}: "${v}"`));

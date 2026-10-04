@@ -20,7 +20,7 @@ const r=[];
     const small=[...document.querySelectorAll('#app button, #app a.btn, #app a.chip, #app a.sit, header button, header a')]
       .filter(e=>{const q=e.getBoundingClientRect(); return q.width>0 && q.height<44 && !e.classList.contains('inline');});
     if(small.length) bad.small.push(s+': '+small.map(e=>e.textContent.trim().slice(0,20)).join('/'));
-    if([...document.querySelectorAll('#app *')].some(e=>e.scrollWidth>e.clientWidth+2 && getComputedStyle(e).overflowX==='hidden' && e.textContent.trim())) bad.clipped.push(s);
+    if([...document.querySelectorAll('#app *')].some(e=>!e.classList.contains('sr') && e.scrollWidth>e.clientWidth+2 && getComputedStyle(e).overflowX==='hidden' && e.textContent.trim())) bad.clipped.push(s);   // .sr = screen-reader-only text, hidden on purpose
    } return {bad,n}; });
   r.push([`${width}px: all ${res.n} screens, no horizontal scrolling`, res.n>=50 && res.bad.over.length===0, res.bad.over.join()]);
   r.push([`${width}px: no clipped text`, res.bad.clipped.length===0, res.bad.clipped.join()]);

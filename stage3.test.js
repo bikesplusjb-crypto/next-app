@@ -24,7 +24,7 @@ const r=[];
  const tx=w.document.body.textContent;
  r.push(['checkin craving copy', tx.includes('How strong is the craving now?') && tx.includes('You just put 16 minutes between the urge and the decision.') && !!w.document.querySelector(act('crvMore'))]);
  click(act('crvMore')); r.push(['add 5 min', S().screen==='craving-delay' && (U().cravingEnd-Date.now())>4*60000]);
- click(act('crvCheck')); click(act('rate','5')); click(act('ciHelped'));
+ click(act('crvCheck')); click(act('rate','5')); click(act('ciHelped')); click(act('phoneDownElse'));
  s=S(); const o=s.sessionHistory.at(-1);
  r.push(['outcome 8->5', s.screen==='recommendation'&&o.before===8&&o.after===5&&o.interventionId==='craving_delay', s.lastEngineReason+' / '+s.lastEnginePick]);
  r.push(['change line', w.document.body.textContent.includes('8 → 5')]);

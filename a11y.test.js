@@ -19,7 +19,7 @@ r.push(['phone setting stops every CSS animation and transition', /@media\s*\(pr
 r.push(['app "Reduce motion" setting stops every CSS animation and transition', /:root\.reduce \*,:root\.reduce \*::before,:root\.reduce \*::after\{animation:none!important;transition:none!important\}/.test(CSS)]);
 r.push(['no animation can override reduced motion with !important', moving.every(d=>!/!important/.test(d))]);
 const SCRIPT=(HTML.match(/<script>([\s\S]*?)<\/script>/)||[])[1]||'';
-r.push(['smooth scrolling only when motion is allowed', [...SCRIPT.matchAll(/"smooth"/g)].length===[...SCRIPT.matchAll(/reducedMotion\(\) \? "auto" : "smooth"/g)].length]);
+r.push(['smooth scrolling only when motion is allowed', [...SCRIPT.matchAll(/behavior\s*:[^,}]*"smooth"/g)].length===[...SCRIPT.matchAll(/reducedMotion\(\) \? "auto" : "smooth"/g)].length]);
 r.push(['no Web Animations API calls', !/\.animate\(/.test(SCRIPT)]);
 // Focus game: reduced motion drops the up-down bob.
 function focusY(reduce){
