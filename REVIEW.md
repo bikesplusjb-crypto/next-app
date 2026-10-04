@@ -1024,6 +1024,8 @@ About: "When something isn't helping, ZigZag doesn't tell you to try harder. It 
 
 A. Home, below everything else: "Worried about someone? How to help →" (opens the supporter guide at support/#worried). Supporter guide, very top: "Take it seriously, even if they seem fine. Listen more than you talk." Opening section, shown only when arriving that way: "Someone you care about is struggling." / "You don't need the right words. Being there and taking it seriously matters most." / "What to say →".
 
+B. My Plan: "Print my plan" / "A full page and a wallet card to cut out. Printed from this phone; nothing is uploaded." / [ ] "Include my code word" (off by default, never saved). Printed page: "My plan for hard moments", each filled-in section, then "988 Suicide & Crisis Lifeline: call or text 988. Free, 24/7." / "911 if someone is hurt or in danger." / "✂ Cut along the dashed line" and a wallet card: first trusted person and number, "988 — call or text", "911 if someone is hurt or in danger", first reason to stay.
+
 ### Stage 6.18 owner-approved updates (OWNER-APPROVED INTERIM, pending clinician)
 
 A. Zags: first line now "Hi, I'm Zags. I'm not a person, just a little guide. I can guide you through the next few minutes."; Connect: "Calm down with Zags while you wait" (no subtitle).
@@ -2457,6 +2459,8 @@ _When: distraction_
 - Nothing here yet.
 - Ask someone to hold onto a few things:
 - **Link → `sms:5550142?&body=Would you be willing to hold onto a few things for me for a while? I'll explain when we talk.`:** Ask Jordan _(screen reader: "Ask Jordan to hold onto a few things")_
+- A full page and a wallet card to cut out. Printed from this phone; nothing is uploaded.
+- **Button:** Print my plan
 - Songs you make and keep show up here.
 - **Button:** Make one
 - **Heading:** Things to avoid when I'm struggling

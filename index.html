@@ -383,6 +383,25 @@ html.reduce .zmark-wave .zmark-body{animation:none}
 .faith-next a.sit{display:inline-flex;align-items:center;text-decoration:none;color:var(--text)}
 
 /* Stage 6.19 */
+/* B. Print my plan: a print-only view. Black on white, large plain type. Nothing is sent anywhere. */
+#printView{display:none}
+@media print{
+  @page{margin:0.5in}
+  html,body{background:#fff !important;color:#000 !important}
+  body > *:not(#printView){display:none !important}
+  #printView{display:block !important;font-family:-apple-system,"Helvetica Neue",Arial,sans-serif;font-size:14pt;line-height:1.35;color:#000;background:#fff}
+  #printView h1{font-family:inherit;font-size:22pt;margin:0 0 8pt}
+  #printView h2{font-size:14pt;margin:12pt 0 3pt;text-transform:none}
+  #printView ul{margin:0;padding-left:18pt}
+  #printView p{margin:0 0 3pt}
+  #printView .pv-crisis{border:1.5pt solid #000;padding:6pt 8pt;margin-top:12pt}
+  #printView .wallet{width:3.4in;height:2.1in;border:1.5pt dashed #000;padding:0.12in 0.16in;margin-top:18pt;font-size:10.5pt;line-height:1.3;overflow:hidden;break-inside:avoid;page-break-inside:avoid}
+  #printView .wallet b{font-size:11.5pt}
+  #printView .cut{font-size:9pt;margin-top:12pt}
+}
+.print-row{display:flex;flex-direction:column;gap:10px}
+.print-check{display:flex;align-items:center;gap:10px;min-height:44px;font-size:15px}
+.print-check input{width:22px;height:22px}
 .worried-row{margin:18px 0 8px;text-align:center}
 .worried-link{display:inline-flex;align-items:center;min-height:44px;color:var(--text-muted);font-size:15px;text-decoration:underline;text-underline-offset:3px}
 
@@ -513,6 +532,7 @@ h2{font-size:22px;line-height:1.25}
 </head>
 <body>
 <div id="app" aria-live="polite"></div>
+<div id="printView" aria-hidden="true"></div>
 <script>
 "use strict";
 
@@ -3388,6 +3408,9 @@ const SCREENS = {
         ${editable && pb.trustedPeople.length ? `<p class="small" style="margin:14px 0 6px">Ask someone to hold onto a few things:</p>
           ${canPhone() ? `<div class="sits">${pb.trustedPeople.map(p => `<a class="sit" href="${smsLink(p.phone, TD_ASK)}" aria-label="Ask ${esc(p.name)} to hold onto a few things">Ask ${esc(p.name)}</a>`).join("")}</div>`
             : `<p class="copy-text">${esc(TD_ASK)}</p>${copyButton(TD_ASK, "btn btn-secondary", "Copy message")}`}` : ""}</div>
+      ${editable ? `<div class="panel print-row" id="printPanel"><div class="setup-row"><span><b>Print my plan</b><span class="small">A full page and a wallet card to cut out. Printed from this phone; nothing is uploaded.</span></span></div>
+        ${codeWord() ? `<label class="print-check"><input type="checkbox" id="printCode"> Include my code word</label>` : ""}
+        <button class="btn btn-secondary" data-act="printPlan">Print my plan</button></div>` : ""}
       ${editable ? `<div class="panel"><div class="setup-row"><span><b>My songs</b><span class="small">${songs().length ? `${songs().length} saved on this phone` : "Songs you make and keep show up here."}</span></span>
           <button class="edit-btn" data-act="${songs().length ? "songList" : "songNew"}">${songs().length ? "Open" : "Make one"}</button></div></div>` : ""}
       <div class="panel">${head("avoid", "Things to avoid when I'm struggling")}${ul(pb.avoid)}</div>
@@ -3878,6 +3901,43 @@ function zagsMark(cls = ""){
     <ellipse cx="70" cy="138" rx="10" ry="6" fill="var(--zag-cheek)" opacity=".55"/><ellipse cx="150" cy="138" rx="10" ry="6" fill="var(--zag-cheek)" opacity=".55"/>
     <path d="M100 140 Q110 148 120 140" fill="none" stroke="var(--zag-eye)" stroke-width="4" stroke-linecap="round"/>
     </g></svg></span>`;
+}
+/* 6.19 B: the print view. Built only when the person taps Print; empty sections are skipped; the code word only
+   if they ticked "Include my code word" (off by default, never saved). */
+function printPlanHTML(includeCode){
+  const pb = getPlan();
+  const list = arr => `<ul>${arr.map(x => `<li>${esc(x)}</li>`).join("")}</ul>`;
+  const sec = (t, inner) => inner ? `<h2>${t}</h2>${inner}` : "";
+  const people = pb.trustedPeople || [];
+  const td = pb.timeDistance || {};
+  const tdLines = TD_FIELDS.filter(([k]) => td[k]).map(([k, t]) => `<p><b>${t}:</b> ${esc(td[k])}</p>`).join("");
+  const cw = codeWord();
+  const first = people[0];
+  const reason = (pb.reasons || [])[0];
+  return `<h1>My plan for hard moments</h1>
+    ${sec("How I know a hard moment is starting", pb.warningSigns.length ? list(pb.warningSigns) : "")}
+    ${sec("Things that help me", pb.helps.length ? list(pb.helps.map(helpLabel)) : "")}
+    ${sec("My anchor", pb.anchor ? `<p>${esc(pb.anchor)}</p>` : "")}
+    ${sec("Reasons to stay", (pb.reasons || []).length ? list(pb.reasons) : "")}
+    ${sec("People and places that take my mind off things", pb.places.length ? list(pb.places) : "")}
+    ${sec("My trusted people", people.length ? list(people.map(p => `${p.name}${p.relationship ? ` (${p.relationship})` : ""}: ${p.phone}`)) : "")}
+    ${sec("Professional support", pb.professional && pb.professional.name ? `<p>${esc(pb.professional.name)}${pb.professional.phone ? `: ${esc(pb.professional.phone)}` : ""}</p>` : "")}
+    ${includeCode && cw ? sec("My code word", `<p>${esc(cw.word)} (with ${esc(cw.person.name)})</p>`) : ""}
+    ${sec("My time and distance plan", tdLines)}
+    ${sec("Things to avoid when I'm struggling", pb.avoid.length ? list(pb.avoid) : "")}
+    ${sec("What I want to remember", pb.reminders.length ? list(pb.reminders) : "")}
+    <div class="pv-crisis">
+      <p><b>988 Suicide &amp; Crisis Lifeline: call or text 988.</b> Free, 24/7.</p>
+      <p><b>911</b> if someone is hurt or in danger.</p>
+      ${typeof ctlShown === "function" && ctlShown() ? `<p>${esc(CTL_LINE)}</p>` : ""}
+    </div>
+    <p class="cut">✂ Cut along the dashed line</p>
+    <div class="wallet">
+      ${first ? `<p><b>${esc(first.name)}</b>: ${esc(first.phone)}</p>` : ""}
+      <p><b>988</b> — call or text</p>
+      <p><b>911</b> if someone is hurt or in danger</p>
+      ${reason ? `<p>${esc(reason)}</p>` : ""}
+    </div>`;
 }
 function planEmpty(){
   const pb = getPlan();
@@ -4530,6 +4590,16 @@ const ACTIONS = {
   /* ---- 6.17 ---- */
   phoneDown(){ if (blockIfRed()) return; ui.fromHelped = false; go("phone-down"); },
   putDown(){ ui.fromHelped = false; clearInterval(borrowTimer); go("home"); },   // quiet; never starts anything
+  printPlan(){
+    if (blockIfRed()) return;
+    const c = document.getElementById("printCode");   // "Include my code word": off by default, read at tap time, never saved
+    const pv = document.getElementById("printView");
+    if (!pv) return;
+    pv.innerHTML = printPlanHTML(!!(c && c.checked));
+    const clear = () => { pv.innerHTML = ""; window.removeEventListener("afterprint", clear); };
+    window.addEventListener("afterprint", clear);
+    try { if (typeof window.print === "function") window.print(); } catch (_){}
+  },
   aroundPeople(){ if (blockIfRed()) return; dispatch({ type:"SET_CURRENT_STATE", state:"alone" }); startIntervention("be_around_people", { route:"around-people" }); },
   minuteStart(){ if (blockIfRed()) return; ui.minutePhase = "wait"; ui.minuteEnd = Date.now() + MINUTE_MS; go("minute-down"); },
   minuteYes(){ if (blockIfRed()) return; ui.minutePhase = null; go("home"); },
