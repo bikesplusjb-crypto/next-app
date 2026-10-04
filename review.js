@@ -287,6 +287,14 @@ P(''); P('G. "Help near me (Treasure Coast)" (**hidden until the owner verifies 
 list(G('NEAR_ME').map(e=>`${e.name}: "${e.what}"${e.phone?' · '+e.phone:''} (verified: ${e.verified})`));
 P(''); P('H. Simplicity audit: report only, nothing applied (docs/SIMPLICITY_AUDIT.md).');
 
+H(3,'North star pass (2026-10-04): at most 8 choices, nothing removed');
+P('Progressive disclosure only; wording of every hidden option is unchanged. One tap shows the rest (kept open for this visit, in memory only):');
+list([
+  'Calm: "'+G('l10n("calm.more")')+'" ("'+G('l10n("calm.moreMeta")')+'") shows: '+['breathe','ground','feet','real'].map(k=>'"'+G('l10n("calm.'+k+'")')+'"').join(', ')+'.',
+  'Connect: "'+G('l10n("connect.more")')+'" ("'+G('l10n("connect.moreMeta")')+'") shows: "'+G('l10n("connect.around")')+'", "'+G('l10n("connect.zags")')+'", "'+G('l10n("connect.song")')+'". The Warm Line, your people, message ideas and 988 stay in view.',
+  'Change the scene: "Find something" ("Something alive, or something worth looking at") shows: "Find something alive", "Find something worth looking at".'
+]);
+
 H(3,'Stage 6.18 owner-approved updates (OWNER-APPROVED INTERIM, pending clinician)');
 P('A. Zags: first line now "'+G('ZAGS_LINES.hello')+'"; Connect: "Calm down with Zags while you wait" (no subtitle).');
 P(''); P('B. Supporter guide, "Look after yourself": "Talk to someone who gets it. The Florida Warm Line is free and is also for family and friends supporting someone: 1-800-945-1355, every day 4pm–10pm Eastern. Not a crisis line. For a crisis, call or text 988."');

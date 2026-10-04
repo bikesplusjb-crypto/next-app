@@ -3,10 +3,12 @@
 const {JSDOM}=require('jsdom');
 const fs=require('fs');
 const HTML=fs.readFileSync(require('path').join(__dirname,'index.html'),'utf8');
+// North star pass: Calm, Connect and Change the scene keep some options one tap behind a toggle; tap it when the target isn't shown yet.
+const MORE_TOGGLES='[data-act="calmMore"],[data-act="connMore"],[data-act="sceneFind"]';
 function boot(storage){const dom=new JSDOM(HTML,{url:'https://next.example/',runScripts:'dangerously',pretendToBeVisual:true,beforeParse(w){ w.scrollTo=()=>{}; w.scrollBy=()=>{};
    if(storage) for(const [k,v] of Object.entries(storage)) w.localStorage.setItem(k,v); }});
  const w=dom.window; w.HTMLElement.prototype.scrollIntoView=()=>{};
- const click=(sel)=>{const el=w.document.querySelector(sel); if(!el) throw new Error('missing '+sel+' on '+w.eval('session.screen')); el.dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true}));};
+ const click=(sel)=>{let el=w.document.querySelector(sel); if(!el){ const t=w.document.querySelector(MORE_TOGGLES); if(t){ t.dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true})); el=w.document.querySelector(sel); } } if(!el) throw new Error('missing '+sel+' on '+w.eval('session.screen')); el.dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true}));};
  if(!storage) ['obNext','obAdult','obLater'].forEach(a=>click(`[data-act="${a}"]`));
  const dump=()=>{const o={}; for(let i=0;i<w.localStorage.length;i++){const k=w.localStorage.key(i); o[k]=w.localStorage.getItem(k);} return o;};
  return {w,click,S:()=>w.eval('session'),G:x=>w.eval(x),doc:w.document,T:()=>w.document.getElementById('app').textContent.replace(/\s+/g,' '),dump};}
@@ -30,7 +32,8 @@ const r=[];
  r.push(['after 10pm or outside Florida → findahelpline.com', !!more && more.getAttribute('href')==='https://findahelpline.com']);
  r.push(['number and hours live in one constant', (HTML.match(/18009451355/g)||[]).length===1 && (HTML.match(/4pm–10pm/g)||[]).length===1 && a.G('WARMLINE.tel')==='tel:18009451355']);
  r.push(['988 call and text under "If it gets heavier"', t.includes('If it gets heavier') && hrefs(a).includes('tel:988') && hrefs(a).includes('sms:988')]);
- r.push(['"Calm down with Zags while you wait" (6.18 A; no subtitle)', t.includes('Calm down with Zags while you wait') && !t.includes('Stay with Zags') && !t.includes('Until someone calls back') && !!a.doc.querySelector('[data-act="zags"][data-arg="connect"]')]);
+ a.click('[data-act="connMore"]'); { const t=a.T();
+ r.push(['"Calm down with Zags while you wait" (6.18 A; no subtitle)', t.includes('Calm down with Zags while you wait') && !t.includes('Stay with Zags') && !t.includes('Until someone calls back') && !!a.doc.querySelector('[data-act="zags"][data-arg="connect"]')]); }
  r.push(['code word waits for 6.8', !/code word/i.test(t)]);
  r.push(['no emoji; Help in the top bar', !/\p{Extended_Pictographic}/u.test(t) && !!a.doc.querySelector('header .help-pill[data-act="crisis"]')]);}
 for(const hour of [3,23]){

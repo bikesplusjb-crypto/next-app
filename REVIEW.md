@@ -1167,7 +1167,7 @@ Contact line (only when CONTACT_EMAIL is set): "Questions? Email [address]."
 
 D. Crisis Text Line (**hidden until the owner verifies it**; CRISIS_TEXT_LINE.verified is false): one line below the 988 buttons on the full crisis screen and Connect, on the printed plan, and in the supporter guide's "Get help together": "Rather text a stranger? Text HOME to 741741 (Crisis Text Line)." (phones: Text HOME to 741741 is a text link; computers: shown as text).
 
-E. Spanish interface: **scaffolding only, nothing shown**. SPANISH_ENABLED is false. 213 strings (onboarding, Home, crisis screens, Calm, Connect, My Plan, Help, Settings labels) now live in one table; English is unchanged. Every Spanish line is a DRAFT for a human translator and the clinician: docs/SPANISH_REVIEW.md. A draft crisis-screen line is never shown, even with Spanish on.
+E. Spanish interface: **scaffolding only, nothing shown**. SPANISH_ENABLED is false. 217 strings (onboarding, Home, crisis screens, Calm, Connect, My Plan, Help, Settings labels) now live in one table; English is unchanged. Every Spanish line is a DRAFT for a human translator and the clinician: docs/SPANISH_REVIEW.md. A draft crisis-screen line is never shown, even with Spanish on.
 
 F. Feedback (only when FEEDBACK_URL is set; it is empty): on About only, "Did ZigZag Mind help? Tell us anonymously →" (new tab). Privacy page adds: "If you use the feedback link on About, that form is a separate service. It receives only what you type there."
 
@@ -1178,6 +1178,13 @@ G. "Help near me (Treasure Coast)" (**hidden until the owner verifies at least o
 - Local recovery meetings: "Meetings for people working on drinking or drug use." (verified: false)
 
 H. Simplicity audit: report only, nothing applied (docs/SIMPLICITY_AUDIT.md).
+
+### North star pass (2026-10-04): at most 8 choices, nothing removed
+
+Progressive disclosure only; wording of every hidden option is unchanged. One tap shows the rest (kept open for this visit, in memory only):
+- Calm: "Something else" ("Breathe for a minute, grounding, feet on the floor, something real") shows: "Breathe for 1 minute", "5-4-3-2-1 grounding", "Feet on the floor", "Find something real".
+- Connect: "Something else" ("Be around people, Zags, or a song while you wait") shows: "Be around people, no talking needed", "Calm down with Zags while you wait", "Make a song while you wait". The Warm Line, your people, message ideas and 988 stay in view.
+- Change the scene: "Find something" ("Something alive, or something worth looking at") shows: "Find something alive", "Find something worth looking at".
 
 ### Stage 6.18 owner-approved updates (OWNER-APPROVED INTERIM, pending clinician)
 
@@ -1459,11 +1466,8 @@ Rendered for each state where the screen changes by state. Identical renders are
 - **Button:** Have coffee with ZigZag — Make something warm. I'll sit with you for a few minutes.
 - **Button:** Cozy up — Something warm, a blanket, softer light
 - **Button:** Calm down with Zags — Breathe together for a few minutes
-- **Button:** Breathe for 1 minute — In for 4, out for 6
-- **Button:** 5-4-3-2-1 grounding — Notice what's around you
-- **Button:** Feet on the floor — Three tiny steps, 2 minutes
 - **Button:** What's true — What you know, and what else is true
-- **Button:** Find something real — Something you can hold, cooler, warmer
+- **Button:** Something else — Breathe for a minute, grounding, feet on the floor, something real
 - **Button:** I'd rather talk to someone
 
 ### `still-true`
@@ -2352,9 +2356,7 @@ _When: distraction_
 - **Link → `sms:5550142`:** Text _(screen reader: "Text Jordan")_
 - **Link → `tel:5550142`:** Call _(screen reader: "Call Jordan")_
 - **Button:** Don't know what to say?
-- **Button:** Be around people, no talking needed
-- **Button:** Calm down with Zags while you wait
-- **Button:** Make a song while you wait
+- **Button:** Something else — Be around people, Zags, or a song while you wait
 - If it gets heavier
 - **Link → `tel:988`:** Call 988 _(screen reader: "Call 988, the Suicide and Crisis Lifeline")_
 - **Link → `sms:988`:** Text 988 _(screen reader: "Text 988, the Suicide and Crisis Lifeline")_
@@ -2789,8 +2791,7 @@ _When: distraction_
 - **Button:** Take a shower
 - **Button:** Get something to drink
 - **Button:** Go to a window
-- **Button:** Find something alive
-- **Button:** Find something worth looking at — One thing. A photo if you want.
+- **Button:** Find something — Something alive, or something worth looking at
 - **Button:** Somewhere to go — A library, a park, a coffee shop, or 211 for local help
 
 ### `scene-places`

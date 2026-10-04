@@ -2,12 +2,14 @@
 const {JSDOM}=require('jsdom');
 const fs=require('fs');
 const HTML=fs.readFileSync(require('path').join(__dirname,'index.html'),'utf8');
+// North star pass: Calm, Connect and Change the scene keep some options one tap behind a toggle; tap it when the target isn't shown yet.
+const MORE_TOGGLES='[data-act="calmMore"],[data-act="connMore"],[data-act="sceneFind"]';
 function boot({speech=false}={}){
  const spoken=[], cancels={n:0};
  const dom=new JSDOM(HTML,{url:'https://next.example/',runScripts:'dangerously',pretendToBeVisual:true,beforeParse(w){ w.scrollTo=()=>{}; w.scrollBy=()=>{};
    if(speech){ w.speechSynthesis={speak(u){spoken.push(u.text)},cancel(){cancels.n++}}; w.SpeechSynthesisUtterance=function(t){this.text=t;}; } }});
  const w=dom.window; w.HTMLElement.prototype.scrollIntoView=()=>{};
- const click=(sel)=>{const el=w.document.querySelector(sel); if(!el) throw new Error('missing '+sel+' on '+w.eval('session.screen')+'/'+w.eval('ui.zags&&ui.zags.phase')); el.dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true}));};
+ const click=(sel)=>{let el=w.document.querySelector(sel); if(!el){ const t=w.document.querySelector(MORE_TOGGLES); if(t){ t.dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true})); el=w.document.querySelector(sel); } } if(!el) throw new Error('missing '+sel+' on '+w.eval('session.screen')+'/'+w.eval('ui.zags&&ui.zags.phase')); el.dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true}));};
  ['obNext','obAdult','obLater'].forEach(a=>click(`[data-act="${a}"]`));
  // Controllable timers for the breathing: queue them instead of waiting.
  const q=[]; const realST=w.setTimeout;

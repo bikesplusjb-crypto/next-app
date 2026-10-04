@@ -23,6 +23,8 @@ const stored=a=>{ const raw=a.dump()['next.v1.sensitive']; return raw?JSON.parse
  const first=a.doc.querySelector('.content .card');
  r.push(['Get out of my head: "Turn it into a song" is the featured card at the top', first && first.dataset.act==='songStart' && /Turn it into a song/.test(first.textContent)]);
  a.G('ACTIONS.route ? 0 : 0; session.screen="connect"; lastRendered=null; render()');
+ r.push(['Connect: song is behind "Something else" (one tap)', !a.has(act('songStart','connect')) && a.has(act('connMore'))]);
+ a.click(act('connMore'));
  r.push(['Connect: "Make a song while you wait"', a.has(act('songStart','connect')) && a.T().includes('Make a song while you wait')]);
  a.G('ACTIONS.tab("plan")'); r.push(['My Plan: My songs row', a.T().includes('My songs') && a.has(act('songNew'))]);
  const lib=a.G('findIntervention("song")');

@@ -74,3 +74,18 @@ Applied: 1, 2, 3, 4, 5, 6, 8 and 10 (10 = leave "Put the phone down" as it is). 
 | Tech check | 7 | 6 | #2: "AI is taking the place of people" replaces the two AI-and-people options |
 
 #1: the 988 chat button is "Chat with 988 online" everywhere (full crisis screen and Talk to someone too). Taps from Home are unchanged (1–2, and 3 for "Put the phone down").
+
+## North star pass (2026-10-04)
+
+Target: at most 8 choices on a main menu, by progressive disclosure only (nothing removed, no wording changed). Measured with one trusted person in My Plan.
+
+| Screen | Before | After | What moved one tap behind a toggle |
+|---|---|---|---|
+| Calm | 9 | 6 | "Something else": Breathe for 1 minute, 5-4-3-2-1 grounding, Feet on the floor, Find something real |
+| Connect | 10 | 8 | "Something else": Be around people, no talking needed; Calm down with Zags while you wait; Make a song while you wait |
+| Change the scene | 9 | 8 | "Find something": Find something alive; Find something worth looking at |
+| Get out of my head | 5 | 5 | unchanged |
+| Tech check | 6 | 6 | unchanged |
+| Home | 16 | 16 | unchanged (owner kept the "I feel alone" chip; "I don't feel safe" stays first) |
+
+Connect keeps the Warm Line, your people (Text and Call), "Don't know what to say?" and 988 Call/Text in view; each extra trusted person adds two buttons by design. Tests: `northstar.test.js`.

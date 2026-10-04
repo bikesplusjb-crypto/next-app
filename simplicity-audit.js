@@ -33,7 +33,7 @@ function shortest(name, test, maxDepth=7){
         if(e.tagName==='A' && !e.hasAttribute('data-act')) continue;
         const w2=replay([...p,s]); if(!w2) continue;
         if(test.length===1 && test(w2)) return { taps:d, path:[...p,s] };
-        const key=w2.eval('session.screen')+'|'+w2.eval('JSON.stringify([ui.talkOpen,ui.placesOpen,ui.dirOpen])');
+        const key=w2.eval('session.screen')+'|'+w2.eval('JSON.stringify([ui.talkOpen,ui.placesOpen,ui.dirOpen,ui.calmMoreOpen,ui.connMoreOpen,ui.sceneFindOpen])');
         if(seen.has(key)) continue; seen.add(key); next.push([...p,s]);
       }
     }

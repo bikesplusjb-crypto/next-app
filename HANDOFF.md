@@ -84,7 +84,7 @@ The build order is done. What's left needs a person, not code:
 - **Translator + clinician:** docs/SPANISH_REVIEW.md before `SPANISH_ENABLED` can be true.
 - **Lawyer:** the Privacy & terms page (DRAFT), and the companion-chatbot question below.
 - **On hold (do not build without owner + clinician sign-off):** 6.7b Snuggle Zags, 6.7c Zags listens, 6.7d Safe place, Tech check option 6 (`ai_reality`), 7C new experiences. Not built because they don't exist yet: YOUR THINGS (handoff cut off), MIND SCRIBBLE, LOSS / GRIEF. Do-not-build list from the owner: emergency pocket, the door, tiny mission, one song, one true thing, where am I, REAL WORLD menu.
-- **Owner decisions still open:** simplicity audit #7 (I feel alone chip) and #9 (crisis "Open my plan" wording, clinician first); Calm, Connect and Change the scene still have more than 8 choices.
+- **Owner decisions still open:** simplicity audit #7 (I feel alone chip) and #9 (crisis "Open my plan" wording, clinician first); Home still has 16 tappable items (owner decision); every main menu is now at 8 or fewer (north star pass, 2026-10-04).
 
 ## Do not build
 

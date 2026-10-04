@@ -2,6 +2,8 @@
 const {JSDOM}=require('jsdom');
 const fs=require('fs'), path=require('path');
 const HTML=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
+// North star pass: Calm, Connect and Change the scene keep some options one tap behind a toggle; tap it when the target isn't shown yet.
+const MORE_TOGGLES='[data-act="calmMore"],[data-act="connMore"],[data-act="sceneFind"]';
 function boot(storage){const errs=[];const dom=new JSDOM(HTML,{url:'https://zigzagmind.com/',runScripts:'dangerously',pretendToBeVisual:true,beforeParse(w){ w.scrollTo=()=>{};
    w.addEventListener('error',e=>errs.push(e.message));
    w.netCalls=0; w.fetch=()=>{w.netCalls++; return Promise.reject();};
@@ -9,7 +11,7 @@ function boot(storage){const errs=[];const dom=new JSDOM(HTML,{url:'https://zigz
    if(storage) for(const [k,v] of Object.entries(storage)) w.localStorage.setItem(k,v); }});
  const w=dom.window; w.HTMLElement.prototype.scrollIntoView=()=>{};
  w.eval('shrinkPhoto = () => Promise.resolve("data:image/jpeg;base64,QUJD")');   // jsdom has no canvas: stand-in for the on-phone shrink
- const click=(sel)=>{const el=w.document.querySelector(sel); if(!el) throw new Error('missing '+sel+' on '+w.eval('session.screen')); el.dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true}));};
+ const click=(sel)=>{let el=w.document.querySelector(sel); if(!el){ const t=w.document.querySelector(MORE_TOGGLES); if(t){ t.dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true})); el=w.document.querySelector(sel); } } if(!el) throw new Error('missing '+sel+' on '+w.eval('session.screen')); el.dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true}));};
  if(w.eval('session.screen').startsWith('ob-')) ['obNext','obAdult','obLater'].forEach(a=>click(`[data-act="${a}"]`));
  const takePhoto=()=>{ const i=w.document.getElementById('fsCam'); const f=new w.File(['x'],'p.jpg',{type:'image/jpeg'}); Object.defineProperty(i,'files',{value:[f],configurable:true}); i.dispatchEvent(new w.Event('change',{bubbles:true})); };
  const dump=()=>{const o={}; for(let i=0;i<w.localStorage.length;i++){const k=w.localStorage.key(i); o[k]=w.localStorage.getItem(k);} return o;};
@@ -19,6 +21,8 @@ const tick=()=>new Promise(r=>setTimeout(r,5));
 const r=[];
 (async()=>{
 {const a=boot(); a.G('ACTIONS.route("scene")');
+ r.push(['entry on Change the scene: behind "Find something" (north star)', !a.has(act('fsStart')) && a.has(act('sceneFind'))]);
+ a.G('ACTIONS.sceneFind()');
  r.push(['entry on Change the scene: "Find something worth looking at"', a.has(act('fsStart'))]);
  a.click(act('fsStart'));
  r.push(['1: one mission at a time (never a list of missions)', a.S().screen==='fs' && a.doc.querySelectorAll('.step-big').length===1 && a.T().includes("Find something you walk past all the time but never really notice.") && !a.T().includes('Find something beautiful.')]);

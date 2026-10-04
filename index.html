@@ -769,6 +769,8 @@ const L10N = {
     "calm.zagsMeta":"Breathe together for a few minutes",
     "common.hope":"Need a little hope?",
     "calm.talk":"I'd rather talk to someone",
+    "calm.more":"Something else",
+    "calm.moreMeta":"Breathe for a minute, grounding, feet on the floor, something real",
     "connect.warmLbl":"Talk to someone who's been there",
     "connect.warmNight":"Usually closed right now · opens at 4pm Eastern",
     "connect.callWarm":"Call the Warm Line",
@@ -785,6 +787,8 @@ const L10N = {
     "connect.around":"Be around people, no talking needed",
     "connect.zags":"Calm down with Zags while you wait",
     "connect.song":"Make a song while you wait",
+    "connect.more":"Something else",
+    "connect.moreMeta":"Be around people, Zags, or a song while you wait",
     "plan.h.warningSigns":"How I know a hard moment is starting",
     "plan.h.helps":"Things that help me on my own",
     "plan.h.reasons":"Reasons to stay",
@@ -984,6 +988,8 @@ const L10N = {
     "calm.zagsMeta":{ text:"Respirar juntos unos minutos", draft:true },
     "common.hope":{ text:"¿Necesitas un poco de esperanza?", draft:true },
     "calm.talk":{ text:"Prefiero hablar con alguien", draft:true },
+    "calm.more":{ text:"Otra cosa", draft:true },
+    "calm.moreMeta":{ text:"Respirar un minuto, el ejercicio 5-4-3-2-1, pies en el suelo, algo real", draft:true },
     "connect.warmLbl":{ text:"Habla con alguien que ha pasado por esto", draft:true },
     "connect.warmNight":{ text:"Normalmente cerrado a esta hora · abre a las 4pm hora del Este", draft:true },
     "connect.callWarm":{ text:"Llamar a la Warm Line", draft:true },
@@ -1000,6 +1006,8 @@ const L10N = {
     "connect.around":{ text:"Estar cerca de gente, sin tener que hablar", draft:true },
     "connect.zags":{ text:"Calmarme con Zags mientras espero", draft:true },
     "connect.song":{ text:"Hacer una canción mientras espero", draft:true },
+    "connect.more":{ text:"Otra cosa", draft:true },
+    "connect.moreMeta":{ text:"Estar entre gente, Zags o una canción mientras esperas", draft:true },
     "plan.h.warningSigns":{ text:"Cómo sé que empieza un momento difícil", draft:true },
     "plan.h.helps":{ text:"Lo que me ayuda por mi cuenta", draft:true },
     "plan.h.reasons":{ text:"Razones para quedarme", draft:true },
@@ -2867,13 +2875,15 @@ const SCREENS = {
 
   /* 6.3: Calm. (Zags, 6.7, will be the featured card here.) */
   calm(){
-    const opts = [
+    // North star pass: at most 8 choices. What's true stays out; the quick tools are one tap behind "Something else".
+    const truth = ["truth","anchor",l10n("calm.truth"),l10n("calm.truthMeta")];   // simplicity audit #8: "still true" and "also true" behind one option
+    const more = [
       ["breathe","calm",l10n("calm.breathe"),l10n("calm.breatheMeta")],
       ["ground","leaf",l10n("calm.ground"),l10n("calm.groundMeta")],
       ["feet","check",l10n("calm.feet"),l10n("calm.feetMeta")],
-      ["truth","anchor",l10n("calm.truth"),l10n("calm.truthMeta")],   // simplicity audit #8: "still true" and "also true" behind one option
       ["real","leaf",l10n("calm.real"),l10n("calm.realMeta")]
     ];
+    const opts = ui.calmMoreOpen ? [truth, ...more] : [truth];
     return { close:true, body:`
       ${title(l10n("calm.title"))}
       <p class="sub">${l10n("calm.sub")}</p>
@@ -2882,6 +2892,7 @@ const SCREENS = {
       <button class="card wide zcard" data-act="zags" data-arg="calm">${zagsFace()}<span>${l10n("calm.zags")}<span class="meta">${l10n("calm.zagsMeta")}</span></span></button>
       <div class="list">${opts.map(([arg, ic, t, m]) =>
         `<button class="card" data-act="calmPick" data-arg="${arg}">${icon(ic)}<span>${t}<span class="meta">${m}</span></span></button>`).join("")}
+        ${ui.calmMoreOpen ? "" : `<button class="card calm-more" data-act="calmMore" aria-expanded="false">${icon("calm")}<span>${l10n("calm.more")}<span class="meta">${l10n("calm.moreMeta")}</span></span></button>`}
       </div>
       ${faithOn() ? `<button class="link faith-link" data-act="faith">${l10n("common.hope")}</button>` : ""}`,
       actions:`<button class="btn btn-secondary" data-act="route" data-arg="connect">${l10n("calm.talk")}</button>` };
@@ -3848,10 +3859,11 @@ const SCREENS = {
           <button class="btn btn-secondary" data-act="planFromConnect">${l10n("connect.addSomeone")}</button>`}
       </div>
       ${night ? warm : ""}
-      <button class="card wide around-card" data-act="aroundPeople" style="margin-top:14px">${icon("people")}<span>${l10n("connect.around")}</span></button>
-      ${nearMeLink()}
+      ${ui.connMoreOpen ? `<button class="card wide around-card" data-act="aroundPeople" style="margin-top:14px">${icon("people")}<span>${l10n("connect.around")}</span></button>
       <button class="card wide zcard" data-act="zags" data-arg="connect" style="margin-top:10px">${zagsFace()}<span>${l10n("connect.zags")}</span></button>
-      <button class="link" data-act="songStart" data-arg="connect">${l10n("connect.song")}</button>
+      <button class="link" data-act="songStart" data-arg="connect">${l10n("connect.song")}</button>`
+      : `<button class="card wide conn-more-card" data-act="connMore" aria-expanded="false" style="margin-top:14px">${icon("people")}<span>${l10n("connect.more")}<span class="meta">${l10n("connect.moreMeta")}</span></span></button>`}
+      ${nearMeLink()}
       ${faithOn() ? `<button class="link faith-link" data-act="faith">${l10n("common.hope")}</button>` : ""}
       ${night ? "" : crisis988}` };
   },
@@ -4235,8 +4247,9 @@ const SCREENS = {
       <p class="sub">Sometimes your brain needs a different place, not another question. Pick one.</p>
       <div class="list">${CHANGE_SCENE.map(([k, t]) =>
         `<button class="card scene-opt" data-act="scenePick" data-arg="${k}">${icon("door")}<span>${t}</span></button>`).join("")}
-        <button class="card scene-opt" data-act="sceneAlive">${icon("leaf")}<span>Find something alive</span></button>
-        <button class="card scene-opt fs-card" data-act="fsStart">${icon("leaf")}<span>Find something worth looking at<span class="meta">One thing. A photo if you want.</span></span></button>
+        ${ui.sceneFindOpen ? `<button class="card scene-opt" data-act="sceneAlive">${icon("leaf")}<span>Find something alive</span></button>
+        <button class="card scene-opt fs-card" data-act="fsStart">${icon("leaf")}<span>Find something worth looking at<span class="meta">One thing. A photo if you want.</span></span></button>`
+        : `<button class="card scene-opt find-card" data-act="sceneFind" aria-expanded="false">${icon("leaf")}<span>Find something<span class="meta">Something alive, or something worth looking at</span></span></button>`}
         <button class="card scene-opt places-card" data-act="placesOpen">${icon("door")}<span>Somewhere to go<span class="meta">A library, a park, a coffee shop, or 211 for local help</span></span></button>
       </div>
       ${nearMeLink()}` };
@@ -5541,6 +5554,10 @@ const ACTIONS = {
   placesOpen(){ if (blockIfRed()) return; go("scene-places"); },
   gamesOpen(){ if (blockIfRed()) return; dispatch({ type:"SET_CURRENT_STATE", state:"distraction" }); go("games"); },
   ideasToggle(){ ui.ideasOpen = !ui.ideasOpen; render(); },
+  // North star pass (progressive disclosure, nothing removed): one tap shows the rest of the menu. In memory only.
+  calmMore(){ if (blockIfRed()) return; ui.calmMoreOpen = true; render(); },
+  connMore(){ if (blockIfRed()) return; ui.connMoreOpen = true; render(); },
+  sceneFind(){ if (blockIfRed()) return; ui.sceneFindOpen = true; render(); },
   calmTruth(){ if (blockIfRed()) return; go("calm-truth"); },
   /* ---- 6.13 ---- */
   afterStart(){ if (blockIfRed()) return; ui.flash = ""; go(afterActive() ? "after" : "after-setup"); },

@@ -3,9 +3,11 @@
 const {JSDOM}=require('jsdom');
 const fs=require('fs');
 const HTML=fs.readFileSync(require('path').join(__dirname,'index.html'),'utf8');
+// North star pass: Calm, Connect and Change the scene keep some options one tap behind a toggle; tap it when the target isn't shown yet.
+const MORE_TOGGLES='[data-act="calmMore"],[data-act="connMore"],[data-act="sceneFind"]';
 function boot(){const dom=new JSDOM(HTML,{url:'https://next.example/',runScripts:'dangerously',pretendToBeVisual:true,beforeParse(w){ w.scrollTo=()=>{}; w.scrollBy=()=>{}; }});
  const w=dom.window; w.HTMLElement.prototype.scrollIntoView=()=>{};
- const click=(sel)=>{const el=w.document.querySelector(sel); if(!el) throw new Error('missing '+sel+' on '+w.eval('session.screen')); el.dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true}));};
+ const click=(sel)=>{let el=w.document.querySelector(sel); if(!el){ const t=w.document.querySelector(MORE_TOGGLES); if(t){ t.dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true})); el=w.document.querySelector(sel); } } if(!el) throw new Error('missing '+sel+' on '+w.eval('session.screen')); el.dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true}));};
  ['obNext','obAdult','obLater'].forEach(a=>click(`[data-act="${a}"]`));
  const dump=()=>{const o={}; for(let i=0;i<w.localStorage.length;i++){const k=w.localStorage.key(i); o[k]=w.localStorage.getItem(k);} return o;};
  return {w,click,S:()=>w.eval('session'),G:x=>w.eval(x),doc:w.document,T:()=>w.document.getElementById('app').textContent.replace(/\s+/g,' '),dump};}
@@ -15,7 +17,9 @@ const r=[];
 
 {const a=calm(); const t=a.T();
  r.push(['Calm opens from Home', a.S().screen==='calm' && a.doc.getElementById('screen-title').textContent==="Let's slow things down."]);
- r.push(['short menu: breathe, 5-4-3-2-1, feet on the floor, what\'s true (still true + also true inside, simplicity audit #8), find something real', [...a.doc.querySelectorAll('[data-act="calmPick"]')].map(b=>b.dataset.arg).join()==='breathe,ground,feet,truth,real']);
+ r.push(['north star: only What\'s true until "Something else"', [...a.doc.querySelectorAll('[data-act="calmPick"]')].map(b=>b.dataset.arg).join()==='truth']);
+ a.click('[data-act="calmMore"]');
+ r.push(['short menu: breathe, 5-4-3-2-1, feet on the floor, what\'s true (still true + also true inside, simplicity audit #8), find something real', [...a.doc.querySelectorAll('[data-act="calmPick"]')].map(b=>b.dataset.arg).sort().join()==='breathe,feet,ground,real,truth']);
  r.push(['"I\'d rather talk to someone" goes to Connect', !!a.doc.querySelector('.actions [data-act="route"][data-arg="connect"]') && t.includes("I'd rather talk to someone")]);
  r.push(['no emoji; Help in the top bar', !/\p{Extended_Pictographic}/u.test(t) && !!a.doc.querySelector('header .help-pill')]);
  r.push(['Zags is the featured card, first on the menu (6.7)', /^Calm down with Zags/.test(a.doc.querySelector('#app .zcard').textContent.trim()) && a.doc.querySelector('#app .zcard').compareDocumentPosition(a.doc.querySelector('[data-act="calmPick"]'))===4]);

@@ -93,7 +93,6 @@ Help (top right) · Zags + "ZigZag Mind" · "It's okay not to be okay." · **I d
 - **Open decisions:**
   - remove the "I feel alone" chip? (currently kept)
   - rename the crisis button "Open my plan" to "I need my plan"? (waits for the clinician)
-  - Calm, Connect and Change the scene still have 9–10 choices
 
 ## How to write a handoff for Claude Code
 

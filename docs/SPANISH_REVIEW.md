@@ -8,7 +8,7 @@ Every Spanish line below is a **draft** (not reviewed). Please give each one a h
 
 Notes for the translator: keep "988", "911", "211" and "ZigZag Mind" as they are. Lines starting with a space or comma are joined to a name or number on screen (for example "Llamar a" + a name). `&` is shown on screen as "&".
 
-Strings: 213 (crisis-screen: 46).
+Strings: 217 (crisis-screen: 46).
 
 
 ## Help button
@@ -248,6 +248,8 @@ Strings: 213 (crisis-screen: 46).
 | Key | English (live) | Spanish (draft) | Crisis | Status |
 |---|---|---|---|---|
 | `calm.talk` | I'd rather talk to someone | Prefiero hablar con alguien |  | DRAFT |
+| `calm.more` | Something else | Otra cosa |  | DRAFT |
+| `calm.moreMeta` | Breathe for a minute, grounding, feet on the floor, something real | Respirar un minuto, el ejercicio 5-4-3-2-1, pies en el suelo, algo real |  | DRAFT |
 
 ## Connect
 
@@ -269,6 +271,8 @@ Strings: 213 (crisis-screen: 46).
 | `connect.around` | Be around people, no talking needed | Estar cerca de gente, sin tener que hablar |  | DRAFT |
 | `connect.zags` | Calm down with Zags while you wait | Calmarme con Zags mientras espero |  | DRAFT |
 | `connect.song` | Make a song while you wait | Hacer una canción mientras espero |  | DRAFT |
+| `connect.more` | Something else | Otra cosa |  | DRAFT |
+| `connect.moreMeta` | Be around people, Zags, or a song while you wait | Estar entre gente, Zags o una canción mientras esperas |  | DRAFT |
 
 ## My Plan
 
