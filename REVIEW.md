@@ -1196,6 +1196,7 @@ Only from My Plan ("A line for today") and a small link under "Put the phone dow
 - Step 4: "Keep" (with saving off: "Keep for now (saving is off)") / "Don't keep" → "Kept. Only on this phone." / "Kept for this visit. Saving is off, so it's gone when you close ZigZag Mind." / "Not kept."
 - Both fields are safety-checked on Keep: RED → crisis screen, entry NOT saved (clinician item D-diary); YELLOW → support bar, entry saved.
 - Storage full: "This phone's storage is full, so this couldn't be saved. Your words are still here." (the words stay on screen)
+- Looking back: newest first, grouped by date; each entry shows its feeling words, the few words and the "still true" line (stronger brand style). Tap to read in full; "Delete" → "Delete this entry?" Delete / Keep → "Entry deleted.". Only at 7 or more entries, at the top: "Every 'still true' here is something you noticed on a hard day.". No stats, counts or graphs.
 
 ### Stage 6.20: When you've lost someone (CLINICIAN REVIEW REQUIRED for the whole path)
 
@@ -2028,6 +2029,22 @@ _When: distraction_
 - Only on this phone.
 - **Button:** Write today's line
 - **Button:** Looking back
+
+### `diary-back`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Looking back
+- Nothing here yet.
+- **Button:** Back
+
+### `diary-entry`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Looking back
+- Nothing here yet.
+- **Button:** Back
 
 ### `diary-feel`
 

@@ -71,5 +71,21 @@ for(const [where,opts] of [['few words',{text:'Last year I wanted to kill myself
  r.push(['A: never on crisis screens, Home or the menus', found===false, found]);
  a.G('dispatch({type:"SET_SAFETY_LEVEL",level:"RED"})'); a.G('ACTIONS.diaryWrite()'); r.push(['A: blocked while RED', a.S()==='crisis']); }
 
+// ================= B. Looking back =================
+const seed=(a,n)=>a.G(`store.diary={entries:Array.from({length:${n}},(_,i)=>{ const t=new Date(2026,9,4-Math.floor(i/2),12-i).getTime(); return {id:"e"+i,date:t,day:diaryDay(t),feelings:i%2?["tired"]:[],text:"Entry text "+i+(i===0?" "+"x".repeat(300):""),trueLine:i%3?"":"Still true "+i}; })}; saveDiary()`);
+{const a=boot(); seed(a,4); a.G('ACTIONS.diaryOpen()'); a.click(act('diaryBack')); const t=a.T();
+ const items=[...a.w.document.querySelectorAll('.diary-item')].map(e=>e.dataset.arg), heads=[...a.w.document.querySelectorAll('.diary-day')].map(h=>h.textContent);
+ r.push(['B: list newest first, grouped by date', JSON.stringify(items)==='["e0","e1","e2","e3"]' && heads.length===2 && heads[0].includes('October 4, 2026') && heads[1].includes('October 3, 2026')]);
+ r.push(['B: shows feeling words, the few words, and "still true" in the brand style', t.includes('tired') && t.includes('Entry text 1') && a.w.document.querySelector('.diary-item .diary-still').textContent==='Still true 0']);
+ r.push(['B: long entries are shortened in the list', a.w.document.querySelector('[data-arg="e0"]').textContent.includes('…')]);
+ r.push(['B: no "hard day" note under 7 entries', !t.includes("Every 'still true' here")]);
+ a.click(act('diaryEntry','e0')); r.push(['B: tap to read in full', a.S()==='diary-entry' && a.T().includes('x'.repeat(300))]);
+ a.click(act('diaryDel')); r.push(['B: Delete asks to confirm first', a.T().includes('Delete this entry?') && a.G('diaryEntries().length')===4]);
+ a.click(act('diaryDelNo')); r.push(['B: "Keep" cancels', a.G('diaryEntries().length')===4 && !a.T().includes('Delete this entry?')]);
+ a.click(act('diaryDel')); a.click(act('diaryDelYes')); await tick(5);
+ r.push(['B: confirmed Delete removes it (and from storage)', a.G('diaryEntries().length')===3 && !stored(a).entries.some(e=>e.id==='e0') && a.S()==='diary-back' && a.T().includes('Entry deleted.')]); }
+{const a=boot(); seed(a,7); a.G('ACTIONS.diaryBack()'); const t=a.T();
+ r.push(['B: at 7+ entries, only the note at the top', t.includes("Every 'still true' here is something you noticed on a hard day.") && a.w.document.querySelector('.diary-note').compareDocumentPosition(a.w.document.querySelector('.diary-item'))&4]); }
+
 for(const [n,ok,info] of r) console.log((ok?'PASS':'FAIL')+' '+n+(ok||info===undefined?'':' ('+info+')'));
 })();

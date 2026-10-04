@@ -297,7 +297,8 @@ list([
   'Step 3: "'+DI.still+'" (Optional; up to 120 characters). Examples: '+DI.stillEx.map(x=>`"${x}"`).join(' · '),
   'Step 4: "'+DI.keep+'" (with saving off: "'+DI.keepOff+'") / "'+DI.dontKeep+'" → "'+DI.kept+'" / "'+DI.keptOff+'" / "'+DI.dropped+'"',
   'Both fields are safety-checked on Keep: RED → crisis screen, entry NOT saved (clinician item D-diary); YELLOW → support bar, entry saved.',
-  'Storage full: "'+DI.full+'" (the words stay on screen)'
+  'Storage full: "'+DI.full+'" (the words stay on screen)',
+  'Looking back: newest first, grouped by date; each entry shows its feeling words, the few words and the "still true" line (stronger brand style). Tap to read in full; "Delete" → "'+DI.deleteQ+'" Delete / Keep → "'+DI.deleted+'". Only at 7 or more entries, at the top: "'+DI.backNote+'". No stats, counts or graphs.'
 ]);
 
 H(3,'Stage 6.20: When you\'ve lost someone (CLINICIAN REVIEW REQUIRED for the whole path)');

@@ -1296,8 +1296,10 @@ const DIARY = {
   write:"Write today's line", back:"Looking back",
   backNote:"Every 'still true' here is something you noticed on a hard day.",
   empty:"Nothing here yet.",
-  phoneDown:"Write a line about today?"
+  phoneDown:"Write a line about today?",
+  deleteQ:"Delete this entry?", deleted:"Entry deleted."
 };
+function diaryDateLabel(day){ const [y, m, d] = day.split("-").map(Number); return new Date(y, m - 1, d).toLocaleDateString("en-US", { weekday:"long", month:"long", day:"numeric", year:"numeric" }); }
 function diaryDay(ts = Date.now()){ const d = new Date(ts); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; }
 function validDiaryEntries(a){
   if (!Array.isArray(a)) return [];
@@ -3493,6 +3495,35 @@ const SCREENS = {
         <button class="card" data-act="diaryWrite"><span>${DIARY.write}</span></button>
         <button class="card" data-act="diaryBack"><span>${DIARY.back}</span></button>
       </div>` };
+  },
+  "diary-back"(){
+    const list = diaryEntries().slice().sort((a, b) => b.date - a.date);
+    const days = [...new Set(list.map(e => e.day))];
+    const short = t => t.length > 160 ? esc(t.slice(0, 157).trimEnd()) + "…" : esc(t);
+    return { close:true, body:`
+      ${title(DIARY.back)}
+      ${ui.flash ? `<p class="flash" role="status">${esc(ui.flash)}</p>` : ""}
+      ${list.length >= 7 ? `<p class="sub diary-note">${DIARY.backNote}</p>` : ""}
+      ${list.length ? days.map(day => `<h2 class="lbl diary-day">${esc(diaryDateLabel(day))}</h2>
+        ${list.filter(e => e.day === day).map(e => `<button class="panel diary-item" data-act="diaryEntry" data-arg="${esc(e.id)}" style="display:block;width:100%;text-align:left">
+          ${e.feelings.length ? `<p class="small" style="margin:0">${e.feelings.map(esc).join(" · ")}</p>` : ""}
+          ${e.text ? `<p style="margin:6px 0 0">${short(e.text)}</p>` : ""}
+          ${e.trueLine ? `<p class="diary-still">${esc(e.trueLine)}</p>` : ""}</button>`).join("")}`).join("")
+        : `<p class="empty">${DIARY.empty}</p>`}`,
+      actions:`<button class="btn btn-secondary" data-act="diaryOpen">Back</button>` };
+  },
+  "diary-entry"(){
+    const e = diaryEntries().find(x => x.id === ui.diaryId);
+    if (!e) return SCREENS["diary-back"]();
+    return { close:true, body:`
+      <p class="step-count">${esc(diaryDateLabel(e.day))}</p>
+      ${e.feelings.length ? `<p class="small">${e.feelings.map(esc).join(" · ")}</p>` : ""}
+      ${e.text ? `<p style="white-space:pre-wrap;font-size:18px">${esc(e.text)}</p>` : ""}
+      ${e.trueLine ? `<p class="diary-still">${esc(e.trueLine)}</p>` : ""}
+      ${ui.msg ? `<p class="err" role="alert">${esc(ui.msg)}</p>` : ""}
+      ${ui.diaryDel ? `<div class="panel"><p style="margin:0 0 10px"><b>${DIARY.deleteQ}</b></p>
+        <div class="pair"><button class="btn btn-outline" data-act="diaryDelYes">Delete</button><button class="btn btn-secondary" data-act="diaryDelNo">Keep</button></div></div>` : ""}`,
+      actions:`${ui.diaryDel ? "" : `<button class="link" data-act="diaryDel">Delete</button>`}<button class="btn btn-secondary" data-act="diaryBack">Back</button>` };
   },
   "diary-feel"(){
     const d = ui.diaryDraft || { feelings:[] };
@@ -6184,7 +6215,20 @@ const ACTIONS = {
   warmFind(){ if (blockIfRed()) return; startIntervention("find_something"); },
 
   /* 6.21 A LINE FOR TODAY */
-  diaryOpen(){ if (blockIfRed()) return; ui.flash = ""; ui.msg = ""; go("diary"); },
+  diaryOpen(){ if (blockIfRed()) return; ui.flash = ""; ui.msg = ""; ui.diaryDel = false; go("diary"); },
+  diaryBack(){ if (blockIfRed()) return; ui.diaryDel = false; ui.msg = ""; go("diary-back"); },
+  diaryEntry(arg){ if (blockIfRed()) return; if (!diaryEntries().some(e => e.id === arg)) return; ui.diaryId = arg; ui.diaryDel = false; ui.flash = ""; go("diary-entry"); },
+  diaryDel(){ if (blockIfRed()) return; ui.diaryDel = true; render(); },
+  diaryDelNo(){ ui.diaryDel = false; render(); },
+  diaryDelYes(){
+    if (blockIfRed()) return;
+    const before = diaryEntries();
+    store.diary = { ...(store.diary || {}), entries:before.filter(e => e.id !== ui.diaryId) };
+    saveDiary().then(ok => {
+      if (!ok){ store.diary.entries = before; ui.msg = "Couldn't delete it on this phone."; render(); return; }
+      ui.diaryDel = false; ui.msg = ""; ui.flash = DIARY.deleted; go("diary-back");
+    });
+  },
   diaryWrite(){ if (blockIfRed()) return; ui.flash = ""; ui.msg = ""; ui.diaryDraft = { feelings:[], text:"", trueLine:"" }; go("diary-feel"); },
   diaryFeel(arg){
     if (blockIfRed()) return;
