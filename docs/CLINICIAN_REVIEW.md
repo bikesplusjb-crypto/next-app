@@ -148,5 +148,6 @@ These tests document **current** behavior so that any change is visible. They ar
 | D24 | Spanish interface drafts (6.19 E): 211 strings incl. 46 crisis-screen lines, side by side in docs/SPANISH_REVIEW.md. Not shown to anyone (SPANISH_ENABLED = false) | §6, §7 | **OPEN: human translator + clinician** (crisis lines must be reviewed before Spanish can be turned on; a test enforces it) | | | |
 | D25 | Find something (photo missions, "Things I noticed", "Something that's yours"): wording, the "find something that reminds you of someone" mission for people who are grieving, and photo safety | §8 | **OPEN** | | | |
 | D26 | Warm & comfort (drink ritual): wording, hot-liquid safety line, and that it's left out of the craving flow | §8, §11 | **OPEN** | | | |
+| D27 | Social Zig ("Is this helping?", come back to your side, don't check again, don't send it yet, the last thing you saw, mute the noise): wording; no shaming or diagnosis | §8, Tech check | **OPEN** | | | |
 
 Signed: ______________________ (name, credentials) Date: __________

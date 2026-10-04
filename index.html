@@ -1220,6 +1220,42 @@ function fsDropPhoto(){ if (ui.fsPhoto){ try { URL.revokeObjectURL(ui.fsPhoto); 
 /* "Something that's yours": the person's own things from My Plan's "Things that help me" (not the app's own steps). */
 function yourThings(){ return (getPlan().helps || []).filter(h => !findIntervention(h)).map(helpLabel); }
 
+/* SOCIAL ZIG (owner handoff, 2026-10-04): "Is this helping?" Not anti-social-media: Yes means carry on. No shaming,
+   no diagnosis, no platform names asked, nothing read from other apps, nothing stored (typed text is safety-checked
+   and dropped). The other directions are the app's existing steps; the engine stays authoritative. */
+const SZ = {
+  title:"Is this helping?",
+  q:"Before you keep scrolling: is this actually helping right now?",
+  yes:"Okay. Enjoy it.",
+  zig:"Okay. Let's Zig.",
+  life:["You've been looking at everyone else's life.","Want to look at something that's yours?"],
+  unsure:"That's okay. Let's try something different for a few minutes.",
+  enough:"That's enough internet for a minute.",
+  checked:["You already checked.","You don't have to check again right now."],
+  compare:"Are you looking at someone else's life or your own?",
+  side:["Come back to your side.","What's something that's actually yours?"],
+  ownSide:"Then you're already on your side.",
+  mute:"What's one thing you don't need to see for the next hour?",
+  muteChoices:["News","Comments","Notifications","A particular person's posts","Everything","I don't know"],
+  muteHow:"You can mute or pause that in its own app.",
+  instead:"What do you want to do instead?",
+  send:"Want to send that right now, or borrow 10 minutes?",
+  sent:"Okay. It's your call.",
+  saveHint:"Write or paste it here to copy it for later. It isn't saved in ZigZag Mind.",
+  letGo:"Okay. You can let it go for now.",
+  last:"What was the last thing you saw?",
+  felt:"How did it leave you feeling?",
+  feltChoices:[["better","Better"],["worse","Worse"],["same","About the same"],["unsure","I don't know"]],
+  change:"Want to change the input?"
+};
+/* The directions offered from Social Zig (at most 8). "Something that's yours" only when the person has their own things. */
+function szOptions(){
+  const o = [];
+  if (yourThings().length) o.push(["yours","Something that's yours"]);
+  o.push(["find","Find something worth looking at"],["warm","Make something warm"],["borrow","Borrow ten minutes"],["true","What's also true"],["talk","Talk to someone"],["pick","Pick something for me"],["down","Put the phone down"]);
+  return `<div class="list sz-opts">${o.map(([k, l]) => `<button class="card" data-act="szGo" data-arg="${k}"><span>${l}</span></button>`).join("")}</div>`;
+}
+
 /* WARM & COMFORT (owner handoff, 2026-10-04): an ordinary ritual, not a treatment. The ritual is the point, not
    caffeine: decaf and caffeine-free come first and regular coffee isn't suggested. No timer, every step skippable,
    no tracking, no medical claims. Not offered in the craving flow. */
@@ -1444,6 +1480,11 @@ INTERVENTION_LIBRARY.push(
     states:["anxious","spiraling","low","distraction","alone"], intensityRange:[0,10], needsMobility:true, realWorld:true,
     steps:["Find something worth looking at.","Take a photo if you want.","Put the phone down."], completion:"tap_done" }
 );
+// SOCIAL ZIG: opened from Tech check only (no states, so the engine never suggests it elsewhere).
+INTERVENTION_LIBRARY.push(
+  { id:"social_zig", name:"Is this helping?", tryLabel:"Is this helping?", description:"Notice whether scrolling is helping right now, and choose a different direction if it isn't.", durationSec:120,
+    states:[], intensityRange:[0,10], needsMobility:false, steps:["Is this helping?","Choose a different direction."], completion:"tap_done" }
+);
 // WARM & COMFORT (SENSE, real world).
 INTERVENTION_LIBRARY.push(
   { id:"warm_comfort", name:"Make something warm", tryLabel:"Make something warm", description:"Nothing needs to be solved right now. Make something warm and take a few quiet minutes.", durationSec:300,
@@ -1467,7 +1508,7 @@ const CHANNEL_OF = {
   grounding:"BODY", breathing:"BODY", hydration:"BODY", walking:"BODY", touch_real_world:"BODY",
   change_scene:"SPACE", environment_change:"SPACE", find_alive:"SPACE", craving_delay:"SPACE",
   distraction_game:"SENSE", distraction_color_hunt:"SENSE", distraction_around_me:"SENSE", distraction_categories:"SENSE",
-  distraction_memory:"SENSE", distraction_pattern:"SENSE", distraction_60_second:"SENSE", ridiculous_mode:"SENSE", zags:"SENSE", song:"SENSE", break_the_loop:"SPACE", ai_relationship_check:"PEOPLE", be_around_people:"PEOPLE", find_something:"SENSE", warm_comfort:"SENSE", ai_loss:"PEOPLE", ai_reliance_check:"ACTION", ai_fomo:"ACTION",
+  distraction_memory:"SENSE", distraction_pattern:"SENSE", distraction_60_second:"SENSE", ridiculous_mode:"SENSE", zags:"SENSE", song:"SENSE", break_the_loop:"SPACE", ai_relationship_check:"PEOPLE", be_around_people:"PEOPLE", find_something:"SENSE", warm_comfort:"SENSE", social_zig:"ACTION", ai_loss:"PEOPLE", ai_reliance_check:"ACTION", ai_fomo:"ACTION",
   connection:"PEOPLE",
   thought_parking:"ACTION", still_true:"ACTION", true_sentence:"ACTION", kind_stranger:"ACTION", borrow_ten:"ACTION", behavioral_activation:"ACTION"
 };
@@ -1547,6 +1588,7 @@ function faithOn(){ return prefs.strength === "bible"; }
 const TC_INTRO = "No judgment. Tech is allowed. Let's just see what it's doing to you right now.";
 // [key, title, meta, interventionId, state for the check-in]
 const TC_OPTIONS = [
+  ["scroll","I've been scrolling","Is this helping?","social_zig","distraction"],   // SOCIAL ZIG (owner handoff)
   ["reliance","I keep asking AI the same thing","","ai_reliance_check","spiraling"],
   ["check","I keep checking","Texts, feeds, news, an ex's profile, symptoms, stocks","break_the_loop","spiraling"],
   ["fomo","I'm afraid I'm falling behind","","ai_fomo","anxious"],
@@ -2864,6 +2906,87 @@ const SCREENS = {
       : `<button class="btn btn-primary" data-act="recTry">${esc(it.tryLabel)}</button>
         <button class="btn btn-secondary" data-act="recElse">Something else</button>
         <button class="link" data-act="phoneDown">I'm good for now</button>` };
+  },
+
+  /* SOCIAL ZIG */
+  sz(){
+    return { close:true, body:`
+      <p class="step-count">Is this helping?</p>
+      ${stepTitle(SZ.q, true)}
+      <div class="stack" style="margin-top:14px">
+        <button class="btn btn-secondary" data-act="szAnswer" data-arg="yes">Yes</button>
+        <button class="btn btn-secondary" data-act="szAnswer" data-arg="no">Not really</button>
+        <button class="btn btn-secondary" data-act="szAnswer" data-arg="unsure">I don't know</button>
+      </div>
+      <p class="lbl" style="margin-top:18px">Or</p>
+      <div class="sits">
+        <button class="sit" data-act="szTool" data-arg="check">I keep checking the same thing</button>
+        <button class="sit" data-act="szTool" data-arg="compare">I'm comparing my life to someone else's</button>
+        <button class="sit" data-act="szTool" data-arg="send">I'm about to send something</button>
+        <button class="sit" data-act="szTool" data-arg="last">The last thing I saw</button>
+        <button class="sit" data-act="szTool" data-arg="mute">Too much noise</button>
+      </div>` };
+  },
+  "sz-yes"(){ return { close:true, body:`${stepTitle(SZ.yes, true)}`, actions:`<button class="btn btn-primary" data-act="home">Okay</button>` }; },
+  "sz-zig"(){
+    const m = ui.szMode;
+    const head = m === "unsure" ? `${stepTitle(SZ.unsure, true)}`
+      : m === "side" ? `${stepTitle(SZ.side[0], true)}<p class="sub" style="font-size:19px">${SZ.side[1]}</p>`
+      : m === "check" ? `${stepTitle(SZ.instead, true)}`
+      : m === "mute" ? `<p class="sub">${ui.szMute === "I don't know" ? "That's okay." : SZ.muteHow}</p>${stepTitle(SZ.instead, true)}`
+      : m === "felt" ? `${stepTitle(SZ.change, true)}`
+      : `<p class="zig-lead">${SZ.zig}</p>${stepTitle(SZ.life[0], true)}<p class="sub" style="font-size:19px">${SZ.life[1]}</p>`;
+    return { close:true, body:`${head}${szOptions()}` };
+  },
+  "sz-enough"(){ return { close:true, body:`${stepTitle(SZ.enough, true)}<p class="sub" style="font-size:19px">${PUT_DOWN_NOW}</p>`, actions:`<button class="btn btn-primary" data-act="putDown">I'm done</button>` }; },
+  "sz-check"(){
+    return { close:true, body:`${stepTitle(SZ.checked[0], true)}<p class="sub" style="font-size:19px">${SZ.checked[1]}</p>`,
+      actions:`<button class="btn btn-primary" data-act="szGo" data-arg="borrow">Borrow ten minutes</button>
+        <button class="btn btn-secondary" data-act="szZig" data-arg="check">Something else</button>` };
+  },
+  "sz-compare"(){
+    return { close:true, body:`${stepTitle(SZ.compare, true)}`,
+      actions:`<button class="btn btn-secondary" data-act="szZig" data-arg="side">Someone else's</button>
+        <button class="btn btn-secondary" data-act="szOwn">My own</button>` };
+  },
+  "sz-own"(){ return { close:true, body:`${stepTitle(SZ.ownSide, true)}`, actions:`<button class="btn btn-primary" data-act="home">Okay</button>` }; },
+  "sz-mute"(){
+    return { close:true, body:`${stepTitle(SZ.mute, true)}
+      <div class="sits" style="margin-top:12px">${SZ.muteChoices.map((c, i) => `<button class="sit" data-act="szMute" data-arg="${i}">${esc(c)}</button>`).join("")}</div>` };
+  },
+  "sz-send"(){
+    return { close:true, body:`${stepTitle(SZ.send, true)}`,
+      actions:`<button class="btn btn-secondary" data-act="szSend" data-arg="send">Send</button>
+        <button class="btn btn-secondary" data-act="szSend" data-arg="later">Save for later</button>
+        <button class="btn btn-secondary" data-act="szSend" data-arg="dont">Don't send</button>` };
+  },
+  "sz-sent"(){ return { close:true, body:`${stepTitle(SZ.sent, true)}`, actions:`<button class="btn btn-primary" data-act="home">Okay</button>` }; },
+  "sz-save"(){
+    return { close:true, body:`
+      ${title("Save it for later")}
+      <label class="sub" for="szBox">${SZ.saveHint}</label>
+      <textarea class="field" id="szBox" maxlength="1000" style="min-height:140px">${esc(ui.szText || "")}</textarea>
+      ${ui.flash ? `<p class="flash" role="status">${esc(ui.flash)}</p>` : ""}
+      ${ui.msg ? `<p class="err" role="alert">${esc(ui.msg)}</p>` : ""}`,
+      actions:`<button class="btn btn-primary" data-act="szCopy">Copy it</button>
+        <button class="btn btn-secondary" data-act="szGo" data-arg="borrow">Borrow ten minutes</button>` };
+  },
+  "sz-letgo"(){
+    return { close:true, body:`${stepTitle(SZ.letGo, true)}`,
+      actions:`<button class="btn btn-primary" data-act="szGo" data-arg="borrow">Borrow ten minutes</button>
+        <button class="btn btn-secondary" data-act="home">Okay</button>` };
+  },
+  "sz-last"(){
+    return { close:true, body:`
+      ${title(SZ.last)}
+      <label class="sub" for="szLast">Optional. A few words is enough. Not saved.</label>
+      <input class="field" id="szLast" maxlength="120" autocomplete="off">
+      ${ui.msg ? `<p class="err" role="alert">${esc(ui.msg)}</p>` : ""}`,
+      actions:`<button class="btn btn-primary" data-act="szLastNext">Next</button>` };
+  },
+  "sz-felt"(){
+    return { close:true, body:`${stepTitle(SZ.felt, true)}`,
+      actions:SZ.feltChoices.map(([k, l]) => `<button class="btn btn-secondary" data-act="szZig" data-arg="felt">${l}</button>`).join("") };
   },
 
   /* WARM & COMFORT */
@@ -5197,7 +5320,8 @@ const ACTIONS = {
     dispatch({ type:"SET_CURRENT_STATE", state:o[4] });
     ui.tcKey = arg; ui.tcStep = 0; ui.tcLoopEnd = 0; ui.tcLoopOver = false; ui.tcLoopDone = {}; ui.tcMiss = {}; ui.tcFomo = {};
     ui.tcGives = {}; ui.tcReplacing = {}; ui.tcWrote = false; ui.msg = ""; ui.flash = "";
-    startIntervention(o[3], { route:{ reliance:"tc-reliance", check:"tc-check", fomo:"tc-fomo", attached:"tc-attached", instead:"tc-attached", loss:"tc-loss" }[arg] });
+    ui.szMode = null; ui.szText = ""; ui.szMute = null;
+    startIntervention(o[3], { route:{ scroll:"sz", reliance:"tc-reliance", check:"tc-check", fomo:"tc-fomo", attached:"tc-attached", instead:"tc-attached", loss:"tc-loss" }[arg] });
   },
   tcLoop(){ if (blockIfRed()) return; ui.tcLoopEnd = Date.now() + TC_LOOP_MS; ui.tcLoopOver = false; ui.tcLoopDone = {}; go("tc-loop"); },
   tcStep(arg){ if (!TC_LOOP_STEPS.some(x => x[0] === arg)) return; ui.tcLoopDone[arg] = !ui.tcLoopDone[arg]; render(); },
@@ -5334,6 +5458,68 @@ const ACTIONS = {
     window.addEventListener("afterprint", clear);
     try { if (typeof window.print === "function") window.print(); } catch (_){}
   },
+  /* SOCIAL ZIG */
+  szAnswer(arg){
+    if (blockIfRed()) return;
+    if (arg === "yes"){ go("sz-yes"); return; }
+    ui.szMode = arg === "unsure" ? "unsure" : "life"; go("sz-zig");
+  },
+  szTool(arg){
+    if (blockIfRed()) return;
+    const map = { check:"sz-check", compare:"sz-compare", send:"sz-send", last:"sz-last", mute:"sz-mute" };
+    if (!map[arg]) return; ui.msg = ""; ui.flash = ""; ui.szText = ""; go(map[arg]);
+  },
+  szZig(arg){ if (blockIfRed()) return; ui.szMode = arg; lastRendered = null; go("sz-zig"); },
+  szOwn(){ if (blockIfRed()) return; go("sz-own"); },
+  szMute(arg){ if (blockIfRed()) return; const c = SZ.muteChoices[Number(arg)]; if (!c) return; ui.szMute = c; ui.szMode = "mute"; go("sz-zig"); },   // never saved
+  szSend(arg){
+    if (blockIfRed()) return;
+    if (arg === "send") go("sz-sent");
+    else if (arg === "later") go("sz-save");
+    else if (arg === "dont") go("sz-letgo");
+  },
+  szCopy(){
+    if (blockIfRed()) return;
+    const b = document.getElementById("szBox");
+    const text = ((b && b.value) || "").trim().slice(0, 1000);
+    if (!text){ ui.msg = "Write or paste it first."; render(); return; }
+    ui.msg = "";
+    const copy = () => {
+      ui.szText = text;   // memory only, for this screen; never saved
+      const done = m => { ui.flash = m; render(); };
+      try { if (navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(() => done("Copied. It isn't saved in ZigZag Mind."), () => done("Press and hold the text to copy it.")); return; } } catch (_){}
+      done("Press and hold the text to copy it.");
+    };
+    handleSafeTextSubmit({ text,
+      onRed(){ ui.szText = ""; applySafetyResult("RED"); },
+      onYellow(){ applySafetyResult("YELLOW"); copy(); },
+      onGreen: copy });
+  },
+  szLastNext(){
+    if (blockIfRed()) return;
+    const b = document.getElementById("szLast");
+    const text = ((b && b.value) || "").trim().slice(0, 120);
+    if (b) b.value = "";
+    ui.msg = "";
+    if (!text){ go("sz-felt"); return; }   // optional
+    handleSafeTextSubmit({ text,   // checked, then dropped: never saved
+      onRed(){ applySafetyResult("RED"); },
+      onYellow(){ applySafetyResult("YELLOW"); go("sz-felt"); },
+      onGreen(){ go("sz-felt"); } });
+  },
+  szGo(arg){
+    if (blockIfRed()) return;
+    ui.szText = "";
+    if (arg === "yours"){ go("your-things"); return; }
+    if (arg === "find"){ startIntervention("find_something"); return; }
+    if (arg === "warm"){ startIntervention("warm_comfort"); return; }
+    if (arg === "borrow"){ startIntervention("borrow_ten"); return; }
+    if (arg === "true"){ startIntervention("true_sentence"); return; }
+    if (arg === "talk"){ ACTIONS.route("connect"); return; }
+    if (arg === "pick"){ dispatch({ type:"SET_CURRENT_STATE", state:"distraction" }); ui.exclude = ["social_zig"]; ui.dirOpen = false; runEngine(); go("recommendation"); return; }   // the engine decides (YELLOW first)
+    if (arg === "down"){ go("sz-enough"); return; }
+  },
+
   /* WARM & COMFORT */
   warmStart(){ if (blockIfRed()) return; startIntervention("warm_comfort"); },
   warmPick(arg){ if (blockIfRed()) return; if (!WARM_DRINKS.some(d => d[0] === arg)) return; ui.warmDrink = arg; go("warm-go"); },   // never saved

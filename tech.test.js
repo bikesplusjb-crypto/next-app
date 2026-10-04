@@ -20,7 +20,7 @@ const realWorld=a=>a.has('a[href^="sms:"]')||a.has('a[href^="tel:"]')||a.has(act
 // ---- entry ----
 {const a=boot(); a.click(act('techStart'));
  r.push(['Home → Tech check: "No judgment. Tech is allowed. Let\'s just see what it\'s doing to you right now."', a.S().screen==='tech' && a.T().includes("No judgment. Tech is allowed. Let's just see what it's doing to you right now.")]);
- r.push(['six options: asking AI again · checking · falling behind · attached · instead of people · AI changed or gone', a.doc.querySelectorAll('[data-act="tcPick"]').length===6
+ r.push(['seven options (Social Zig "I\'ve been scrolling" added first): asking AI again · checking · falling behind · attached · instead of people · AI changed or gone', a.doc.querySelectorAll('[data-act="tcPick"]').length===7
    && ["I keep asking AI the same thing","I keep checking","I'm afraid I'm falling behind","I think I'm getting attached to AI","I'm using AI instead of people","My AI changed or is gone"].every(x=>a.T().includes(x))]);
  r.push(['"I\'m not sure what\'s real" is on hold (clinician review before it ships)', !a.T().includes("not sure what's real") && !a.G('findIntervention("ai_reality")') && !a.G('TC_OPTIONS').some(o=>o[3]==='ai_reality')]);
  r.push(['no shame anywhere in Tech check copy', !shame.test(a.G('JSON.stringify([TC_INTRO,TC_OPTIONS,TC_RELIANCE,TC_SDA,TC_CHECK_Q,TC_LOOP_STEPS,TC_LOOP_ASK,TC_LOOP_END,TC_FOMO_MISS,TC_FOMO_FIELDS,TC_FOMO_END,TC_FOMO_USING,TC_ATTACHED,TC_GIVES,TC_REPLACING,TC_BOUNDARY_NOTE,TC_LOSS,TC_LOSS_GROUND,TC_LOSS_MSG,TC_REFLECT])').replace("It still isn't a human relationship",""))]);

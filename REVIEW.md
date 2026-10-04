@@ -512,6 +512,16 @@ Steps:
 2. Take a photo if you want.
 3. Put the phone down.
 
+### Is this helping? (`social_zig`)
+
+- Button: "Is this helping?"
+- Description: "Notice whether scrolling is helping right now, and choose a different direction if it isn't."
+- For:  · about 2 min
+
+Steps:
+1. Is this helping?
+2. Choose a different direction.
+
 ### Make something warm (`warm_comfort`)
 
 - Button: "Make something warm"
@@ -1020,7 +1030,7 @@ On the guide when a name is given: "[name] would like you to check in now and th
 - `SPACE`: change_scene, environment_change, find_alive, craving_delay, break_the_loop
 - `SENSE`: distraction_game, distraction_color_hunt, distraction_around_me, distraction_categories, distraction_memory, distraction_pattern, distraction_60_second, ridiculous_mode, zags, song, find_something, warm_comfort
 - `PEOPLE`: ai_relationship_check, be_around_people, ai_loss, connection
-- `ACTION`: ai_reliance_check, ai_fomo, thought_parking, still_true, true_sentence, kind_stranger, borrow_ten, behavioral_activation
+- `ACTION`: social_zig, ai_reliance_check, ai_fomo, thought_parking, still_true, true_sentence, kind_stranger, borrow_ten, behavioral_activation
 
 After "didn't help": "Okay. That wasn't it. / Let's Zig." then one of: "Let's try something with your body." · "Let's change the space." · "Let's give your senses something to do." · "Let's reach a person." · "Let's do one tiny thing."
 
@@ -1075,6 +1085,16 @@ An ordinary ritual, not a treatment; the ritual is the point, not caffeine (deca
 Steps: "Hold the cup for a moment." → "Notice the warmth." → "Take your time with the first sip." ("A slower version": "Look at the drink for a moment." → "Notice the smell." → "Notice the warmth of the cup." → "Take one slow sip.")
 
 End: "That's enough." / "You don't have to stay here. Go enjoy your drink." [Now go do something that's yours] [I'm done → "You can put the phone down now."] / "How do I feel now?"
+
+### Social Zig (owner handoff)
+
+Not anti-social-media: "Yes" means carry on. No shaming, no diagnosis, no platform asked, nothing read from other apps, nothing stored (typed text is safety-checked, then dropped). Tech check → "I've been scrolling" / "Is this helping?".
+
+"Before you keep scrolling: is this actually helping right now?" [Yes → "Okay. Enjoy it."] [Not really → "Okay. Let's Zig." / "You've been looking at everyone else's life." / "Want to look at something that's yours?"] [I don't know → "That's okay. Let's try something different for a few minutes."]
+
+Directions: Something that's yours (only if the person has their own things) · Find something worth looking at · Make something warm · Borrow ten minutes · What's also true · Talk to someone · Pick something for me (the engine) · Put the phone down ("That's enough internet for a minute." / "You can put the phone down now.")
+
+Or: "I keep checking the same thing" → "You already checked." / "You don't have to check again right now." [Borrow ten minutes] · "I'm comparing my life to someone else's" → "Are you looking at someone else's life or your own?" [Someone else's → "Come back to your side." / "What's something that's actually yours?"] [My own → "Then you're already on your side."] · "I'm about to send something" → "Want to send that right now, or borrow 10 minutes?" [Send → "Okay. It's your call."] [Save for later → "Write or paste it here to copy it for later. It isn't saved in ZigZag Mind." (copy only)] [Don't send → "Okay. You can let it go for now."] · "The last thing I saw" → "What was the last thing you saw?" (optional) → "How did it leave you feeling?" → "Want to change the input?" · "Too much noise" → "What's one thing you don't need to see for the next hour?" News · Comments · Notifications · A particular person's posts · Everything · I don't know → "You can mute or pause that in its own app." / "What do you want to do instead?"
 
 ### Stage 6.19: reach, trust and simplicity
 
@@ -1171,6 +1191,7 @@ Pray: "Take a quiet moment. Pray in your own words, or just sit with it. There's
 From the Tech check row on Home. Copy rule: no shame, ever. Nothing typed or tapped here is saved. Each path ends at a person or a real-world step, then the usual "How do you feel now?" check-in. Option 6, "I'm not sure what's real" (ai_reality), is NOT built: it needs clinician review first.
 
 Intro: "No judgment. Tech is allowed. Let's just see what it's doing to you right now."
+- "I've been scrolling" (Is this helping?) → `social_zig`
 - "I keep asking AI the same thing" → `ai_reliance_check`
 - "I keep checking" (Texts, feeds, news, an ex's profile, symptoms, stocks) → `break_the_loop`
 - "I'm afraid I'm falling behind" → `ai_fomo`
@@ -1589,6 +1610,141 @@ _When: distraction_
 - **Button:** Try grounding
 - **Button:** Something else
 - **Button:** I'm good for now
+
+### `sz`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Is this helping?
+- **Heading:** Before you keep scrolling: is this actually helping right now?
+- **Button:** Yes
+- **Button:** Not really
+- **Button:** I don't know
+- Or
+- **Button:** I keep checking the same thing
+- **Button:** I'm comparing my life to someone else's
+- **Button:** I'm about to send something
+- **Button:** The last thing I saw
+- **Button:** Too much noise
+
+### `sz-yes`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Okay. Enjoy it.
+- **Button:** Okay
+
+### `sz-zig`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Okay. Let's Zig.
+- **Heading:** You've been looking at everyone else's life.
+- Want to look at something that's yours?
+- **Button:** Something that's yours
+- **Button:** Find something worth looking at
+- **Button:** Make something warm
+- **Button:** Borrow ten minutes
+- **Button:** What's also true
+- **Button:** Talk to someone
+- **Button:** Pick something for me
+- **Button:** Put the phone down
+
+### `sz-enough`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** That's enough internet for a minute.
+- You can put the phone down now.
+- **Button:** I'm done
+
+### `sz-check`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** You already checked.
+- You don't have to check again right now.
+- **Button:** Borrow ten minutes
+- **Button:** Something else
+
+### `sz-compare`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Are you looking at someone else's life or your own?
+- **Button:** Someone else's
+- **Button:** My own
+
+### `sz-own`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Then you're already on your side.
+- **Button:** Okay
+
+### `sz-mute`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** What's one thing you don't need to see for the next hour?
+- **Button:** News
+- **Button:** Comments
+- **Button:** Notifications
+- **Button:** A particular person's posts
+- **Button:** Everything
+- **Button:** I don't know
+
+### `sz-send`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Want to send that right now, or borrow 10 minutes?
+- **Button:** Send
+- **Button:** Save for later
+- **Button:** Don't send
+
+### `sz-sent`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Okay. It's your call.
+- **Button:** Okay
+
+### `sz-save`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Save it for later
+- Write or paste it here to copy it for later. It isn't saved in ZigZag Mind.
+- **Button:** Copy it
+- **Button:** Borrow ten minutes
+
+### `sz-letgo`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Okay. You can let it go for now.
+- **Button:** Borrow ten minutes
+- **Button:** Okay
+
+### `sz-last`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** What was the last thing you saw?
+- Optional. A few words is enough. Not saved.
+- **Text box**
+- **Button:** Next
+
+### `sz-felt`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** How did it leave you feeling?
+- **Button:** Better
+- **Button:** Worse
+- **Button:** About the same
+- **Button:** I don't know
 
 ### `warm`
 
@@ -2221,6 +2377,7 @@ _When: distraction_
 - **Button:** Help _(screen reader: "Get help now")_
 - **Heading:** Tech check
 - No judgment. Tech is allowed. Let's just see what it's doing to you right now.
+- **Button:** I've been scrolling — Is this helping?
 - **Button:** I keep asking AI the same thing
 - **Button:** I keep checking — Texts, feeds, news, an ex's profile, symptoms, stocks
 - **Button:** I'm afraid I'm falling behind
@@ -3126,6 +3283,14 @@ _When: distraction_
 - **Button:** Help _(screen reader: "Get help now")_
 - Find something · Step 1 of 3
 - **Heading:** Find something worth looking at.
+- **Button:** Next
+
+#### Is this helping?
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Is this helping? · Step 1 of 2
+- **Heading:** Is this helping?
 - **Button:** Next
 
 #### Make something warm
