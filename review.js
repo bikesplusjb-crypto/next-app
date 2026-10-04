@@ -232,6 +232,10 @@ P(''); P(`**Find something alive**: "Find something alive." / "Do you have a pet
 P(''); P('**Ridiculous mode** (Get out of my head only; hidden in YELLOW and after any crisis screen this visit; two per visit): "Make this less serious. Just for a moment." '+G('RIDICULOUS_LINES').map(x=>`"${x}"`).join(' · ')+' → "Okay. Back to reality."');
 P(''); P('**Find something real** (Calm): '+G('TOUCH_PROMPTS').map(x=>`"${x}"`).join(' · ')+'. Optional textures: '+G('TEXTURES').join(', ')+'. With an anchor in My Plan: "Do you have your anchor nearby?" Yes: "Hold it for a moment." No: "Find something else you can safely hold." Ends: "You found something real."');
 
+H(3,'Stage 6.19: reach, trust and simplicity');
+P('A. Home, below everything else: "Worried about someone? How to help →" (opens the supporter guide at support/#worried). Supporter guide, very top: "Take it seriously, even if they seem fine. Listen more than you talk." Opening section, shown only when arriving that way: "Someone you care about is struggling." / "You don\'t need the right words. Being there and taking it seriously matters most." / "What to say →".');
+//@@619@@
+
 H(3,'Stage 6.18 owner-approved updates (OWNER-APPROVED INTERIM, pending clinician)');
 P('A. Zags: first line now "'+G('ZAGS_LINES.hello')+'"; Connect: "Calm down with Zags while you wait" (no subtitle).');
 P(''); P('B. Supporter guide, "Look after yourself": "Talk to someone who gets it. The Florida Warm Line is free and is also for family and friends supporting someone: 1-800-945-1355, every day 4pm–10pm Eastern. Not a crisis line. For a crisis, call or text 988."');

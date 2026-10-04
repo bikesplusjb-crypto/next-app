@@ -56,6 +56,7 @@ ZigZag Mind is comfortable with people leaving. That is the goal, not a failure.
 | 2 Zags | 6.16 | Turn it into a song |
 | 2 Real world | 6.17 | Let's Zig + real-world steps |
 | 6.18 | 6.18 | Owner-approved updates (STAGE6-18-ADDENDUM.md) |
+| 6.19 | 6.19 | Reach, trust and simplicity (STAGE6-19-ADDENDUM.md) |
 | 3 People & safety | 6.8 | Code word |
 | 3 People & safety | 6.9 | Supporter guide page |
 | 3 People & safety | 6.10 | Check-in reminders |

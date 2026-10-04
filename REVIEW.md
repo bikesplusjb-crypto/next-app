@@ -926,6 +926,11 @@ A static page for the people in someone's plan: no scripts, no storage, no track
 
 **Heading:** Someone you care about trusted you.
 
+**Someone you care about is struggling.**
+- You don't need the right words. Being there and taking it seriously matters most.
+- What to say →
+- **Link → `#h-say`:** What to say →
+
 **If you got a code word**
 - It means they're struggling. Call them now. If they don't answer, keep trying, then go to them if you can. You don't have to fix anything.
 
@@ -1014,6 +1019,10 @@ About: "When something isn't helping, ZigZag doesn't tell you to try harder. It 
 **Ridiculous mode** (Get out of my head only; hidden in YELLOW and after any crisis screen this visit; two per visit): "Make this less serious. Just for a moment." "Find the most boring object in the room." · "Decide whether your refrigerator is judging you." · "Find the object that looks most like a face." · "Give the nearest chair a completely unnecessary name." · "Find something that would make a terrible hat." → "Okay. Back to reality."
 
 **Find something real** (Calm): "Find something you can hold." · "Find something cooler." · "Find something warmer." · "Put both feet on the floor." · "Change your position." · "Wash your hands." · "Turn on a light.". Optional textures: smooth, rough, warm, cool, soft, hard, heavy, light. With an anchor in My Plan: "Do you have your anchor nearby?" Yes: "Hold it for a moment." No: "Find something else you can safely hold." Ends: "You found something real."
+
+### Stage 6.19: reach, trust and simplicity
+
+A. Home, below everything else: "Worried about someone? How to help →" (opens the supporter guide at support/#worried). Supporter guide, very top: "Take it seriously, even if they seem fine. Listen more than you talk." Opening section, shown only when arriving that way: "Someone you care about is struggling." / "You don't need the right words. Being there and taking it seriously matters most." / "What to say →".
 
 ### Stage 6.18 owner-approved updates (OWNER-APPROVED INTERIM, pending clinician)
 
@@ -1280,6 +1289,7 @@ Rendered for each state where the screen changes by state. Identical renders are
 - **Button:** I feel alone
 - **Button:** Just out of the ER
 - **Button:** Tech check — AI, scrolling, or checking is getting to me
+- **Link → `support/#worried`:** Worried about someone? How to help →
 - **Button:** Home
 - **Button:** My Plan
 - **Button:** Progress
@@ -1920,6 +1930,7 @@ _When: distraction_
 - **Button:** I feel alone
 - **Button:** Just out of the ER
 - **Button:** Tech check — AI, scrolling, or checking is getting to me
+- **Link → `support/#worried`:** Worried about someone? How to help →
 - **Button:** Home
 - **Button:** My Plan
 - **Button:** Progress
@@ -1946,6 +1957,7 @@ _When: distraction_
 - **Button:** I feel alone
 - **Button:** Just out of the ER
 - **Button:** Tech check — AI, scrolling, or checking is getting to me
+- **Link → `support/#worried`:** Worried about someone? How to help →
 - **Button:** Home
 - **Button:** My Plan
 - **Button:** Progress
@@ -1972,6 +1984,7 @@ _When: distraction_
 - **Button:** I feel alone
 - **Button:** Just out of the ER
 - **Button:** Tech check — AI, scrolling, or checking is getting to me
+- **Link → `support/#worried`:** Worried about someone? How to help →
 - **Button:** Home
 - **Button:** My Plan
 - **Button:** Progress

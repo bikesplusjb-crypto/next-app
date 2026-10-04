@@ -382,6 +382,10 @@ html.reduce .zmark-wave .zmark-body{animation:none}
 .faith-next{margin-top:8px}
 .faith-next a.sit{display:inline-flex;align-items:center;text-decoration:none;color:var(--text)}
 
+/* Stage 6.19 */
+.worried-row{margin:18px 0 8px;text-align:center}
+.worried-link{display:inline-flex;align-items:center;min-height:44px;color:var(--text-muted);font-size:15px;text-decoration:underline;text-underline-offset:3px}
+
 /* Stage 6.18 */
 .tagline-zig{margin-top:6px}
 .dir-lbl{margin:4px 0 0}
@@ -2085,7 +2089,8 @@ const SCREENS = {
         <p style="margin:0">Add ZigZag Mind to your home screen so your plan stays with you. Tap Share, then Add to Home Screen.</p>
         <div style="display:flex;justify-content:flex-end"><button class="link" data-act="dismissHomeTip">Got it</button></div>
       </div>` : ""}
-      ${!getPlan().trustedPeople.length && !getPlan().helps.length ? `<button class="card wide" data-act="tab" data-arg="plan" style="margin:14px 0 16px;width:100%">${icon("plan")}<span>Build your plan for hard moments<span class="meta">Do it on a good day. It takes a few minutes.</span></span></button>` : ""}` };
+      ${!getPlan().trustedPeople.length && !getPlan().helps.length ? `<button class="card wide" data-act="tab" data-arg="plan" style="margin:14px 0 16px;width:100%">${icon("plan")}<span>Build your plan for hard moments<span class="meta">Do it on a good day. It takes a few minutes.</span></span></button>` : ""}
+      <p class="worried-row"><a class="worried-link" href="support/#worried" target="_blank" rel="noopener">Worried about someone? How to help →</a></p>` };   // 6.19 A: a door for friends and family
   },
 
   /* 6.3: Calm. (Zags, 6.7, will be the featured card here.) */

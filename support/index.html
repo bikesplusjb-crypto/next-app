@@ -52,6 +52,10 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--focus);outline-offs
 .opt b{font-size:17px}
 .opt span{font-size:15px;color:var(--text-muted)}
 .made{font-weight:600;color:var(--primary)}
+.top-line{margin:8px 0 0;padding:12px 16px;border-radius:14px;background:var(--primary-soft);font-weight:600}
+.worried{display:none}
+.worried:target{display:block}
+section a{color:var(--primary);font-weight:600}
 </style>
 </head>
 <body>
@@ -60,8 +64,16 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--focus);outline-offs
   <a class="help" href="tel:988" aria-label="Call 988, the Suicide and Crisis Lifeline">Call 988</a>
 </header>
 <main>
+  <p class="top-line" id="topLine">Take it seriously, even if they seem fine. Listen more than you talk.</p>
   <p class="lbl">Supporter guide</p>
   <h1>Someone you care about trusted you.</h1>
+
+  <!-- 6.19 A: shown only to people who came from "Worried about someone?" in the app (support/#worried). -->
+  <section class="worried" id="worried" aria-labelledby="h-worried">
+    <h2 id="h-worried">Someone you care about is struggling.</h2>
+    <p>You don't need the right words. Being there and taking it seriously matters most.</p>
+    <p><a href="#h-say">What to say →</a></p>
+  </section>
 
   <section class="first" aria-labelledby="h-code">
     <h2 id="h-code">If you got a code word</h2>

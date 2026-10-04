@@ -29,10 +29,19 @@ const r=[];
   r.push([`${name}: not hidden under the top bar or the tab bar`, m.top>=m.headBottom && m.bottom<=m.tabTop && m.onTop, JSON.stringify(m)]);
   r.push([`${name}: it sits above "I don't know what I need"`, m.aboveDontKnow]);
   r.push([`${name}: one crisis control on Home, no second path`, m.crisisInMain===1]);
+  // 6.19 A: "Worried about someone?" sits below "I don't feel safe"
+  r.push([`${name}: "Worried about someone?" is below "I don't feel safe"`, await p.evaluate(()=>{ const l=document.querySelector('a.worried-link'), s=document.querySelector('.home-safe'); return !!l && l.getBoundingClientRect().top>s.getBoundingClientRect().bottom; })]);
   await p.click('main [data-act="crisis"]');
   r.push([`${name}: tapping it opens the crisis screen (openCrisis)`, await p.evaluate(()=>session.screen==='crisis' && session.safetyLevel==='RED')]);
   await p.close();
  }
+ // 6.19 A: the guide's opening section shows when arriving from the app (#worried), not otherwise
+ const g=await b.newPage({viewport:{width:390,height:844}});
+ await g.goto('file://'+require('path').join(__dirname,'support','index.html')+'#worried');
+ r.push(['supporter guide via "Worried about someone?": the opening section is visible', await g.evaluate(()=>getComputedStyle(document.getElementById('worried')).display!=='none')]);
+ await g.goto('file://'+require('path').join(__dirname,'support','index.html'));
+ r.push(['supporter guide opened directly (e.g. code word link): the opening section is hidden', await g.evaluate(()=>getComputedStyle(document.getElementById('worried')).display==='none')]);
+ await g.close();
  await b.close();
 })().catch(e=>r.push(['viewport test ran: '+e.message,false])).finally(()=>{
  console.log(r.map(x=>(x[1]?'PASS ':'FAIL ')+x[0]+(x[1]||!x[2]?'':' — '+x[2])).join('\n'));

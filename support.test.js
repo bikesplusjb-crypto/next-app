@@ -15,12 +15,12 @@ const CSS=(PAGE.match(/<style>([\s\S]*?)<\/style>/)||[])[1]||'';
 r.push(['no network calls: nothing loaded from anywhere else', !/fetch\(|XMLHttpRequest|sendBeacon|WebSocket|EventSource|import\(|navigator\.share|window\.open/.test(PAGE) && !/@import|url\(/i.test(CSS)
   && [...g.querySelectorAll('[src], link[href]')].every(e=>!/^(https?:)?\/\//.test(e.getAttribute('src')||e.getAttribute('href')))]);
 r.push(['no storage APIs', !/localStorage|sessionStorage|indexedDB|document\.cookie|caches\./.test(PAGE)]);
-r.push(['no tracking: no analytics, pixels or third-party links', !/analytics|gtag|pixel|facebook|google|plausible|segment/i.test(PAGE) && hrefs.every(h=>/^(tel|sms):/.test(h))]);
+r.push(['no tracking: no analytics, pixels or third-party links', !/analytics|gtag|pixel|facebook|google|plausible|segment/i.test(PAGE) && hrefs.every(h=>/^(tel|sms):|^#[a-z-]+$/.test(h))]);   // #...: links within this page (6.19 A)
 r.push(['988 present: call and text', hrefs.includes('tel:988') && hrefs.includes('sms:988') && /988 helps people who are supporting someone, too/.test(text)]);
 r.push(['911 present: if they\'re in danger or took something', hrefs.includes('tel:911') && text.includes("Call 911 if they're in danger or took something")]);
 const H=[...g.querySelectorAll('h2')].map(h=>h.textContent);
-r.push(['sections in order: code word · what to say · help together · time and distance · check in · look after yourself',
-  H.join('|')==='If you got a code word|What to say|Get help together|Time and distance|Check in now and then|Look after yourself']);
+r.push(['sections in order: (worried, via the app) · code word · what to say · help together · time and distance · check in · look after yourself',
+  H.join('|')==='Someone you care about is struggling.|If you got a code word|What to say|Get help together|Time and distance|Check in now and then|Look after yourself']);   // first one: 6.19 A, shown only via #worried
 r.push(['what to say: ask directly; asking doesn\'t put the idea in their head; "I\'m here" is enough',
   text.includes('Ask directly: "Are you thinking about suicide?"') && text.includes("Asking doesn't put the idea in someone's head.") && text.includes('"I\'m here"')]);
 // 6.18 D6 (owner-approved, clinician review): the one gun-storage sentence is the only exception; nothing else may name a means.
