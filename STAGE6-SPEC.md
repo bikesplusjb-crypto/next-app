@@ -57,6 +57,7 @@ ZigZag Mind is comfortable with people leaving. That is the goal, not a failure.
 | 2 Real world | 6.17 | Let's Zig + real-world steps |
 | 6.18 | 6.18 | Owner-approved updates (STAGE6-18-ADDENDUM.md) |
 | 6.19 | 6.19 | Reach, trust and simplicity (STAGE6-19-ADDENDUM.md) |
+| 6.20 | 6.20 | When you've lost someone (STAGE6-20-ADDENDUM.md) |
 | 3 People & safety | 6.8 | Code word |
 | 3 People & safety | 6.9 | Supporter guide page |
 | 3 People & safety | 6.10 | Check-in reminders |
@@ -550,3 +551,15 @@ Tech check → "I've been scrolling" (`social_zig`, no states: never suggested e
 ## North star & stabilization pass (owner handoff, 2026-10-04)
 
 No new features. Progressive disclosure only, nothing removed, no wording changed on existing options: Calm puts Breathe for 1 minute, 5-4-3-2-1 grounding, Feet on the floor and Find something real behind "Something else" (9 → 6 choices); Connect puts Be around people, Zags-while-you-wait and Make a song behind "Something else" (10 → 8; Warm Line, your people, message ideas and 988 stay in view); Change the scene puts the two "Find something" items behind "Find something" (9 → 8). Toggles start with `blockIfRed()`, live in `ui` only, and save nothing. Safety logic, crisis screens, Home order, Coffee and Zags wording untouched. Tests: `northstar.test.js` (menu limits, toggles, RED, storage, Coffee/Zags wording guards, no network/AI/notifications).
+
+## 6.20 When you've lost someone (as built, 2026-10-04)
+
+Built per STAGE6-20-ADDENDUM.md A–E. Screens `grief-who` → `grief-when` → `grief-ack` → (`grief-faith`, Faith & hope only) → `grief-help` → `grief-end`, plus `grief-write`, `grief-write-done`, `grief-tell`, `grief-tell-msgs`, `grief-date`. Copy in `GRIEF`; entered only by `griefStart` (Home chip, Tech check AI-loss last screen); not in `INTERVENTION_LIBRARY`, so the engine and Let's Zig never offer it. Who/when/name live in `ui.grief` (memory only; cleared on any crisis screen). Differences from the text, and why:
+- **Breathe for a minute** opens the existing Calm down with Zags (one choice, not two); its last screen adds "Back to "What would help right now?"" so the person can return.
+- **Find** reuses the Find something screens with a `remembering` mission (no "Try another", no lead line, "Back" returns to the grief choices). Keep saves to `next.v1.noticed` labeled "Remembering"; cap and storage rules unchanged.
+- **Written note**: Delete is the primary button; leaving the screen any other way also deletes it. Keep stores `{mission:"remembering", text}` (≤1,000 characters) in Things I noticed; the export includes its text.
+- **Tell one person**: the messages open to the first trusted person in My Plan if there is one (the person can change the recipient), otherwise a blank Messages compose; Copy on computers.
+- **Hard date**: the calendar file repeats yearly (`RRULE:FREQ=YEARLY`), 9am, starting at the date's next occurrence.
+- **Something else** on the ending runs the existing engine for state "low" (Let's Zig recommendation).
+- **Resources**: `GRIEF_RESOURCES` (all `verified:false`, hidden); "If it gets heavier" + 988 is always on the choices screen.
+Tests: `grief.test.js`.

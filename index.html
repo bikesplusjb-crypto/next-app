@@ -578,8 +578,8 @@ const FEEDBACK_PRIVACY = ["If you use the feedback link on About, that form is a
 const PRIVACY_PAGE = [
   ["What's saved, and where", "Your plan, check-ins and settings are saved only in this browser on this phone. They are not encrypted: anyone who can use your unlocked phone, or its backups, may be able to read them.",
     "Not encrypted.** Anyone with access to the unlocked phone and browser, or its backups, can read `localStorage`."],
-  ["", "Most things you type are checked and then thrown away. Song lines, and photos from Find something with their notes, are saved only if you tap Keep.",
-    "Free text is never stored** (except song lines and Find something photo notes, and only when the person taps Keep)."],
+  ["", "Most things you type are checked and then thrown away. Song lines, photos from Find something with their notes, and what you write to someone you lost, are saved only if you tap Keep.",
+    "Free text is never stored** (except song lines, Find something photo notes and \"Remembering\" notes, and only when the person taps Keep)."],
   ["", "Photos never leave this phone through ZigZag Mind. Nothing looks at them or analyzes them.",
     "No image analysis, no AI, nothing uploaded."],
   ["What leaves your phone", "ZigZag Mind doesn't send anything anywhere. There are no accounts, ads or analytics.",
@@ -617,7 +617,10 @@ const RED_PHRASES = [
 ];
 const YELLOW_PHRASES = [
   "hopeless","can't take it","can't take this","give up","giving up","nobody cares","no one cares",
-  "worthless","trapped","can't do this anymore"
+  "worthless","trapped","can't do this anymore",
+  // 6.20 C grief, OWNER-APPROVED INTERIM, pending clinician (YELLOW only; the clinician decides whether any should be RED).
+  "want to be with him again","want to be with her again","want to be with them again",
+  "want to join him","want to join her","want to join them"
 ];
 
 function normalizeText(t){
@@ -686,6 +689,7 @@ const L10N = {
     "home.low":"I feel low",
     "home.alone":"I feel alone",
     "home.er":"Just out of the ER",
+    "home.lost":"I lost someone",
     "home.tech":"Tech check",
     "home.techMeta":"AI, scrolling, or checking is getting to me",
     "home.tip":"Add ZigZag Mind to your home screen so your plan stays with you. Tap Share, then Add to Home Screen.",
@@ -905,6 +909,7 @@ const L10N = {
     "home.low":{ text:"Me siento decaído", draft:true },
     "home.alone":{ text:"Me siento solo", draft:true },
     "home.er":{ text:"Acabo de salir de urgencias", draft:true },
+    "home.lost":{ text:"Perdí a alguien", draft:true },
     "home.tech":{ text:"Revisión de tecnología", draft:true },
     "home.techMeta":{ text:"La IA, las redes o revisar el teléfono me están afectando", draft:true },
     "home.tip":{ text:"Agrega ZigZag Mind a tu pantalla de inicio para tener tu plan a mano. Toca Compartir y luego Agregar a inicio.", draft:true },
@@ -1213,12 +1218,70 @@ const FS_NOCAM = ["No camera? That's okay.", "Just find something and look at it
 const FS_FOUND = "You found it.";
 const FS_CAPTION = "Want to write one sentence about it?";
 const PUT_DOWN_NOW = "You can put the phone down now.";
+/* 6.20 WHEN YOU'VE LOST SOMEONE. Entered only by the person (Home chip, Tech check's AI-loss screen); the engine and
+   Let's Zig never suggest it (it is not in INTERVENTION_LIBRARY). Who / when are used only to pick wording and are never
+   saved. Typed text is safety-checked; a written note is deleted unless the person taps Keep. Clinician review: all of it.
+   Never: "a better place", "happens for a reason", "at least", "just a pet", "over it", stages or timelines, how anyone died. */
+const GRIEF = {
+  who:"Who did you lose?",
+  whoOpts:[["person","A person",""],["pet","A pet",""],["else","Something else that mattered","A relationship, a home, a job, a part of your life"]],
+  when:"When was it?",
+  whenOpts:[["recent","Recently",""],["while","A while ago",""],["hard","Today is a hard day","An anniversary, a birthday, a holiday"]],
+  ack:{ person:"I'm sorry. Grief can feel like a lot of things at once: heavy, numb, angry, foggy. There's no right way to do this.",
+    pet:"Losing a pet is losing family. This grief is real, even if not everyone understands it.",
+    else:"Losing something that mattered is real grief too." },
+  hardDay:"Hard days can bring it all back. That makes sense.",
+  suicideLoss:"If you lost someone to suicide, you're not alone. You can call or text 988 to talk about it, any time.",   // clinician review
+  help:"What would help right now?",
+  helpSub:"One thing at a time, in any order. All optional.",
+  helpOpts:[["breathe","Breathe for a minute","With Zags"],["find","Find something that reminds you of them","Their spot, a photo, something they loved"],
+    ["write","Write what you'd want to say to them",""],["tell","Tell one person",""],["date","Add a gentle reminder for a hard date","An anniversary or a birthday, in your own calendar"]],
+  doneForNow:"I'm done for now",
+  write:"Write what you'd want to say to them",
+  writeSub:"Only on this phone. It's deleted when you're done, unless you tap Keep.",
+  wrote:"You said it.",
+  wroteSub:"Delete it, or keep it in Things I noticed.",
+  kept:"Kept in Things I noticed.",
+  deleted:"Deleted. It isn't kept anywhere.",
+  tell:"Tell one person",
+  tellName:"Who did you lose? Their first name, if you want. Optional. Not saved.",
+  tellPick:"Tap one. It opens your messages. Nothing is sent until you send it.",
+  tellCopy:"Tap one to copy it.",
+  date:"A gentle reminder for a hard date",
+  dateSub:"Pick the date. It goes in your own calendar, once a year. Nothing is kept in ZigZag Mind.",
+  dateTitle:"Be gentle with yourself today.",
+  dateAdded:"Added. Open the file to put it in your calendar.",
+  end:"Grief comes and goes. You don't have to carry it all today.",
+  resources:"Grief support near you",
+  faith:["The LORD is nigh unto them that are of a broken heart.","Psalm 34:18"]
+};
+function griefMsgs(name){
+  const n = firstName(name);
+  return [`I lost ${n || "someone"} and I'm having a really hard time. Can you call me?`,
+    `Today's a hard day. I'm thinking about ${n || "them"}.`,
+    "I don't need you to say anything. I just didn't want to be alone with this."];
+}
+const GRIEF_MISSION = { id:"remembering", title:"Remembering", prompt:"Find something that reminds you of them — their spot, a photo, something they loved." };
+const GRIEF_NOTE_MAX = 1000;
+/* 6.20 D: grief resources. Every entry starts verified:false and is hidden; the owner identifies, verifies (date and
+   initials in CRISIS_RESOURCE_VERIFICATION.md), fills in phone/url and sets verified:true. faith:true entries show
+   only when Faith & hope is on. */
+const GRIEF_RESOURCES = [
+  { name:"Hospice bereavement program (Treasure Coast)", what:"Free grief support for anyone in the community.", phone:"", url:"", area:"Treasure Coast", verified:false },
+  { name:"Pet loss support line", what:"Someone to talk to after losing a pet.", phone:"", url:"", area:"", verified:false },
+  { name:"GriefShare", what:"Faith-based grief support groups.", phone:"", url:"", area:"", verified:false, faith:true }
+];
 const NOTICED_KEY = "next.v1.noticed", NOTICED_CAP = 20, NOTICED_EDGE = 640;
 function noticed(){ return store.noticed || (store.noticed = []); }
+function griefResources(){ return GRIEF_RESOURCES.filter(e => e.verified === true && (!e.faith || faithOn()) && (e.phone || /^https:\/\/\S+$/.test(e.url))); }
 function validNoticed(a){
   if (!Array.isArray(a)) return [];
-  return a.filter(n => n && typeof n.id === "string" && typeof n.date === "number" && typeof n.img === "string" && /^data:image\/jpeg;base64,/.test(n.img)
-    && PHOTO_MISSIONS.some(m => m.id === n.mission) && (n.caption === undefined || (typeof n.caption === "string" && n.caption.length <= 120))).slice(0, NOTICED_CAP);
+  // a kept photo, or (6.20) a written "Remembering" note with no photo
+  return a.filter(n => n && typeof n.id === "string" && typeof n.date === "number"
+    && ((typeof n.img === "string" && /^data:image\/jpeg;base64,/.test(n.img) && n.text === undefined)
+      || (n.img === undefined && n.mission === GRIEF_MISSION.id && typeof n.text === "string" && n.text.length > 0 && n.text.length <= GRIEF_NOTE_MAX))
+    && (PHOTO_MISSIONS.some(m => m.id === n.mission) || n.mission === GRIEF_MISSION.id)
+    && (n.caption === undefined || (typeof n.caption === "string" && n.caption.length <= 120))).slice(0, NOTICED_CAP);
 }
 function loadNoticed(){
   if (!STORAGE_OK || !persistOn) return;
@@ -1245,6 +1308,7 @@ function shrinkPhoto(url){
   });
 }
 function fsMission(){
+  if (ui.fsGrief) return GRIEF_MISSION;   // 6.20: "Find something that reminds you of them"
   if (ui.fsYours) return { id:"find_true", title:"Find something from your things", prompt:`Find something from one of your things: ${ui.fsYours}.` };
   return PHOTO_MISSIONS[(ui.fsIdx || 0) % PHOTO_MISSIONS.length];
 }
@@ -2035,7 +2099,7 @@ function icsBuild(events, stamp = new Date()){
   events.forEach((e, i) => {
     lines.push("BEGIN:VEVENT", `UID:zz-${e.kind}-${utc(stamp)}-${i + 1}@zigzagmind.com`, `DTSTAMP:${utc(stamp)}`,
       `DTSTART:${local(e.start)}`, `DTEND:${local(new Date(e.start.getTime() + (e.minutes || 15) * 60000))}`,
-      `SUMMARY:${escT(e.title)}`, ...(e.text ? [`DESCRIPTION:${escT(e.text)}`] : []),
+      `SUMMARY:${escT(e.title)}`, ...(e.text ? [`DESCRIPTION:${escT(e.text)}`] : []), ...(e.yearly ? ["RRULE:FREQ=YEARLY"] : []),
       "BEGIN:VALARM","ACTION:DISPLAY",`DESCRIPTION:${escT(e.title)}`,`TRIGGER:${e.alarm || "PT0M"}`,"END:VALARM","END:VEVENT");
   });
   lines.push("END:VCALENDAR");
@@ -2050,6 +2114,15 @@ function afterDailyEvents(from = Date.now()){
   const d0 = new Date(startOfDay(from));
   return Array.from({ length:14 }, (_, k) => ({ kind:"daily", title:AFTER_DAILY_TITLE, text:AFTER_DAILY_TEXT,
     start:new Date(d0.getFullYear(), d0.getMonth(), d0.getDate() + 1 + k, 10, 0) }));
+}
+/* 6.20: a hard date (anniversary, birthday), once a year from its next occurrence, all-morning gentle reminder at 9am. */
+function griefDateEvents(dateStr, now = Date.now()){
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateStr || ""); if (!m) return null;
+  const today = new Date(startOfDay(now));
+  let d = new Date(today.getFullYear(), +m[2] - 1, +m[3], 9, 0);
+  if (d.getMonth() !== +m[2] - 1) return null;   // not a real date this year (for example Feb 29)
+  if (startOfDay(d.getTime()) < today.getTime()) d = new Date(today.getFullYear() + 1, +m[2] - 1, +m[3], 9, 0);
+  return [{ kind:"hardday", title:GRIEF.dateTitle, start:d, minutes:15, yearly:true }];
 }
 function downloadIcs(name, ics){
   try {
@@ -2592,6 +2665,7 @@ function openScene(){
 /* 6.7 Zags. A fresh session every time: nothing carries over. */
 function startZags(state){
   if (blockIfRed()) return;
+  ui.griefZags = false;   // 6.20: set again only when opened from the grief path
   if (state) dispatch({ type:"SET_CURRENT_STATE", state });
   ui.zags = { phase:"hello", step:0, rounds:0, hard:0, breath:0, half:null };
   startIntervention("zags", { route:"zags" });
@@ -2636,6 +2710,7 @@ function beginAfterBefore(){
 function startIntervention(interventionId, opts = {}){
   if (blockIfRed()) return false;
   ui.cozyReturn = null;   // only Cozy up's own "warm drink steps" link returns to Cozy up
+  ui.fsGrief = false;     // 6.20: the "Remembering" mission is only for the grief path
   const it = findIntervention(interventionId);
   if (!it) return false;
   dispatch({ type:"ADD_PICK", id:interventionId });
@@ -2863,6 +2938,7 @@ const SCREENS = {
         <button class="sit" data-act="flow" data-arg="low">${l10n("home.low")}</button>
         <button class="sit" data-act="route" data-arg="connect">${l10n("home.alone")}</button>
         <button class="sit" data-act="afterStart">${l10n("home.er")}</button>
+        <button class="sit" data-act="griefStart">${l10n("home.lost")}</button>
       </div>
       <button class="card wide tech-row" data-act="techStart">${icon("phone")}<span>${l10n("home.tech")}<span class="meta">${l10n("home.techMeta")}</span></span></button>
       ${showHomeTip() ? `<div class="panel" id="homeTip" role="note">
@@ -3279,14 +3355,16 @@ const SCREENS = {
   fs(){
     const m = fsMission();
     return { close:true, body:`
-      <p class="step-count">Find something</p>
-      <p class="sub fs-lead">${FS_LEAD}</p>
+      <p class="step-count">${ui.fsGrief ? GRIEF_MISSION.title : "Find something"}</p>
+      ${ui.fsGrief ? "" : `<p class="sub fs-lead">${FS_LEAD}</p>`}
       ${stepTitle(esc(m.prompt), true)}
       <p class="small fs-safe">${FS_SAFE}</p>
       <label class="btn btn-primary fs-start" for="fsCam">Start</label>
       <input type="file" id="fsCam" class="sr" accept="image/*" capture="environment" aria-label="Open the camera">
       <p class="small" style="margin-top:10px">${FS_PRIVATE}</p>`,
-      actions:`<button class="btn btn-secondary" data-act="fsNoCam">No camera? Just look</button>
+      actions:ui.fsGrief ? `<button class="btn btn-secondary" data-act="fsNoCam">No camera? Just look</button>
+        <button class="link" data-act="griefBack">Back</button>`
+        : `<button class="btn btn-secondary" data-act="fsNoCam">No camera? Just look</button>
         <button class="btn btn-secondary" data-act="fsAnother">Try another</button>
         <button class="link" data-act="fsDone">I'm done</button>` };
   },
@@ -3294,7 +3372,7 @@ const SCREENS = {
     return { close:true, body:`${stepTitle(FS_NOCAM[0], true)}<p class="sub" style="font-size:19px">${FS_NOCAM[1]}</p>
       <p class="sub">${esc(fsMission().prompt)}</p>`,
       actions:`<button class="btn btn-primary" data-act="fsFoundNoPhoto">I found something</button>
-        <button class="btn btn-secondary" data-act="fsElse">Try something else</button>` };
+        <button class="btn btn-secondary" data-act="${ui.fsGrief ? "griefBack" : "fsElse"}">${ui.fsGrief ? "Back" : "Try something else"}</button>` };
   },
   "fs-found"(){
     const photo = ui.fsPhoto;
@@ -3305,7 +3383,9 @@ const SCREENS = {
         <input class="field" id="fsCaption" maxlength="120" autocomplete="off" value="${esc(ui.fsCaption || "")}">` : ""}
       ${ui.fsKept ? `<p class="flash" role="status">Kept in Things I noticed.</p>` : ""}
       ${ui.msg ? `<p class="err" role="alert">${esc(ui.msg)}</p>` : ""}`,
-      actions:`${photo && !ui.fsKept ? `<button class="btn btn-primary" data-act="fsKeep">Keep it</button>` : ""}
+      actions:ui.fsGrief ? `${photo && !ui.fsKept ? `<button class="btn btn-primary" data-act="fsKeep">Keep it</button>` : ""}
+        <button class="btn btn-secondary" data-act="griefBack">Back</button>`
+        : `${photo && !ui.fsKept ? `<button class="btn btn-primary" data-act="fsKeep">Keep it</button>` : ""}
         <button class="btn btn-secondary" data-act="fsAnother">Try another</button>
         <button class="btn btn-secondary" data-act="fsDone">I'm done</button>
         <button class="link" data-act="stepCheckin">How do I feel now?</button>` };
@@ -3338,13 +3418,107 @@ const SCREENS = {
       <p class="sub">Only on this phone. Not a feed, not shared.</p>
       ${ui.flash ? `<p class="flash" role="status">${esc(ui.flash)}</p>` : ""}
       ${list.length ? list.map(n => `<div class="panel noticed-item">
-          <img class="fs-photo" src="${esc(n.img)}" alt="${esc(n.caption || "A photo you kept")}">
+          ${n.mission === GRIEF_MISSION.id ? `<p class="lbl" style="margin:0 0 6px">${GRIEF_MISSION.title}</p>` : ""}
+          ${n.img ? `<img class="fs-photo" src="${esc(n.img)}" alt="${esc(n.caption || "A photo you kept")}">` : ""}
+          ${n.text ? `<p class="grief-note" style="margin:0;white-space:pre-wrap">${esc(n.text)}</p>` : ""}
           ${n.caption ? `<p style="margin:8px 0 0">${esc(n.caption)}</p>` : ""}
           <p class="small" style="margin:6px 0 0">${esc(songDate(n.date))}</p>
           ${ui.noticedDel === n.id ? `<div class="pair" style="margin-top:8px"><button class="btn btn-outline" data-act="noticedDelYes" data-arg="${esc(n.id)}">Delete</button><button class="btn btn-secondary" data-act="noticedDelNo">Keep</button></div>`
             : `<button class="link" data-act="noticedDel" data-arg="${esc(n.id)}">Delete</button>`}</div>`).join("")
         : `<p class="empty">Nothing here yet.</p>`}`,
       actions:`<button class="btn btn-secondary" data-act="fsStart">Find something</button>` };
+  },
+
+  /* 6.20 WHEN YOU'VE LOST SOMEONE (entered only by the person; never suggested). */
+  "grief-who"(){
+    return { close:true, body:`
+      ${title(GRIEF.who)}
+      <div class="list">${GRIEF.whoOpts.map(([k, t, m]) => `<button class="card" data-act="griefWho" data-arg="${k}"><span>${t}${m ? `<span class="meta">${m}</span>` : ""}</span></button>`).join("")}</div>` };
+  },
+  "grief-when"(){
+    return { close:true, body:`
+      ${title(GRIEF.when)}
+      <div class="list">${GRIEF.whenOpts.map(([k, t, m]) => `<button class="card" data-act="griefWhen" data-arg="${k}"><span>${t}${m ? `<span class="meta">${m}</span>` : ""}</span></button>`).join("")}</div>` };
+  },
+  "grief-ack"(){
+    const g = ui.grief || {};
+    return { close:true, body:`
+      ${stepTitle(GRIEF.ack[g.who] || GRIEF.ack.person, true)}
+      ${g.when === "hard" ? `<p class="sub" style="font-size:19px">${GRIEF.hardDay}</p>` : ""}
+      <p class="small grief-988" style="margin-top:18px">${GRIEF.suicideLoss}</p>`,
+      actions:`<button class="btn btn-primary" data-act="griefAckNext">Next</button>` };
+  },
+  "grief-faith"(){
+    if (!faithOn()) return SCREENS["grief-help"]();
+    return { close:true, body:`
+      ${stepTitle(`“${GRIEF.faith[0]}”`, true)}
+      <p class="small">${GRIEF.faith[1]} (KJV)</p>`,
+      actions:`<button class="btn btn-primary" data-act="griefBack">Next</button>` };
+  },
+  "grief-help"(){
+    const res = griefResources();
+    return { close:true, body:`
+      ${title(GRIEF.help)}
+      <p class="sub">${GRIEF.helpSub}</p>
+      ${ui.flash ? `<p class="flash" role="status">${esc(ui.flash)}</p>` : ""}
+      <div class="list">${GRIEF.helpOpts.map(([k, t, m]) => `<button class="card" data-act="griefPick" data-arg="${k}"><span>${t}${m ? `<span class="meta">${m}</span>` : ""}</span></button>`).join("")}</div>
+      ${res.length ? `<div class="panel grief-res"><p class="lbl">${GRIEF.resources}</p>${res.map(e => `<h3>${esc(e.name)}</h3><p class="small">${esc(e.what)}</p>
+        ${e.phone ? `<a class="btn btn-secondary" href="${telLink(e.phone)}">${callText("Call", e.phone)}</a>` : ""}
+        ${/^https:\/\/\S+$/.test(e.url) ? `<a class="conn-more" href="${esc(e.url)}" target="_blank" rel="noopener">Website</a>` : ""}`).join("")}</div>` : ""}
+      <p class="lbl" style="margin-top:18px">${l10n("connect.heavier")}</p>
+      ${row988()}`,
+      actions:`<button class="btn btn-secondary" data-act="griefEnd">${GRIEF.doneForNow}</button>` };
+  },
+  "grief-write"(){
+    return { close:true, body:`
+      ${title(GRIEF.write)}
+      <p class="sub">${GRIEF.writeSub}</p>
+      <label class="sr" for="griefBox">${GRIEF.write}</label>
+      <textarea class="field" id="griefBox" maxlength="${GRIEF_NOTE_MAX}" style="min-height:160px"></textarea>
+      ${ui.msg ? `<p class="err" role="alert">${esc(ui.msg)}</p>` : ""}`,
+      actions:`<button class="btn btn-primary" data-act="griefWrite">Done writing</button><button class="link" data-act="griefBack">Back</button>` };
+  },
+  "grief-write-done"(){
+    if (!ui.griefNote) return SCREENS["grief-help"]();
+    return { close:true, body:`
+      ${stepTitle(GRIEF.wrote, true)}
+      <p class="sub">${GRIEF.wroteSub}</p>
+      ${ui.msg ? `<p class="err" role="alert">${esc(ui.msg)}</p>` : ""}`,
+      actions:`<button class="btn btn-primary" data-act="griefNoteDelete">Delete</button>
+        <button class="btn btn-secondary" data-act="griefNoteKeep">Keep</button>` };
+  },
+  "grief-tell"(){
+    return { close:true, body:`
+      ${title(GRIEF.tell)}
+      <label class="sub" for="griefName" style="display:block">${GRIEF.tellName}</label>
+      <input class="field" id="griefName" maxlength="40" autocomplete="off">
+      ${ui.msg ? `<p class="err" role="alert">${esc(ui.msg)}</p>` : ""}`,
+      actions:`<button class="btn btn-primary" data-act="griefTellNext">Next</button><button class="link" data-act="griefBack">Back</button>` };
+  },
+  "grief-tell-msgs"(){
+    const p = person();
+    const msgs = griefMsgs(ui.grief && ui.grief.name);
+    return { close:true, body:`
+      ${title(GRIEF.tell)}
+      <p class="sub">${canPhone() ? GRIEF.tellPick : GRIEF.tellCopy}</p>
+      <div class="sits">${msgs.map(m => canPhone() ? `<a class="sit idea" href="${smsLink(p ? p.phone : "", m)}">${esc(m)}</a>` : copyButton(m, "sit idea", esc(m))).join("")}</div>
+      ${p ? `<p class="small" style="margin-top:10px">Opens a message to ${esc(p.name)}. You can change who it goes to.</p>` : ""}`,
+      actions:`<button class="btn btn-secondary" data-act="griefBack">Back</button>` };
+  },
+  "grief-date"(){
+    return { close:true, body:`
+      ${title(GRIEF.date)}
+      <p class="sub">${GRIEF.dateSub}</p>
+      <label class="sr" for="griefDate">The date</label>
+      <input class="field" id="griefDate" type="date">
+      ${ui.msg ? `<p class="err" role="alert">${esc(ui.msg)}</p>` : ""}`,
+      actions:`<button class="btn btn-primary" data-act="griefDateAdd">Add to my calendar</button><button class="link" data-act="griefBack">Back</button>` };
+  },
+  "grief-end"(){
+    return { close:true, body:`${stepTitle(GRIEF.end, true)}`,
+      actions:`<button class="btn btn-primary" data-act="putDown">Put the phone down</button>
+        <button class="btn btn-secondary" data-act="griefElse">Something else</button>
+        <button class="btn btn-secondary" data-act="route" data-arg="connect">Talk to someone</button>` };
   },
 
   /* 6.19 G: Help near me (verified entries only). */
@@ -3695,6 +3869,7 @@ const SCREENS = {
         actions = `${people}${row988()}`; break;
       default:   // bye: still ends at a person
         actions = `<button class="btn btn-primary" data-act="route" data-arg="connect">Reach someone</button>
+          ${ui.griefZags && ui.grief && ui.grief.who ? `<button class="btn btn-secondary" data-act="griefBack">Back to "${GRIEF.help}"</button>` : ""}
           <button class="btn btn-secondary" data-act="home">Done</button>`;
     }
     const calm = z.phase === "breathe" && z.half === "out";
@@ -4042,7 +4217,8 @@ const SCREENS = {
       ${ui.tcWrote ? `<p class="notice">You said it. It isn't kept anywhere.</p>` : ""}
       ${title("Tell one person")}
       <p class="sub">"${TC_LOSS_MSG}"</p>
-      ${tcPersonButtons(TC_LOSS_MSG)}`,
+      ${tcPersonButtons(TC_LOSS_MSG)}
+      <p style="margin-top:18px"><button class="link grief-link" data-act="griefStart">Lost a person or a pet? →</button></p>`,
       actions:`<button class="btn btn-primary" data-act="tcCheckin">Done</button>` };
   },
   "tc-reflect"(){
@@ -4839,7 +5015,7 @@ function buildExport(){
     first30Days:store.sensitive.afterCrisis ? { start:new Date(store.sensitive.afterCrisis.start).toISOString(), until:new Date(store.sensitive.afterCrisis.until).toISOString(), done:store.sensitive.afterCrisis.done } : undefined,
     songs:songs().length ? songs().map(x => ({ date:new Date(x.date).toISOString(), mood:x.mood, lines:x.lines, still:x.still })) : undefined,
     // photos stay on the phone (too large for a text export); the export lists what was kept
-    thingsINoticed:noticed().length ? noticed().map(n => ({ date:new Date(n.date).toISOString(), mission:n.mission, caption:n.caption || undefined, photo:"kept on this phone, not in the export" })) : undefined
+    thingsINoticed:noticed().length ? noticed().map(n => ({ date:new Date(n.date).toISOString(), mission:n.mission, caption:n.caption || undefined, note:n.text || undefined, photo:n.img ? "kept on this phone, not in the export" : undefined })) : undefined
   };
 }
 
@@ -5200,6 +5376,8 @@ function render(){
     ${session.devPanelOpen ? devPanel() : ""}`;
   fitChrome();
   if (changed){
+    if (s !== "grief-write-done") ui.griefNote = null;   // 6.20: a written note is deleted unless the person taps Keep
+    if (crisis){ ui.grief = null; ui.fsGrief = false; }    // nothing from the grief path survives a crisis screen
     window.scrollTo(0, 0);
     const h = document.getElementById("screen-title");
     if (h) h.focus({ preventScroll:true });
@@ -5905,6 +6083,69 @@ const ACTIONS = {
   warmEnough(){ if (blockIfRed()) return; go("warm-end"); },
   warmFind(){ if (blockIfRed()) return; startIntervention("find_something"); },
 
+  /* 6.20 WHEN YOU'VE LOST SOMEONE */
+  griefStart(){ if (blockIfRed()) return; ui.grief = {}; ui.griefNote = null; ui.fsGrief = false; ui.msg = ""; ui.flash = ""; go("grief-who"); },
+  griefWho(arg){ if (blockIfRed()) return; if (!GRIEF.whoOpts.some(o => o[0] === arg)) return; ui.grief = { ...(ui.grief || {}), who:arg }; go("grief-when"); },
+  griefWhen(arg){ if (blockIfRed()) return; if (!GRIEF.whenOpts.some(o => o[0] === arg)) return; ui.grief = { ...(ui.grief || {}), when:arg }; go("grief-ack"); },
+  griefAckNext(){ if (blockIfRed()) return; ui.flash = ""; go(faithOn() ? "grief-faith" : "grief-help"); },
+  griefBack(){ if (blockIfRed()) return; fsDropPhoto(); ui.fsGrief = false; ui.griefNote = null; ui.msg = ""; zagsStopBreathing(); go("grief-help"); },
+  griefPick(arg){
+    if (blockIfRed()) return;
+    ui.msg = ""; ui.flash = "";
+    if (arg === "breathe"){ startZags(null); ui.griefZags = session.screen === "zags"; return; }   // the existing Calm down with Zags; its last screen offers a way back here
+    if (arg === "find"){ fsDropPhoto(); ui.fsGrief = true; ui.fsKept = false; ui.fsCaption = ""; go("fs"); return; }
+    if (arg === "write"){ ui.griefNote = null; go("grief-write"); return; }
+    if (arg === "tell"){ go("grief-tell"); return; }
+    if (arg === "date"){ go("grief-date"); return; }
+  },
+  griefWrite(){
+    if (blockIfRed()) return;
+    const box = document.getElementById("griefBox");
+    const text = ((box && box.value) || "").trim().slice(0, GRIEF_NOTE_MAX);
+    if (box) box.value = "";
+    if (!text){ go("grief-help"); return; }
+    handleSafeTextSubmit({ text,
+      onRed(){ ui.griefNote = null; applySafetyResult("RED"); },   // nothing is kept
+      onYellow(){ applySafetyResult("YELLOW"); ui.griefNote = text; go("grief-write-done"); },
+      onGreen(){ ui.griefNote = text; go("grief-write-done"); } });
+  },
+  griefNoteDelete(){ ui.griefNote = null; ui.flash = GRIEF.deleted; go("grief-help"); },
+  griefNoteKeep(){
+    if (blockIfRed()) return;
+    const text = ui.griefNote; if (!text) return;
+    const d = Date.now();
+    const item = { id:String(d), date:d, mission:GRIEF_MISSION.id, text };
+    store.noticed = [item, ...noticed()].slice(0, NOTICED_CAP);
+    if (!saveNoticed()){ store.noticed = noticed().filter(x => x.id !== item.id); ui.msg = "Couldn't keep it: this phone's browser storage is full."; render(); return; }
+    ui.griefNote = null; ui.msg = ""; ui.flash = GRIEF.kept; go("grief-help");
+  },
+  griefTellNext(){
+    if (blockIfRed()) return;
+    const box = document.getElementById("griefName");
+    const text = ((box && box.value) || "").trim().slice(0, 40);
+    if (box) box.value = "";
+    const next = () => { ui.grief = { ...(ui.grief || {}), name:firstName(text) }; go("grief-tell-msgs"); };   // in memory only, never saved
+    if (!text){ next(); return; }
+    handleSafeTextSubmit({ text,
+      onRed(){ if (ui.grief) ui.grief.name = ""; applySafetyResult("RED"); },
+      onYellow(){ applySafetyResult("YELLOW"); next(); },
+      onGreen(){ next(); } });
+  },
+  griefDateAdd(){
+    if (blockIfRed()) return;
+    const box = document.getElementById("griefDate");
+    const ev = griefDateEvents(box && box.value);
+    if (!ev){ ui.msg = "Pick a date first."; render(); return; }
+    downloadIcs("hard-day-reminder.ics", icsBuild(ev));   // handed to the person's own calendar; nothing kept here
+    ui.msg = ""; ui.flash = GRIEF.dateAdded; go("grief-help");
+  },
+  griefEnd(){ if (blockIfRed()) return; ui.flash = ""; go("grief-end"); },
+  griefElse(){   // the existing engine, Let's Zig (never back into the grief path: it isn't in the library)
+    if (blockIfRed()) return;
+    dispatch({ type:"SET_CURRENT_STATE", state:"low" });
+    ui.exclude = []; ui.zigFrom = null; ui.dirChannel = null;
+    runEngine(); toRecommendation();
+  },
   /* FIND SOMETHING */
   fsStart(){ if (blockIfRed()) return; ui.flash = ""; startIntervention("find_something"); },
   fsAnother(){ if (blockIfRed()) return; fsDropPhoto(); ui.fsYours = null; ui.fsIdx = ((ui.fsIdx || 0) + 1) % PHOTO_MISSIONS.length; ui.fsKept = false; ui.fsCaption = ""; ui.msg = ""; lastRendered = null; go("fs"); },
@@ -5935,7 +6176,7 @@ const ACTIONS = {
   noticedOpen(){ if (blockIfRed()) return; ui.flash = ""; ui.noticedDel = null; go("noticed-list"); },
   noticedDel(arg){ ui.noticedDel = arg; render(); },
   noticedDelNo(){ ui.noticedDel = null; render(); },
-  noticedDelYes(arg){ store.noticed = noticed().filter(n => n.id !== arg); saveNoticed(); ui.noticedDel = null; ui.flash = "Photo deleted."; render(); },
+  noticedDelYes(arg){ store.noticed = noticed().filter(n => n.id !== arg); saveNoticed(); ui.noticedDel = null; ui.flash = "Deleted."; render(); },
   yourThings(){ if (blockIfRed()) return; go("your-things"); },
   yourThing(arg){ if (blockIfRed()) return; const t = yourThings()[Number(arg)]; if (!t) return; ui.yourThing = t; go("your-thing"); },
   nearMe(){ if (blockIfRed()) return; if (!nearMe().length) return; ui.nearFrom = session.screen; go("near-me"); },

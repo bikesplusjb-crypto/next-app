@@ -73,7 +73,7 @@ The last 13 (from "kms" to "hurt somebody", including harm-to-others phrases) ar
 - "suicidarme"
 - "no quiero vivir"
 
-### YELLOW phrases (10) → support bar for the rest of the visit
+### YELLOW phrases (16) → support bar for the rest of the visit
 
 - "hopeless"
 - "can't take it"
@@ -85,6 +85,12 @@ The last 13 (from "kms" to "hurt somebody", including harm-to-others phrases) ar
 - "worthless"
 - "trapped"
 - "can't do this anymore"
+- "want to be with him again"
+- "want to be with her again"
+- "want to be with them again"
+- "want to join him"
+- "want to join her"
+- "want to join them"
 
 ## 3. Crisis contacts and prepared messages
 
@@ -697,6 +703,7 @@ Filter by state → filter by intensity → never repeat the last pick → if YE
 - "I feel low" → `flow:low`
 - "I feel alone" → `route:connect`
 - "Just out of the ER" → `afterStart`
+- "I lost someone" → `griefStart`
 
 Changed for review: the craving button now reads "I have an urge to use (drink or drugs)" (was "I want to use"). It still opens the same craving flow (`flow:craving`).
 
@@ -1154,7 +1161,7 @@ B. My Plan: "Print my plan" / "A full page and a wallet card to cut out. Printed
 
 C. **Privacy & terms — DRAFT, lawyer review required** (the page itself does not say "draft"). Linked from Settings, About and the first onboarding screen. Every paragraph, with the PRIVACY_DATA_FLOW.md sentence that supports it:
 - **What's saved, and where:** "Your plan, check-ins and settings are saved only in this browser on this phone. They are not encrypted: anyone who can use your unlocked phone, or its backups, may be able to read them." — source: "Not encrypted. Anyone with access to the unlocked phone and browser, or its backups, can read localStorage."
-- "Most things you type are checked and then thrown away. Song lines, and photos from Find something with their notes, are saved only if you tap Keep." — source: "Free text is never stored (except song lines and Find something photo notes, and only when the person taps Keep)."
+- "Most things you type are checked and then thrown away. Song lines, photos from Find something with their notes, and what you write to someone you lost, are saved only if you tap Keep." — source: "Free text is never stored (except song lines, Find something photo notes and "Remembering" notes, and only when the person taps Keep)."
 - "Photos never leave this phone through ZigZag Mind. Nothing looks at them or analyzes them." — source: "No image analysis, no AI, nothing uploaded."
 - **What leaves your phone:** "ZigZag Mind doesn't send anything anywhere. There are no accounts, ads or analytics." — source: "The app makes no network requests of its own."
 - "When you tap a link, like calling or texting 988, opening Maps, or the donation page, that app or website gets what you send it. Texts you prepare go to whoever you send them to." — source: "Everything below happens only when the person taps something:"
@@ -1167,7 +1174,7 @@ Contact line (only when CONTACT_EMAIL is set): "Questions? Email [address]."
 
 D. Crisis Text Line (**hidden until the owner verifies it**; CRISIS_TEXT_LINE.verified is false): one line below the 988 buttons on the full crisis screen and Connect, on the printed plan, and in the supporter guide's "Get help together": "Rather text a stranger? Text HOME to 741741 (Crisis Text Line)." (phones: Text HOME to 741741 is a text link; computers: shown as text).
 
-E. Spanish interface: **scaffolding only, nothing shown**. SPANISH_ENABLED is false. 217 strings (onboarding, Home, crisis screens, Calm, Connect, My Plan, Help, Settings labels) now live in one table; English is unchanged. Every Spanish line is a DRAFT for a human translator and the clinician: docs/SPANISH_REVIEW.md. A draft crisis-screen line is never shown, even with Spanish on.
+E. Spanish interface: **scaffolding only, nothing shown**. SPANISH_ENABLED is false. 218 strings (onboarding, Home, crisis screens, Calm, Connect, My Plan, Help, Settings labels) now live in one table; English is unchanged. Every Spanish line is a DRAFT for a human translator and the clinician: docs/SPANISH_REVIEW.md. A draft crisis-screen line is never shown, even with Spanish on.
 
 F. Feedback (only when FEEDBACK_URL is set; it is empty): on About only, "Did ZigZag Mind help? Tell us anonymously →" (new tab). Privacy page adds: "If you use the feedback link on About, that form is a separate service. It receives only what you type there."
 
@@ -1178,6 +1185,27 @@ G. "Help near me (Treasure Coast)" (**hidden until the owner verifies at least o
 - Local recovery meetings: "Meetings for people working on drinking or drug use." (verified: false)
 
 H. Simplicity audit: report only, nothing applied (docs/SIMPLICITY_AUDIT.md).
+
+### Stage 6.20: When you've lost someone (CLINICIAN REVIEW REQUIRED for the whole path)
+
+Entered only by the person: Home chip "I lost someone", and on Tech check's "My AI changed or is gone" last screen: "Lost a person or a pet? →". The engine and Let's Zig never suggest it. Who/when pick wording only and are never saved. Every free-text field is safety-checked (RED → crisis, nothing kept).
+- Who: "Who did you lose?" → "A person" · "A pet" · "Something else that mattered" ("A relationship, a home, a job, a part of your life")
+- When: "When was it?" → "Recently" · "A while ago" · "Today is a hard day" ("An anniversary, a birthday, a holiday")
+- Acknowledgment (person): "I'm sorry. Grief can feel like a lot of things at once: heavy, numb, angry, foggy. There's no right way to do this."
+- Acknowledgment (pet): "Losing a pet is losing family. This grief is real, even if not everyone understands it."
+- Acknowledgment (something else): "Losing something that mattered is real grief too."
+- Added when "Today is a hard day": "Hard days can bring it all back. That makes sense."
+- Small text on every acknowledgment: "If you lost someone to suicide, you're not alone. You can call or text 988 to talk about it, any time."
+- Faith & hope on only (KJV): "The LORD is nigh unto them that are of a broken heart." (Psalm 34:18)
+- Choices: "What would help right now?" / "One thing at a time, in any order. All optional." → "Breathe for a minute" ("With Zags") · "Find something that reminds you of them" ("Their spot, a photo, something they loved") · "Write what you'd want to say to them" · "Tell one person" · "Add a gentle reminder for a hard date" ("An anniversary or a birthday, in your own calendar") · "I'm done for now"; below: "If it gets heavier" + Call 988 / Text 988
+- Breathe: the existing Calm down with Zags; its last screen adds "Back to "What would help right now?""
+- Find (Find something, "Remembering" mission): "Find something that reminds you of them — their spot, a photo, something they loved." (camera optional; "No camera? Just look"; Keep saves to Things I noticed labeled "Remembering")
+- Write: "Write what you'd want to say to them" / "Only on this phone. It's deleted when you're done, unless you tap Keep." → "You said it." / "Delete it, or keep it in Things I noticed." → Delete (default, primary) · Keep → "Kept in Things I noticed." or "Deleted. It isn't kept anywhere."
+- Tell one person: "Who did you lose? Their first name, if you want. Optional. Not saved." → "Tap one. It opens your messages. Nothing is sent until you send it." (computers: "Tap one to copy it."). Messages (with a name / without): "I lost Sam and I'm having a really hard time. Can you call me?" · "Today's a hard day. I'm thinking about Sam." · "I don't need you to say anything. I just didn't want to be alone with this." / "I lost someone and I'm having a really hard time. Can you call me?" · "Today's a hard day. I'm thinking about them." · "I don't need you to say anything. I just didn't want to be alone with this."
+- Hard date: "A gentle reminder for a hard date" / "Pick the date. It goes in your own calendar, once a year. Nothing is kept in ZigZag Mind." → calendar file, once a year at 9am: "Be gentle with yourself today." → "Added. Open the file to put it in your calendar."
+- Ending: "Grief comes and goes. You don't have to carry it all today." → Put the phone down · Something else (the engine, Let's Zig, state "low") · Talk to someone (Connect)
+- Resources (hidden until verified; card "Grief support near you"): Hospice bereavement program (Treasure Coast): "Free grief support for anyone in the community." (verified: false) · Pet loss support line: "Someone to talk to after losing a pet." (verified: false) · GriefShare: "Faith-based grief support groups." (verified: false; Faith & hope only)
+- YELLOW phrases (OWNER-APPROVED INTERIM, pending clinician; should any be RED?): "want to be with him again", "want to be with her again", "want to be with them again", "want to join him", "want to join her", "want to join them"
 
 ### North star pass (2026-10-04): at most 8 choices, nothing removed
 
@@ -1450,6 +1478,7 @@ Rendered for each state where the screen changes by state. Identical renders are
 - **Button:** I feel low
 - **Button:** I feel alone
 - **Button:** Just out of the ER
+- **Button:** I lost someone
 - **Button:** Tech check — AI, scrolling, or checking is getting to me
 - **Link → `support/#worried`:** Worried about someone? How to help →
 - **Button:** Home
@@ -1980,6 +2009,132 @@ _When: distraction_
 - Nothing here yet.
 - **Button:** Find something
 
+### `grief-who`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Who did you lose?
+- **Button:** A person
+- **Button:** A pet
+- **Button:** Something else that mattered — A relationship, a home, a job, a part of your life
+
+### `grief-when`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** When was it?
+- **Button:** Recently
+- **Button:** A while ago
+- **Button:** Today is a hard day — An anniversary, a birthday, a holiday
+
+### `grief-ack`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** I'm sorry. Grief can feel like a lot of things at once: heavy, numb, angry, foggy. There's no right way to do this.
+- If you lost someone to suicide, you're not alone. You can call or text 988 to talk about it, any time.
+- **Button:** Next
+
+### `grief-faith`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** What would help right now?
+- One thing at a time, in any order. All optional.
+- **Button:** Breathe for a minute — With Zags
+- **Button:** Find something that reminds you of them — Their spot, a photo, something they loved
+- **Button:** Write what you'd want to say to them
+- **Button:** Tell one person
+- **Button:** Add a gentle reminder for a hard date — An anniversary or a birthday, in your own calendar
+- If it gets heavier
+- **Link → `tel:988`:** Call 988 _(screen reader: "Call 988, the Suicide and Crisis Lifeline")_
+- **Link → `sms:988`:** Text 988 _(screen reader: "Text 988, the Suicide and Crisis Lifeline")_
+- **Button:** I'm done for now
+
+### `grief-help`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** What would help right now?
+- One thing at a time, in any order. All optional.
+- **Button:** Breathe for a minute — With Zags
+- **Button:** Find something that reminds you of them — Their spot, a photo, something they loved
+- **Button:** Write what you'd want to say to them
+- **Button:** Tell one person
+- **Button:** Add a gentle reminder for a hard date — An anniversary or a birthday, in your own calendar
+- If it gets heavier
+- **Link → `tel:988`:** Call 988 _(screen reader: "Call 988, the Suicide and Crisis Lifeline")_
+- **Link → `sms:988`:** Text 988 _(screen reader: "Text 988, the Suicide and Crisis Lifeline")_
+- **Button:** I'm done for now
+
+### `grief-write`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Write what you'd want to say to them
+- Only on this phone. It's deleted when you're done, unless you tap Keep.
+- Write what you'd want to say to them
+- **Button:** Done writing
+- **Button:** Back
+
+### `grief-write-done`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** What would help right now?
+- One thing at a time, in any order. All optional.
+- **Button:** Breathe for a minute — With Zags
+- **Button:** Find something that reminds you of them — Their spot, a photo, something they loved
+- **Button:** Write what you'd want to say to them
+- **Button:** Tell one person
+- **Button:** Add a gentle reminder for a hard date — An anniversary or a birthday, in your own calendar
+- If it gets heavier
+- **Link → `tel:988`:** Call 988 _(screen reader: "Call 988, the Suicide and Crisis Lifeline")_
+- **Link → `sms:988`:** Text 988 _(screen reader: "Text 988, the Suicide and Crisis Lifeline")_
+- **Button:** I'm done for now
+
+### `grief-tell`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Tell one person
+- Who did you lose? Their first name, if you want. Optional. Not saved.
+- **Text box**
+- **Button:** Next
+- **Button:** Back
+
+### `grief-tell-msgs`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Tell one person
+- Tap one. It opens your messages. Nothing is sent until you send it.
+- **Link → `sms:5550142?&body=I lost someone and I'm having a really hard time. Can you call me?`:** I lost someone and I'm having a really hard time. Can you call me?
+- **Link → `sms:5550142?&body=Today's a hard day. I'm thinking about them.`:** Today's a hard day. I'm thinking about them.
+- **Link → `sms:5550142?&body=I don't need you to say anything. I just didn't want to be alone with this.`:** I don't need you to say anything. I just didn't want to be alone with this.
+- Opens a message to Jordan. You can change who it goes to.
+- **Button:** Back
+
+### `grief-date`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** A gentle reminder for a hard date
+- Pick the date. It goes in your own calendar, once a year. Nothing is kept in ZigZag Mind.
+- The date
+- **Text box**
+- **Button:** Add to my calendar
+- **Button:** Back
+
+### `grief-end`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Grief comes and goes. You don't have to carry it all today.
+- **Button:** Put the phone down
+- **Button:** Something else
+- **Button:** Talk to someone
+
 ### `near-me`
 
 - **Button:** × _(screen reader: "Close and go to home")_
@@ -1996,7 +2151,7 @@ _When: distraction_
 - **Heading:** Privacy & terms
 - **Heading:** What's saved, and where
 - Your plan, check-ins and settings are saved only in this browser on this phone. They are not encrypted: anyone who can use your unlocked phone, or its backups, may be able to read them.
-- Most things you type are checked and then thrown away. Song lines, and photos from Find something with their notes, are saved only if you tap Keep.
+- Most things you type are checked and then thrown away. Song lines, photos from Find something with their notes, and what you write to someone you lost, are saved only if you tap Keep.
 - Photos never leave this phone through ZigZag Mind. Nothing looks at them or analyzes them.
 - **Heading:** What leaves your phone
 - ZigZag Mind doesn't send anything anywhere. There are no accounts, ads or analytics.
@@ -2427,6 +2582,7 @@ _When: distraction_
 - **Button:** I feel low
 - **Button:** I feel alone
 - **Button:** Just out of the ER
+- **Button:** I lost someone
 - **Button:** Tech check — AI, scrolling, or checking is getting to me
 - **Link → `support/#worried`:** Worried about someone? How to help →
 - **Button:** Home
@@ -2454,6 +2610,7 @@ _When: distraction_
 - **Button:** I feel low
 - **Button:** I feel alone
 - **Button:** Just out of the ER
+- **Button:** I lost someone
 - **Button:** Tech check — AI, scrolling, or checking is getting to me
 - **Link → `support/#worried`:** Worried about someone? How to help →
 - **Button:** Home
@@ -2481,6 +2638,7 @@ _When: distraction_
 - **Button:** I feel low
 - **Button:** I feel alone
 - **Button:** Just out of the ER
+- **Button:** I lost someone
 - **Button:** Tech check — AI, scrolling, or checking is getting to me
 - **Link → `support/#worried`:** Worried about someone? How to help →
 - **Button:** Home

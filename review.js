@@ -287,6 +287,29 @@ P(''); P('G. "Help near me (Treasure Coast)" (**hidden until the owner verifies 
 list(G('NEAR_ME').map(e=>`${e.name}: "${e.what}"${e.phone?' · '+e.phone:''} (verified: ${e.verified})`));
 P(''); P('H. Simplicity audit: report only, nothing applied (docs/SIMPLICITY_AUDIT.md).');
 
+H(3,'Stage 6.20: When you\'ve lost someone (CLINICIAN REVIEW REQUIRED for the whole path)');
+P('Entered only by the person: Home chip "'+G('l10n("home.lost")')+'", and on Tech check\'s "My AI changed or is gone" last screen: "Lost a person or a pet? →". The engine and Let\'s Zig never suggest it. Who/when pick wording only and are never saved. Every free-text field is safety-checked (RED → crisis, nothing kept).');
+const GR=G('GRIEF');
+list([
+  'Who: "'+GR.who+'" → '+GR.whoOpts.map(([,t,m])=>`"${t}"${m?` ("${m}")`:''}`).join(' · '),
+  'When: "'+GR.when+'" → '+GR.whenOpts.map(([,t,m])=>`"${t}"${m?` ("${m}")`:''}`).join(' · '),
+  'Acknowledgment (person): "'+GR.ack.person+'"',
+  'Acknowledgment (pet): "'+GR.ack.pet+'"',
+  'Acknowledgment (something else): "'+GR.ack.else+'"',
+  'Added when "Today is a hard day": "'+GR.hardDay+'"',
+  'Small text on every acknowledgment: "'+GR.suicideLoss+'"',
+  'Faith & hope on only (KJV): "'+GR.faith[0]+'" ('+GR.faith[1]+')',
+  'Choices: "'+GR.help+'" / "'+GR.helpSub+'" → '+GR.helpOpts.map(([,t,m])=>`"${t}"${m?` ("${m}")`:''}`).join(' · ')+' · "'+GR.doneForNow+'"; below: "If it gets heavier" + Call 988 / Text 988',
+  'Breathe: the existing Calm down with Zags; its last screen adds "Back to \"'+GR.help+'\""',
+  'Find (Find something, "Remembering" mission): "'+G('GRIEF_MISSION.prompt')+'" (camera optional; "No camera? Just look"; Keep saves to Things I noticed labeled "Remembering")',
+  'Write: "'+GR.write+'" / "'+GR.writeSub+'" → "'+GR.wrote+'" / "'+GR.wroteSub+'" → Delete (default, primary) · Keep → "'+GR.kept+'" or "'+GR.deleted+'"',
+  'Tell one person: "'+GR.tellName+'" → "'+GR.tellPick+'" (computers: "'+GR.tellCopy+'"). Messages (with a name / without): '+G('griefMsgs("Sam")').map(m=>`"${m}"`).join(' · ')+' / '+G('griefMsgs("")').map(m=>`"${m}"`).join(' · '),
+  'Hard date: "'+GR.date+'" / "'+GR.dateSub+'" → calendar file, once a year at 9am: "'+GR.dateTitle+'" → "'+GR.dateAdded+'"',
+  'Ending: "'+GR.end+'" → Put the phone down · Something else (the engine, Let\'s Zig, state "low") · Talk to someone (Connect)',
+  'Resources (hidden until verified; card "'+GR.resources+'"): '+G('GRIEF_RESOURCES').map(e=>`${e.name}: "${e.what}" (verified: ${e.verified}${e.faith?'; Faith & hope only':''})`).join(' · '),
+  'YELLOW phrases (OWNER-APPROVED INTERIM, pending clinician; should any be RED?): '+G('YELLOW_PHRASES.slice(10)').map(p=>`"${p}"`).join(', ')
+]);
+
 H(3,'North star pass (2026-10-04): at most 8 choices, nothing removed');
 P('Progressive disclosure only; wording of every hidden option is unchanged. One tap shows the rest (kept open for this visit, in memory only):');
 list([

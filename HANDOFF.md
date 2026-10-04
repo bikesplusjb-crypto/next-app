@@ -29,6 +29,7 @@ Everything is in one file, `index.html` (vanilla JS, no build step, no runtime d
 | 6 | 6.1–6.17 per STAGE6-SPEC.md (Home, I don't know what I need, Calm, games, Change the scene, Connect + Human First, Zags, code word, supporter guide, check-in reminders, time and distance plan, I need my plan, After the ER, Tech check options 1–5, Faith & hope, Turn it into a song, Let's Zig), the Zags brand mark, desktop support |
 | 6.18 | STAGE6-18-ADDENDUM.md A–E (Zags wording, Warm Line on the guide, Spanish RED phrases, veteran line, night mode, alcohol/drugs line, 211 "not police", Reasons to stay, gun-storage line, five directions, small copy) |
 | 6.19 | STAGE6-19-ADDENDUM.md A–H (Worried about someone?, Print my plan, Privacy & terms DRAFT, Crisis Text Line and Help near me hidden until verified, Spanish scaffolding off, feedback link off, simplicity audit) |
+| 6.20 | STAGE6-20-ADDENDUM.md (When you've lost someone: Home chip, Tech check link, who/when, acknowledgment, breathe / find / write / tell / hard-date reminder, grief YELLOW phrases, grief resources hidden until verified) |
 | Owner handoffs | Find something (+ Things I noticed), Warm & comfort, Social Zig, Have coffee with ZigZag, Cozy up; simplicity audit proposals 1–6, 8, 10 applied |
 
 Where each part stands (as built, what differs from the text, tests) is at the end of STAGE6-SPEC.md.
@@ -83,7 +84,7 @@ The build order is done. What's left needs a person, not code:
 - **Clinician:** every decision in docs/CLINICIAN_REVIEW.md (D1–D29, all OPEN), including the OWNER-APPROVED INTERIM items.
 - **Translator + clinician:** docs/SPANISH_REVIEW.md before `SPANISH_ENABLED` can be true.
 - **Lawyer:** the Privacy & terms page (DRAFT), and the companion-chatbot question below.
-- **On hold (do not build without owner + clinician sign-off):** 6.7b Snuggle Zags, 6.7c Zags listens, 6.7d Safe place, Tech check option 6 (`ai_reality`), 7C new experiences. Not built because they don't exist yet: YOUR THINGS (handoff cut off), MIND SCRIBBLE, LOSS / GRIEF. Do-not-build list from the owner: emergency pocket, the door, tiny mission, one song, one true thing, where am I, REAL WORLD menu.
+- **On hold (do not build without owner + clinician sign-off):** 6.7b Snuggle Zags, 6.7c Zags listens, 6.7d Safe place, Tech check option 6 (`ai_reality`), 7C new experiences. Not built because they don't exist yet: YOUR THINGS (handoff cut off), MIND SCRIBBLE. (Loss/grief is built as 6.20.) Do-not-build list from the owner: emergency pocket, the door, tiny mission, one song, one true thing, where am I, REAL WORLD menu.
 - **Owner decisions still open:** simplicity audit #7 (I feel alone chip) and #9 (crisis "Open my plan" wording, clinician first); Home still has 16 tappable items (owner decision); every main menu is now at 8 or fewer (north star pass, 2026-10-04).
 
 ## Do not build

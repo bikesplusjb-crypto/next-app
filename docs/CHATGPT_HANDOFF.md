@@ -26,7 +26,7 @@ It is NOT therapy, diagnosis, treatment, a chatbot, or an emergency service. Adu
 
 ## What's on Home now
 
-Help (top right) · Zags + "ZigZag Mind" · "It's okay not to be okay." · **I don't feel safe** · I don't know what I need · Calm down · Get out of my head · Connect · Change the scene · "Or tell me what's happening": I'm anxious / I'm spiraling / I have an urge to use (drink or drugs) / I feel low / I feel alone / Just out of the ER · Tech check (AI, scrolling, or checking) · Worried about someone? How to help → · tabs incl. My Plan.
+Help (top right) · Zags + "ZigZag Mind" · "It's okay not to be okay." · **I don't feel safe** · I don't know what I need · Calm down · Get out of my head · Connect · Change the scene · "Or tell me what's happening": I'm anxious / I'm spiraling / I have an urge to use (drink or drugs) / I feel low / I feel alone / Just out of the ER / I lost someone · Tech check (AI, scrolling, or checking) · Worried about someone? How to help → · tabs incl. My Plan.
 
 ## What's built
 
@@ -89,7 +89,7 @@ Help (top right) · Zags + "ZigZag Mind" · "It's okay not to be okay." · **I d
 
 - **On hold:** Snuggle Zags, Zags listens, Safe place, the "Is this real?" AI-reality option, new experiences (7C).
 - **Do not build:** emergency pocket, the door, tiny mission, one song, one true thing, where am I, REAL WORLD menu.
-- **Ideas started but unfinished:** YOUR THINGS (the handoff stopped at section 13), Mind Scribble, Loss/grief.
+- **Ideas started but unfinished:** YOUR THINGS (the handoff stopped at section 13), Mind Scribble. Loss/grief is built as 6.20 ("I lost someone").
 - **Open decisions:**
   - remove the "I feel alone" chip? (currently kept)
   - rename the crisis button "Open my plan" to "I need my plan"? (waits for the clinician)

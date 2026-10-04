@@ -42,6 +42,16 @@ Every entry is **hidden** (`NEAR_ME` in index.html, `verified:false`). The scree
 | NAMI (local affiliate) | "Support groups and classes for people and families living with mental health conditions." | (none: owner to add) | (none: owner to add) | | | |
 | Local recovery meetings | "Meetings for people working on drinking or drug use." | (none: owner to add) | (none: owner to add) | | | |
 
+## Grief support (6.20 D)
+
+Every entry is **hidden** (`GRIEF_RESOURCES` in index.html, `verified:false`). Shown on "What would help right now?" as "Grief support near you" only once verified (and, for GriefShare, only when Faith & hope is on). 988 is always shown there. The owner identifies each one, confirms it by phone or official website, fills in phone and/or website, and sets `verified:true`.
+
+| Entry | What the app would say | Phone in code | Website in code | Confirmed by (phone / official site) | Date | Initials |
+|---|---|---|---|---|---|---|
+| Hospice bereavement program (Treasure Coast) | "Free grief support for anyone in the community." | (none: owner to identify and add) | (none: owner to add) | | | |
+| Pet loss support line | "Someone to talk to after losing a pet." | (none: owner to identify and add) | (none: owner to add) | | | |
+| GriefShare (Faith & hope only) | "Faith-based grief support groups." | (none: owner to add) | (none: owner to add) | | | |
+
 ## Florida Warm Line (Amendment 4)
 
 | Field | Value |
