@@ -101,6 +101,14 @@ for(const [k,txt] of [['then','I want to kill myself'],['now','I want to die']])
  a.G('ACTIONS.diaryBack()'); a.fill('diaryPass',PASS); a.click(act('diaryUnlock')); await until(()=>a.G('!!diaryKey'));
  r.push(['Locked diary: the note is there after unlocking', a.T().includes('Locked note text') && a.T().includes('Note to my younger self')]); }
 
+// review fix: "Let it go" while the passcode is being checked keeps nothing and leaves the diary locked
+{const a=boot(); await lockDiary(a); const lockedBefore=a.dump()['next.v1.diary'];
+ toPast(a); a.click(act('bullyIdeas')); a.click(act('bullyNext')); a.click(act('bullyGo','bully-younger'));
+ a.fill('youngerBox','Racing note'); a.click(act('bullyYounger')); a.click(act('bullyKeepDiary','younger')); await tick(5);
+ a.fill('bullyPass',PASS); a.click(act('bullyUnlock')); a.click(act('bullyLetGo'));   // before the check finishes
+ await until(()=>!a.G('ui.diaryBusy')); await tick(30);
+ r.push(['Let it go during the passcode check: nothing kept, diary still locked, no crash', a.dump()['next.v1.diary']===lockedBefore && a.G('diaryKey')===null && a.G('store.diary')===null && a.errs.length===0 && a.S()==='bully-idea']); }
+
 // ================= C. At work =================
 const toWork=a=>{ a.G('ACTIONS.bullyStart()'); a.click(act('bullyPath','work')); };
 {const a=boot(); toWork(a);

@@ -7243,13 +7243,16 @@ const ACTIONS = {
     ui.diaryBusy = true; ui.msg = ""; render();
     const opened = pass ? await diaryOpenWith(pass) : null;
     ui.diaryBusy = false;
+    const pending = ui.bully && ui.bully.pending;
+    // The person let it go, or left, while the passcode was being checked: keep nothing and leave the diary locked.
+    if (!pending || session.screen !== "bully-unlock") return;
     if (!opened){ ui.msg = DIARY.wrong; render(); return; }
     diaryKey = opened.key; store.diary = { entries:opened.entries };
-    const { text, tag } = b.pending;
-    const ok = await bullyToDiary(text, tag);
-    diaryRelock(false);   // kept and locked again right away
-    if (!ok){ go(tag === "work" ? "bully-work-done" : "bully-younger-done"); return; }
-    b.pending = null; b.note = null; b.work = null; ui.msg = ""; ui.flash = BULLY.keptDiary; go("bully-idea");
+    let ok = false;
+    try { ok = await bullyToDiary(pending.text, pending.tag); }
+    finally { diaryRelock(false); }   // kept (or not) and locked again right away, whatever happens
+    if (!ok){ go(pending.tag === "work" ? "bully-work-done" : "bully-younger-done"); return; }
+    const bb = ui.bully || {}; bb.pending = null; bb.note = null; bb.work = null; ui.msg = ""; ui.flash = BULLY.keptDiary; go("bully-idea");
   },
   bullyPath(arg){ if (blockIfRed()) return; if (!BULLY.paths.some(p => p[0] === arg)) return; ui.bully = { path:arg, idx:0 }; ui.msg = ""; ui.flash = ""; go("bully-" + arg); },
   /* 6.23 I FEEL SAD OR LOW */
