@@ -1203,6 +1203,11 @@ H. Simplicity audit: report only, nothing applied (docs/SIMPLICITY_AUDIT.md).
 Why (for reviewers only; never shown to people as statements about them): frequent childhood bullying is linked to more adult depression (OR 1.95), anxiety disorders (OR 1.65) and suicidality (OR 2.21) (Takizawa, Maughan & Arseneault, 2014); 32% of Americans reported being directly bullied at work in 2024 (Workplace Bullying Institute); 41% of U.S. adults have experienced online harassment (Pew Research Center, 2021).
 - Home chip: "Bullied — now or before". First screen: "Being bullied is not your fault. Whether it's happening now or happened a long time ago, it's real." / "Which is closest?" → "It happened years ago, but it still gets to me" · "It's happening at work" · "It's happening online" · "Someone I love is being bullied"
 - Every screen in this path ends with: "Call or text 988 any time." Call 988 · Text 988 (computers: Chat with 988 online)
+- B. Years ago: "What happened to you was real, and it wasn't your fault. Bullying can leave marks long after it stops. Still feeling it doesn't mean you're weak." → one idea at a time ("Another idea" · "I'm done for now"): "Then and now" ("What was true then, and what's true now.") · "A note to your younger self" ("What would you tell them now?") · "Ground yourself" ("Notice what's around you, or calm down with Zags.")
+- Then and now (tap-only chips; optional short line each, "Add a short line (optional)"; safety-checked; nothing saved): "What was true then": "I couldn't get away" · "No one stood up for me" · "I was alone with it" · "I was a kid" / "What's true now": "I'm an adult" · "I choose who's in my life" · "I can leave a room" · "I can ask for help" · "I'm still here" → "Then was then. You got through it."
+- Younger self: "What would you tell them now?" / "Only on this screen unless you choose to keep it." → "You said it." → "Let it go" (default) · "Keep in my diary" (diary entry tagged "Note to my younger self"; a locked diary asks "Your diary is locked" / "Type your passcode to keep this in your diary." first) → "Let go. It isn't kept anywhere." / "Kept in your diary."
+- Ground: "Ground" (existing 5-4-3-2-1) · "Calm down with Zags" (existing)
+- End (years ago): "Old hurts like this are one of the things counselors help with most. It's never too late to talk about it." → Put the phone down · Talk to someone · "Back to the start"
 
 ### Stage 6.23: I feel sad or low (CLINICIAN REVIEW REQUIRED for all of it)
 
@@ -2074,6 +2079,103 @@ _When: distraction_
 - **Button:** It's happening online
 - **Button:** Someone I love is being bullied
 - Call or text 988 any time. Call 988 · Text 988
+
+### `bully-past`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** What happened to you was real, and it wasn't your fault. Bullying can leave marks long after it stops. Still feeling it doesn't mean you're weak.
+- Call or text 988 any time. Call 988 · Text 988
+- **Button:** Next
+
+### `bully-idea`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Being bullied is not your fault. Whether it's happening now or happened a long time ago, it's real.
+- Which is closest?
+- **Button:** It happened years ago, but it still gets to me
+- **Button:** It's happening at work
+- **Button:** It's happening online
+- **Button:** Someone I love is being bullied
+- Call or text 988 any time. Call 988 · Text 988
+
+### `bully-thennow`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Then and now
+- What was true then
+- **Button:** I couldn't get away
+- **Button:** No one stood up for me
+- **Button:** I was alone with it
+- **Button:** I was a kid
+- Add a short line (optional)
+- **Text box**
+- What's true now
+- **Button:** I'm an adult
+- **Button:** I choose who's in my life
+- **Button:** I can leave a room
+- **Button:** I can ask for help
+- **Button:** I'm still here
+- Add a short line (optional)
+- **Text box**
+- Call or text 988 any time. Call 988 · Text 988
+- **Button:** Done
+
+### `bully-thennow-end`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Then was then. You got through it.
+- Call or text 988 any time. Call 988 · Text 988
+- **Button:** Another idea
+- **Button:** I'm done for now
+
+### `bully-younger`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** What would you tell them now?
+- Only on this screen unless you choose to keep it.
+- What would you tell them now?
+- Call or text 988 any time. Call 988 · Text 988
+- **Button:** Done writing
+- **Button:** Back
+
+### `bully-younger-done`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Being bullied is not your fault. Whether it's happening now or happened a long time ago, it's real.
+- Which is closest?
+- **Button:** It happened years ago, but it still gets to me
+- **Button:** It's happening at work
+- **Button:** It's happening online
+- **Button:** Someone I love is being bullied
+- Call or text 988 any time. Call 988 · Text 988
+
+### `bully-unlock`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Being bullied is not your fault. Whether it's happening now or happened a long time ago, it's real.
+- Which is closest?
+- **Button:** It happened years ago, but it still gets to me
+- **Button:** It's happening at work
+- **Button:** It's happening online
+- **Button:** Someone I love is being bullied
+- Call or text 988 any time. Call 988 · Text 988
+
+### `bully-end`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** You can put the phone down now.
+- Call or text 988 any time. Call 988 · Text 988
+- **Button:** Put the phone down
+- **Button:** Talk to someone
+- **Button:** Back to the start
 
 ### `sad`
 

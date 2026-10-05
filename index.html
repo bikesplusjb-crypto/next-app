@@ -151,6 +151,9 @@ textarea.field{min-height:150px;resize:vertical}
 @keyframes cloudDrift{from{transform:translateX(-6px)}to{transform:translateX(6px)}}
 @media (prefers-reduced-motion:reduce){.sad-cloud{animation:none}}
 .sad-sky{margin-top:14px}
+.tn-grid{display:grid;grid-template-columns:1fr;gap:16px}
+@media (min-width:600px){.tn-grid{grid-template-columns:1fr 1fr}}
+.tn-col .sit[aria-pressed="true"]{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
 .bully-988{margin-top:22px;padding-top:12px;border-top:1px solid var(--line)}
 .doodle-prompt{margin:0 0 8px;font-family:var(--serif);font-size:19px;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline}
 .doodle-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
@@ -1293,8 +1296,35 @@ const BULLY = {
   intro:"Being bullied is not your fault. Whether it's happening now or happened a long time ago, it's real.",
   closest:"Which is closest?",
   paths:[["past","It happened years ago, but it still gets to me"],["work","It's happening at work"],["online","It's happening online"],["love","Someone I love is being bullied"]],
-  line988:"Call or text 988 any time."
+  line988:"Call or text 988 any time.",
+  another:"Another idea", doneForNow:"I'm done for now", next:"Next", backStart:"Back to the start",
+  past:{
+    say:"What happened to you was real, and it wasn't your fault. Bullying can leave marks long after it stops. Still feeling it doesn't mean you're weak.",
+    ideas:[["thennow","Then and now","What was true then, and what's true now."],["younger","A note to your younger self","What would you tell them now?"],["ground","Ground yourself","Notice what's around you, or calm down with Zags."]],
+    end:"Old hurts like this are one of the things counselors help with most. It's never too late to talk about it."
+  },
+  then:{ lbl:"What was true then", chips:["I couldn't get away","No one stood up for me","I was alone with it","I was a kid"] },
+  now:{ lbl:"What's true now", chips:["I'm an adult","I choose who's in my life","I can leave a room","I can ask for help","I'm still here"] },
+  lineOpt:"Add a short line (optional)",
+  thenDone:"Then was then. You got through it.",
+  younger:"What would you tell them now?",
+  youngerSub:"Only on this screen unless you choose to keep it.",
+  letGo:"Let it go", keepDiary:"Keep in my diary", letGone:"Let go. It isn't kept anywhere.", keptDiary:"Kept in your diary.",
+  ground:"Ground", zags:"Calm down with Zags",
+  unlockTitle:"Your diary is locked", unlockSub:"Type your passcode to keep this in your diary.", unlockBtn:"Unlock and keep",
+  full:"This phone's storage is full, so this couldn't be saved. Your words are still here."
 };
+const DIARY_TAGS = { younger:"Note to my younger self", work:"Work notes" };   // 6.27: tagged diary entries
+function bullyIdeas(){ const p = ui.bully && BULLY[ui.bully.path]; return (p && p.ideas) || []; }
+/* 6.27: keep a note in A line for today, only when the person chooses; a locked diary is unlocked first. */
+async function bullyToDiary(text, tag){
+  if (diaryLockedNow()){ ui.bully = { ...(ui.bully || {}), pending:{ text, tag } }; go("bully-unlock"); return false; }
+  const now = Date.now();
+  const entry = { id:String(now), date:now, day:diaryDay(now), feelings:[], text:text.slice(0, DIARY_TEXT_MAX), trueLine:"", tag };
+  store.diary = { ...(store.diary || {}), entries:[entry, ...diaryEntries()] };
+  if (!(await saveDiary())){ store.diary.entries = diaryEntries().filter(e => e.id !== entry.id); ui.msg = BULLY.full; render(); return false; }
+  return true;
+}
 function bully988(){ return `<p class="small bully-988">${BULLY.line988} <a href="${LINKS.call988}">Call 988</a> · ${text988Inline()}</p>`; }
 
 /* 6.23 I FEEL SAD OR LOW: a first screen before the tiny things. All wording: clinician review. Nothing saved. */
@@ -1438,6 +1468,7 @@ function validDiaryEntries(a){
   return a.filter(e => e && typeof e.id === "string" && typeof e.date === "number" && /^\d{4}-\d{2}-\d{2}$/.test(e.day || "")
     && Array.isArray(e.feelings) && e.feelings.every(f => DIARY.feelings.includes(f))
     && typeof e.text === "string" && e.text.length <= DIARY_TEXT_MAX && typeof e.trueLine === "string" && e.trueLine.length <= DIARY_TRUE_MAX
+    && (e.tag === undefined || Object.prototype.hasOwnProperty.call(DIARY_TAGS, e.tag))
     && (e.text || e.trueLine || e.feelings.length));
 }
 function diaryEntries(){ return (store.diary && store.diary.entries) || []; }
@@ -3646,6 +3677,84 @@ const SCREENS = {
       ${bully988()}` };
   },
 
+  /* 6.27 B: it happened years ago (and the shared one-idea-at-a-time screens) */
+  "bully-past"(){
+    return { close:true, body:`${stepTitle(BULLY.past.say, true)}${bully988()}`,
+      actions:`<button class="btn btn-primary" data-act="bullyIdeas">${BULLY.next}</button>` };
+  },
+  "bully-idea"(){
+    const ideas = bullyIdeas(); const b = ui.bully || {};
+    const it = ideas[(b.idx || 0) % (ideas.length || 1)];
+    if (!it) return SCREENS.bully();
+    const [k, t, m] = it;
+    const main = {
+      thennow:`<button class="btn btn-primary" data-act="bullyGo" data-arg="bully-thennow">Start</button>`,
+      younger:`<button class="btn btn-primary" data-act="bullyGo" data-arg="bully-younger">Write it</button>`,
+      ground:`<button class="btn btn-primary" data-act="calmPick" data-arg="ground">${BULLY.ground}</button><button class="btn btn-secondary" data-act="zags" data-arg="calm">${BULLY.zags}</button>`
+    }[k] || "";
+    return { close:true, body:`
+      ${stepTitle(t, true)}
+      ${m ? `<p class="sub" style="font-size:19px">${m}</p>` : ""}
+      ${ui.flash ? `<p class="flash" role="status">${esc(ui.flash)}</p>` : ""}
+      ${bully988()}`,
+      actions:`${main}
+        <button class="btn btn-secondary" data-act="bullyNext">${BULLY.another}</button>
+        <button class="link" data-act="bullyEnd">${BULLY.doneForNow}</button>` };
+  },
+  "bully-thennow"(){
+    const b = ui.bully || {}; const th = b.then || [], nw = b.now || [];
+    const col = (key, g, sel) => `<div class="tn-col"><p class="lbl">${g.lbl}</p>
+      <div class="sits">${g.chips.map((c, i) => `<button class="sit" data-act="bullyChip" data-arg="${key}:${i}" aria-pressed="${sel.includes(i)}">${c}</button>`).join("")}</div>
+      <label class="small" for="tn-${key}" style="display:block;margin-top:10px">${BULLY.lineOpt}</label>
+      <input class="field" id="tn-${key}" maxlength="120" autocomplete="off" value="${esc((b.lines || {})[key] || "")}"></div>`;
+    return { close:true, body:`
+      ${title("Then and now")}
+      <div class="tn-grid">${col("then", BULLY.then, th)}${col("now", BULLY.now, nw)}</div>
+      ${bully988()}`,
+      actions:`<button class="btn btn-primary" data-act="bullyThenDone">Done</button>` };
+  },
+  "bully-thennow-end"(){
+    return { close:true, body:`${stepTitle(BULLY.thenDone, true)}${bully988()}`,
+      actions:`<button class="btn btn-primary" data-act="bullyNext">${BULLY.another}</button><button class="link" data-act="bullyEnd">${BULLY.doneForNow}</button>` };
+  },
+  "bully-younger"(){
+    return { close:true, body:`
+      ${title(BULLY.younger)}
+      <p class="sub">${BULLY.youngerSub}</p>
+      <label class="sr" for="youngerBox">${BULLY.younger}</label>
+      <textarea class="field" id="youngerBox" maxlength="${DIARY_TEXT_MAX}" style="min-height:160px"></textarea>
+      ${bully988()}`,
+      actions:`<button class="btn btn-primary" data-act="bullyYounger">Done writing</button><button class="link" data-act="bullyIdeasBack">Back</button>` };
+  },
+  "bully-younger-done"(){
+    if (!(ui.bully && ui.bully.note)) return SCREENS["bully-idea"]();
+    return { close:true, body:`
+      ${stepTitle("You said it.", true)}
+      ${ui.msg ? `<p class="err" role="alert">${esc(ui.msg)}</p><p class="copy-text">${esc(ui.bully.note)}</p>` : ""}
+      ${bully988()}`,
+      actions:`<button class="btn btn-primary" data-act="bullyLetGo">${BULLY.letGo}</button>
+        <button class="btn btn-secondary" data-act="bullyKeepDiary" data-arg="younger">${BULLY.keepDiary}</button>` };
+  },
+  "bully-unlock"(){
+    if (!(ui.bully && ui.bully.pending)) return SCREENS["bully-idea"]();
+    return { close:true, body:`
+      ${title(BULLY.unlockTitle)}
+      <p class="sub">${BULLY.unlockSub}</p>
+      <label class="sr" for="bullyPass">${DIARY.pass1}</label>
+      <input class="field" id="bullyPass" type="password" autocomplete="current-password" placeholder="${DIARY.pass1}">
+      ${ui.msg ? `<p class="err" role="alert">${esc(ui.msg)}</p>` : ""}
+      ${bully988()}`,
+      actions:`<button class="btn btn-primary" data-act="bullyUnlock"${ui.diaryBusy ? " disabled" : ""}>${ui.diaryBusy ? DIARY.working : BULLY.unlockBtn}</button>
+        <button class="link" data-act="bullyLetGo">${BULLY.letGo}</button>` };
+  },
+  "bully-end"(){
+    const p = BULLY[(ui.bully || {}).path] || {};
+    return { close:true, body:`${stepTitle(p.end || PUT_DOWN_NOW, true)}${bully988()}`,
+      actions:`<button class="btn btn-primary" data-act="putDown">Put the phone down</button>
+        <button class="btn btn-secondary" data-act="route" data-arg="connect">Talk to someone</button>
+        <button class="link" data-act="bullyStart">${BULLY.backStart}</button>` };
+  },
+
   /* 6.23 I FEEL SAD OR LOW */
   sad(){
     return { close:true, body:`
@@ -3795,6 +3904,7 @@ const SCREENS = {
       ${list.length >= 7 ? `<p class="sub diary-note">${DIARY.backNote}</p>` : ""}
       ${list.length ? days.map(day => `<h2 class="lbl diary-day">${esc(diaryDateLabel(day))}</h2>
         ${list.filter(e => e.day === day).map(e => `<button class="panel diary-item" data-act="diaryEntry" data-arg="${esc(e.id)}" style="display:block;width:100%;text-align:left">
+          ${e.tag ? `<p class="lbl" style="margin:0 0 4px">${DIARY_TAGS[e.tag]}</p>` : ""}
           ${e.feelings.length ? `<p class="small" style="margin:0">${e.feelings.map(esc).join(" · ")}</p>` : ""}
           ${e.text ? `<p style="margin:6px 0 0">${short(e.text)}</p>` : ""}
           ${e.trueLine ? `<p class="diary-still">${esc(e.trueLine)}</p>` : ""}</button>`).join("")}`).join("")
@@ -3805,7 +3915,7 @@ const SCREENS = {
     const e = diaryEntries().find(x => x.id === ui.diaryId);
     if (!e) return SCREENS["diary-back"]();
     return { close:true, body:`
-      <p class="step-count">${esc(diaryDateLabel(e.day))}</p>
+      <p class="step-count">${esc(diaryDateLabel(e.day))}${e.tag ? ` · ${DIARY_TAGS[e.tag]}` : ""}</p>
       ${e.feelings.length ? `<p class="small">${e.feelings.map(esc).join(" · ")}</p>` : ""}
       ${e.text ? `<p style="white-space:pre-wrap;font-size:18px">${esc(e.text)}</p>` : ""}
       ${e.trueLine ? `<p class="diary-still">${esc(e.trueLine)}</p>` : ""}
@@ -5436,7 +5546,7 @@ function buildExport(){
     songs:songs().length ? songs().map(x => ({ date:new Date(x.date).toISOString(), mood:x.mood, lines:x.lines, still:x.still })) : undefined,
     // photos stay on the phone (too large for a text export); the export lists what was kept
     // 6.21: diary entries only when the diary is open; a locked diary stays locked
-    diary:diaryLockedNow() ? DIARY.exportLocked : diaryEntries().length ? diaryEntries().slice().sort((a, b) => b.date - a.date).map(e => ({ date:new Date(e.date).toISOString(), feelings:e.feelings, words:e.text, stillTrue:e.trueLine })) : undefined,
+    diary:diaryLockedNow() ? DIARY.exportLocked : diaryEntries().length ? diaryEntries().slice().sort((a, b) => b.date - a.date).map(e => ({ date:new Date(e.date).toISOString(), feelings:e.feelings, words:e.text, stillTrue:e.trueLine, tag:e.tag ? DIARY_TAGS[e.tag] : undefined })) : undefined,
     thingsINoticed:noticed().length ? noticed().map(n => ({ date:new Date(n.date).toISOString(), mission:n.mission, caption:n.caption || undefined, note:n.text || undefined, photo:n.img ? "kept on this phone, not in the export" : undefined })) : undefined
   };
 }
@@ -5871,7 +5981,8 @@ function render(){
   if (s === "doodle") doodleMount();   // 6.22: the canvas is new after every render; redraw the strokes
   if (changed){
     if (!/^doodle/.test(s) && ui.doodle && ui.doodle.strokes){ ui.doodle.strokes = []; ui.doodle.img = null; doodleLive = null; }   // 6.22: nothing outlives the doodle
-    if (s !== "grief-write-done") ui.griefNote = null;   // 6.20: a written note is deleted unless the person taps Keep
+    if (s !== "grief-write-done") ui.griefNote = null;
+    if (!/^bully/.test(s) && ui.bully){ ui.bully.note = null; ui.bully.work = null; ui.bully.pending = null; ui.bully.lines = {}; }   // 6.27: unsaved notes go when the person leaves   // 6.20: a written note is deleted unless the person taps Keep
     if (!/^diary/.test(s)){ ui.diaryDraft = null; diaryRelock(false); }   // 6.21: leaving the diary drops an unsaved draft and re-locks it
     if (crisis){ ui.grief = null; ui.fsGrief = false; }    // nothing from the grief path survives a crisis screen
     window.scrollTo(0, 0);
@@ -6581,6 +6692,70 @@ const ACTIONS = {
 
   /* 6.27 BULLIED, NOW OR BEFORE */
   bullyStart(){ if (blockIfRed()) return; ui.bully = {}; ui.msg = ""; ui.flash = ""; go("bully"); },
+  bullyIdeas(){ if (blockIfRed()) return; ui.bully = { ...(ui.bully || {}), idx:0, seen:1 }; ui.flash = ""; ui.msg = ""; go("bully-idea"); },
+  bullyIdeasBack(){ if (blockIfRed()) return; ui.msg = ""; go("bully-idea"); },
+  bullyNext(){
+    if (blockIfRed()) return;
+    const b = ui.bully || (ui.bully = {}); const n = bullyIdeas().length;
+    if ((b.seen || 1) >= n){ go("bully-end"); return; }   // every idea offered once: the ending
+    b.idx = ((b.idx || 0) + 1) % n; b.seen = (b.seen || 1) + 1; ui.flash = ""; ui.msg = "";
+    lastRendered = null; go("bully-idea");
+  },
+  bullyEnd(){ if (blockIfRed()) return; go("bully-end"); },
+  bullyGo(arg){ if (blockIfRed()) return; if (!/^bully-[a-z-]+$/.test(arg || "") || !SCREENS[arg]) return; ui.msg = ""; go(arg); },
+  bullyChip(arg){
+    if (blockIfRed()) return;
+    const [key, i] = String(arg).split(":"); const g = BULLY[key]; const n = Number(i);
+    if (!["then","now"].includes(key) || !g || !g.chips[n]) return;
+    const b = ui.bully || (ui.bully = {});
+    b.lines = { ...(b.lines || {}) };   // keep what's typed while chips change
+    for (const k of ["then","now"]){ const el = document.getElementById("tn-" + k); if (el) b.lines[k] = el.value.slice(0, 120); }
+    const sel = b[key] || []; b[key] = sel.includes(n) ? sel.filter(x => x !== n) : [...sel, n];
+    render();
+  },
+  bullyThenDone(){
+    if (blockIfRed()) return;
+    const lines = ["then","now"].map(k => { const el = document.getElementById("tn-" + k); return ((el && el.value) || "").trim().slice(0, 120); });
+    let red = false, yellow = false;
+    for (const t of lines) handleSafeTextSubmit({ text:t, onRed(){ red = true; }, onYellow(){ yellow = true; }, onGreen(){} });
+    const b = ui.bully || {};
+    b.then = []; b.now = []; b.lines = {};   // nothing saved, nothing kept in memory
+    if (red){ openCrisis(); return; }
+    if (yellow) applySafetyResult("YELLOW");
+    go("bully-thennow-end");
+  },
+  bullyYounger(){
+    if (blockIfRed()) return;
+    const box = document.getElementById("youngerBox"); const text = ((box && box.value) || "").trim().slice(0, DIARY_TEXT_MAX);
+    if (box) box.value = "";
+    if (!text){ go("bully-idea"); return; }
+    handleSafeTextSubmit({ text,
+      onRed(){ if (ui.bully) ui.bully.note = null; applySafetyResult("RED"); },   // nothing kept
+      onYellow(){ applySafetyResult("YELLOW"); ui.bully.note = text; go("bully-younger-done"); },
+      onGreen(){ ui.bully.note = text; go("bully-younger-done"); } });
+  },
+  bullyLetGo(){ if (blockIfRed()) return; const b = ui.bully || {}; b.note = null; b.pending = null; b.work = null; ui.msg = ""; ui.flash = BULLY.letGone; go("bully-idea"); },
+  async bullyKeepDiary(arg){
+    if (blockIfRed()) return;
+    const b = ui.bully || {}; const text = arg === "work" ? b.work : b.note;
+    if (!text || !DIARY_TAGS[arg]) return;
+    if (await bullyToDiary(text, arg)){ b.note = null; b.work = null; ui.msg = ""; ui.flash = BULLY.keptDiary; go("bully-idea"); }
+  },
+  async bullyUnlock(){
+    if (blockIfRed() || ui.diaryBusy) return;
+    const b = ui.bully || {}; if (!b.pending) return;
+    const box = document.getElementById("bullyPass"); const pass = (box && box.value) || "";
+    ui.diaryBusy = true; ui.msg = ""; render();
+    const opened = pass ? await diaryOpenWith(pass) : null;
+    ui.diaryBusy = false;
+    if (!opened){ ui.msg = DIARY.wrong; render(); return; }
+    diaryKey = opened.key; store.diary = { entries:opened.entries };
+    const { text, tag } = b.pending;
+    const ok = await bullyToDiary(text, tag);
+    diaryRelock(false);   // kept and locked again right away
+    if (!ok){ go(tag === "work" ? "bully-work-done" : "bully-younger-done"); return; }
+    b.pending = null; b.note = null; b.work = null; ui.msg = ""; ui.flash = BULLY.keptDiary; go("bully-idea");
+  },
   bullyPath(arg){ if (blockIfRed()) return; if (!BULLY.paths.some(p => p[0] === arg)) return; ui.bully = { path:arg, idx:0 }; ui.msg = ""; ui.flash = ""; go("bully-" + arg); },
   /* 6.23 I FEEL SAD OR LOW */
   sadOut(){ if (blockIfRed()) return; ui.sadIdx = 0; ui.sadSeen = 1; go("sad-out"); },

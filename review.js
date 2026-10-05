@@ -294,6 +294,13 @@ list([
   'Home chip: "'+G('l10n("home.bullied")')+'". First screen: "'+BU.intro+'" / "'+BU.closest+'" → '+BU.paths.map(p=>`"${p[1]}"`).join(' · '),
   'Every screen in this path ends with: "'+BU.line988+'" Call 988 · Text 988 (computers: Chat with 988 online)'
 ]);
+list([
+  'B. Years ago: "'+BU.past.say+'" → one idea at a time ("'+BU.another+'" · "'+BU.doneForNow+'"): '+BU.past.ideas.map(([,t,m])=>`"${t}" ("${m}")`).join(' · '),
+  'Then and now (tap-only chips; optional short line each, "'+BU.lineOpt+'"; safety-checked; nothing saved): "'+BU.then.lbl+'": '+BU.then.chips.map(x=>`"${x}"`).join(' · ')+' / "'+BU.now.lbl+'": '+BU.now.chips.map(x=>`"${x}"`).join(' · ')+' → "'+BU.thenDone+'"',
+  'Younger self: "'+BU.younger+'" / "'+BU.youngerSub+'" → "You said it." → "'+BU.letGo+'" (default) · "'+BU.keepDiary+'" (diary entry tagged "'+G('DIARY_TAGS.younger')+'"; a locked diary asks "'+BU.unlockTitle+'" / "'+BU.unlockSub+'" first) → "'+BU.letGone+'" / "'+BU.keptDiary+'"',
+  'Ground: "'+BU.ground+'" (existing 5-4-3-2-1) · "'+BU.zags+'" (existing)',
+  'End (years ago): "'+BU.past.end+'" → Put the phone down · Talk to someone · "'+BU.backStart+'"'
+]);
 //@@BULLY@@
 
 H(3,'Stage 6.23: I feel sad or low (CLINICIAN REVIEW REQUIRED for all of it)');

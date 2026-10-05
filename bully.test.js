@@ -41,6 +41,66 @@ const r=[];
  r.push(['A: only on Home (not on crisis screens or the menus)', !on]);
  a.G('dispatch({type:"SET_SAFETY_LEVEL",level:"RED"})'); a.G('ACTIONS.bullyStart()'); r.push(['A: blocked while RED', a.S()==='crisis']); }
 
+// ================= B. It happened years ago =================
+const PASS='quiet-harbor-7';
+async function lockDiary(a){ a.G('ACTIONS.diaryOpen()'); a.click(act('diaryLockStart')); a.click(act('diaryLockOk')); a.fill('diaryPass1',PASS); a.fill('diaryPass2',PASS); a.click(act('diaryLockSet')); await until(()=>a.G('!!store.diaryLock') && !a.G('ui.diaryBusy')); a.G('ACTIONS.home()'); }
+const toPast=a=>{ a.G('ACTIONS.bullyStart()'); a.click(act('bullyPath','past')); };
+{const a=boot(); toPast(a);
+ r.push(['B1: "What happened to you was real, and it wasn\'t your fault..."', a.S()==='bully-past' && a.T().includes("What happened to you was real, and it wasn't your fault. Bullying can leave marks long after it stops. Still feeling it doesn't mean you're weak.") && has988(a)]);
+ a.click(act('bullyIdeas'));
+ const seen=[a.w.document.getElementById('screen-title').textContent];
+ r.push(['B2: one idea at a time, with "Another idea" and "I\'m done for now"', a.S()==='bully-idea' && a.has(act('bullyNext')) && a.has(act('bullyEnd')) && has988(a)]);
+ a.click(act('bullyNext')); seen.push(a.w.document.getElementById('screen-title').textContent);
+ a.click(act('bullyNext')); seen.push(a.w.document.getElementById('screen-title').textContent);
+ r.push(['B2: Then and now · A note to your younger self · Ground', JSON.stringify(seen)==='["Then and now","A note to your younger self","Ground yourself"]']);
+ r.push(['B2: Ground (existing) or Calm down with Zags (existing)', a.has(act('calmPick','ground')) && a.has(act('zags','calm'))]);
+ a.click(act('bullyNext'));
+ r.push(['B3: the end: "Old hurts like this are one of the things counselors help with most..."', a.S()==='bully-end' && a.T().includes("Old hurts like this are one of the things counselors help with most. It's never too late to talk about it.") && has988(a) && a.has(act('putDown')) && a.has(act('route','connect'))]); }
+{const a=boot(); toPast(a); a.click(act('bullyIdeas')); a.click(act('bullyGo','bully-thennow'));
+ const t=a.T();
+ r.push(['Then and now: two groups of tap-only chips', a.w.document.querySelectorAll('[data-act="bullyChip"][data-arg^="then:"]').length===4 && a.w.document.querySelectorAll('[data-act="bullyChip"][data-arg^="now:"]').length===5 && t.includes('What was true then') && t.includes("What's true now") && t.includes("I couldn't get away") && t.includes("I'm still here")]);
+ r.push(['Then and now: two columns on wider screens (stacked on phones)', a.has('.tn-grid .tn-col + .tn-col') && /@media \(min-width:600px\)\{\.tn-grid\{grid-template-columns:1fr 1fr\}\}/.test(HTML)]);
+ a.fill('tn-then','Typed before tapping'); a.click(act('bullyChip','then:3')); a.click(act('bullyChip','now:0'));
+ r.push(['Then and now: chips toggle, typed lines stay', a.has('[data-arg="then:3"][aria-pressed="true"]') && a.has('[data-arg="now:0"][aria-pressed="true"]') && a.w.document.getElementById('tn-then').value==='Typed before tapping']);
+ const before=JSON.stringify(a.dump());
+ a.fill('tn-now','I have friends now'); a.click(act('bullyThenDone'));
+ r.push(['Then and now ends: "Then was then. You got through it."', a.S()==='bully-thennow-end' && a.T().includes('Then was then. You got through it.')]);
+ r.push(['Then and now: nothing saved, nothing kept in memory', JSON.stringify(a.dump())===before && !JSON.stringify(a.G('ui.bully')).includes('friends now') && a.G('ui.bully.then.length')===0]); }
+for(const [k,txt] of [['then','I want to kill myself'],['now','I want to die']]){
+ const a=boot(); toPast(a); a.click(act('bullyIdeas')); a.click(act('bullyGo','bully-thennow')); const before=JSON.stringify(a.dump());
+ a.fill('tn-'+k,txt); a.click(act('bullyThenDone'));
+ r.push([`Then and now (${k} line) RED → crisis, nothing saved`, a.S()==='crisis' && JSON.stringify(a.dump())===before]); }
+// note to your younger self
+{const a=boot(); toPast(a); a.click(act('bullyIdeas')); a.click(act('bullyNext')); a.click(act('bullyGo','bully-younger'));
+ r.push(['Younger self: "What would you tell them now?"', a.S()==='bully-younger' && a.T().includes('What would you tell them now?') && has988(a)]);
+ const before=JSON.stringify(a.dump());
+ a.fill('youngerBox','It was never your fault, kid.'); a.click(act('bullyYounger'));
+ const first=a.w.document.querySelector('.actions [data-act]');
+ r.push(['Younger self: Let it go is the default (first), Keep in my diary second', a.S()==='bully-younger-done' && first.dataset.act==='bullyLetGo' && first.classList.contains('btn-primary') && a.has(act('bullyKeepDiary','younger'))]);
+ a.click(act('bullyLetGo'));
+ r.push(['Younger self: Let it go stores nothing', JSON.stringify(a.dump())===before && a.G('ui.bully.note')===null && a.T().includes("Let go. It isn't kept anywhere.")]);
+ a.G('ACTIONS.bullyGo("bully-younger")'); a.fill('youngerBox','You were brave.'); a.click(act('bullyYounger')); a.G('ACTIONS.home()');
+ r.push(['Younger self: leaving without choosing keeps nothing', JSON.stringify(a.dump())===before && a.G('ui.bully.note')===null]);
+ a.G('ACTIONS.bullyStart(); ACTIONS.bullyPath("past"); ACTIONS.bullyIdeas(); ACTIONS.bullyNext(); ACTIONS.bullyGo("bully-younger")');
+ a.fill('youngerBox','You were brave.'); a.click(act('bullyYounger')); a.click(act('bullyKeepDiary','younger')); await tick(5);
+ const d=JSON.parse(a.dump()['next.v1.diary']||'null');
+ r.push(['Younger self: Keep in my diary saves one tagged entry', !!d && d.entries.length===1 && d.entries[0].text==='You were brave.' && d.entries[0].tag==='younger' && a.T().includes('Kept in your diary.')]);
+ a.G('ACTIONS.diaryBack()'); r.push(['Looking back labels it "Note to my younger self"', a.T().includes('Note to my younger self') && a.T().includes('You were brave.')]); }
+{const a=boot(); toPast(a); a.click(act('bullyIdeas')); a.click(act('bullyNext')); a.click(act('bullyGo','bully-younger')); const before=JSON.stringify(a.dump());
+ a.fill('youngerBox','I still want to end my life'); a.click(act('bullyYounger'));
+ r.push(['Younger self RED → crisis, nothing saved or kept', a.S()==='crisis' && JSON.stringify(a.dump())===before && !JSON.stringify(a.G('ui')).includes('end my life')]); }
+{const a=boot(); await lockDiary(a); const lockedBefore=a.dump()['next.v1.diary'];
+ toPast(a); a.click(act('bullyIdeas')); a.click(act('bullyNext')); a.click(act('bullyGo','bully-younger'));
+ a.fill('youngerBox','Locked note text'); a.click(act('bullyYounger')); a.click(act('bullyKeepDiary','younger')); await tick(5);
+ r.push(['Locked diary: asks for the passcode first, nothing written yet', a.S()==='bully-unlock' && a.dump()['next.v1.diary']===lockedBefore]);
+ a.fill('bullyPass','wrong'); a.click(act('bullyUnlock')); await until(()=>!a.G('ui.diaryBusy'));
+ r.push(['Locked diary: wrong passcode → "That\'s not it."', a.T().includes("That's not it.") && a.dump()['next.v1.diary']===lockedBefore]);
+ a.fill('bullyPass',PASS); a.click(act('bullyUnlock')); await until(()=>a.S()==='bully-idea');
+ const raw=a.dump()['next.v1.diary']||'';
+ r.push(['Locked diary: kept encrypted (no plain text stored) and locked again', raw!==lockedBefore && !raw.includes('Locked note text') && a.G('diaryKey')===null && a.T().includes('Kept in your diary.')]);
+ a.G('ACTIONS.diaryBack()'); a.fill('diaryPass',PASS); a.click(act('diaryUnlock')); await until(()=>a.G('!!diaryKey'));
+ r.push(['Locked diary: the note is there after unlocking', a.T().includes('Locked note text') && a.T().includes('Note to my younger self')]); }
+
 //@@PARTS@@
 
 for(const [n,ok,info] of r) console.log((ok?'PASS':'FAIL')+' '+n+(ok||info===undefined?'':' ('+info+')'));
