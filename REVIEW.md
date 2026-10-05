@@ -1549,6 +1549,7 @@ Scripted, not AI. Taps only. Says he is not a person in every session's first li
 - `again`: "That's okay. Hard feelings take a while. We can do one more round."
 - `stillHard`: "Thank you for doing this. This is a good moment to reach a real person."
 - `bye`: "Bye for now. Go be with your people."
+**Voice (owner request, 2026-10-05: "a cute sweet voice")**: still off by default ("Voice off" button on the Zags screen only). When on, he reads these lines with the phone's own speech voice, higher and softer (pitch 1.6, rate 0.86), preferring a gentle voice that runs on the phone itself; never an online-only voice. Clinician: does a voice make Zags feel more like a companion (D5, D28)?
 
 Under every Zags screen: "Zags is a scripted guide, not a person and not AI."
 

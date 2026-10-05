@@ -5,9 +5,10 @@ const HTML=fs.readFileSync(require('path').join(__dirname,'index.html'),'utf8');
 // North star pass: Calm, Connect and Change the scene keep some options one tap behind a toggle; tap it when the target isn't shown yet.
 const MORE_TOGGLES='[data-act="calmMore"],[data-act="connMore"],[data-act="sceneFind"]';
 function boot({speech=false}={}){
- const spoken=[], cancels={n:0};
+ const spoken=[], cancels={n:0}, utter=[];
+ const voices=[{name:'Google US English',lang:'en-US',localService:false},{name:'Fred',lang:'en-US',localService:true},{name:'Samantha',lang:'en-US',localService:true}];
  const dom=new JSDOM(HTML,{url:'https://next.example/',runScripts:'dangerously',pretendToBeVisual:true,beforeParse(w){ w.scrollTo=()=>{}; w.scrollBy=()=>{};
-   if(speech){ w.speechSynthesis={speak(u){spoken.push(u.text)},cancel(){cancels.n++}}; w.SpeechSynthesisUtterance=function(t){this.text=t;}; } }});
+   if(speech){ w.speechSynthesis={speak(u){spoken.push(u.text); utter.push(u)},cancel(){cancels.n++},getVoices(){return voices}}; w.SpeechSynthesisUtterance=function(t){this.text=t;}; } }});
  const w=dom.window; w.HTMLElement.prototype.scrollIntoView=()=>{};
  const click=(sel)=>{let el=w.document.querySelector(sel); if(!el){ const t=w.document.querySelector(MORE_TOGGLES); if(t){ t.dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true})); el=w.document.querySelector(sel); } } if(!el) throw new Error('missing '+sel+' on '+w.eval('session.screen')+'/'+w.eval('ui.zags&&ui.zags.phase')); el.dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true}));};
  ['obNext','obAdult','obLater'].forEach(a=>click(`[data-act="${a}"]`));
@@ -17,7 +18,7 @@ function boot({speech=false}={}){
  const tick=()=>{ const t=q.shift(); if(t) t.fn(); return t; };
  const dump=()=>{const o={}; for(let i=0;i<w.localStorage.length;i++){const k=w.localStorage.key(i); o[k]=w.localStorage.getItem(k);} return o;};
  return {w,click,S:()=>w.eval('session'),G:x=>w.eval(x),doc:w.document,T:()=>w.document.getElementById('app').textContent.replace(/\s+/g,' '),
-   Z:()=>w.eval('ui.zags'),bubble:()=>w.document.getElementById('screen-title').textContent,spoken,cancels,hold,tick,q,dump,realST};}
+   Z:()=>w.eval('ui.zags'),bubble:()=>w.document.getElementById('screen-title').textContent,spoken,utter,cancels,hold,tick,q,dump,realST};}
 const act=(a,arg)=>arg!==undefined?`[data-act="${a}"][data-arg="${arg}"]`:`[data-act="${a}"]`;
 const fromCalm=o=>{ const a=boot(o); a.click(act('route','calm')); a.click(act('zags','calm')); return a; };
 const r=[];
@@ -122,6 +123,9 @@ const toCheck=a=>{ a.click(act('zagsBreathe')); a.click(act('zagsSkip')); stepsT
  r.push(['voice is off by default', !!b && b.getAttribute('aria-pressed')==='false' && b.textContent==='Voice off' && a.spoken.length===0]);
  a.click(act('zagsVoice'));
  r.push(['turning it on speaks the current line, on the device', a.spoken.at(-1)===L.hello && a.doc.querySelector(act('zagsVoice')).getAttribute('aria-pressed')==='true']);
+ const u=a.utter.at(-1);
+ r.push(['a cute, sweet voice: higher pitch, softer and slower', u.pitch>=1.5 && u.rate<1 && u.volume<=1]);
+ r.push(['picks a gentle voice that runs on the phone (Samantha), never an online-only one', u.voice && u.voice.name==='Samantha' && u.voice.localService===true]);
  const c=a.cancels.n; a.click(act('zagsBreathe'));
  r.push(['it stops the moment the person taps anything', a.cancels.n>c]);
  const c2=a.cancels.n; a.click(act('home'));

@@ -578,6 +578,7 @@ P(''); P(`At 30 days, once, on Home: "${G('AFTER_END_NOTE')}" [Okay]`);
 H(3,'Zags: every line he can say (ZAGS_LINES)');
 P('Scripted, not AI. Taps only. Says he is not a person in every session\'s first line. No relationship language, no pressure to stay, no memory between sessions, never the person\'s name. Every session ends at a person. RED stops Zags. At most two breathing rounds per session (4 breaths each: in 4 seconds, out 6; 3 breaths with reduced motion). Voice is off by default and uses the device\'s own speech only.');
 list(Object.entries(G('ZAGS_LINES')).map(([k,v])=>`${code(k)}: "${v}"`));
+P('**Voice (owner request, 2026-10-05: "a cute sweet voice")**: still off by default ("Voice off" button on the Zags screen only). When on, he reads these lines with the phone\'s own speech voice, higher and softer (pitch '+G('ZAGS_VOICE.pitch')+', rate '+G('ZAGS_VOICE.rate')+'), preferring a gentle voice that runs on the phone itself; never an online-only voice. Clinician: does a voice make Zags feel more like a companion (D5, D28)?');
 P('');
 P(`Under every Zags screen: "${G('ZAGS_NOTE')}"`);
 const zShots=[['Hello','hello',''],['Breathing (in)','breathe','ui.zags.half="in"; ui.zags.breath=1;'],['Grounding step','steps',''],['How are you feeling now?','check',''],

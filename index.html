@@ -6436,12 +6436,26 @@ function zagsPhase(phase){
   lastRendered = null; render();
   zagsSpeak(zagsLine(ui.zags));
 }
+/* Zags's voice (owner request, 2026-10-05: "a cute sweet voice"). Still off by default and only on the Zags screen.
+   Higher, softer and a little slower than a normal voice. Prefers a gentle voice that runs on the phone itself
+   (localService), so the words aren't sent to an online speech service; never picks an online-only voice. */
+const ZAGS_VOICE = { pitch:1.6, rate:0.86, volume:0.9,
+  prefer:["Samantha","Karen","Tessa","Moira","Fiona","Serena","Zira","Hazel","Susan","Catherine","Allison","Ava","Victoria"] };
+function zagsVoicePick(){
+  try {
+    const all = (speechSynthesis.getVoices ? speechSynthesis.getVoices() : []) || [];
+    const local = all.filter(v => v && v.localService !== false && /^en/i.test(v.lang || ""));
+    for (const name of ZAGS_VOICE.prefer){ const v = local.find(x => (x.name || "").includes(name)); if (v) return v; }
+    return local.find(v => /female|woman/i.test(v.name || "")) || null;   // otherwise the phone's own default voice
+  } catch (_){ return null; }
+}
 function zagsSpeak(text){
   if (!ui.zagsVoice || !("speechSynthesis" in window)) return;
   try {
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
-    u.rate = 0.88; u.pitch = 1.15;
+    const v = zagsVoicePick(); if (v) u.voice = v;
+    u.rate = ZAGS_VOICE.rate; u.pitch = ZAGS_VOICE.pitch; u.volume = ZAGS_VOICE.volume;
     speechSynthesis.speak(u);
   } catch (_){}
 }

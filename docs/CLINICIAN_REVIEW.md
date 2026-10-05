@@ -126,7 +126,7 @@ These tests document **current** behavior so that any change is visible. They ar
 | D2 | YELLOW thresholds (phrases; 2× still bad / game No; 2× 9–10) | §6 | **OPEN** | | | |
 | D3 | Danger question wording and branches | §7 | **OPEN** | | | |
 | D4 | RED → YELLOW exits, incl. "That's not what I meant" on the full crisis screen; reset to GREEN on reload | §5, §7 | **OPEN: OWNER-APPROVED INTERIM in the code** (full crisis screen back → \"Do you feel safer?\") | | | |
-| D5 | Zags wording and Zags vs Human First | §9 | **OPEN: OWNER-APPROVED INTERIM in the code** (6.18 A: "I can guide you through the next few minutes."; Connect "Calm down with Zags while you wait") | | | |
+| D5 | Zags wording and Zags vs Human First | §9 | **OPEN: OWNER-APPROVED INTERIM in the code** (6.18 A: "I can guide you through the next few minutes."; Connect "Calm down with Zags while you wait"; 2026-10-05 owner request: Zags's optional voice made higher and softer, "a cute sweet voice", still off by default — does a voice make him feel more like a companion?) | | | |
 | D6 | Human First trigger and wording | §10 | **OPEN** | | | |
 | D7 | Safety plan structure and copy | §8 | **OPEN** | | | |
 | D8 | Time and distance plan | §8 | **OPEN** | | | |
