@@ -156,6 +156,9 @@ textarea.field{min-height:150px;resize:vertical}
 .tn-col .sit[aria-pressed="true"]{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
 .bully-guide{padding-left:20px;margin:8px 0 0}.bully-guide li{margin:8px 0;font-size:17px}
 .founder-h{font-size:17px}
+.und-lead{margin:0 0 6px}
+.und-entry{margin-top:12px}
+.und-list .card{min-height:56px}
 .bully-988{margin-top:22px;padding-top:12px;border-top:1px solid var(--line)}
 .doodle-prompt{margin:0 0 8px;font-family:var(--serif);font-size:19px;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline}
 .doodle-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
@@ -1291,6 +1294,39 @@ function griefMsgs(name){
 }
 const GRIEF_MISSION = { id:"remembering", title:"Remembering", prompt:"Find something that reminds you of them — their spot, a photo, something they loved." };
 const GRIEF_NOTE_MAX = 1000;
+/* UNDERSTAND IT (owner handoff, 2026-10-04). An optional, short step before acting: FEEL → UNDERSTAND → ACT. One
+   question at a time (2–3 at most), then a real next step through the existing routes and engine. Not therapy, not
+   an assessment: no labels, no scores, nothing saved (answers live in memory for this visit and are dropped). Never
+   argues ("that's not true"), never forces a positive answer. Original ZigZag wording; clinician review: all of it. */
+const UNDERSTAND = {
+  name:"Understand it",
+  entryMeta:"Before we change anything, let's see what's going on.",
+  lead:"Before we try to change it, let's figure out what's happening.",
+  q1:"What happened right before this?",
+  a1:[["said","Something someone said"],["saw","Something I saw"],["remembered","Something I remembered"],["worried","Something I'm worried will happen"],["happened","Something happened"],["nothing","Nothing obvious"],["unsure","I don't know"]],
+  q2:"What feels hardest about it?",
+  a2:[["what","What happened"],["might","What might happen"],["thinks","What someone thinks of me"],["alone","Being alone with it"],["loop","I can't stop thinking about it"],["unsure","I don't know"]],
+  q3:"What do you need right now?",
+  a3:[["calm","To calm down"],["out","To get it out"],["talk","Someone to talk to"],["scene","A change of scene"],["real","Something real to do"],["unsure","I don't know"]],
+  known:"Okay. We know a little more.", step:"Let's take one small step.", nextStep:"Next step",
+  thoughtLink:"A thought keeps telling me something",
+  thoughtQ:"What is the thought saying?",
+  thoughts:[
+    ["nobody","Nobody cares about me.","That's how it feels right now.",["Someone cares, but isn't here","I haven't reached out","Something happened that made me feel this way","I'm overwhelmed right now","I don't know"]],
+    ["hates","Everyone hates me.","It feels that way right now.",["Someone is upset with me, but that isn't everyone","I might be reading the situation through how I feel","Something specific happened","I don't know"]],
+    ["screw","I'm going to screw everything up.","That's what your mind is predicting.",["I might make a mistake, but not ruin everything","I don't know what will happen yet","I can deal with the next part when it happens","I don't know"]],
+    ["handle","I can't handle this.","It feels like too much right now.",null]
+  ],
+  thoughtOwn:"Something else", thoughtOwnLabel:"In your own words (optional)",
+  ownSay:"That's how it feels right now.", ownAlts:["Something happened that made me feel this way","I'm overwhelmed right now","We don't have to decide that yet","I don't know"],
+  elseQ:"What else could be true?",
+  easierQ:"What would make the next 10 minutes easier?",
+  stopLink:"Stop figuring it out",
+  stop1:"You've been trying to solve this in your head.", stop2:"Let's stop solving it for a minute.",
+  stopOpts:[["look","Look"],["touch","Touch"],["move","Move"],["drink","Drink"],["outside","Step outside"]],
+  link:"Understand it first"
+};
+
 /* 6.27 BULLIED, NOW OR BEFORE. Why it matters (not shown to people, never presented as statements about them):
    frequent childhood bullying is linked in a five-decade British birth cohort to more depression (OR 1.95), anxiety
    disorders (OR 1.65) and suicidality (OR 2.21) in adulthood, with fewer social relationships at 50 (Takizawa, Maughan
@@ -3303,6 +3339,7 @@ const SCREENS = {
       <div class="list">${opts.map(([arg, ic, alt, t, m]) =>
         `<button class="card dk-opt" data-act="route" data-arg="${arg}">${icon(ic, alt)}<span>${t}<span class="meta">${m}</span></span></button>`).join("")}
       </div>
+      <p class="und-entry"><button class="link" data-act="undStart">${UNDERSTAND.name}</button> <span class="small">${UNDERSTAND.entryMeta}</span></p>
       <p class="note dk-help">Scared of what you might do? <button class="link" data-act="getHelpNow">Get help now</button></p>` };
   },
 
@@ -3315,7 +3352,9 @@ const SCREENS = {
       <p class="small">Optional. You can skip this.</p>
       ${ratingRow(ui.rating, "calm", "the most intense")}`,
       actions:`<button class="btn btn-primary" data-act="beforeContinue">Continue</button>
-        <button class="link" data-act="beforeSkip">Skip</button>` };
+        <button class="link" data-act="beforeSkip">Skip</button>
+        ${["anxious","spiraling","low"].includes(session.currentState) ? `<button class="link und-entry" data-act="undStart">${UNDERSTAND.link}</button>` : ""}
+        ${session.currentState === "spiraling" ? `<button class="link" data-act="undStopStart">${UNDERSTAND.stopLink}</button>` : ""}` };
   },
 
   "anx-feet"(){
@@ -3722,6 +3761,54 @@ const SCREENS = {
       actions:`<button class="btn btn-secondary" data-act="fsStart">Find something</button>` };
   },
 
+  /* UNDERSTAND IT */
+  "understand"(){
+    return { close:true, body:`
+      <p class="small und-lead">${UNDERSTAND.lead}</p>
+      ${stepTitle(UNDERSTAND.q1, true)}
+      <div class="list und-list">${UNDERSTAND.a1.map(([k, t]) => `<button class="card" data-act="undA1" data-arg="${k}"><span>${t}</span></button>`).join("")}</div>
+      <p style="margin-top:16px"><button class="link" data-act="undThought">${UNDERSTAND.thoughtLink}</button></p>` };
+  },
+  "understand-2"(){
+    return { close:true, body:`
+      ${stepTitle(UNDERSTAND.q2, true)}
+      <div class="list und-list">${UNDERSTAND.a2.map(([k, t]) => `<button class="card" data-act="undA2" data-arg="${k}"><span>${t}</span></button>`).join("")}</div>` };
+  },
+  "understand-3"(){
+    const ten = ui.und && ui.und.ten;
+    return { close:true, body:`
+      ${ten ? `<p class="sub" style="font-size:19px">${ten}</p>` : ""}
+      ${stepTitle(ten ? UNDERSTAND.easierQ : UNDERSTAND.q3, true)}
+      <div class="list und-list">${UNDERSTAND.a3.map(([k, t]) => `<button class="card" data-act="undA3" data-arg="${k}"><span>${t}</span></button>`).join("")}</div>` };
+  },
+  "understand-next"(){
+    return { close:true, body:`${stepTitle(UNDERSTAND.known, true)}<p class="sub" style="font-size:19px">${UNDERSTAND.step}</p>`,
+      actions:`<button class="btn btn-primary" data-act="undNext">${UNDERSTAND.nextStep}</button>` };
+  },
+  "understand-thought"(){
+    return { close:true, body:`
+      ${stepTitle(UNDERSTAND.thoughtQ, true)}
+      <div class="list und-list">${UNDERSTAND.thoughts.map(([k, t]) => `<button class="card" data-act="undThoughtPick" data-arg="${k}"><span>${t}</span></button>`).join("")}</div>
+      <label class="small" for="undOwn" style="display:block;margin-top:16px">${UNDERSTAND.thoughtOwnLabel}</label>
+      <input class="field" id="undOwn" maxlength="140" autocomplete="off">
+      ${ui.msg ? `<p class="err" role="alert">${esc(ui.msg)}</p>` : ""}`,
+      actions:`<button class="btn btn-secondary" data-act="undThoughtOwn">${UNDERSTAND.thoughtOwn}</button>` };
+  },
+  "understand-else"(){
+    const u = ui.und || {}; const t = UNDERSTAND.thoughts.find(x => x[0] === u.thought);
+    const say = t ? t[2] : UNDERSTAND.ownSay, alts = t && t[3] ? t[3] : UNDERSTAND.ownAlts;
+    return { close:true, body:`
+      <p class="sub" style="font-size:19px">${say}</p>
+      ${stepTitle(UNDERSTAND.elseQ, true)}
+      <div class="list und-list">${alts.map((a, i) => `<button class="card" data-act="undElse" data-arg="${i}"><span>${a}</span></button>`).join("")}</div>` };
+  },
+  "understand-stop"(){
+    return { close:true, body:`
+      ${stepTitle(UNDERSTAND.stop1, true)}
+      <p class="sub" style="font-size:19px">${UNDERSTAND.stop2}</p>
+      <div class="sits und-stop">${UNDERSTAND.stopOpts.map(([k, t]) => `<button class="sit" data-act="undStop" data-arg="${k}">${t}</button>`).join("")}</div>` };
+  },
+
   /* 6.27 BULLIED, NOW OR BEFORE */
   bully(){
     return { close:true, body:`
@@ -3894,7 +3981,8 @@ const SCREENS = {
       <div class="sad-art">${sadCloud()}${zagsMark("zmark-lg sad-zags")}</div>
       ${stepTitle(SAD.q, true)}
       <p class="sub" style="font-size:19px">${SAD.ok}</p>
-      <p class="small sad-sky">${SAD.sky}</p>`,
+      <p class="small sad-sky">${SAD.sky}</p>
+      <p class="und-entry"><button class="link" data-act="undStart">${UNDERSTAND.link}</button></p>`,
       actions:`<button class="btn btn-primary" data-act="sadOut">${SAD.letOut}</button>
         <button class="btn btn-secondary" data-act="sadTiny">${SAD.tiny}</button>` };
   },
@@ -4695,6 +4783,7 @@ const SCREENS = {
       </div>
       ${night ? warm : ""}
       ${ui.connMoreOpen ? `<button class="card wide around-card" data-act="aroundPeople" style="margin-top:14px">${icon("people")}<span>${l10n("connect.around")}</span></button>
+      <button class="link und-entry" data-act="undStart">${UNDERSTAND.link}</button>
       <button class="card wide zcard" data-act="zags" data-arg="connect" style="margin-top:10px">${zagsFace()}<span>${l10n("connect.zags")}</span></button>
       <button class="link" data-act="songStart" data-arg="connect">${l10n("connect.song")}</button>`
       : `<button class="card wide conn-more-card" data-act="connMore" aria-expanded="false" style="margin-top:14px">${icon("people")}<span>${l10n("connect.more")}<span class="meta">${l10n("connect.moreMeta")}</span></span></button>`}
@@ -6825,6 +6914,54 @@ const ACTIONS = {
   warmEnough(){ if (blockIfRed()) return; go("warm-end"); },
   warmFind(){ if (blockIfRed()) return; startIntervention("find_something"); },
 
+  /* UNDERSTAND IT: answers live in ui.und for this visit only; nothing is saved or scored. */
+  undStart(){ if (blockIfRed()) return; ui.und = { from:session.screen }; ui.msg = ""; go("understand"); },
+  undA1(arg){ if (blockIfRed()) return; if (!UNDERSTAND.a1.some(a => a[0] === arg)) return; ui.und = { ...(ui.und || {}), a1:arg, ten:null };
+    go(arg === "nothing" || arg === "unsure" ? "understand-3" : "understand-2"); },   // nothing to ask about: straight to what you need
+  undA2(arg){ if (blockIfRed()) return; if (!UNDERSTAND.a2.some(a => a[0] === arg)) return; ui.und = { ...(ui.und || {}), a2:arg };
+    go(arg === "loop" ? "understand-stop" : "understand-3"); },   // stuck thinking: stop figuring it out
+  undA3(arg){ if (blockIfRed()) return; if (!UNDERSTAND.a3.some(a => a[0] === arg)) return; ui.und = { ...(ui.und || {}), a3:arg }; go("understand-next"); },
+  undNext(){   // into the existing routes; "I don't know" → the existing engine
+    if (blockIfRed()) return;
+    const a3 = (ui.und || {}).a3; ui.und = null;
+    if (a3 === "calm") ACTIONS.route("calm");
+    else if (a3 === "out") ACTIONS.route("head");
+    else if (a3 === "talk") ACTIONS.route("connect");
+    else if (a3 === "scene") ACTIONS.route("scene");
+    else if (a3 === "real") startIntervention("find_something");
+    else { if (!session.currentState) dispatch({ type:"SET_CURRENT_STATE", state:"distraction" }); ui.exclude = []; ui.zigFrom = null; ui.dirChannel = null; runEngine(); toRecommendation(); }
+  },
+  undStopStart(){ if (blockIfRed()) return; ui.und = { from:session.screen }; go("understand-stop"); },
+  undThought(){ if (blockIfRed()) return; ui.msg = ""; go("understand-thought"); },
+  undThoughtPick(arg){
+    if (blockIfRed()) return;
+    const t = UNDERSTAND.thoughts.find(x => x[0] === arg); if (!t) return;
+    // The person chose this sentence as theirs, so it is checked like their own words (YELLOW stays YELLOW).
+    handleSafeTextSubmit({ text:t[1], onRed(){ applySafetyResult("RED"); }, onYellow(){ applySafetyResult("YELLOW"); }, onGreen(){} });
+    if (session.safetyLevel === "RED") return;
+    ui.und = { ...(ui.und || {}), thought:arg, ten:null };
+    if (!t[3]){ ui.und.ten = t[2]; go("understand-3"); return; }   // "I can't handle this.": what would make the next 10 minutes easier?
+    go("understand-else");
+  },
+  undThoughtOwn(){
+    if (blockIfRed()) return;
+    const box = document.getElementById("undOwn"); const text = ((box && box.value) || "").trim().slice(0, 140);
+    if (box) box.value = "";
+    handleSafeTextSubmit({ text,
+      onRed(){ ui.und = null; applySafetyResult("RED"); },   // crisis first; nothing kept
+      onYellow(){ applySafetyResult("YELLOW"); ui.und = { ...(ui.und || {}), thought:"own" }; go("understand-else"); },
+      onGreen(){ ui.und = { ...(ui.und || {}), thought:"own" }; go("understand-else"); } });
+  },
+  undElse(){ if (blockIfRed()) return; ui.und = { ...(ui.und || {}), a3:"unsure" }; go("understand-next"); },   // no answer is "right"; then one small step
+  undStop(arg){
+    if (blockIfRed()) return;
+    ui.und = null;
+    if (arg === "look") startIntervention("find_something");
+    else if (arg === "touch") startIntervention("touch_real_world");
+    else if (arg === "move") ACTIONS.route("scene");
+    else if (arg === "drink") startIntervention("warm_comfort");
+    else if (arg === "outside") ACTIONS.scenePick("outside");
+  },
   /* 6.27 BULLIED, NOW OR BEFORE */
   bullyStart(){ if (blockIfRed()) return; ui.bully = {}; ui.msg = ""; ui.flash = ""; go("bully"); },
   bullyIdeas(){ if (blockIfRed()) return; ui.bully = { ...(ui.bully || {}), idx:0, seen:1 }; ui.flash = ""; ui.msg = ""; go("bully-idea"); },

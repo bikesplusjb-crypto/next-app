@@ -287,6 +287,19 @@ P(''); P('G. "Help near me (Treasure Coast)" (**hidden until the owner verifies 
 list(G('NEAR_ME').map(e=>`${e.name}: "${e.what}"${e.phone?' · '+e.phone:''} (verified: ${e.verified})`));
 P(''); P('H. Simplicity audit: report only, nothing applied (docs/SIMPLICITY_AUDIT.md).');
 
+H(3,'Understand it (owner handoff, 2026-10-04; CLINICIAN REVIEW REQUIRED; not validated)');
+P('Optional and short (2–3 questions), one question at a time, then one real step through the existing routes or the engine. No labels, scores or storage. Reached from: I don\'t know what I need (small link), the first screen of I\'m anxious / I\'m spiraling (small link), I feel sad or low (small link), Connect → Something else. Not on Home.');
+const UN=G('UNDERSTAND');
+list([
+  'Entry: "'+UN.name+'" ("'+UN.entryMeta+'") or "'+UN.link+'"; lead line: "'+UN.lead+'"',
+  '"'+UN.q1+'" → '+UN.a1.map(a=>`"${a[1]}"`).join(' · ')+' ("Nothing obvious" and "I don\'t know" skip to the third question)',
+  '"'+UN.q2+'" → '+UN.a2.map(a=>`"${a[1]}"`).join(' · ')+' ("I can\'t stop thinking about it" → Stop figuring it out)',
+  '"'+UN.q3+'" → '+UN.a3.map(a=>`"${a[1]}"`).join(' · ')+' → Calm / Get out of my head / Connect / Change the scene / Find something / the engine',
+  'Ending: "'+UN.known+'" / "'+UN.step+'" → "'+UN.nextStep+'"',
+  'What else could be true: "'+UN.thoughtLink+'" → "'+UN.thoughtQ+'" → '+UN.thoughts.map(([,t,say,alts])=>`"${t}" → "${say}"`+(alts?` / "${UN.elseQ}" → `+alts.map(x=>`"${x}"`).join(' · '):` / "${UN.easierQ}" → the third question\'s choices`)).join(' ; ')+' ; "'+UN.thoughtOwn+'" ("'+UN.thoughtOwnLabel+'", safety-checked, not kept) → "'+UN.ownSay+'" / "'+UN.elseQ+'" → '+UN.ownAlts.map(x=>`"${x}"`).join(' · ')+'. Choosing a sentence counts as the person\'s words, so "Nobody cares about me." and "Everyone hates me." turn on YELLOW like typing them would.',
+  'Stop figuring it out: "'+UN.stop1+'" / "'+UN.stop2+'" → '+UN.stopOpts.map(o=>`"${o[1]}"`).join(' · ')+' (Find something · Find something real · Change the scene · Make something warm · Step outside for 5 minutes)'
+]);
+
 H(3,'Stage 6.27: Bullied, now or before (CLINICIAN REVIEW REQUIRED for all of it)');
 P('Why (for reviewers only; never shown to people as statements about them): frequent childhood bullying is linked to more adult depression (OR 1.95), anxiety disorders (OR 1.65) and suicidality (OR 2.21) (Takizawa, Maughan & Arseneault, 2014); 32% of Americans reported being directly bullied at work in 2024 (Workplace Bullying Institute); 41% of U.S. adults have experienced online harassment (Pew Research Center, 2021).');
 const BU=G('BULLY');

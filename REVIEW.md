@@ -1202,6 +1202,17 @@ G. "Help near me (Treasure Coast)" (**hidden until the owner verifies at least o
 
 H. Simplicity audit: report only, nothing applied (docs/SIMPLICITY_AUDIT.md).
 
+### Understand it (owner handoff, 2026-10-04; CLINICIAN REVIEW REQUIRED; not validated)
+
+Optional and short (2–3 questions), one question at a time, then one real step through the existing routes or the engine. No labels, scores or storage. Reached from: I don't know what I need (small link), the first screen of I'm anxious / I'm spiraling (small link), I feel sad or low (small link), Connect → Something else. Not on Home.
+- Entry: "Understand it" ("Before we change anything, let's see what's going on.") or "Understand it first"; lead line: "Before we try to change it, let's figure out what's happening."
+- "What happened right before this?" → "Something someone said" · "Something I saw" · "Something I remembered" · "Something I'm worried will happen" · "Something happened" · "Nothing obvious" · "I don't know" ("Nothing obvious" and "I don't know" skip to the third question)
+- "What feels hardest about it?" → "What happened" · "What might happen" · "What someone thinks of me" · "Being alone with it" · "I can't stop thinking about it" · "I don't know" ("I can't stop thinking about it" → Stop figuring it out)
+- "What do you need right now?" → "To calm down" · "To get it out" · "Someone to talk to" · "A change of scene" · "Something real to do" · "I don't know" → Calm / Get out of my head / Connect / Change the scene / Find something / the engine
+- Ending: "Okay. We know a little more." / "Let's take one small step." → "Next step"
+- What else could be true: "A thought keeps telling me something" → "What is the thought saying?" → "Nobody cares about me." → "That's how it feels right now." / "What else could be true?" → "Someone cares, but isn't here" · "I haven't reached out" · "Something happened that made me feel this way" · "I'm overwhelmed right now" · "I don't know" ; "Everyone hates me." → "It feels that way right now." / "What else could be true?" → "Someone is upset with me, but that isn't everyone" · "I might be reading the situation through how I feel" · "Something specific happened" · "I don't know" ; "I'm going to screw everything up." → "That's what your mind is predicting." / "What else could be true?" → "I might make a mistake, but not ruin everything" · "I don't know what will happen yet" · "I can deal with the next part when it happens" · "I don't know" ; "I can't handle this." → "It feels like too much right now." / "What would make the next 10 minutes easier?" → the third question's choices ; "Something else" ("In your own words (optional)", safety-checked, not kept) → "That's how it feels right now." / "What else could be true?" → "Something happened that made me feel this way" · "I'm overwhelmed right now" · "We don't have to decide that yet" · "I don't know". Choosing a sentence counts as the person's words, so "Nobody cares about me." and "Everyone hates me." turn on YELLOW like typing them would.
+- Stop figuring it out: "You've been trying to solve this in your head." / "Let's stop solving it for a minute." → "Look" · "Touch" · "Move" · "Drink" · "Step outside" (Find something · Find something real · Change the scene · Make something warm · Step outside for 5 minutes)
+
 ### Stage 6.27: Bullied, now or before (CLINICIAN REVIEW REQUIRED for all of it)
 
 Why (for reviewers only; never shown to people as statements about them): frequent childhood bullying is linked to more adult depression (OR 1.95), anxiety disorders (OR 1.65) and suicidality (OR 2.21) (Takizawa, Maughan & Arseneault, 2014); 32% of Americans reported being directly bullied at work in 2024 (Workplace Bullying Institute); 41% of U.S. adults have experienced online harassment (Pew Research Center, 2021).
@@ -1592,6 +1603,8 @@ Rendered for each state where the screen changes by state. Identical renders are
 - **Button:** Get distracted — Interrupt the loop for a few minutes
 - **Button:** Connect with someone — A person, not another answer
 - **Button:** Get out of where I am — Change the scene
+- **Button:** Understand it
+- Before we change anything, let's see what's going on.
 - Scared of what you might do? Get help now
 
 ### `before`
@@ -1609,6 +1622,7 @@ _When: anxious_
 - 10 · the most intense
 - **Button:** Continue
 - **Button:** Skip
+- **Button:** Understand it first
 
 _When: spiraling_
 
@@ -1623,6 +1637,8 @@ _When: spiraling_
 - 10 · the most intense
 - **Button:** Continue
 - **Button:** Skip
+- **Button:** Understand it first
+- **Button:** Stop figuring it out
 
 _When: low_
 
@@ -1637,6 +1653,7 @@ _When: low_
 - 10 · the most intense
 - **Button:** Continue
 - **Button:** Skip
+- **Button:** Understand it first
 
 _When: craving_
 
@@ -2082,6 +2099,89 @@ _When: distraction_
 - Nothing here yet.
 - **Button:** Find something
 
+### `understand`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Before we try to change it, let's figure out what's happening.
+- **Heading:** What happened right before this?
+- **Button:** Something someone said
+- **Button:** Something I saw
+- **Button:** Something I remembered
+- **Button:** Something I'm worried will happen
+- **Button:** Something happened
+- **Button:** Nothing obvious
+- **Button:** I don't know
+- **Button:** A thought keeps telling me something
+
+### `understand-2`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** What feels hardest about it?
+- **Button:** What happened
+- **Button:** What might happen
+- **Button:** What someone thinks of me
+- **Button:** Being alone with it
+- **Button:** I can't stop thinking about it
+- **Button:** I don't know
+
+### `understand-3`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** What do you need right now?
+- **Button:** To calm down
+- **Button:** To get it out
+- **Button:** Someone to talk to
+- **Button:** A change of scene
+- **Button:** Something real to do
+- **Button:** I don't know
+
+### `understand-next`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Okay. We know a little more.
+- Let's take one small step.
+- **Button:** Next step
+
+### `understand-thought`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** What is the thought saying?
+- **Button:** Nobody cares about me.
+- **Button:** Everyone hates me.
+- **Button:** I'm going to screw everything up.
+- **Button:** I can't handle this.
+- In your own words (optional)
+- **Text box**
+- **Button:** Something else
+
+### `understand-else`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- That's how it feels right now.
+- **Heading:** What else could be true?
+- **Button:** Something happened that made me feel this way
+- **Button:** I'm overwhelmed right now
+- **Button:** We don't have to decide that yet
+- **Button:** I don't know
+
+### `understand-stop`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** You've been trying to solve this in your head.
+- Let's stop solving it for a minute.
+- **Button:** Look
+- **Button:** Touch
+- **Button:** Move
+- **Button:** Drink
+- **Button:** Step outside
+
 ### `bully`
 
 - **Button:** × _(screen reader: "Close and go to home")_
@@ -2287,6 +2387,7 @@ _When: distraction_
 - **Heading:** Feels like a dark cloud over you?
 - It's okay to feel sad. You don't have to fix it right now.
 - You're the sky, not the cloud. Clouds can be heavy, and they still move.
+- **Button:** Understand it first
 - **Button:** Let it out
 - **Button:** Do one tiny thing
 

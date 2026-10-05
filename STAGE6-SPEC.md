@@ -62,6 +62,7 @@ ZigZag Mind is comfortable with people leaving. That is the goal, not a failure.
 | 6.22 | 6.22 | Doodle (owner request, 2026-10-04) |
 | 6.23 | 6.23 | I feel sad or low (owner request, 2026-10-04) |
 | 6.27 | 6.27 | Bullied, now or before (STAGE6-27-ADDENDUM.md) |
+| — | Understand it | Owner handoff, 2026-10-04 (FEEL → UNDERSTAND → ACT, optional) |
 | 3 People & safety | 6.8 | Code word |
 | 3 People & safety | 6.9 | Supporter guide page |
 | 3 People & safety | 6.10 | Check-in reminders |
@@ -600,3 +601,13 @@ Built per STAGE6-27-ADDENDUM.md A–G, one commit per part. Entry: Home chip "Bu
 - **Resources:** the addendum's tests mention four resources but the text names three (WBI, CCRI, StopBullying.gov); all three are hidden until verified.
 - **Online:** the threats / 911 panel is on the first and the last screen of that path.
 Tests: `bully.test.js`.
+
+## Understand it (owner handoff, as built, 2026-10-05)
+
+Optional, 2–3 questions, one at a time: `understand` (Q1) → `understand-2` (Q2) → `understand-3` (Q3) → `understand-next` ("Okay. We know a little more." / "Let's take one small step." → Next step). Copy in `UNDERSTAND`; answers in `ui.und` (memory, dropped on the next step); nothing saved, no scores. Routing reuses existing actions: Calm, Get out of my head, Connect, Change the scene, `find_something`, or the engine (`runEngine` → `toRecommendation`) for "I don't know". Differences from the text, and why:
+- **Entry** is a small link, never a big card: I don't know what I need; the first (rating) screen of I'm anxious / I'm spiraling; I feel sad or low's first screen; Connect → Something else (Connect stays at 8 choices). Not added to Home. **Not in the engine's library** (it's a question step, not an intervention), so the engine doesn't suggest it.
+- **Skipping:** "Nothing obvious" / "I don't know" on Q1 skip to Q3; "I can't stop thinking about it" on Q2 opens Stop figuring it out instead of Q3.
+- **What else could be true?** needs a statement: "A thought keeps telling me something" offers the handoff's four sentences plus "Something else" in the person's own words (140 characters, `handleSafeTextSubmit`, not kept). Choosing a sentence is checked like typed words, so "Nobody cares about me." / "Everyone hates me." turn on YELLOW. The own-words version uses "That's how it feels right now." and four general possibilities (new wording, clinician item). Any answer leads to "Okay. We know a little more."
+- **Stop figuring it out** (also a small link on I'm spiraling): Look → Find something; Touch → Find something real; Move → Change the scene (small moves); Drink → Make something warm; Step outside → "Step outside for 5 minutes".
+- **"To get it out"** goes to Get out of my head (Mind Scribble doesn't exist yet). **Zags** isn't added (the handoff keeps his role minimal and optional).
+Tests: `understand.test.js`.
