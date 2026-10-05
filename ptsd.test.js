@@ -79,6 +79,26 @@ const NIGHT=new Date(2026,9,5,2,41).getTime();   // night mode (midnight to 6am)
  r.push(['E3: "I still feel bad" → Let\'s Zig: the next step comes from a different direction than BODY', ['recommendation','human-first'].includes(a.S()) && a.G('ui.zigFrom')==='BODY' && a.G('!ui.engine.interventionId || findIntervention(ui.engine.interventionId).channel!=="BODY"')]); }
 {const a=boot(); r.push(['E: never suggested by the engine (no states)', a.G('findIntervention("on_edge").states.length')===0 && a.G('findIntervention("on_edge").channel')==='BODY']); }
 
+// ================= F. Veteran or service member =================
+const GUNS="A lot of vets have a buddy hold their guns for a while when things get heavy. It's temporary, and it's yours.";
+{const a=boot(); a.G('ACTIONS.ptsdStart()'); a.click(act('ptsdPath','vet')); const t=a.T();
+ r.push(['F1: "You don\'t have to carry this alone, and you don\'t have to explain it to a civilian."', a.S()==='ptsd-vet' && t.includes("You don't have to carry this alone, and you don't have to explain it to a civilian.")]);
+ r.push(['F2: Vet Center Call Center — 1-877-927-8387, call button', t.includes('Vet Center Call Center — 1-877-927-8387') && a.has('a[href="tel:18779278387"]') && t.includes("Free, confidential, 24/7. You'll talk with combat veterans and their families. They also help with PTSD and military sexual trauma.")]);
+ r.push(['F3: Veterans Crisis Line: Call 988 then press 1 · Text 838255 · chat', t.includes('Call 988, then press 1') && a.has('.vet-vcl a[href="tel:988"]') && a.has('.vet-vcl a[href^="sms:838255"]') && a.has('.vet-vcl a[href="https://www.veteranscrisisline.net/"]') && t.includes('Free, confidential, 24/7.')]);
+ r.push(['F4: PTSD Coach: free VA app, link to its official page', t.includes("A free app from the VA's National Center for PTSD.") && a.has('a[href^="https://www.ptsd.va.gov/"]')]);
+ r.push(['F5: "Even if you\'ve never used the VA, some help is available right away."', t.includes("Even if you've never used the VA, some help is available right away.")]);
+ r.push(['F6: the gun line, with a link to the time and distance plan', t.includes(GUNS) && a.has(act('ptsdTD'))]);
+ a.click(act('ptsdTD')); r.push(['F6: → My Plan → Time and distance plan', a.S()==='plan-edit' && a.G('ui.editSection')==='timeDistance']);
+ r.push(['F7: verified with source and checked date', a.G('Object.values(VET_RESOURCES).every(v=>v.verified===true && v.checked==="2026-10-04" && /^https:\\/\\/www\\.(vetcenter\\.va\\.gov|veteranscrisisline\\.net|ptsd\\.va\\.gov)\\//.test(v.source))')]); }
+{const a=boot({phone:false}); a.G('ACTIONS.ptsdStart(); ACTIONS.ptsdPath("vet")');
+ r.push(['F2/F3 on a computer: numbers shown as text, Copy for 838255', a.T().includes('1-877-927-8387') && !a.has('.vet-vcl a[href^="sms:"]') && a.has('.vet-vcl [data-copy="838255"]')]); }
+{const a=boot(); let where=[];
+ for(const sc of ['crisis','crisis-full','crisis-no','safety-check','plan-now','home','ptsd','ptsd-now','ptsd-night','ptsd-other','ptsd-love','connect']){ a.G(`session.screen=${JSON.stringify(sc)}; lastRendered=null; render()`); if(a.T().includes('buddy hold their guns')) where.push(sc); }
+ r.push(['F6: the gun line appears only in F (never on crisis screens)', where.length===0, where.join()]);
+ a.G('ACTIONS.ptsdStart(); ACTIONS.ptsdPath("vet")'); r.push(['F6: and it is in F', a.T().includes('buddy hold their guns')]); }
+{const a=boot(); a.G('VET_RESOURCES.vetCenter.verified=false; VET_RESOURCES.vcl.verified=false; VET_RESOURCES.ptsdCoach.verified=false; ACTIONS.ptsdStart(); ACTIONS.ptsdPath("vet")');
+ r.push(['F7: if a resource is ever unmarked, it disappears', !a.T().includes('1-877-927-8387') && !a.has('a[href^="sms:838255"]') && !a.T().includes('PTSD Coach')]); }
+
 //@@PARTS@@
 
 for(const [n,ok,info] of r) console.log((ok?'PASS':'FAIL')+' '+n+(ok||info===undefined?'':' ('+info+')'));

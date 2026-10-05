@@ -11,7 +11,8 @@ r.push(['app: no network or location APIs, no external scripts, fonts or images'
 r.push(['supporter guide: none either', !NET.test(GUIDE)]);
 r.push(['app: no sessionStorage, IndexedDB or cookies', !/sessionStorage|indexedDB|document\.cookie/.test(APP)]);
 r.push(['service worker: fetches only this site\'s files, never reads user data', !/localStorage|sessionStorage|indexedDB|next\.v1/.test(SW.replace(/^\s*\/\/.*$/gm,''))]);
-const KNOWN=['https://988lifeline.org/chat','https://findahelpline.com','https://ko-fi.com/zigzagmind','https://maps.apple.com/?q=','https://www.google.com/maps/search/','https://'];
+const KNOWN=['https://www.veteranscrisisline.net/','https://www.vetcenter.va.gov/','https://www.ptsd.va.gov/appvid/mobile/ptsdcoach_app.asp',   // 6.28 F, person-tapped (PRIVACY_DATA_FLOW.md)
+  'https://988lifeline.org/chat','https://findahelpline.com','https://ko-fi.com/zigzagmind','https://maps.apple.com/?q=','https://www.google.com/maps/search/','https://'];
 const found=[...new Set((APP.match(/https?:\/\/[A-Za-z0-9./_?=&%#-]*/g)||[]))];
 r.push(['every external address in the app is on the known list (update PRIVACY_DATA_FLOW.md first)', found.every(u=>KNOWN.includes(u)), found.filter(u=>!KNOWN.includes(u)).join()]);
 r.push(['F7: the app and the supporter guide both set no-referrer (links don\'t send the app\'s address)', /<meta name="referrer" content="no-referrer">/.test(APP) && /name="referrer" content="no-referrer"/.test(GUIDE)]);

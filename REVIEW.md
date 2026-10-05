@@ -1223,6 +1223,8 @@ Why (for reviewers only; never shown as statements about people): in 2023 an ave
 - C. It's happening right now (plain, large type, one instruction per screen, Next only, no typing): Now screen "It's [Weekday, Month Day, Year]. It's [h:mm AM/PM]." / "That was then. This is now." → "Put both feet flat on the floor. Press down." → "Look around. Name three things you can see, out loud or in your head." → "Drink something cold, or hold something cool in your hands." → "Say where you are, out loud if you can." → the Now screen again → "Do you want to reach someone?" → "I'm a veteran: talk to someone who's been there" · "Talk to someone" · "I'm okay for now"
 - D. Nightmare (plain, no typing): "Turn on a light." → the Now screen with "It's over. You're here now." → "Drink some water. Sit up for a minute." → "Calm down with Zags" · "Cozy up for sleep" (night only) · "Talk to someone" · "Put the phone down"
 - E. On edge: "Your body learned to stay ready. It's not a flaw, and it's not your fault." → one idea at a time ("Another idea", "How do I feel now?"): "Sit where you can see the door, if that helps." · "Breathe for 1 minute" · "Take a short walk" · "Step away before you say something you don't mean. You can come back to it." → the normal check-in and Let's Zig ("Make it smaller" not built yet)
+- F. Veteran or service member: "You don't have to carry this alone, and you don't have to explain it to a civilian." → "Talk to someone who's been there": Vet Center Call Center — 1-877-927-8387 ("Free, confidential, 24/7. You'll talk with combat veterans and their families. They also help with PTSD and military sexual trauma.") "Call the Vet Center Call Center" · Veterans Crisis Line ("Free, confidential, 24/7."): "Call 988, then press 1" · "Text 838255" · "Chat online" · PTSD Coach ("A free app from the VA's National Center for PTSD.") "About PTSD Coach" · "Even if you've never used the VA, some help is available right away."
+- Guns (OWNER-APPROVED INTERIM, clinician review): "A lot of vets have a buddy hold their guns for a while when things get heavy. It's temporary, and it's yours." → "Open my time and distance plan" (My Plan → Time and distance plan)
 
 ### Understand it (owner handoff, 2026-10-04; CLINICIAN REVIEW REQUIRED; not validated)
 
@@ -2130,6 +2132,27 @@ _When: distraction_
 - **Button:** I'm a veteran or service member
 - **Button:** Something happened to me — Not military
 - **Button:** Someone I love has PTSD or served
+
+### `ptsd-vet`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** You don't have to carry this alone, and you don't have to explain it to a civilian.
+- Talk to someone who's been there
+- **Heading:** Vet Center Call Center — 1-877-927-8387
+- Free, confidential, 24/7. You'll talk with combat veterans and their families. They also help with PTSD and military sexual trauma.
+- **Link → `tel:18779278387`:** Call the Vet Center Call Center
+- **Heading:** Veterans Crisis Line
+- Free, confidential, 24/7.
+- **Link → `tel:988`:** Call 988, then press 1
+- **Link → `sms:838255`:** Text 838255
+- **Link → `https://www.veteranscrisisline.net/`:** Chat online
+- **Heading:** PTSD Coach
+- A free app from the VA's National Center for PTSD.
+- **Link → `https://www.ptsd.va.gov/appvid/mobile/ptsdcoach_app.asp`:** About PTSD Coach
+- Even if you've never used the VA, some help is available right away.
+- A lot of vets have a buddy hold their guns for a while when things get heavy. It's temporary, and it's yours.
+- **Button:** Open my time and distance plan
 
 ### `ptsd-edge`
 

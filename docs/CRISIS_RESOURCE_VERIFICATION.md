@@ -52,6 +52,16 @@ Every entry is **hidden** (`GRIEF_RESOURCES` in index.html, `verified:false`). S
 | Pet loss support line | "Someone to talk to after losing a pet." | (none: owner to identify and add) | (none: owner to add) | | | |
 | GriefShare (Faith & hope only) | "Faith-based grief support groups." | (none: owner to add) | (none: owner to add) | | | |
 
+## Veterans (6.28 F): shown, confirmed by the owner on official VA sites on 2026-10-04
+
+These are `verified:true` in `VET_RESOURCES` (index.html) with `source` and `checked:"2026-10-04"`. **Owner to re-check periodically.** The links below could not be opened from the build environment (its network blocks these sites); tap each once on a phone to confirm it opens the right page.
+
+| Resource | What the app shows | Phone / text in code | Official URL (link in the app) | Checked | Note |
+|---|---|---|---|---|---|
+| Vet Center Call Center | "Free, confidential, 24/7. You'll talk with combat veterans and their families. They also help with PTSD and military sexual trauma." | 1-877-927-8387 (`tel:18779278387`) | https://www.vetcenter.va.gov/ | 2026-10-04 (owner) | Owner to re-check periodically |
+| Veterans Crisis Line | "Free, confidential, 24/7." · "Call 988, then press 1" · "Text 838255" · "Chat online" | `tel:988` (the person presses 1), `sms:838255` | https://www.veteranscrisisline.net/ | 2026-10-04 (owner) | Owner to re-check periodically |
+| PTSD Coach (VA National Center for PTSD) | "A free app from the VA's National Center for PTSD." | (none) | https://www.ptsd.va.gov/appvid/mobile/ptsdcoach_app.asp | 2026-10-04 (owner) | Owner to re-check periodically; confirm the page address |
+
 ## Bullied, now or before (6.27)
 
 Every entry is **hidden** (`BULLY_RESOURCES` in index.html, `verified:false`) until the owner confirms it by phone or official website, fills in phone and/or website, and sets `verified:true`. 988 is always shown in this path.

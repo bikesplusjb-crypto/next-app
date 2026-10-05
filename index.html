@@ -1327,6 +1327,16 @@ const PTSD = {
   edgeSay:"Your body learned to stay ready. It's not a flaw, and it's not your fault.",
   edge:[["door","Sit where you can see the door, if that helps."],["breathe","Breathe for 1 minute"],["walk","Take a short walk"],["away","Step away before you say something you don't mean. You can come back to it."]],
   okay:"Okay", another:"Another idea", howNow:"How do I feel now?",
+  // F: veteran or service member
+  vetSay:"You don't have to carry this alone, and you don't have to explain it to a civilian.",
+  vetBeen:"Talk to someone who's been there",
+  vetCenterLine:"Free, confidential, 24/7. You'll talk with combat veterans and their families. They also help with PTSD and military sexual trauma.",
+  vetCall:"Call the Vet Center Call Center",
+  vclLine:"Free, confidential, 24/7.", vclCall:"Call 988, then press 1", vclText:"Text 838255", vclChat:"Chat online",
+  coachLine:"A free app from the VA's National Center for PTSD.", coachLink:"About PTSD Coach",
+  noVA:"Even if you've never used the VA, some help is available right away.",
+  guns:"A lot of vets have a buddy hold their guns for a while when things get heavy. It's temporary, and it's yours.",   // OWNER-APPROVED INTERIM, clinician review
+  gunsLink:"Open my time and distance plan",
   nightZags:"Calm down with Zags", nightCozy:"Cozy up for sleep", nightTalk:"Talk to someone", nightDown:"Put the phone down"
 };
 /* "It's Monday, October 5, 2026. It's 9:41 PM." from the phone's own clock, every time the screen draws. */
@@ -1339,6 +1349,14 @@ function ptsdNowBlock(line){
   const [day, time] = ptsdNowText();
   return `<p id="screen-title" tabindex="-1" class="ptsd-big ptsd-day">${day}</p><p class="ptsd-big ptsd-time">${time}</p><p class="ptsd-line">${line}</p>`;
 }
+/* 6.28 F: confirmed by the owner on official VA sites on 2026-10-04 (CRISIS_RESOURCE_VERIFICATION.md; owner to re-check
+   periodically). Shown only while verified:true. */
+const VET_RESOURCES = {
+  vetCenter:{ name:"Vet Center Call Center", number:"1-877-927-8387", tel:"tel:18779278387", source:"https://www.vetcenter.va.gov/", checked:"2026-10-04", verified:true },
+  vcl:{ name:"Veterans Crisis Line", call:"tel:988", text:"838255", chat:"https://www.veteranscrisisline.net/", source:"https://www.veteranscrisisline.net/", checked:"2026-10-04", verified:true },
+  ptsdCoach:{ name:"PTSD Coach", url:"https://www.ptsd.va.gov/appvid/mobile/ptsdcoach_app.asp", source:"https://www.ptsd.va.gov/appvid/mobile/ptsdcoach_app.asp", checked:"2026-10-04", verified:true }
+};
+function vetCenterButton(){ const v = VET_RESOURCES.vetCenter; return v.verified === true ? `<a class="btn btn-primary" href="${v.tel}">${callText(PTSD.vetCall, v.number)}</a>` : ""; }
 const PTSD_PLAIN = ["ptsd","ptsd-now","ptsd-night","ptsd-night-opts","ptsd-reach"];   // no screen-enter animation on these
 
 /* UNDERSTAND IT (owner handoff, 2026-10-04). An optional, short step before acting: FEEL → UNDERSTAND → ACT. One
@@ -3823,6 +3841,23 @@ const SCREENS = {
       <div class="list ptsd-list">${PTSD.opts.map(([k, t, m]) => `<button class="card" data-act="ptsdPath" data-arg="${k}"><span>${t}${m ? `<span class="meta">${m}</span>` : ""}</span></button>`).join("")}</div>` };
   },
 
+  /* 6.28 F: veteran or service member */
+  "ptsd-vet"(){
+    const V = VET_RESOURCES, vc = V.vetCenter, vcl = V.vcl, pc = V.ptsdCoach;
+    return { close:true, body:`
+      ${stepTitle(PTSD.vetSay, true)}
+      ${vc.verified === true ? `<div class="panel vet-center"><p class="lbl">${PTSD.vetBeen}</p><h3>${vc.name} — ${vc.number}</h3>
+        <p class="small">${PTSD.vetCenterLine}</p>${vetCenterButton()}</div>` : ""}
+      ${vcl.verified === true ? `<div class="panel vet-vcl"><h3>${vcl.name}</h3><p class="small">${PTSD.vclLine}</p>
+        <a class="btn btn-safety" href="${vcl.call}">${PTSD.vclCall}</a>
+        ${textOrCopy({ phone:vcl.text, label:PTSD.vclText, cls:"btn btn-secondary" })}
+        <a class="conn-more" href="${vcl.chat}" target="_blank" rel="noopener">${PTSD.vclChat}</a></div>` : ""}
+      ${pc.verified === true ? `<div class="panel vet-coach"><h3>${pc.name}</h3><p class="small">${PTSD.coachLine}</p>
+        <a class="conn-more" href="${pc.url}" target="_blank" rel="noopener">${PTSD.coachLink}</a></div>` : ""}
+      <p class="sub" style="margin-top:16px">${PTSD.noVA}</p>
+      <div class="panel vet-guns"><p style="margin:0">${PTSD.guns}</p>
+        <button class="link" data-act="ptsdTD">${PTSD.gunsLink}</button></div>` };
+  },
   /* 6.28 E: on edge (an intervention, so it ends at the normal check-in and Let's Zig) */
   "ptsd-edge"(){
     const i = (ui.ptsd || {}).edge;
@@ -7032,6 +7067,7 @@ const ACTIONS = {
     if ((p.edge ?? -1) >= PTSD.edge.length - 1){ go("checkin"); return; }   // then the normal check-in and Let's Zig
     p.edge = (p.edge ?? -1) + 1; lastRendered = null; render();
   },
+  ptsdTD(){ if (blockIfRed()) return; ui.planFrom = "tab"; ACTIONS.planEdit("timeDistance"); },   // My Plan → Time and distance plan
   ptsdCozy(){ if (blockIfRed()) return; if (!isNight()) return; startIntervention("cozy_up"); ACTIONS.cozySleep(); },
   ptsdPath(arg){
     if (blockIfRed()) return;

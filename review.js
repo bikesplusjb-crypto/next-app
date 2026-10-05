@@ -303,6 +303,10 @@ list([
 list([
   'E. On edge: "'+PT.edgeSay+'" → one idea at a time ("'+PT.another+'", "'+PT.howNow+'"): '+PT.edge.map(([,t])=>`"${t}"`).join(' · ')+' → the normal check-in and Let\'s Zig ("Make it smaller" not built yet)'
 ]);
+list([
+  'F. Veteran or service member: "'+PT.vetSay+'" → "'+PT.vetBeen+'": Vet Center Call Center — 1-877-927-8387 ("'+PT.vetCenterLine+'") "'+PT.vetCall+'" · Veterans Crisis Line ("'+PT.vclLine+'"): "'+PT.vclCall+'" · "'+PT.vclText+'" · "'+PT.vclChat+'" · PTSD Coach ("'+PT.coachLine+'") "'+PT.coachLink+'" · "'+PT.noVA+'"',
+  'Guns (OWNER-APPROVED INTERIM, clinician review): "'+PT.guns+'" → "'+PT.gunsLink+'" (My Plan → Time and distance plan)'
+]);
 //@@PTSD@@
 
 H(3,'Understand it (owner handoff, 2026-10-04; CLINICIAN REVIEW REQUIRED; not validated)');
