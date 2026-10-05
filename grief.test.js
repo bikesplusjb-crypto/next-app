@@ -10,7 +10,7 @@ function boot({phone=true, storage}={}){ const errs=[];
   w.HTMLElement.prototype.scrollIntoView=()=>{};
   w.__ics=[]; w.URL.createObjectURL=b=>{ w.__ics.push(b); return 'blob:x'; }; w.URL.revokeObjectURL=()=>{};
   w.HTMLAnchorElement.prototype.click=function(){};   // the calendar download link (no navigation in jsdom)
-  const click=(sel)=>{const el=w.document.querySelector(sel); if(!el) throw new Error('missing '+sel+' on '+w.eval('session.screen')); el.dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true}));};
+  const click=(sel)=>{let el=w.document.querySelector(sel); if(!el && w.document.querySelector('[data-act="homeMore"]')){ w.document.querySelector('[data-act="homeMore"]').dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true})); el=w.document.querySelector(sel); } /* 6.28 A: Home's More chip */ if(!el) throw new Error('missing '+sel+' on '+w.eval('session.screen')); el.dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true}));};
   if(w.eval('session.screen').startsWith('ob-')) ['obNext','obAdult','obLater'].forEach(a=>click(`[data-act="${a}"]`));
   const T=()=>w.document.getElementById('app').textContent.replace(/\s+/g,' ');
   const dump=()=>{const o={}; for(let i=0;i<w.localStorage.length;i++){const k=w.localStorage.key(i); o[k]=w.localStorage.getItem(k);} return JSON.stringify(o);};
@@ -20,7 +20,7 @@ const r=[];
 const toHelp=(a,who='person',when='recent')=>{ a.click(act('griefStart')); a.click(act('griefWho',who)); a.click(act('griefWhen',when)); a.click(act('griefAckNext')); };
 
 // ---- A. entry ----
-{const a=boot();
+{const a=boot(); a.click(act('homeMore'));
  const btns=[...a.w.document.querySelectorAll('#app main [data-act]')];
  const iCrisis=btns.findIndex(b=>b.dataset.act==='crisis'), iLost=btns.findIndex(b=>b.dataset.act==='griefStart');
  r.push(['A1: Home chip "I lost someone" in "Or tell me what\'s happening"', iLost>0 && btns[iLost].textContent.trim()==='I lost someone' && !!btns[iLost].closest('.sits')]);

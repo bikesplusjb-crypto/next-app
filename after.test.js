@@ -7,7 +7,7 @@ function boot(storage,{now}={}){const dom=new JSDOM(HTML,{url:'https://zigzagmin
    if(now){ const real=w.Date; w.Date.now=()=>now; }
    if(storage) for(const [k,v] of Object.entries(storage)) w.localStorage.setItem(k,v); }});
  const w=dom.window; w.HTMLElement.prototype.scrollIntoView=()=>{};
- const click=(sel)=>{const el=w.document.querySelector(sel); if(!el) throw new Error('missing '+sel+' on '+w.eval('session.screen')); el.dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true}));};
+ const click=(sel)=>{let el=w.document.querySelector(sel); if(!el && w.document.querySelector('[data-act="homeMore"]')){ w.document.querySelector('[data-act="homeMore"]').dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true})); el=w.document.querySelector(sel); } /* 6.28 A: Home's More chip */ if(!el) throw new Error('missing '+sel+' on '+w.eval('session.screen')); el.dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true}));};
  if(w.eval('session.screen').startsWith('ob-')) ['obNext','obAdult','obLater'].forEach(a=>click(`[data-act="${a}"]`));
  const dump=()=>{const o={}; for(let i=0;i<w.localStorage.length;i++){const k=w.localStorage.key(i); o[k]=w.localStorage.getItem(k);} return o;};
  return {w,click,S:()=>w.eval('session'),G:x=>w.eval(x),doc:w.document,T:()=>w.document.getElementById('app').textContent.replace(/\s+/g,' '),dump,has:s=>!!w.document.querySelector(s)};}
@@ -29,7 +29,7 @@ function validICS(ics){
 
 // ---- entry and setup ----
 {const a=boot();
- r.push(['Home has the "Just out of the ER" chip; nothing prompts it', a.has(act('afterStart')) && !a.has('.after-bar') && !a.T().includes('First 30 days')]);
+ a.click(act('homeMore')); r.push(['Home has the "Just out of the ER" chip (under More, 6.28 A); nothing prompts it', a.has(act('afterStart')) && !a.has('.after-bar') && !a.T().includes('First 30 days')]);
  a.click(act('afterStart'));
  r.push(['setup: "When did you leave?" today / yesterday / a few days ago', a.S().screen==='after-setup' && a.doc.querySelectorAll('[data-act="afterLeft"]').length===3 && a.T().includes('When did you leave?')]);
  a.click(act('afterLeft','yesterday'));

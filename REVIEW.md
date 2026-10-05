@@ -714,12 +714,10 @@ Filter by state → filter by intensity → never repeat the last pick → if YE
 
 - "I'm anxious" → `flow:anxious`
 - "I'm spiraling" → `flow:spiraling`
-- "I have an urge to use (drink or drugs)" → `flow:craving`
 - "I feel sad or low" → `flow:low`
+- "I have an urge to use (drink or drugs)" → `flow:craving`
 - "I feel alone" → `route:connect`
-- "Just out of the ER" → `afterStart`
-- "I lost someone" → `griefStart`
-- "Bullied — now or before" → `bullyStart`
+- "More" → `homeMore`
 
 Changed for review: the craving button now reads "I have an urge to use (drink or drugs)" (was "I want to use"). It still opens the same craving flow (`flow:craving`).
 
@@ -1190,7 +1188,7 @@ Contact line (only when CONTACT_EMAIL is set): "Questions? Email [address]."
 
 D. Crisis Text Line (**hidden until the owner verifies it**; CRISIS_TEXT_LINE.verified is false): one line below the 988 buttons on the full crisis screen and Connect, on the printed plan, and in the supporter guide's "Get help together": "Rather text a stranger? Text HOME to 741741 (Crisis Text Line)." (phones: Text HOME to 741741 is a text link; computers: shown as text).
 
-E. Spanish interface: **scaffolding only, nothing shown**. SPANISH_ENABLED is false. 219 strings (onboarding, Home, crisis screens, Calm, Connect, My Plan, Help, Settings labels) now live in one table; English is unchanged. Every Spanish line is a DRAFT for a human translator and the clinician: docs/SPANISH_REVIEW.md. A draft crisis-screen line is never shown, even with Spanish on.
+E. Spanish interface: **scaffolding only, nothing shown**. SPANISH_ENABLED is false. 220 strings (onboarding, Home, crisis screens, Calm, Connect, My Plan, Help, Settings labels) now live in one table; English is unchanged. Every Spanish line is a DRAFT for a human translator and the clinician: docs/SPANISH_REVIEW.md. A draft crisis-screen line is never shown, even with Spanish on.
 
 F. Feedback (only when FEEDBACK_URL is set; it is empty): on About only, "Did ZigZag Mind help? Tell us anonymously →" (new tab). Privacy page adds: "If you use the feedback link on About, that form is a separate service. It receives only what you type there."
 
@@ -1201,6 +1199,10 @@ G. "Help near me (Treasure Coast)" (**hidden until the owner verifies at least o
 - Local recovery meetings: "Meetings for people working on drinking or drug use." (verified: false)
 
 H. Simplicity audit: report only, nothing applied (docs/SIMPLICITY_AUDIT.md).
+
+### Stage 6.28 A: Home chips
+
+"Or tell me what's happening" now shows five chips plus "More": I'm anxious · I'm spiraling · I feel sad or low · I have an urge to use (drink or drugs) · I feel alone · More → (in place) Just out of the ER · I lost someone · Bullied — now or before · PTSD, trauma, or military.
 
 ### Understand it (owner handoff, 2026-10-04; CLINICIAN REVIEW REQUIRED; not validated)
 
@@ -1557,12 +1559,10 @@ Rendered for each state where the screen changes by state. Identical renders are
 - Or tell me what's happening
 - **Button:** I'm anxious
 - **Button:** I'm spiraling
-- **Button:** I have an urge to use (drink or drugs)
 - **Button:** I feel sad or low
+- **Button:** I have an urge to use (drink or drugs)
 - **Button:** I feel alone
-- **Button:** Just out of the ER
-- **Button:** I lost someone
-- **Button:** Bullied — now or before
+- **Button:** More
 - **Button:** Tech check — AI, scrolling, or checking is getting to me
 - **Link → `support/#worried`:** Worried about someone? How to help →
 - **Button:** Home
@@ -3142,12 +3142,10 @@ _When: distraction_
 - Or tell me what's happening
 - **Button:** I'm anxious
 - **Button:** I'm spiraling
-- **Button:** I have an urge to use (drink or drugs)
 - **Button:** I feel sad or low
+- **Button:** I have an urge to use (drink or drugs)
 - **Button:** I feel alone
-- **Button:** Just out of the ER
-- **Button:** I lost someone
-- **Button:** Bullied — now or before
+- **Button:** More
 - **Button:** Tech check — AI, scrolling, or checking is getting to me
 - **Link → `support/#worried`:** Worried about someone? How to help →
 - **Button:** Home
@@ -3171,12 +3169,10 @@ _When: distraction_
 - Or tell me what's happening
 - **Button:** I'm anxious
 - **Button:** I'm spiraling
-- **Button:** I have an urge to use (drink or drugs)
 - **Button:** I feel sad or low
+- **Button:** I have an urge to use (drink or drugs)
 - **Button:** I feel alone
-- **Button:** Just out of the ER
-- **Button:** I lost someone
-- **Button:** Bullied — now or before
+- **Button:** More
 - **Button:** Tech check — AI, scrolling, or checking is getting to me
 - **Link → `support/#worried`:** Worried about someone? How to help →
 - **Button:** Home
@@ -3200,12 +3196,10 @@ _When: distraction_
 - Or tell me what's happening
 - **Button:** I'm anxious
 - **Button:** I'm spiraling
-- **Button:** I have an urge to use (drink or drugs)
 - **Button:** I feel sad or low
+- **Button:** I have an urge to use (drink or drugs)
 - **Button:** I feel alone
-- **Button:** Just out of the ER
-- **Button:** I lost someone
-- **Button:** Bullied — now or before
+- **Button:** More
 - **Button:** Tech check — AI, scrolling, or checking is getting to me
 - **Link → `support/#worried`:** Worried about someone? How to help →
 - **Button:** Home

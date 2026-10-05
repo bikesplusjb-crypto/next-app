@@ -12,7 +12,7 @@ function boot({phone=true, storage, html=HTML}={}){ const errs=[];
     w.HTMLCanvasElement.prototype.getContext=function(){ return null; };
     if(storage) for(const [k,v] of Object.entries(storage)) w.localStorage.setItem(k,v); }}).window;
   w.HTMLElement.prototype.scrollIntoView=()=>{};
-  const click=(sel)=>{const el=w.document.querySelector(sel); if(!el) throw new Error('missing '+sel+' on '+w.eval('session.screen')); el.dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true}));};
+  const click=(sel)=>{let el=w.document.querySelector(sel); if(!el && w.document.querySelector('[data-act="homeMore"]')){ w.document.querySelector('[data-act="homeMore"]').dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true})); el=w.document.querySelector(sel); } /* 6.28 A: Home's More chip */ if(!el) throw new Error('missing '+sel+' on '+w.eval('session.screen')); el.dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true}));};
   if(w.eval('session.screen').startsWith('ob-')) ['obNext','obAdult','obLater'].forEach(a=>click(`[data-act="${a}"]`));
   const T=()=>w.document.getElementById('app').textContent.replace(/\s+/g,' ');
   const dump=()=>{const o={}; for(let i=0;i<w.localStorage.length;i++){const k=w.localStorage.key(i); o[k]=w.localStorage.getItem(k);} return o;};
@@ -26,7 +26,7 @@ const r=[];
 
 (async()=>{
 // ================= A. Entry =================
-{const a=boot(); const chip=[...a.w.document.querySelectorAll('.sit')].find(x=>x.dataset.act==='bullyStart');
+{const a=boot(); a.click(act('homeMore')); const chip=[...a.w.document.querySelectorAll('.sit')].find(x=>x.dataset.act==='bullyStart');
  r.push(['A: Home chip "Bullied — now or before"', !!chip && chip.textContent==='Bullied — now or before' && !!chip.closest('.sits')]);
  const btns=[...a.w.document.querySelectorAll('#app main [data-act]')];
  r.push(['A: "I don\'t feel safe" stays the first choice on Home', btns.find(e=>!['wordmark','zags'].includes(e.dataset.act)).dataset.act==='crisis']);

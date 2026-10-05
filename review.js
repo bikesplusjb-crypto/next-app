@@ -287,6 +287,9 @@ P(''); P('G. "Help near me (Treasure Coast)" (**hidden until the owner verifies 
 list(G('NEAR_ME').map(e=>`${e.name}: "${e.what}"${e.phone?' · '+e.phone:''} (verified: ${e.verified})`));
 P(''); P('H. Simplicity audit: report only, nothing applied (docs/SIMPLICITY_AUDIT.md).');
 
+H(3,'Stage 6.28 A: Home chips');
+P('"'+G('l10n("home.sitLabel")')+'" now shows five chips plus "'+G('l10n("home.more")')+'": I\'m anxious · I\'m spiraling · I feel sad or low · '+G('l10n("home.craving")')+' · I feel alone · More → (in place) Just out of the ER · I lost someone · Bullied — now or before · PTSD, trauma, or military.');
+
 H(3,'Understand it (owner handoff, 2026-10-04; CLINICIAN REVIEW REQUIRED; not validated)');
 P('Optional and short (2–3 questions), one question at a time, then one real step through the existing routes or the engine. No labels, scores or storage. Reached from: I don\'t know what I need (small link), the first screen of I\'m anxious / I\'m spiraling (small link), I feel sad or low (small link), Connect → Something else. Not on Home.');
 const UN=G('UNDERSTAND');

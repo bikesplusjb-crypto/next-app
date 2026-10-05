@@ -13,8 +13,14 @@ const r=[];
 
 {const a=boot(); const t=a.app().textContent;
  r.push(['wordmark and tagline', !!a.doc.querySelector('.brand[data-act="wordmark"]') && a.doc.getElementById('screen-title').textContent==="It's okay not to be okay." && a.doc.querySelector('.home-sub').textContent==="You don't have to figure everything out right now."]);
- const order=["I don't feel safe","I don't know what I need","Calm down","Get out of my head","Connect","Change the scene","Or tell me what's happening","I'm anxious","I'm spiraling","I have an urge to use (drink or drugs)","I feel sad or low","I feel alone"];
+ const order=["I don't feel safe","I don't know what I need","Calm down","Get out of my head","Connect","Change the scene","Or tell me what's happening","I'm anxious","I'm spiraling","I feel sad or low","I have an urge to use (drink or drugs)","I feel alone","More"];
  r.push(['Home items in the spec order', order.every((x,i)=>t.indexOf(x)>-1 && (i===0 || t.indexOf(x)>t.indexOf(order[i-1])))]);
+ const chips=[...a.doc.querySelectorAll('#sitLabel + .sits .sit')];
+ r.push(['6.28 A: exactly five chips plus "More"', chips.length===6 && chips[5].dataset.act==='homeMore' && chips[5].textContent==='More']);
+ r.push(['6.28 A: the rest are hidden until More', !a.doc.querySelector('[data-act="afterStart"],[data-act="griefStart"],[data-act="bullyStart"]')]);
+ a.click('[data-act="homeMore"]');
+ const more=[...a.doc.querySelectorAll('#sitLabel + .sits .sit')].map(c=>c.textContent);
+ r.push(['6.28 A: More opens them in place (same screen), every earlier chip still reachable', a.S().screen==='home' && JSON.stringify(more)===JSON.stringify(["I'm anxious","I'm spiraling","I feel sad or low","I have an urge to use (drink or drugs)","I feel alone","Just out of the ER","I lost someone","Bullied — now or before"])]);
  r.push(['four escape routes in a 2x2 grid, each with a stroke icon', a.doc.querySelectorAll('.routes .route').length===4 && [...a.doc.querySelectorAll('.routes .route')].every(b=>b.querySelector('.ico[aria-hidden="true"] svg'))]);
  r.push(['no emoji on Home', !/\p{Extended_Pictographic}/u.test(t)]);
  r.push(['bottom tabs: Home, My Plan, Progress, Settings', [...a.doc.querySelectorAll('.tabbar .tab')].map(b=>b.textContent.trim()).join('|')==='Home|My Plan|Progress|Settings']);

@@ -717,6 +717,7 @@ const L10N = {
     "home.er":"Just out of the ER",
     "home.lost":"I lost someone",
     "home.bullied":"Bullied — now or before",
+    "home.more":"More",
     "home.tech":"Tech check",
     "home.techMeta":"AI, scrolling, or checking is getting to me",
     "home.tip":"Add ZigZag Mind to your home screen so your plan stays with you. Tap Share, then Add to Home Screen.",
@@ -938,6 +939,7 @@ const L10N = {
     "home.er":{ text:"Acabo de salir de urgencias", draft:true },
     "home.lost":{ text:"Perdí a alguien", draft:true },
     "home.bullied":{ text:"Acoso, ahora o antes", draft:true },
+    "home.more":{ text:"Más", draft:true },
     "home.tech":{ text:"Revisión de tecnología", draft:true },
     "home.techMeta":{ text:"La IA, las redes o revisar el teléfono me están afectando", draft:true },
     "home.tip":{ text:"Agrega ZigZag Mind a tu pantalla de inicio para tener tu plan a mano. Toca Compartir y luego Agregar a inicio.", draft:true },
@@ -3262,12 +3264,13 @@ const SCREENS = {
       <div class="sits" role="group" aria-labelledby="sitLabel">
         <button class="sit" data-act="flow" data-arg="anxious">${l10n("home.anxious")}</button>
         <button class="sit" data-act="flow" data-arg="spiraling">${l10n("home.spiraling")}</button>
-        <button class="sit" data-act="flow" data-arg="craving">${l10n("home.craving")}</button>
         <button class="sit" data-act="flow" data-arg="low">${l10n("home.low")}</button>
+        <button class="sit" data-act="flow" data-arg="craving">${l10n("home.craving")}</button>
         <button class="sit" data-act="route" data-arg="connect">${l10n("home.alone")}</button>
-        <button class="sit" data-act="afterStart">${l10n("home.er")}</button>
+        ${ui.homeMore ? `<button class="sit" data-act="afterStart">${l10n("home.er")}</button>
         <button class="sit" data-act="griefStart">${l10n("home.lost")}</button>
-        <button class="sit" data-act="bullyStart">${l10n("home.bullied")}</button>
+        <button class="sit" data-act="bullyStart">${l10n("home.bullied")}</button>`
+        : `<button class="sit sit-more" data-act="homeMore" aria-expanded="false">${l10n("home.more")}</button>`}
       </div>
       <button class="card wide tech-row" data-act="techStart">${icon("phone")}<span>${l10n("home.tech")}<span class="meta">${l10n("home.techMeta")}</span></span></button>
       ${showHomeTip() ? `<div class="panel" id="homeTip" role="note">
@@ -6962,6 +6965,8 @@ const ACTIONS = {
     else if (arg === "drink") startIntervention("warm_comfort");
     else if (arg === "outside") ACTIONS.scenePick("outside");
   },
+  // 6.28 A: Home shows five chips plus "More", which opens the rest in place (no new screen). In memory only.
+  homeMore(){ if (blockIfRed()) return; ui.homeMore = true; render(); const f = document.querySelector('[data-act="afterStart"]'); if (f) f.focus({ preventScroll:true }); },
   /* 6.27 BULLIED, NOW OR BEFORE */
   bullyStart(){ if (blockIfRed()) return; ui.bully = {}; ui.msg = ""; ui.flash = ""; go("bully"); },
   bullyIdeas(){ if (blockIfRed()) return; ui.bully = { ...(ui.bully || {}), idx:0, seen:1 }; ui.flash = ""; ui.msg = ""; go("bully-idea"); },
