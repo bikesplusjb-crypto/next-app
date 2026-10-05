@@ -1221,6 +1221,7 @@ Why (for reviewers only; never shown to people as statements about them): freque
 - On the first and last screen: "If there are threats, stalking, or private images shared without your consent" / "That's more than bullying. You can report threats to the police. If you're in danger right now, call 911." → "Call 911"; resource (hidden until verified): Cyber Civil Rights Initiative helpline
 - E. Someone I love (adults supporting someone, including a parent of a child): "Thank you for taking it seriously. That matters more than anything." → "How to help": "Listen first. Let them tell it their way." · "Believe them, and say it's not their fault." · "Don't say "just ignore it" or "stand up to them."" · "Ask what they want to happen before you act." · "Keep checking in, not just once." · "If they talk about not wanting to be alive, take it seriously and call or text 988 together." · "More on how to help: the supporter guide →" (the supporter guide); resource (hidden until verified): StopBullying.gov
 - F. YELLOW phrases (OWNER-APPROVED INTERIM, pending clinician; should any be RED?): "everyone hates me", "everyone would be happier without me", "i'm a joke to everyone", "i deserve it"
+- G. FOUNDER_NOTE (owner's choice): empty, so nothing is shown. When set: About page only, under "Why ZigZag Mind exists", in the owner's exact words.
 
 ### Stage 6.23: I feel sad or low (CLINICIAN REVIEW REQUIRED for all of it)
 

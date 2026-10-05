@@ -155,6 +155,7 @@ textarea.field{min-height:150px;resize:vertical}
 @media (min-width:600px){.tn-grid{grid-template-columns:1fr 1fr}}
 .tn-col .sit[aria-pressed="true"]{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
 .bully-guide{padding-left:20px;margin:8px 0 0}.bully-guide li{margin:8px 0;font-size:17px}
+.founder-h{font-size:17px}
 .bully-988{margin-top:22px;padding-top:12px;border-top:1px solid var(--line)}
 .doodle-prompt{margin:0 0 8px;font-family:var(--serif);font-size:19px;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline}
 .doodle-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
@@ -1199,6 +1200,9 @@ const MESSAGE_IDEAS = ["Can't sleep, you up?","Rough night. Can you talk for 5 m
 /* 6.18 E: small copy additions. */
 const TAGLINE_ZIG = L10N.en["ob.tagline"];
 const PROMISE = "We'll help you find something you can do next. If one direction doesn't help, we'll try another.";
+/* 6.27 G: "Why ZigZag Mind exists", in the owner's own words. Empty = nothing shown. When filled in, it appears on the
+   About page only, exactly as written (escaped for safety, line breaks kept, never edited). */
+const FOUNDER_NOTE = "";
 const DIRECTIONS = [["BODY","Body","Change something physical"],["SPACE","Space","Change where you are"],["SENSE","Sense","Give your senses something to do"],["PEOPLE","People","Reach a person"],["ACTION","Action","One tiny thing"]];
 const IDEAS_NOTE = L10N.en["connect.ideasNote"];
 const AROUND_PEOPLE = "You don't have to talk. Sit with someone at home, or go somewhere familiar with people around.";
@@ -5612,6 +5616,8 @@ const SCREENS = {
         <li><span><b>Check</b><span class="small">Notice whether it helped. Rating is optional.</span></span></li>
         <li><span><b>Next</b><span class="small">Try another step, or stop. Both are fine.</span></span></li>
       </ol>
+      ${String(FOUNDER_NOTE).trim() ? `<h2 class="founder-h">Why ZigZag Mind exists</h2>
+      <div class="panel founder-note" style="margin-top:0"><p style="margin:0;white-space:pre-wrap">${esc(FOUNDER_NOTE)}</p></div>` : ""}
       <h2 id="strength" tabindex="-1">Getting help</h2>
       <div class="panel" style="margin-top:0"><p style="margin:0">${HELP_IS_STRENGTH}</p></div>
       <h2>Helping others</h2>

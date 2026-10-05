@@ -33,6 +33,7 @@ Everything is in one file, `index.html` (vanilla JS, no build step, no runtime d
 | 6.21 | STAGE6-21-ADDENDUM.md (A line for today: feeling words, a few words, "still true"; Looking back; optional passcode lock with PBKDF2 + AES-GCM on the phone; export/delete/saving off) |
 | 6.22 | Doodle (Get out of my head; SENSE, real world; canvas, Keep to Things I noticed or Let it go) |
 | 6.23 | I feel sad or low (Home chip renamed; Zags under a small cloud; Let it out, one idea at a time; the two-weeks line; clinician D32) |
+| 6.27 | STAGE6-27-ADDENDUM.md (Bullied, now or before: years ago, at work, online, someone I love; diary notes on request; 4 YELLOW phrases; resources hidden until verified; FOUNDER_NOTE) |
 | Owner handoffs | Find something (+ Things I noticed), Warm & comfort, Social Zig, Have coffee with ZigZag, Cozy up; simplicity audit proposals 1–6, 8, 10 applied |
 
 Where each part stands (as built, what differs from the text, tests) is at the end of STAGE6-SPEC.md.
@@ -83,7 +84,7 @@ Session state lives in one object `session`, changed only through `dispatch(acti
 The build order is done. What's left needs a person, not code:
 
 - **Owner verifications:** Florida Warm Line (incl. "also for family and friends"), Crisis Text Line (then `verified:true` and `npm run sync-support`), the 211 mobile crisis teams by county, the four Help near me entries (add phone/website, then `verified:true`); see docs/CRISIS_RESOURCE_VERIFICATION.md.
-- **Owner settings:** `CONTACT_EMAIL` and `FEEDBACK_URL` (both empty, so hidden).
+- **Owner settings:** `CONTACT_EMAIL` and `FEEDBACK_URL` (both empty, so hidden); `FOUNDER_NOTE` (6.27, empty: About shows "Why ZigZag Mind exists" only once it's filled in).
 - **Clinician:** every decision in docs/CLINICIAN_REVIEW.md (D1–D29, all OPEN), including the OWNER-APPROVED INTERIM items.
 - **Translator + clinician:** docs/SPANISH_REVIEW.md before `SPANISH_ENABLED` can be true.
 - **Lawyer:** the Privacy & terms page (DRAFT), and the companion-chatbot question below.

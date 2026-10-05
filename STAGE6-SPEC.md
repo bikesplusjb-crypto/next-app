@@ -589,3 +589,14 @@ Built from the owner's second, fuller 6.23 message (cloud, "Let it rain", "Find 
 - **Zags on this screen** is added to the brand-mark allow-list (`zags-mark.test.js`), as the owner asked.
 - **"Turn it into a song"** from here keeps the state "low".
 Nothing is saved beyond the usual "moment" activity that every flow logs. Tests: `sad.test.js`.
+
+## 6.27 Bullied, now or before (as built, 2026-10-05)
+
+Built per STAGE6-27-ADDENDUM.md A–G, one commit per part. Entry: Home chip "Bullied — now or before" → `bully` → paths `bully-past`, `bully-work`, `bully-online`, `bully-love`; shared screens `bully-idea` (one idea at a time, "Another idea" / "I'm done for now"), `bully-end`, `bully-unlock`. Copy in `BULLY`; resources in `BULLY_RESOURCES` (all `verified:false`); `bully988()` on every screen; `FOUNDER_NOTE` on About only. Not in `INTERVENTION_LIBRARY`. Differences from the text, and why:
+- **6.24 isn't built**, so "Make it through today" shows Borrow ten minutes only; "Make it smaller" appears automatically once an action `smallerStart` exists.
+- **Tech check link skipped:** no Tech check option says the content is people being cruel online (the addendum allows skipping).
+- **Then and now** is two columns on screens 600px and wider and stacked on phones (two columns of long chips don't fit a phone).
+- **Diary notes** are diary entries with a `tag` ("Note to my younger self", "Work notes") shown in Looking back and the export. A locked diary asks for the passcode on a screen inside this path, saves encrypted, then locks again right away. The work note is stored as "Date / What happened / Who saw it" lines.
+- **Resources:** the addendum's tests mention four resources but the text names three (WBI, CCRI, StopBullying.gov); all three are hidden until verified.
+- **Online:** the threats / 911 panel is on the first and the last screen of that path.
+Tests: `bully.test.js`.

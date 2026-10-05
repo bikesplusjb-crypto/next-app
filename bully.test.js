@@ -181,7 +181,33 @@ const toOnline=a=>{ a.G('ACTIONS.bullyStart()'); a.click(act('bullyPath','online
  r.push(['F: RED unchanged (43 phrases; "better off without me" still RED)', a.G('RED_PHRASES.length')===43 && sc('Everyone would be better off without me')==='RED' && sc('I want to kill myself')==='RED']);
  r.push(['F: in the path, a YELLOW line turns on the support bar and continues', (()=>{ a.G('ACTIONS.bullyStart(); ACTIONS.bullyPath("past"); ACTIONS.bullyIdeas(); ACTIONS.bullyGo("bully-thennow")'); a.fill('tn-then','Everyone hates me'); a.click(act('bullyThenDone')); return a.G('session.yellow')===true && a.S()==='bully-thennow-end'; })()]); }
 
-//@@PARTS@@
+// ================= G. FOUNDER_NOTE =================
+{const a=boot(); r.push(['G: FOUNDER_NOTE is empty by default', a.G('FOUNDER_NOTE')==='']);
+ let seen=''; for(const sc of ['about','home','settings','ob-about','bully','privacy']){ a.G(`session.screen=${JSON.stringify(sc)}; lastRendered=null; render()`); if(a.T().includes('Why ZigZag Mind exists')) seen=sc; }
+ r.push(['G: empty → nothing shown anywhere', !seen, seen]); }
+{const NOTE="I was bullied for years.\nI built this for the person I was then. <b>not bold</b> & that's okay";
+ const html=HTML.replace('const FOUNDER_NOTE = "";','const FOUNDER_NOTE = '+JSON.stringify(NOTE)+';');
+ const a=boot({html}); a.G('ACTIONS.about()');
+ const p=a.w.document.querySelector('.founder-note p');
+ r.push(['G: set → on About under "Why ZigZag Mind exists", in the owner\'s exact words', a.T().includes('Why ZigZag Mind exists') && !!p && p.textContent===NOTE && !a.has('.founder-note b')]);
+ let other=''; for(const sc of ['home','settings','ob-about','bully','privacy','plan','connect','crisis']){ a.G(`session.screen=${JSON.stringify(sc)}; lastRendered=null; render()`); if(a.T().includes('Why ZigZag Mind exists') || a.T().includes('I was bullied for years')) other=sc; }
+ r.push(['G: set → shown only on About', !other, other]); }
+
+// ================= Copy rules, every screen, nothing saved =================
+{const a=boot();
+ const copy=JSON.stringify([a.G('BULLY'), a.G('BULLY_RESOURCES'), a.G('DIARY_TAGS')]);
+ const BANNED=/just ignore them|toughen up|sticks and stones|just jealous|builds character|kids will be kids|what did you do|your fault for|you should have|stand up for yourself|fight back|get back at|confront (them|him|her)|ignore it and it/i;
+ r.push(['copy rules: no banned phrases anywhere in the path', !BANNED.test(copy), (copy.match(BANNED)||[])[0]]);
+ r.push(['copy rules: the statistics are never shown to people', !/1\.95|2\.21|32%|41%|Takizawa|Pew/.test(copy)]);
+ let missing=''; for(const sc of ['bully','bully-past','bully-idea','bully-thennow','bully-thennow-end','bully-younger','bully-work','bully-work-write','bully-work-talk','bully-online','bully-online-tell','bully-love','bully-love-guide','bully-end']){
+   a.G(`ui.bully={path:"past",idx:0,seen:1}; session.screen=${JSON.stringify(sc)}; lastRendered=null; render()`); if(a.S()!==sc || !has988(a) || !a.has('header .help-pill[data-act="crisis"]')) missing+=sc+' '; }
+ r.push(['every screen in the path: Help visible and the 988 line at the bottom', !missing, missing]); }
+{const a=boot(); a.G('saveStore()'); const strip=()=>{ const o=a.dump(); const sv=JSON.parse(o['next.v1.sensitive']||'{}'); delete sv.activity; o['next.v1.sensitive']=sv; return JSON.stringify(o); };
+ const before=strip();
+ for(const p of ['past','work','online','love']){ a.G(`ACTIONS.bullyStart(); ACTIONS.bullyPath(${JSON.stringify(p)})`); a.G('ACTIONS.bullyIdeas && ACTIONS.bullyIdeas()'); for(let i=0;i<6;i++) a.G('ACTIONS.bullyNext()'); }
+ r.push(['walking all four paths without choosing the diary saves nothing', strip()===before]);
+ r.push(['no script errors', a.errs.length===0]); }
+
 
 for(const [n,ok,info] of r) console.log((ok?'PASS':'FAIL')+' '+n+(ok||info===undefined?'':' ('+info+')'));
 process.exit(0);   // the diary's re-lock timer would otherwise keep this process alive

@@ -318,7 +318,9 @@ list([
 list([
   'F. YELLOW phrases (OWNER-APPROVED INTERIM, pending clinician; should any be RED?): '+G('YELLOW_PHRASES.slice(16)').map(p=>`"${p}"`).join(', ')
 ]);
-//@@BULLY@@
+list([
+  'G. FOUNDER_NOTE (owner\'s choice): '+(G('FOUNDER_NOTE')?'set':'empty, so nothing is shown')+'. When set: About page only, under "Why ZigZag Mind exists", in the owner\'s exact words.'
+]);
 
 H(3,'Stage 6.23: I feel sad or low (CLINICIAN REVIEW REQUIRED for all of it)');
 const SA=G('SAD');
