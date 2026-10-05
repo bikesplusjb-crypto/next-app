@@ -156,6 +156,10 @@ textarea.field{min-height:150px;resize:vertical}
 .tn-col .sit[aria-pressed="true"]{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
 .bully-guide{padding-left:20px;margin:8px 0 0}.bully-guide li{margin:8px 0;font-size:17px}
 .founder-h{font-size:17px}
+.ptsd-big{font-size:clamp(30px,8.5vw,46px);font-weight:800;line-height:1.15;margin:0;color:var(--text)}
+.ptsd-time{margin-top:6px}
+.ptsd-line{font-size:clamp(22px,6vw,28px);font-weight:600;margin:22px 0 0;color:var(--text)}
+.ptsd-step{font-size:clamp(26px,7.2vw,36px);font-weight:700;line-height:1.25;margin:8px 0 0;color:var(--text)}
 .und-lead{margin:0 0 6px}
 .und-entry{margin-top:12px}
 .und-list .card{min-height:56px}
@@ -1310,8 +1314,27 @@ const PTSD = {
   q:"What's going on right now?",
   opts:[["now","It's happening right now","A flashback, or feeling like I'm back there"],["nightmare","I woke up from a nightmare",""],["edge","I'm on edge",""],
     ["vet","I'm a veteran or service member",""],["other","Something happened to me","Not military"],["love","Someone I love has PTSD or served",""]],
-  next:"Next"
+  next:"Next",
+  // C: it's happening right now. "now" = the Now screen (the phone's own date and time).
+  flash:["now","Put both feet flat on the floor. Press down.","Look around. Name three things you can see, out loud or in your head.",
+    "Drink something cold, or hold something cool in your hands.","Say where you are, out loud if you can.","now"],
+  thenNow:"That was then. This is now.",
+  reachQ:"Do you want to reach someone?", reachVet:"I'm a veteran: talk to someone who's been there", reachTalk:"Talk to someone", reachOk:"I'm okay for now",
+  // D: woke up from a nightmare
+  night:["Turn on a light.","now","Drink some water. Sit up for a minute."],
+  over:"It's over. You're here now.",
+  nightZags:"Calm down with Zags", nightCozy:"Cozy up for sleep", nightTalk:"Talk to someone", nightDown:"Put the phone down"
 };
+/* "It's Monday, October 5, 2026. It's 9:41 PM." from the phone's own clock, every time the screen draws. */
+function ptsdNowText(){
+  const d = new Date();
+  return [`It's ${d.toLocaleDateString("en-US", { weekday:"long", month:"long", day:"numeric", year:"numeric" })}.`,
+    `It's ${d.toLocaleTimeString("en-US", { hour:"numeric", minute:"2-digit" })}.`];
+}
+function ptsdNowBlock(line){
+  const [day, time] = ptsdNowText();
+  return `<p id="screen-title" tabindex="-1" class="ptsd-big ptsd-day">${day}</p><p class="ptsd-big ptsd-time">${time}</p><p class="ptsd-line">${line}</p>`;
+}
 const PTSD_PLAIN = ["ptsd","ptsd-now","ptsd-night","ptsd-night-opts","ptsd-reach"];   // no screen-enter animation on these
 
 /* UNDERSTAND IT (owner handoff, 2026-10-04). An optional, short step before acting: FEEL → UNDERSTAND → ACT. One
@@ -3788,6 +3811,32 @@ const SCREENS = {
     return { close:true, body:`
       ${title(PTSD.q)}
       <div class="list ptsd-list">${PTSD.opts.map(([k, t, m]) => `<button class="card" data-act="ptsdPath" data-arg="${k}"><span>${t}${m ? `<span class="meta">${m}</span>` : ""}</span></button>`).join("")}</div>` };
+  },
+
+  /* 6.28 C: it's happening right now (one instruction per screen, no typing, no Zags, no animation) */
+  "ptsd-now"(){
+    const i = Math.min((ui.ptsd || {}).step || 0, PTSD.flash.length - 1), x = PTSD.flash[i];
+    return { close:true, body:x === "now" ? ptsdNowBlock(PTSD.thenNow) : `<p id="screen-title" tabindex="-1" class="ptsd-step">${x}</p>`,
+      actions:`<button class="btn btn-primary btn-big" data-act="ptsdStep">${PTSD.next}</button>` };
+  },
+  "ptsd-reach"(){
+    return { close:true, body:`<p id="screen-title" tabindex="-1" class="ptsd-step">${PTSD.reachQ}</p>`,
+      actions:`<button class="btn btn-primary" data-act="ptsdPath" data-arg="vet">${PTSD.reachVet}</button>
+        <button class="btn btn-secondary" data-act="route" data-arg="connect">${PTSD.reachTalk}</button>
+        <button class="btn btn-secondary" data-act="putDown">${PTSD.reachOk}</button>` };
+  },
+  /* 6.28 D: woke up from a nightmare */
+  "ptsd-night"(){
+    const i = Math.min((ui.ptsd || {}).step || 0, PTSD.night.length - 1), x = PTSD.night[i];
+    return { close:true, body:x === "now" ? ptsdNowBlock(PTSD.over) : `<p id="screen-title" tabindex="-1" class="ptsd-step">${x}</p>`,
+      actions:`<button class="btn btn-primary btn-big" data-act="ptsdStep">${PTSD.next}</button>` };
+  },
+  "ptsd-night-opts"(){
+    return { close:true, body:`<p id="screen-title" tabindex="-1" class="ptsd-step">${PTSD.over}</p>`,
+      actions:`<button class="btn btn-secondary" data-act="zags" data-arg="calm">${PTSD.nightZags}</button>
+        ${isNight() ? `<button class="btn btn-secondary" data-act="ptsdCozy">${PTSD.nightCozy}</button>` : ""}
+        <button class="btn btn-secondary" data-act="route" data-arg="connect">${PTSD.nightTalk}</button>
+        <button class="btn btn-primary" data-act="putDown">${PTSD.nightDown}</button>` };
   },
 
   /* UNDERSTAND IT */
@@ -6945,6 +6994,14 @@ const ACTIONS = {
 
   /* 6.28 PTSD, TRAUMA, OR MILITARY */
   ptsdStart(){ if (blockIfRed()) return; ui.ptsd = {}; ui.flash = ""; go("ptsd"); },
+  ptsdStep(){   // one instruction at a time; the Now screen redraws the time on every visit
+    if (blockIfRed()) return;
+    const p = ui.ptsd || (ui.ptsd = { path:"now", step:0 });
+    const seq = session.screen === "ptsd-night" ? PTSD.night : PTSD.flash;
+    if ((p.step || 0) >= seq.length - 1){ go(session.screen === "ptsd-night" ? "ptsd-night-opts" : "ptsd-reach"); return; }
+    p.step = (p.step || 0) + 1; lastRendered = null; render();
+  },
+  ptsdCozy(){ if (blockIfRed()) return; if (!isNight()) return; startIntervention("cozy_up"); ACTIONS.cozySleep(); },
   ptsdPath(arg){
     if (blockIfRed()) return;
     if (!PTSD.opts.some(o => o[0] === arg)) return;

@@ -1208,6 +1208,8 @@ H. Simplicity audit: report only, nothing applied (docs/SIMPLICITY_AUDIT.md).
 
 Why (for reviewers only; never shown as statements about people): in 2023 an average of 17.5 veterans died by suicide each day; firearms were involved in 73.3% of veteran suicides (52.9% non-veteran); 61% had not received VA care in their last year (VA 2025 National Veteran Suicide Prevention Annual Report). The rule above all others: ZigZag Mind never asks about the trauma; no typing in the flashback or nightmare flows.
 - Home → More → "PTSD, trauma, or military" → "What's going on right now?" → "It's happening right now" ("A flashback, or feeling like I'm back there") · "I woke up from a nightmare" · "I'm on edge" · "I'm a veteran or service member" · "Something happened to me" ("Not military") · "Someone I love has PTSD or served"
+- C. It's happening right now (plain, large type, one instruction per screen, Next only, no typing): Now screen "It's [Weekday, Month Day, Year]. It's [h:mm AM/PM]." / "That was then. This is now." → "Put both feet flat on the floor. Press down." → "Look around. Name three things you can see, out loud or in your head." → "Drink something cold, or hold something cool in your hands." → "Say where you are, out loud if you can." → the Now screen again → "Do you want to reach someone?" → "I'm a veteran: talk to someone who's been there" · "Talk to someone" · "I'm okay for now"
+- D. Nightmare (plain, no typing): "Turn on a light." → the Now screen with "It's over. You're here now." → "Drink some water. Sit up for a minute." → "Calm down with Zags" · "Cozy up for sleep" (night only) · "Talk to someone" · "Put the phone down"
 
 ### Understand it (owner handoff, 2026-10-04; CLINICIAN REVIEW REQUIRED; not validated)
 
@@ -2115,6 +2117,40 @@ _When: distraction_
 - **Button:** I'm a veteran or service member
 - **Button:** Something happened to me — Not military
 - **Button:** Someone I love has PTSD or served
+
+### `ptsd-now`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** It's Thursday, January 15, 2026.
+- It's 3:00 PM.
+- That was then. This is now.
+- **Button:** Next
+
+### `ptsd-reach`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Do you want to reach someone?
+- **Button:** I'm a veteran: talk to someone who's been there
+- **Button:** Talk to someone
+- **Button:** I'm okay for now
+
+### `ptsd-night`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Turn on a light.
+- **Button:** Next
+
+### `ptsd-night-opts`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** It's over. You're here now.
+- **Button:** Calm down with Zags
+- **Button:** Talk to someone
+- **Button:** Put the phone down
 
 ### `understand`
 
