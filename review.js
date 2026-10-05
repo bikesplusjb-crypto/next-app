@@ -368,6 +368,15 @@ list([
   'End: "'+PR.endNow+'" (Now) or "'+PR.end+'" · "'+PR.big+'" Talk to someone → Put the phone down'
 ]);
 
+H(3,'Butterfly hug (owner request, 2026-10-05, after the crossing-the-midline research; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)');
+const BF=G('BUTTERFLY');
+list([
+  'Entry: Calm → Something else → "'+G('l10n("calm.butterfly")')+'" ("'+G('l10n("calm.butterflyMeta")')+'"). From EMDR, used here only as a calming moment: never asks the person to think about or remember anything; no claims about the brain or trauma. No typing, no timer, nothing saved, not in the engine.',
+  ...BF.steps.map((x,i)=>(i+1)+': "'+x[0]+'" / "'+x[1]+'"'+(i===0?' / "'+BF.some+'"':'')),
+  'Every step: "'+BF.memory+'"',
+  'Then: "'+BF.endQ+'" → '+BF.ends.map(e=>`"${e[1]}"`).join(' · ')+' → "'+BF.calmer+'" (Put the phone down · Talk to someone) or "'+BF.same+'" (Put the phone down · Try something else · Talk to someone)'
+]);
+
 H(3,'My hope box (2026-10-05 research pass; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)');
 const HB=G('HOPE_BOX');
 list([

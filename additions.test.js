@@ -83,17 +83,29 @@ for(const [k,ok] of [['breathe',a=>a.G('session.currentInterventionId')==='breat
  a.click(act('problemWhen','tomorrow')); r.push(['problem: end + "Too big to do alone?" Talk to someone', title(a)===P.end && a.has(act('route','connect')) && a.has(act('putDown'))]);
  const b=boot(); b.G('ACTIONS.problemStart(); for(let i=0;i<3;i++) ACTIONS.problemNext()'); b.click(act('problemWhen','now')); r.push(['problem: "Now" → "Go do it."', title(b)===P.endNow]); }
 
+// ---- Butterfly hug ----
+{const a=boot(); a.G('ACTIONS.route("calm")'); r.push(['butterfly: hidden until Calm → Something else', !a.has(act('calmPick','butterfly'))]);
+ a.click(act('calmMore')); r.push(['butterfly: Calm → Something else → "Butterfly hug"', a.has(act('calmPick','butterfly'))]);
+ a.click(act('calmPick','butterfly')); const B=a.G('BUTTERFLY'); let ok=true, mem=true, inputs=true;
+ for(let i=0;i<B.steps.length;i++){ if(title(a)!==B.steps[i][0] || !a.T().includes(B.steps[i][1])) ok=false; if(!a.T().includes(B.memory)) mem=false; if(!noInputs(a)) inputs=false; a.click(act('butterflyNext')); }
+ r.push(['butterfly: three steps (arms crossed, tap left/right, breathe out)', ok]);
+ r.push(['butterfly: "if something hard comes to mind, stop" on every step', mem]);
+ r.push(['butterfly: no typing', inputs]);
+ r.push(['butterfly: "How is it now?"', title(a)===B.endQ && a.has(act('butterflyEnd','calmer')) && a.has(act('butterflyEnd','same'))]);
+ a.click(act('butterflyEnd','same')); r.push(['butterfly: about the same → Try something else · Talk to someone', title(a)===B.same && a.has(act('route','calm')) && a.has(act('route','connect')) && a.has(act('putDown'))]);
+ const words=JSON.stringify(Object.values(B)); r.push(['butterfly: modest wording; never asks to remember; no brain/trauma claims', /Some people find this calming/.test(words) && !/remember|think about what|memory|trauma|rewire|hemispher|brain|heal|EMDR|process/i.test(words)]); }
+
 // ---- shared rules ----
 {const a=boot(); a.G('saveStore()'); const before=a.dump();
- a.G('ACTIONS.panicStart(); for(let i=0;i<4;i++) ACTIONS.panicNext(); ACTIONS.panicEnd("down"); ACTIONS.angryStart(); for(let i=0;i<4;i++) ACTIONS.angryNext(); ACTIONS.worryStart(); ACTIONS.worryTime("work"); ACTIONS.worryNext(); ACTIONS.problemStart(); for(let i=0;i<3;i++) ACTIONS.problemNext(); ACTIONS.problemWhen("now")');
+ a.G('ACTIONS.panicStart(); for(let i=0;i<4;i++) ACTIONS.panicNext(); ACTIONS.panicEnd("down"); ACTIONS.angryStart(); for(let i=0;i<4;i++) ACTIONS.angryNext(); ACTIONS.worryStart(); ACTIONS.worryTime("work"); ACTIONS.worryNext(); ACTIONS.problemStart(); for(let i=0;i<3;i++) ACTIONS.problemNext(); ACTIONS.problemWhen("now"); ACTIONS.butterflyStart(); for(let i=0;i<3;i++) ACTIONS.butterflyNext(); ACTIONS.butterflyEnd("calmer")');
  r.push(['nothing saved by panic, angry, worry or problem', a.dump()===before]);
- r.push(['not in the engine', a.G('INTERVENTION_LIBRARY.every(i=>!/panic|angry|hope|worry|problem/.test(i.id))')]);
- let on=''; for(const sc of ['crisis','crisis-full','crisis-no','safety-check']){ a.G(`session.screen=${JSON.stringify(sc)}; lastRendered=null; render()`); if(/panicStart|angryStart|hopeOpen|worryStart|problemStart|panic-911|angry-danger/.test(a.w.document.getElementById('app').innerHTML)) on=sc; }
+ r.push(['not in the engine', a.G('INTERVENTION_LIBRARY.every(i=>!/panic|angry|hope|worry|problem|butterfly/.test(i.id))')]);
+ let on=''; for(const sc of ['crisis','crisis-full','crisis-no','safety-check']){ a.G(`session.screen=${JSON.stringify(sc)}; lastRendered=null; render()`); if(/panicStart|angryStart|hopeOpen|worryStart|problemStart|butterflyStart|bf-memory|panic-911|angry-danger/.test(a.w.document.getElementById('app').innerHTML)) on=sc; }
  r.push(['never on crisis screens', !on]);
- for(const x of ['panicStart','panicNext','panicEnd','angryStart','angryNext','angryDown','hopeOpen','hopeAdd','worryStart','worryTime','worryNext','problemStart','problemNext','problemWhen']){ const b=boot(); b.G('dispatch({type:"SET_SAFETY_LEVEL",level:"RED"})'); b.G(`ACTIONS.${x}("down")`);
+ for(const x of ['panicStart','panicNext','panicEnd','angryStart','angryNext','angryDown','hopeOpen','hopeAdd','worryStart','worryTime','worryNext','problemStart','problemNext','problemWhen','butterflyStart','butterflyNext','butterflyEnd']){ const b=boot(); b.G('dispatch({type:"SET_SAFETY_LEVEL",level:"RED"})'); b.G(`ACTIONS.${x}("down")`);
    if(!b.S().startsWith('crisis')) r.push([`blockIfRed: ${x}`, false]); }
  r.push(['blockIfRed on every new action', true]);
- for(const s of ['panicStart','angryStart','hopeOpen','worryStart','problemStart']){ const b=boot(); b.G(`ACTIONS.${s}()`); r.push([`Help visible (${s})`, b.has('header .help-pill[data-act="crisis"]')]); }
+ for(const s of ['panicStart','angryStart','hopeOpen','worryStart','problemStart','butterflyStart']){ const b=boot(); b.G(`ACTIONS.${s}()`); r.push([`Help visible (${s})`, b.has('header .help-pill[data-act="crisis"]')]); }
  r.push(['Home: "I don\'t feel safe" still first', (()=>{ const b=boot(); b.click(act('homeMore')); const f=[...b.w.document.querySelectorAll('#app main [data-act]')].find(e=>!['wordmark','zags'].includes(e.dataset.act)); return f && f.dataset.act==='crisis'; })()]);
  r.push(['no script errors', a.errs.length===0]); }
 for(const [n,ok] of r) console.log((ok?'PASS':'FAIL')+' '+n);

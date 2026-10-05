@@ -818,6 +818,8 @@ const L10N = {
     "calm.trueMeta":"Start with what you know",
     "calm.real":"Find something real",
     "calm.realMeta":"Something you can hold, cooler, warmer",
+    "calm.butterfly":"Butterfly hug",
+    "calm.butterflyMeta":"Cross your arms and tap, left and right",
     "calm.also":"What's also true",
     "calm.truth":"What's true",
     "calm.truthMeta":"What you know, and what else is true",
@@ -1046,6 +1048,8 @@ const L10N = {
     "calm.trueMeta":{ text:"Empieza con lo que sabes", draft:true },
     "calm.real":{ text:"Encuentra algo real", draft:true },
     "calm.realMeta":{ text:"Algo que puedas sostener, más fresco, más tibio", draft:true },
+    "calm.butterfly":{ text:"Abrazo de mariposa", draft:true },
+    "calm.butterflyMeta":{ text:"Cruza los brazos y da toquecitos, izquierda y derecha", draft:true },
     "calm.also":{ text:"Lo que también es cierto", draft:true },
     "calm.truth":{ text:"Lo que es cierto", draft:true },
     "calm.truthMeta":{ text:"Lo que sabes, y qué más es cierto", draft:true },
@@ -1425,6 +1429,26 @@ const PROBLEM = {
   endNow:"Go do it. That's the whole step.",
   end:"That's the step. You don't have to solve the whole thing.",
   big:"Too big to do alone?",
+  next:"Next"
+};
+
+/* BUTTERFLY HUG (owner request, 2026-10-05, after the "crossing the midline" research; wording drafted by Claude Code,
+   CLINICIAN REVIEW REQUIRED). Arms crossed, slow left-right taps, a slow out-breath. Comes from EMDR, but here it is
+   only a calming moment: it never asks the person to think about or remember anything, and makes no claims about the
+   brain or trauma ("Some people find this calming."). If a hard memory comes up: stop, look around, feet on the floor.
+   No typing, no timer, no animation, nothing saved, not in the engine. */
+const BUTTERFLY = {
+  steps:[
+    ["Butterfly hug","Cross your arms over your chest and rest your hands near your shoulders, like you're giving yourself a hug."],
+    ["Tap slowly. Left, then right.","One gentle tap on each side, back and forth, like a butterfly's wings. Keep it slow."],
+    ["Breathe out slowly while you tap.","Keep going for about a minute. You don't have to think about anything."]
+  ],
+  some:"Some people find this calming.",
+  memory:"If something hard comes to mind, stop. Look around the room and put your feet on the floor.",
+  endQ:"How is it now?",
+  ends:[["calmer","A little calmer"],["same","About the same"]],
+  calmer:"Good. You can come back to this any time.",
+  same:"That's okay. Not everything works every time.",
   next:"Next"
 };
 
@@ -3586,7 +3610,8 @@ const SCREENS = {
       ["breathe","calm",l10n("calm.breathe"),l10n("calm.breatheMeta")],
       ["ground","leaf",l10n("calm.ground"),l10n("calm.groundMeta")],
       ["feet","check",l10n("calm.feet"),l10n("calm.feetMeta")],
-      ["real","leaf",l10n("calm.real"),l10n("calm.realMeta")]
+      ["real","leaf",l10n("calm.real"),l10n("calm.realMeta")],
+      ["butterfly","calm",l10n("calm.butterfly"),l10n("calm.butterflyMeta")]
     ];
     const opts = ui.calmMoreOpen ? [truth, ...more] : [truth];
     return { close:true, body:`
@@ -4178,6 +4203,21 @@ const SCREENS = {
     }
     return { close:true, body:`${stepTitle(HEAVY.end, true)}${line988}`,
       actions:`<button class="btn btn-primary" data-act="putDown">Put the phone down</button>
+        <button class="btn btn-secondary" data-act="route" data-arg="connect">Talk to someone</button>` };
+  },
+
+  /* BUTTERFLY HUG: calming only; never asks the person to remember anything */
+  butterfly(){
+    const b = ui.butterfly || {}, i = b.step || 0;
+    const foot = `<p class="small panic-911 bf-memory">${BUTTERFLY.memory}</p>`;
+    if (i < BUTTERFLY.steps.length){ const [t, m] = BUTTERFLY.steps[i];
+      return { close:true, body:`${stepTitle(t, i === 0)}<p class="sub" style="font-size:19px">${m}</p>${i === 0 ? `<p class="small">${BUTTERFLY.some}</p>` : ""}${foot}`,
+        actions:`<button class="btn btn-primary" data-act="butterflyNext">${BUTTERFLY.next}</button>` }; }
+    if (!b.end) return { close:true, body:`${stepTitle(BUTTERFLY.endQ, true)}
+      <div class="list">${BUTTERFLY.ends.map(([k, t]) => `<button class="card" data-act="butterflyEnd" data-arg="${k}"><span>${t}</span></button>`).join("")}</div>` };
+    return { close:true, body:`${stepTitle(b.end === "calmer" ? BUTTERFLY.calmer : BUTTERFLY.same, true)}`,
+      actions:`<button class="btn btn-primary" data-act="putDown">Put the phone down</button>
+        ${b.end === "calmer" ? "" : `<button class="btn btn-secondary" data-act="route" data-arg="calm">Try something else</button>`}
         <button class="btn btn-secondary" data-act="route" data-arg="connect">Talk to someone</button>` };
   },
 
@@ -6833,6 +6873,7 @@ const ACTIONS = {
     else if (arg === "real") startIntervention("touch_real_world");
     else if (arg === "also") startIntervention("true_sentence");
     else if (arg === "truth") go("calm-truth");
+    else if (arg === "butterfly") ACTIONS.butterflyStart();
   },
   trueYes(){ if (blockIfRed()) return; ui.trueCount++; ui.trueIdx++; lastRendered = null; render(); },
   trueNo(){ if (blockIfRed()) return; ui.trueIdx++; lastRendered = null; render(); },
@@ -7505,6 +7546,9 @@ const ACTIONS = {
     else if (arg === "line") ACTIONS.diaryWrite();
     else if (arg === "borrow") startIntervention("borrow_ten");
   },
+  butterflyStart(){ if (blockIfRed()) return; ui.butterfly = { step:0, end:null }; lastRendered = null; go("butterfly"); },
+  butterflyNext(){ if (blockIfRed()) return; const b = ui.butterfly || (ui.butterfly = { step:0 }); b.step = Math.min((b.step || 0) + 1, BUTTERFLY.steps.length); lastRendered = null; render(); },
+  butterflyEnd(arg){ if (blockIfRed()) return; if (!BUTTERFLY.ends.some(e => e[0] === arg)) return; const b = ui.butterfly || (ui.butterfly = {}); b.step = BUTTERFLY.steps.length; b.end = arg; lastRendered = null; render(); },
   /* IT FEELS LIKE PANIC / I'M REALLY ANGRY / MY HOPE BOX: nothing typed, nothing saved */
   panicStart(){ if (blockIfRed()) return; dispatch({ type:"SET_CURRENT_STATE", state:"anxious" }); ui.panic = { step:0, end:null }; lastRendered = null; go("panic"); },
   panicNext(){ if (blockIfRed()) return; const p = ui.panic || (ui.panic = { step:0 }); p.step = Math.min((p.step || 0) + 1, PANIC.steps.length); lastRendered = null; render(); },

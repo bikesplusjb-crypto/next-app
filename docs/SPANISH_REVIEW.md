@@ -8,7 +8,7 @@ Every Spanish line below is a **draft** (not reviewed). Please give each one a h
 
 Notes for the translator: keep "988", "911", "211" and "ZigZag Mind" as they are. Lines starting with a space or comma are joined to a name or number on screen (for example "Llamar a" + a name). `&` is shown on screen as "&".
 
-Strings: 226 (crisis-screen: 46).
+Strings: 228 (crisis-screen: 46).
 
 
 ## Help button
@@ -237,6 +237,8 @@ Strings: 226 (crisis-screen: 46).
 | `calm.trueMeta` | Start with what you know | Empieza con lo que sabes |  | DRAFT |
 | `calm.real` | Find something real | Encuentra algo real |  | DRAFT |
 | `calm.realMeta` | Something you can hold, cooler, warmer | Algo que puedas sostener, más fresco, más tibio |  | DRAFT |
+| `calm.butterfly` | Butterfly hug | Abrazo de mariposa |  | DRAFT |
+| `calm.butterflyMeta` | Cross your arms and tap, left and right | Cruza los brazos y da toquecitos, izquierda y derecha |  | DRAFT |
 | `calm.also` | What's also true | Lo que también es cierto |  | DRAFT |
 | `calm.truth` | What's true | Lo que es cierto |  | DRAFT |
 | `calm.truthMeta` | What you know, and what else is true | Lo que sabes, y qué más es cierto |  | DRAFT |

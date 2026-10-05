@@ -1215,7 +1215,7 @@ Contact line (only when CONTACT_EMAIL is set): "Questions? Email [address]."
 
 D. Crisis Text Line (**hidden until the owner verifies it**; CRISIS_TEXT_LINE.verified is true): one line below the 988 buttons on the full crisis screen and Connect, on the printed plan, and in the supporter guide's "Get help together": "Rather text a stranger? Text HOME to 741741 (Crisis Text Line)." (phones: Text HOME to 741741 is a text link; computers: shown as text).
 
-E. Spanish interface: **scaffolding only, nothing shown**. SPANISH_ENABLED is false. 226 strings (onboarding, Home, crisis screens, Calm, Connect, My Plan, Help, Settings labels) now live in one table; English is unchanged. Every Spanish line is a DRAFT for a human translator and the clinician: docs/SPANISH_REVIEW.md. A draft crisis-screen line is never shown, even with Spanish on.
+E. Spanish interface: **scaffolding only, nothing shown**. SPANISH_ENABLED is false. 228 strings (onboarding, Home, crisis screens, Calm, Connect, My Plan, Help, Settings labels) now live in one table; English is unchanged. Every Spanish line is a DRAFT for a human translator and the clinician: docs/SPANISH_REVIEW.md. A draft crisis-screen line is never shown, even with Spanish on.
 
 F. Feedback (only when FEEDBACK_URL is set; it is empty): on About only, "Did ZigZag Mind help? Tell us anonymously →" (new tab). Privacy page adds: "If you use the feedback link on About, that form is a separate service. It receives only what you type there."
 
@@ -1295,6 +1295,15 @@ Why (for reviewers only; never shown as statements about people): in 2023 an ave
 - 3: "Pick the smallest one." / "The one you could actually start."
 - 4: "When will you do it?" → "Now" · "Later today" · "Tomorrow"
 - End: "Go do it. That's the whole step." (Now) or "That's the step. You don't have to solve the whole thing." · "Too big to do alone?" Talk to someone → Put the phone down
+
+### Butterfly hug (owner request, 2026-10-05, after the crossing-the-midline research; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)
+
+- Entry: Calm → Something else → "Butterfly hug" ("Cross your arms and tap, left and right"). From EMDR, used here only as a calming moment: never asks the person to think about or remember anything; no claims about the brain or trauma. No typing, no timer, nothing saved, not in the engine.
+- 1: "Butterfly hug" / "Cross your arms over your chest and rest your hands near your shoulders, like you're giving yourself a hug." / "Some people find this calming."
+- 2: "Tap slowly. Left, then right." / "One gentle tap on each side, back and forth, like a butterfly's wings. Keep it slow."
+- 3: "Breathe out slowly while you tap." / "Keep going for about a minute. You don't have to think about anything."
+- Every step: "If something hard comes to mind, stop. Look around the room and put your feet on the floor."
+- Then: "How is it now?" → "A little calmer" · "About the same" → "Good. You can come back to this any time." (Put the phone down · Talk to someone) or "That's okay. Not everything works every time." (Put the phone down · Try something else · Talk to someone)
 
 ### My hope box (2026-10-05 research pass; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)
 
@@ -2329,6 +2338,16 @@ _When: distraction_
 - **Heading:** When most days feel heavy, that's worth taking seriously.
 - It's not weakness, and it's not your fault. You don't have to fix all of it.
 - If it ever feels like more than heavy, call or text 988, any time. Call 988 · Text 988
+- **Button:** Next
+
+### `butterfly`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Butterfly hug
+- Cross your arms over your chest and rest your hands near your shoulders, like you're giving yourself a hug.
+- Some people find this calming.
+- If something hard comes to mind, stop. Look around the room and put your feet on the floor.
 - **Button:** Next
 
 ### `panic`

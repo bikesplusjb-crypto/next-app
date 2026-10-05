@@ -19,7 +19,7 @@ const r=[];
  r.push(['Calm opens from Home', a.S().screen==='calm' && a.doc.getElementById('screen-title').textContent==="Let's slow things down."]);
  r.push(['north star: only What\'s true until "Something else"', [...a.doc.querySelectorAll('[data-act="calmPick"]')].map(b=>b.dataset.arg).join()==='truth']);
  a.click('[data-act="calmMore"]');
- r.push(['short menu: breathe, 5-4-3-2-1, feet on the floor, what\'s true (still true + also true inside, simplicity audit #8), find something real', [...a.doc.querySelectorAll('[data-act="calmPick"]')].map(b=>b.dataset.arg).sort().join()==='breathe,feet,ground,real,truth']);
+ r.push(['short menu: breathe, 5-4-3-2-1, feet on the floor, butterfly hug, what\'s true (still true + also true inside, simplicity audit #8), find something real', [...a.doc.querySelectorAll('[data-act="calmPick"]')].map(b=>b.dataset.arg).sort().join()==='breathe,butterfly,feet,ground,real,truth']);
  r.push(['"I\'d rather talk to someone" goes to Connect', !!a.doc.querySelector('.actions [data-act="route"][data-arg="connect"]') && t.includes("I'd rather talk to someone")]);
  r.push(['no emoji; Help in the top bar', !/\p{Extended_Pictographic}/u.test(t) && !!a.doc.querySelector('header .help-pill')]);
  r.push(['Zags is the featured card, first on the menu (6.7)', /^Calm down with Zags/.test(a.doc.querySelector('#app .zcard').textContent.trim()) && a.doc.querySelector('#app .zcard').compareDocumentPosition(a.doc.querySelector('[data-act="calmPick"]'))===4]);
