@@ -85,13 +85,13 @@ Session state lives in one object `session`, changed only through `dispatch(acti
 
 The build order is done. What's left needs a person, not code:
 
-- **Owner verifications:** Florida Warm Line (incl. "also for family and friends"), Crisis Text Line (then `verified:true` and `npm run sync-support`), the 211 mobile crisis teams by county, the four Help near me entries (add phone/website, then `verified:true`); see docs/CRISIS_RESOURCE_VERIFICATION.md.
+- **Owner verifications:** Florida Warm Line (incl. "also for family and friends"), Crisis Text Line (then `verified:true` and `npm run sync-support`), the 211 mobile crisis teams by county, the four Help near me entries (add phone/website, then `verified:true`); grief support (6.20: hospice bereavement, pet loss line, GriefShare); bullying (6.27: Workplace Bullying Institute, Cyber Civil Rights Initiative, StopBullying.gov); trauma (6.28: RAINN, National Domestic Violence Hotline); and tap the three VA links once (6.28 F: shown as verified from the owner's 2026-10-04 check, but not openable from the build environment) and re-check them periodically. All in docs/CRISIS_RESOURCE_VERIFICATION.md.
 - **Owner settings:** `CONTACT_EMAIL` and `FEEDBACK_URL` (both empty, so hidden); `FOUNDER_NOTE` (6.27, empty: About shows "Why ZigZag Mind exists" only once it's filled in).
-- **Clinician:** every decision in docs/CLINICIAN_REVIEW.md (D1–D29, all OPEN), including the OWNER-APPROVED INTERIM items.
+- **Clinician:** every decision in docs/CLINICIAN_REVIEW.md (D1–D35 plus D-diary, all OPEN), including the OWNER-APPROVED INTERIM items (grief, bullying YELLOW phrases; the veterans gun line).
 - **Translator + clinician:** docs/SPANISH_REVIEW.md before `SPANISH_ENABLED` can be true.
-- **Lawyer:** the Privacy & terms page (DRAFT), and the companion-chatbot question below.
-- **On hold (do not build without owner + clinician sign-off):** 6.7b Snuggle Zags, 6.7c Zags listens, 6.7d Safe place, Tech check option 6 (`ai_reality`), 7C new experiences. Not built because they don't exist yet: YOUR THINGS (handoff cut off), MIND SCRIBBLE. (Loss/grief is built as 6.20.) Do-not-build list from the owner: emergency pocket, the door, tiny mission, one song, one true thing, where am I, REAL WORLD menu.
-- **Owner decisions still open:** simplicity audit #7 (I feel alone chip) and #9 (crisis "Open my plan" wording, clinician first); Home still has 16 tappable items (owner decision); every main menu is now at 8 or fewer (north star pass, 2026-10-04).
+- **Lawyer:** the Privacy & terms page (DRAFT; since updated for Remembering notes, the diary lock and doodles), and the companion-chatbot question below.
+- **On hold (do not build without owner + clinician sign-off):** 6.7b Snuggle Zags, 6.7c Zags listens, 6.7d Safe place, Tech check option 6 (`ai_reality`), 7C new experiences. Not built because they don't exist yet: YOUR THINGS (handoff cut off), MIND SCRIBBLE, 6.24 ("Make it smaller": 6.27 and 6.28 show it automatically once an action `smallerStart` exists), 6.25 (domestic violence; reuse the hotline entry in `TRAUMA_RESOURCES`), 6.26. (Loss/grief is built as 6.20.) Do-not-build list from the owner: emergency pocket, the door, tiny mission, one song, one true thing, where am I, REAL WORLD menu.
+- **Owner decisions still open:** simplicity audit #7 (I feel alone chip) and #9 (crisis "Open my plan" wording, clinician first); Home shows five chips plus More (6.28 A); every main menu is at 8 or fewer (north star pass). The urge chip wording ("I have an urge to use (drink or drugs)" vs the 6.28 text's "I have an urge (drink, drugs, or vape)"): owner + clinician (D35).
 
 ## Do not build
 
