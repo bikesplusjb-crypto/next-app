@@ -14,7 +14,7 @@ They stay hidden until you confirm them. Check the official website or call the 
 - **Older items:** Florida Warm Line · Crisis Text Line · the 211 county list · Help near me
 - **VA:** tap the three links once on your phone (Vet Center, Veterans Crisis Line, PTSD Coach) and say whether each opens the right page
 
-Details for each: `docs/CRISIS_RESOURCE_VERIFICATION.md`. **Start with its "OWNER VERIFICATION — 2026-10-05" section:** Claude Code already found each organization's official page, number and hours by search (the pages couldn't be opened from the build environment). Open each listed page, check it matches, and reply "verified" for it. Two need your decision: the pet-loss line, and whether to keep the Workplace Bullying Institute.
+**Done 2026-10-05:** RAINN, National Domestic Violence Hotline, Crisis Text Line, Treasure Coast Hospice grief support, Cornell pet-loss line, GriefShare, Workplace Bullying Institute, Cyber Civil Rights Initiative, StopBullying.gov and the three VA links (you confirmed the links work). **Still to do:** call the Florida Warm Line (1-800-945-1355) between 4pm and 10pm to confirm it still runs; confirm 211 Palm Beach/Treasure Coast on its own website (or by dialing 211) for Help near me, and pick what to list for local recovery meetings. Details: `docs/CRISIS_RESOURCE_VERIFICATION.md`.
 
 ## 2. Your settings (5 minutes)
 

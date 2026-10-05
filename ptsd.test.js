@@ -103,12 +103,13 @@ const GUNS="A lot of vets have a buddy hold their guns for a while when things g
 {const a=boot(); a.G('ACTIONS.ptsdStart()'); a.click(act('ptsdPath','other')); const t=a.T();
  r.push(['G1: "Whatever happened, it wasn\'t your fault. You don\'t have to explain it here."', a.S()==='ptsd-other' && t.includes("Whatever happened, it wasn't your fault. You don't have to explain it here.")]);
  r.push(['G2: grounding links to C and E', a.has(act('ptsdPath','now')) && a.has(act('ptsdPath','edge'))]);
- r.push(['G3: RAINN and the domestic violence hotline hidden while unverified', !/RAINN|Domestic Violence/.test(t) && a.G('TRAUMA_RESOURCES.every(e=>e.verified===false)')]);
+ r.push(['G3: RAINN (call 800-656-4673, text HOPE to 64673) and the National Domestic Violence Hotline (call 1-800-799-7233, text START to 88788), owner-verified 2026-10-05', /RAINN National Sexual Assault Hotline/.test(t) && /National Domestic Violence Hotline/.test(t) && a.has('a[href="tel:8006564673"]') && a.has('a[href^="sms:64673"]') && a.has('a[href="tel:18007997233"]') && a.has('a[href^="sms:88788"]') && a.G('TRAUMA_RESOURCES.every(e=>e.verified===true && e.checked==="2026-10-05")')]);
+ r.push(['G3: the DV hotline links to people (phone, text), not its website chat', !a.has('a[href*="thehotline.org"]')]);
  r.push(['G4: "Talking to a trauma-trained counselor can really help. It\'s never too late."', t.includes("Talking to a trauma-trained counselor can really help. It's never too late.")]);
  r.push(['G: no text inputs (never asks what happened)', !a.has('#app main input, #app main textarea')]);
  a.click(act('ptsdPath','now')); r.push(['G2: → the Now screen', a.S()==='ptsd-now']); }
-{const a=boot(); a.G('TRAUMA_RESOURCES[0].verified=true; TRAUMA_RESOURCES[0].phone="8006564673"; ACTIONS.ptsdStart(); ACTIONS.ptsdPath("other")');
- r.push(['G3: once verified (with a number), RAINN shows', a.T().includes('RAINN National Sexual Assault Hotline') && a.has('a[href="tel:8006564673"]') && !a.T().includes('Domestic Violence')]); }
+{const a=boot(); a.G('TRAUMA_RESOURCES.forEach(e=>e.verified=false); ACTIONS.ptsdStart(); ACTIONS.ptsdPath("other")');
+ r.push(['G3: unverified entries never render', !/RAINN|Domestic Violence/.test(a.T())]); }
 
 // ================= H. Someone I love =================
 {const a=boot(); a.G('ACTIONS.ptsdStart()'); a.click(act('ptsdPath','love'));

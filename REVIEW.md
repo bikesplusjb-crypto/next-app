@@ -134,6 +134,7 @@ Shown with a trusted person in My Plan (example name "Jordan") unless noted. The
 - **Link → `sms:988`:** Text 988 _(screen reader: "Text 988, the Suicide and Crisis Lifeline")_
 - **Link → `https://988lifeline.org/chat`:** Chat with 988 online
 - Veteran or service member? Call 988 and press 1.
+- Rather text a stranger? Text HOME to 741741 (Crisis Text Line).
 - Want someone to come to you who isn't police? In many Florida counties, 211 can connect you to a mobile crisis team.
 - **Link → `tel:211`:** Call 211
 - **Link → `tel:5550142`:** Call Jordan
@@ -156,6 +157,7 @@ Shown with a trusted person in My Plan (example name "Jordan") unless noted. The
 - **Link → `sms:988`:** Text 988 _(screen reader: "Text 988, the Suicide and Crisis Lifeline")_
 - **Link → `https://988lifeline.org/chat`:** Chat with 988 online
 - Veteran or service member? Call 988 and press 1.
+- Rather text a stranger? Text HOME to 741741 (Crisis Text Line).
 - Want someone to come to you who isn't police? In many Florida counties, 211 can connect you to a mobile crisis team.
 - **Link → `tel:211`:** Call 211
 - Add someone you trust in My Plan.
@@ -1029,9 +1031,11 @@ A static page for the people in someone's plan: no scripts, no storage, no track
 
 **Get help together**
 - Call or text 988 together. 988 helps people who are supporting someone, too. It's free and open 24/7.
+- Rather text a stranger? Text HOME to 741741 (Crisis Text Line), 24/7.
 - **Link → `tel:988`:** Call 988
 - **Link → `sms:988`:** Text 988
 - **Link → `tel:911`:** Call 911 if they're in danger or took something
+- **Link → `sms:741741?&body=HOME`:** Text HOME to 741741
 
 **Time and distance**
 - Offer to hold onto things for a while, or help them get somewhere safer.
@@ -1198,7 +1202,7 @@ C. **Privacy & terms — DRAFT, lawyer review required** (the page itself does n
 
 Contact line (only when CONTACT_EMAIL is set): "Questions? Email [address]."
 
-D. Crisis Text Line (**hidden until the owner verifies it**; CRISIS_TEXT_LINE.verified is false): one line below the 988 buttons on the full crisis screen and Connect, on the printed plan, and in the supporter guide's "Get help together": "Rather text a stranger? Text HOME to 741741 (Crisis Text Line)." (phones: Text HOME to 741741 is a text link; computers: shown as text).
+D. Crisis Text Line (**hidden until the owner verifies it**; CRISIS_TEXT_LINE.verified is true): one line below the 988 buttons on the full crisis screen and Connect, on the printed plan, and in the supporter guide's "Get help together": "Rather text a stranger? Text HOME to 741741 (Crisis Text Line)." (phones: Text HOME to 741741 is a text link; computers: shown as text).
 
 E. Spanish interface: **scaffolding only, nothing shown**. SPANISH_ENABLED is false. 221 strings (onboarding, Home, crisis screens, Calm, Connect, My Plan, Help, Settings labels) now live in one table; English is unchanged. Every Spanish line is a DRAFT for a human translator and the clinician: docs/SPANISH_REVIEW.md. A draft crisis-screen line is never shown, even with Spanish on.
 
@@ -1214,7 +1218,7 @@ H. Simplicity audit: report only, nothing applied (docs/SIMPLICITY_AUDIT.md).
 
 ### Owner verification, 2026-10-05 (docs/CRISIS_RESOURCE_VERIFICATION.md)
 
-Every outside resource was checked by web search restricted to its official domain (the build environment cannot open those pages). None is marked verified from search alone, and nothing was switched on: each waits for the owner to open its official page. Owner decisions needed: a pet-loss line (Cornell's national hotline, or none) and whether to keep the Workplace Bullying Institute link (founders stepping aside). Owner settings (contact email, feedback link, Why ZigZag Mind exists, the urge chip wording): pending owner input. Clinician and translator decisions: pending (none recorded).
+Found on each organization's official site by search; the owner (JB) then opened the official pages and confirmed them. Now on: RAINN National Sexual Assault Hotline (800-656-4673) · National Domestic Violence Hotline (1-800-799-7233) · Workplace Bullying Institute · Cyber Civil Rights Initiative helpline (1-844-878-2274) · StopBullying.gov · Treasure Coast Hospice grief support (Treasure Health) (772-403-4500) · Cornell University Pet Loss Support Hotline (607-218-7457) · GriefShare · Crisis Text Line (text HOME to 741741, one line below 988). Still hidden: Help near me (211, New Horizons, NAMI, recovery meetings). The Florida Warm Line needs the owner's phone call. Owner settings and the urge chip wording: pending owner input. Clinician and translator decisions: pending (none recorded).
 
 ### Stage 6.28 A: Home chips
 
@@ -1317,7 +1321,7 @@ Entered only by the person: Home chip "I lost someone", and on Tech check's "My 
 - Tell one person: "Who did you lose? Their first name, if you want. Optional. Not saved." → "Tap one. It opens your messages. Nothing is sent until you send it." (computers: "Tap one to copy it."). Messages (with a name / without): "I lost Sam and I'm having a really hard time. Can you call me?" · "Today's a hard day. I'm thinking about Sam." · "I don't need you to say anything. I just didn't want to be alone with this." / "I lost someone and I'm having a really hard time. Can you call me?" · "Today's a hard day. I'm thinking about them." · "I don't need you to say anything. I just didn't want to be alone with this."
 - Hard date: "A gentle reminder for a hard date" / "Pick the date. It goes in your own calendar, once a year. Nothing is kept in ZigZag Mind." → calendar file, once a year at 9am: "Be gentle with yourself today." → "Added. Open the file to put it in your calendar."
 - Ending: "Grief comes and goes. You don't have to carry it all today." → Put the phone down · Something else (the engine, Let's Zig, state "low") · Talk to someone (Connect)
-- Resources (hidden until verified; card "Grief support near you"): Hospice bereavement program (Treasure Coast): "Free grief support for anyone in the community." (verified: false) · Pet loss support line: "Someone to talk to after losing a pet." (verified: false) · GriefShare: "Faith-based grief support groups." (verified: false; Faith & hope only)
+- Resources (hidden until verified; card "Grief support near you"): Treasure Coast Hospice grief support (Treasure Health): "Free grief support for anyone in Martin, St. Lucie or Okeechobee counties, whether or not their loved one was in hospice care." (verified: true) · Cornell University Pet Loss Support Hotline: "Someone to talk to after losing a pet. Evenings and weekends; hours vary by season." (verified: true) · GriefShare: "Faith-based grief support groups." (verified: true; Faith & hope only)
 - YELLOW phrases (OWNER-APPROVED INTERIM, pending clinician; should any be RED?): "want to be with him again", "want to be with her again", "want to be with them again", "want to join him", "want to join her", "want to join them", "everyone hates me", "everyone would be happier without me", "i'm a joke to everyone", "i deserve it"
 
 ### North star pass (2026-10-04): at most 8 choices, nothing removed
@@ -2159,6 +2163,15 @@ _When: distraction_
 - **Heading:** Whatever happened, it wasn't your fault. You don't have to explain it here.
 - **Button:** Come back to now
 - **Button:** I'm on edge
+- **Heading:** RAINN National Sexual Assault Hotline
+- Free, confidential support, any time.
+- **Link → `tel:8006564673`:** Call 800-656-4673
+- **Link → `sms:64673?&body=HOPE`:** Text HOPE to 64673
+- **Link → `https://rainn.org/help-and-healing/hotline/`:** Website
+- **Heading:** National Domestic Violence Hotline
+- Free, confidential support, any time.
+- **Link → `tel:18007997233`:** Call 1-800-799-7233
+- **Link → `sms:88788?&body=START`:** Text START to 88788
 - Talking to a trauma-trained counselor can really help. It's never too late.
 - **Button:** Talk to someone
 
@@ -2338,6 +2351,9 @@ _When: distraction_
 - Ask what they want to happen before you act.
 - Keep checking in, not just once.
 - If they talk about not wanting to be alive, take it seriously and call or text 988 together.
+- **Heading:** StopBullying.gov
+- U.S. government information on bullying and how to help.
+- **Link → `https://www.stopbullying.gov/resources/get-help-now`:** Website
 - **Link → `support/`:** More on how to help: the supporter guide →
 - Call or text 988 any time. Call 988 · Text 988
 - **Button:** Done
@@ -2349,6 +2365,10 @@ _When: distraction_
 - **Heading:** Being targeted online is real harm, even if it's 'just a screen.'
 - That's more than bullying. You can report threats to the police. If you're in danger right now, call 911.
 - **Link → `tel:911`:** Call 911
+- **Heading:** Cyber Civil Rights Initiative helpline
+- For private images shared without your consent, including sextortion. Free, any time.
+- **Link → `tel:18448782274`:** Call 1-844-878-2274
+- **Link → `https://cybercivilrights.org/ccri-crisis-helpline/`:** Website
 - Call or text 988 any time. Call 988 · Text 988
 - **Button:** Next
 
@@ -2367,6 +2387,9 @@ _When: distraction_
 - **Button:** × _(screen reader: "Close and go to home")_
 - **Button:** Help _(screen reader: "Get help now")_
 - **Heading:** This is about their behavior, not your worth. A lot of people go through this at work, and it's not something you have to just take.
+- **Heading:** Workplace Bullying Institute
+- Information about bullying at work and what you can do.
+- **Link → `https://workplacebullying.org/help4targets/`:** Website
 - Call or text 988 any time. Call 988 · Text 988
 - **Button:** Next
 
@@ -2734,6 +2757,15 @@ _When: distraction_
 - **Button:** Write what you'd want to say to them
 - **Button:** Tell one person
 - **Button:** Add a gentle reminder for a hard date — An anniversary or a birthday, in your own calendar
+- Grief support near you
+- **Heading:** Treasure Coast Hospice grief support (Treasure Health)
+- Free grief support for anyone in Martin, St. Lucie or Okeechobee counties, whether or not their loved one was in hospice care.
+- **Link → `tel:7724034500`:** Call 772-403-4500
+- **Link → `https://www.treasurehealth.org/care-services/grief-support`:** Website
+- **Heading:** Cornell University Pet Loss Support Hotline
+- Someone to talk to after losing a pet. Evenings and weekends; hours vary by season.
+- **Link → `tel:6072187457`:** Call 607-218-7457
+- **Link → `https://www.vet.cornell.edu/impact/community-impact/pet-loss-resources-and-support`:** Website
 - If it gets heavier
 - **Link → `tel:988`:** Call 988 _(screen reader: "Call 988, the Suicide and Crisis Lifeline")_
 - **Link → `sms:988`:** Text 988 _(screen reader: "Text 988, the Suicide and Crisis Lifeline")_
@@ -2750,6 +2782,15 @@ _When: distraction_
 - **Button:** Write what you'd want to say to them
 - **Button:** Tell one person
 - **Button:** Add a gentle reminder for a hard date — An anniversary or a birthday, in your own calendar
+- Grief support near you
+- **Heading:** Treasure Coast Hospice grief support (Treasure Health)
+- Free grief support for anyone in Martin, St. Lucie or Okeechobee counties, whether or not their loved one was in hospice care.
+- **Link → `tel:7724034500`:** Call 772-403-4500
+- **Link → `https://www.treasurehealth.org/care-services/grief-support`:** Website
+- **Heading:** Cornell University Pet Loss Support Hotline
+- Someone to talk to after losing a pet. Evenings and weekends; hours vary by season.
+- **Link → `tel:6072187457`:** Call 607-218-7457
+- **Link → `https://www.vet.cornell.edu/impact/community-impact/pet-loss-resources-and-support`:** Website
 - If it gets heavier
 - **Link → `tel:988`:** Call 988 _(screen reader: "Call 988, the Suicide and Crisis Lifeline")_
 - **Link → `sms:988`:** Text 988 _(screen reader: "Text 988, the Suicide and Crisis Lifeline")_
@@ -2776,6 +2817,15 @@ _When: distraction_
 - **Button:** Write what you'd want to say to them
 - **Button:** Tell one person
 - **Button:** Add a gentle reminder for a hard date — An anniversary or a birthday, in your own calendar
+- Grief support near you
+- **Heading:** Treasure Coast Hospice grief support (Treasure Health)
+- Free grief support for anyone in Martin, St. Lucie or Okeechobee counties, whether or not their loved one was in hospice care.
+- **Link → `tel:7724034500`:** Call 772-403-4500
+- **Link → `https://www.treasurehealth.org/care-services/grief-support`:** Website
+- **Heading:** Cornell University Pet Loss Support Hotline
+- Someone to talk to after losing a pet. Evenings and weekends; hours vary by season.
+- **Link → `tel:6072187457`:** Call 607-218-7457
+- **Link → `https://www.vet.cornell.edu/impact/community-impact/pet-loss-resources-and-support`:** Website
 - If it gets heavier
 - **Link → `tel:988`:** Call 988 _(screen reader: "Call 988, the Suicide and Crisis Lifeline")_
 - **Link → `sms:988`:** Text 988 _(screen reader: "Text 988, the Suicide and Crisis Lifeline")_
@@ -3205,6 +3255,7 @@ _When: distraction_
 - **Link → `tel:988`:** Call 988 _(screen reader: "Call 988, the Suicide and Crisis Lifeline")_
 - **Link → `sms:988`:** Text 988 _(screen reader: "Text 988, the Suicide and Crisis Lifeline")_
 - Veteran or service member? Call 988 and press 1.
+- Rather text a stranger? Text HOME to 741741 (Crisis Text Line).
 
 ### `human-first`
 

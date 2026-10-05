@@ -9,7 +9,8 @@ function boot(){ const w=new JSDOM(HTML,{url:'https://zigzagmind.com/',runScript
   ['obNext','obAdult','obLater'].forEach(a=>click(`[data-act="${a}"]`));
   w.eval('getPlan().trustedPeople=[{name:"Jordan",phone:"555-0142",relationship:"friend"}]; saveStore(); lastRendered=null; render()');
   const show=s=>w.eval(`lastRendered=null; session={...session, screen:${JSON.stringify(s)}}; render()`);
-  const choices=()=>[...w.document.querySelectorAll('#app main [data-act], #app main a[href]')].length;
+  // Crisis contacts (the Crisis Text Line line under 988) are safety lines, not menu choices.
+  const choices=()=>[...w.document.querySelectorAll('#app main [data-act], #app main a[href]')].filter(e=>!e.closest('.ctl-line')).length;
   const has=s=>!!w.document.querySelector(s);
   return {w,click,show,choices,has,G:x=>w.eval(x)}; }
 const act=(a,arg)=>arg!==undefined?`[data-act="${a}"][data-arg="${arg}"]`:`[data-act="${a}"]`;

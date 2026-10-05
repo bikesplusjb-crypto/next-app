@@ -2,6 +2,8 @@
 
 # OWNER VERIFICATION — 2026-10-05
 
+> **Update, later on 2026-10-05:** JB approved switching on the search-confirmed resources, chose the Cornell pet-loss line and keeping the Workplace Bullying Institute, then opened the official pages and confirmed: **"those links all work."** The rows below are updated: nine resources are now **VERIFIED** (on in the app) and the three VA links are **RIGHT PAGE**, confirmed by JB. Still pending: the Florida Warm Line (a phone line, needs a call), Florida 211 / Help near me (the organization's own site wasn't found).
+
 Checked by Claude Code for JB on 2026-10-05, at JB's request. **How:** the build environment's network blocks every one of these websites (the official pages could not be opened directly). Each resource was instead searched with web search **restricted to the organization's own official domain**, and the search results (page titles, addresses and quoted page text) were recorded below. Under the owner's own rule ("do not rely on search-result snippets alone; open the official page"), **that is not enough to mark anything VERIFIED**, so:
 
 - Every resource below is **PENDING VERIFICATION** (or **OWNER DECISION REQUIRED**), with what the official site's indexed text says, so JB can confirm each one in a minute by opening the listed page.
@@ -13,18 +15,18 @@ Checked by Claude Code for JB on 2026-10-05, at JB's request. **How:** the build
 
 | Resource | Phone | Official Website | Relevant Page | Status | Verified | Initials |
 |---|---|---|---|---|---|---|
-| RAINN (National Sexual Assault Hotline) | 800-656-HOPE (4673); text HOPE to 64673; online chat | https://rainn.org | https://rainn.org/help-and-healing/hotline/ | PENDING VERIFICATION | 2026-10-05 (search of rainn.org) | JB |
-| National Domestic Violence Hotline | 1-800-799-SAFE (7233); text START to 88788; chat | https://www.thehotline.org | https://www.thehotline.org/get-help/ | PENDING VERIFICATION (qualification noted) | 2026-10-05 (search of thehotline.org) | JB |
-| Crisis Text Line | Text only: text HOME to 741741 (Spanish: AYUDA or HOLA to 741741) | https://www.crisistextline.org | https://www.crisistextline.org/text-us/ | PENDING VERIFICATION | 2026-10-05 (search of crisistextline.org) | JB |
+| RAINN (National Sexual Assault Hotline) | 800-656-HOPE (4673); text HOPE to 64673; online chat | https://rainn.org | https://rainn.org/help-and-healing/hotline/ | VERIFIED (on: 6.28 G) | 2026-10-05 (JB opened; found by search of rainn.org) | JB |
+| National Domestic Violence Hotline | 1-800-799-SAFE (7233); text START to 88788; chat | https://www.thehotline.org | https://www.thehotline.org/get-help/ | VERIFIED WITH QUALIFICATION (on: phone and text only) | 2026-10-05 (JB opened; found by search of thehotline.org) | JB |
+| Crisis Text Line | Text only: text HOME to 741741 (Spanish: AYUDA or HOLA to 741741) | https://www.crisistextline.org | https://www.crisistextline.org/text-us/ | VERIFIED (on: below 988) | 2026-10-05 (JB opened; found by search of crisistextline.org) | JB |
 | Florida Warm Line | 1-800-945-1355 | (no official program page found) | news coverage only (WFSU / WUSF / WGCU, 2022) | PENDING VERIFICATION | 2026-10-05 (web search) | JB |
 | Florida 211 (211 Palm Beach / Treasure Coast) | 2-1-1, or (561) 383-1112; text question + ZIP to 898211 | 211 Palm Beach/Treasure Coast (211pbtc.org: not confirmed) | (official page not found in search) | PENDING VERIFICATION | 2026-10-05 (web search) | JB |
 | Treasure Coast Help Near Me | see notes (four entries) | — | — | PENDING VERIFICATION | 2026-10-05 (web search) | JB |
-| Treasure Coast Hospice bereavement (now part of Treasure Health) | 772-403-4500 | https://www.treasurehealth.org | https://www.treasurehealth.org/care-services/grief-support | PENDING VERIFICATION | 2026-10-05 (search of treasurehealth.org) | JB |
-| Pet Loss | Cornell Pet Loss Support Hotline 607-218-7457 (candidate) | https://www.vet.cornell.edu | https://www.vet.cornell.edu/impact/community-impact/pet-loss-resources-and-support | OWNER DECISION REQUIRED | 2026-10-05 (search of cornell.edu) | JB |
-| GriefShare | (no single phone; local groups) | https://www.griefshare.org | https://find.griefshare.org/find | PENDING VERIFICATION (qualification noted) | 2026-10-05 (search of griefshare.org) | JB |
-| Workplace Bullying Institute | (none found) | https://workplacebullying.org | https://workplacebullying.org/help4targets/ | OWNER DECISION REQUIRED | 2026-10-05 (search of workplacebullying.org) | JB |
-| Cyber Civil Rights Initiative | 1-844-878-2274 (844-878-CCRI) | https://cybercivilrights.org | https://cybercivilrights.org/ccri-crisis-helpline/ | PENDING VERIFICATION | 2026-10-05 (search of cybercivilrights.org) | JB |
-| StopBullying.gov | (informational site; HHS line 1-877-696-6775 is general, not a bullying hotline) | https://www.stopbullying.gov | https://www.stopbullying.gov/resources/get-help-now | PENDING VERIFICATION (informational, not a crisis line) | 2026-10-05 (search of stopbullying.gov) | JB |
+| Treasure Coast Hospice bereavement (now part of Treasure Health) | 772-403-4500 | https://www.treasurehealth.org | https://www.treasurehealth.org/care-services/grief-support | VERIFIED (on: 6.20 grief) | 2026-10-05 (JB opened; found by search of treasurehealth.org) | JB |
+| Pet Loss | Cornell Pet Loss Support Hotline 607-218-7457 (candidate) | https://www.vet.cornell.edu | https://www.vet.cornell.edu/impact/community-impact/pet-loss-resources-and-support | VERIFIED WITH QUALIFICATION (owner chose Cornell; national, hours vary) | 2026-10-05 (JB opened; found by search of cornell.edu) | JB |
+| GriefShare | (no single phone; local groups) | https://www.griefshare.org | https://find.griefshare.org/find | VERIFIED WITH QUALIFICATION (on: Faith & hope only; Christian peer groups) | 2026-10-05 (JB opened; found by search of griefshare.org) | JB |
+| Workplace Bullying Institute | (none found) | https://workplacebullying.org | https://workplacebullying.org/help4targets/ | VERIFIED WITH QUALIFICATION (owner kept it as an information link) | 2026-10-05 (JB opened; found by search of workplacebullying.org) | JB |
+| Cyber Civil Rights Initiative | 1-844-878-2274 (844-878-CCRI) | https://cybercivilrights.org | https://cybercivilrights.org/ccri-crisis-helpline/ | VERIFIED (on: 6.27 online) | 2026-10-05 (JB opened; found by search of cybercivilrights.org) | JB |
+| StopBullying.gov | (informational site; HHS line 1-877-696-6775 is general, not a bullying hotline) | https://www.stopbullying.gov | https://www.stopbullying.gov/resources/get-help-now | VERIFIED WITH QUALIFICATION (on: information, not a crisis line) | 2026-10-05 (JB opened; found by search of stopbullying.gov) | JB |
 
 ### Verification notes
 
@@ -47,9 +49,9 @@ These three are already shown in the app (`VET_RESOURCES`, `verified:true`, owne
 
 | VA Resource | Existing ZigZag URL | Destination | Result | Verified | Initials |
 |---|---|---|---|---|---|
-| VA Vet Center | https://www.vetcenter.va.gov/ | "Vet Centers (Readjustment Counseling) Home" (va.gov). Indexed text: the Vet Center Call Center, 1-877-927-8387, is free, around the clock, confidential, staffed by combat veterans and family members; Vet Centers counsel for PTSD and military sexual trauma | RIGHT PAGE (by official search index; not opened) | 2026-10-05 | JB |
-| Veterans Crisis Line | https://www.veteranscrisisline.net/ (also used for chat) | "Veterans Crisis Line" home. Indexed text: dial 988 then press 1, chat online, or text 838255; 24/7, confidential; no VA enrollment needed. The site's dedicated chat page is https://www.veteranscrisisline.net/get-help-now/chat/ | RIGHT PAGE (by official search index; not opened) | 2026-10-05 | JB |
-| PTSD Coach | https://www.ptsd.va.gov/appvid/mobile/ptsdcoach_app.asp | "National Center for PTSD - Apps Videos - PTSD Coach". Indexed text: free, publicly available, created by VA's National Center for PTSD and DoD | RIGHT PAGE (by official search index; not opened) | 2026-10-05 | JB |
+| VA Vet Center | https://www.vetcenter.va.gov/ | "Vet Centers (Readjustment Counseling) Home" (va.gov). Indexed text: the Vet Center Call Center, 1-877-927-8387, is free, around the clock, confidential, staffed by combat veterans and family members; Vet Centers counsel for PTSD and military sexual trauma | RIGHT PAGE (JB opened it, 2026-10-05) | 2026-10-05 | JB |
+| Veterans Crisis Line | https://www.veteranscrisisline.net/ (also used for chat) | "Veterans Crisis Line" home. Indexed text: dial 988 then press 1, chat online, or text 838255; 24/7, confidential; no VA enrollment needed. The site's dedicated chat page is https://www.veteranscrisisline.net/get-help-now/chat/ | RIGHT PAGE (JB opened it, 2026-10-05) | 2026-10-05 | JB |
+| PTSD Coach | https://www.ptsd.va.gov/appvid/mobile/ptsdcoach_app.asp | "National Center for PTSD - Apps Videos - PTSD Coach". Indexed text: free, publicly available, created by VA's National Center for PTSD and DoD | RIGHT PAGE (JB opened it, 2026-10-05) | 2026-10-05 | JB |
 
 No VA link was changed. Optional improvement for the owner: point the app's "Chat online" button at the dedicated chat page above instead of the home page (not changed; owner decision).
 
@@ -70,7 +72,7 @@ No VA link was changed. Optional improvement for the owner: point the app's "Cha
 
 ## Resources not safe to activate yet
 
-All of them, until JB confirms each on its official page: RAINN, National Domestic Violence Hotline, Crisis Text Line, 211 / Help near me (four entries), Treasure Coast Hospice bereavement, pet loss (owner decision), GriefShare, Workplace Bullying Institute (owner decision), Cyber Civil Rights Initiative, StopBullying.gov. The Florida Warm Line is already live from the original spec and still needs the owner's phone check.
+Florida 211 / Help near me (211 Treasure Coast, New Horizons mobile response, NAMI Treasure Coast, local recovery meetings): the organization's own site wasn't confirmed, and recovery meetings need an owner choice. They stay hidden. The Florida Warm Line was already live from the original spec and still needs the owner's phone call during 4pm–10pm.
 
 ---
 
@@ -119,6 +121,9 @@ Every entry is **hidden** (`NEAR_ME` in index.html, `verified:false`). The scree
 
 ## Grief support (6.20 D)
 
+> **Superseded 2026-10-05:** see "OWNER VERIFICATION — 2026-10-05" at the top of this file. These entries are now on, with the owner-confirmed numbers and pages, except where that section says pending.
+
+
 Every entry is **hidden** (`GRIEF_RESOURCES` in index.html, `verified:false`). Shown on "What would help right now?" as "Grief support near you" only once verified (and, for GriefShare, only when Faith & hope is on). 988 is always shown there. The owner identifies each one, confirms it by phone or official website, fills in phone and/or website, and sets `verified:true`.
 
 | Entry | What the app would say | Phone in code | Website in code | Confirmed by (phone / official site) | Date | Initials |
@@ -139,6 +144,9 @@ These are `verified:true` in `VET_RESOURCES` (index.html) with `source` and `che
 
 ## Trauma (6.28 G): hidden until verified
 
+> **Superseded 2026-10-05:** see "OWNER VERIFICATION — 2026-10-05" at the top of this file. These entries are now on, with the owner-confirmed numbers and pages, except where that section says pending.
+
+
 Both are `verified:false` in `TRAUMA_RESOURCES` and not shown. Owner to confirm by phone or official website, fill in phone and/or website, and set `verified:true`. The domestic violence entry is the one 6.25 should reuse when it's built.
 
 | Entry | What the app would say | Phone in code | Website in code | Confirmed by (phone / official site) | Date | Initials |
@@ -147,6 +155,9 @@ Both are `verified:false` in `TRAUMA_RESOURCES` and not shown. Owner to confirm 
 | National Domestic Violence Hotline | "Free, confidential support, any time." | (none: owner to add) | (none: owner to add) | | | |
 
 ## Bullied, now or before (6.27)
+
+> **Superseded 2026-10-05:** see "OWNER VERIFICATION — 2026-10-05" at the top of this file. These entries are now on, with the owner-confirmed numbers and pages, except where that section says pending.
+
 
 Every entry is **hidden** (`BULLY_RESOURCES` in index.html, `verified:false`) until the owner confirms it by phone or official website, fills in phone and/or website, and sets `verified:true`. 988 is always shown in this path.
 

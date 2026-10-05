@@ -111,7 +111,7 @@ for(const [k,txt] of [['then','I want to kill myself'],['now','I want to die']])
 
 // ================= C. At work =================
 const toWork=a=>{ a.G('ACTIONS.bullyStart()'); a.click(act('bullyPath','work')); };
-{const a=boot(); toWork(a);
+{const a=boot(); a.G('BULLY_RESOURCES.forEach(e=>e.verified=false)'); toWork(a);
  r.push(['C1: "This is about their behavior, not your worth..."', a.S()==='bully-work' && a.T().includes("This is about their behavior, not your worth. A lot of people go through this at work, and it's not something you have to just take.") && has988(a)]);
  r.push(['C3: Workplace Bullying Institute hidden while unverified', !a.T().includes('Workplace Bullying Institute') && !a.has('.bully-res')]);
  a.click(act('bullyIdeas')); const seen=[a.w.document.getElementById('screen-title').textContent];
@@ -150,7 +150,7 @@ for(const [id,txt] of [['wkWhat','They told me to go kill myself'],['wkWho','I w
 
 // ================= D. Online =================
 const toOnline=a=>{ a.G('ACTIONS.bullyStart()'); a.click(act('bullyPath','online')); };
-{const a=boot(); toOnline(a); const t=a.T();
+{const a=boot(); a.G('BULLY_RESOURCES.forEach(e=>e.verified=false)'); toOnline(a); const t=a.T();
  r.push(['D1: "Being targeted online is real harm, even if it\'s \'just a screen.\'"', a.S()==='bully-online' && t.includes("Being targeted online is real harm, even if it's 'just a screen.'") && has988(a)]);
  r.push(['D3: threats, stalking, private images: report to police; danger → 911', t.includes('If there are threats, stalking, or private images shared without your consent') && t.includes("You can report threats to the police. If you're in danger right now, call 911.") && a.has('.bully-threats a[href="tel:911"]')]);
  r.push(['D3: Cyber Civil Rights Initiative hidden while unverified', !t.includes('Cyber Civil Rights')]);
@@ -162,10 +162,10 @@ const toOnline=a=>{ a.G('ACTIONS.bullyStart()'); a.click(act('bullyPath','online
  a.click(act('bullyNext')); r.push(['D: the end repeats the threats line and 911', a.S()==='bully-end' && a.has('.bully-threats a[href="tel:911"]') && has988(a)]); }
 {const a=boot(); toOnline(a); a.click(act('bullyIdeas')); for(let i=0;i<3;i++) a.click(act('bullyNext')); a.click(act('bullyGo','bully-online-tell'));
  r.push(['D2: Tell one person: "Someone\'s been going after me online and I don\'t want to deal with it alone."', decodeURIComponent(a.w.document.querySelector('a.sit').getAttribute('href')).endsWith("Someone's been going after me online and I don't want to deal with it alone.")]); }
-{const a=boot(); toOnline(a); r.push(['D: nothing helps look up, contact or expose anyone (no links out but 988/911)', [...a.w.document.querySelectorAll('#app main a[href]')].every(x=>/^(tel:(988|911)|sms:988)/.test(x.getAttribute('href')))]); }
+{const a=boot(); toOnline(a); r.push(['D: nothing helps look up, contact or expose anyone (only 988, 911 and the verified CCRI helpline)', [...a.w.document.querySelectorAll('#app main a[href]')].every(x=>/^(tel:(988|911|18448782274)|sms:988|https:\/\/cybercivilrights\.org\/ccri-crisis-helpline\/)/.test(x.getAttribute('href')))]); }
 
 // ================= E. Someone I love =================
-{const a=boot(); a.G('ACTIONS.bullyStart()'); a.click(act('bullyPath','love'));
+{const a=boot(); a.G('BULLY_RESOURCES.forEach(e=>e.verified=false)'); a.G('ACTIONS.bullyStart()'); a.click(act('bullyPath','love'));
  r.push(['E1: "Thank you for taking it seriously. That matters more than anything."', a.S()==='bully-love' && a.T().includes('Thank you for taking it seriously. That matters more than anything.') && has988(a)]);
  a.click(act('bullyGo','bully-love-guide')); const items=[...a.w.document.querySelectorAll('.bully-guide li')].map(l=>l.textContent);
  r.push(['E2: the six guidance lines', JSON.stringify(items)===JSON.stringify(["Listen first. Let them tell it their way.","Believe them, and say it's not their fault.","Don't say \"just ignore it\" or \"stand up to them.\"","Ask what they want to happen before you act.","Keep checking in, not just once.","If they talk about not wanting to be alive, take it seriously and call or text 988 together."])]);
@@ -174,7 +174,11 @@ const toOnline=a=>{ a.G('ACTIONS.bullyStart()'); a.click(act('bullyPath','online
  r.push(['E: 988 line', has988(a)]);
  a.click(act('bullyEnd')); r.push(['E: Done → the ending', a.S()==='bully-end']); }
 // all resources: hidden while unverified, shown once verified
-{const a=boot(); r.push(['every bullying resource starts verified:false', a.G('BULLY_RESOURCES.length')===3 && a.G('BULLY_RESOURCES.every(e=>e.verified===false)')]);
+{const a=boot(); r.push(['owner verified all three on 2026-10-05 (source, date)', a.G('BULLY_RESOURCES.length')===3 && a.G('BULLY_RESOURCES.every(e=>e.verified===true && e.checked==="2026-10-05" && /^https:\\/\\//.test(e.source))')]);
+ a.G('ACTIONS.bullyStart(); ACTIONS.bullyPath("work")'); r.push(['work: Workplace Bullying Institute (information link)', a.T().includes('Workplace Bullying Institute') && a.has('.bully-res a[href="https://workplacebullying.org/help4targets/"]')]);
+ a.G('ACTIONS.bullyStart(); ACTIONS.bullyPath("online")'); r.push(['online: CCRI helpline 1-844-878-2274 with a call button', a.T().includes('Cyber Civil Rights Initiative helpline') && a.has('.bully-res a[href="tel:18448782274"]')]);
+ a.G('ACTIONS.bullyStart(); ACTIONS.bullyPath("love"); ACTIONS.bullyGo("bully-love-guide")'); r.push(['love: StopBullying.gov (information, no phone)', a.T().includes('StopBullying.gov') && a.has('.bully-res a[href="https://www.stopbullying.gov/resources/get-help-now"]') && !a.has('.bully-res a[href^="tel:"]')]);
+ a.G('BULLY_RESOURCES.forEach(e=>e.verified=false)');
  let seen=''; for(const sc of ['bully','bully-past','bully-work','bully-online','bully-love','bully-love-guide','bully-end']){ a.G(`ui.bully={path:"online"}; session.screen=${JSON.stringify(sc)}; lastRendered=null; render()`); if(/Workplace Bullying|Cyber Civil|StopBullying/.test(a.T())) seen=sc; }
  r.push(['no resource renders anywhere while unverified', !seen, seen]);
  a.G('BULLY_RESOURCES.forEach(e=>{ e.verified=true; e.url="https://example.org/"+e.key; })');

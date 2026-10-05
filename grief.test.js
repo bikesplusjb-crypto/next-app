@@ -73,7 +73,7 @@ const toHelp=(a,who='person',when='recent')=>{ a.click(act('griefStart')); a.cli
 {const a=boot(); toHelp(a); const t=a.T();
  r.push(['B4: "What would help right now?" with all five choices', ['breathe','find','write','tell','date'].every(k=>a.has(act('griefPick',k))) && t.includes('What would help right now?')]);
  r.push(['B4: 988 Call and Text always shown', a.has('#app main a[href="tel:988"]') && a.has('#app main a[href^="sms:988"]')]);
- r.push(['D: no "Grief support near you" card while nothing is verified', !t.includes('Grief support near you') && a.G('griefResources().length')===0]); }
+ r.push(['D: the grief resources card is there now that the owner verified them', t.includes('Grief support near you') && a.G('griefResources().length')===2]); }
 
 // ---- write: Delete default, Keep, RED, YELLOW ----
 {const a=boot(); toHelp(a); const before=a.dump();
@@ -150,12 +150,13 @@ const toHelp=(a,who='person',when='recent')=>{ a.click(act('griefStart')); a.cli
  a.click(act('griefElse')); r.push(['B5: Something else → the existing engine (Let\'s Zig)', ['recommendation','human-first'].includes(a.S()) && a.G('session.currentState')==='low']); }
 
 // ---- D. resources ----
-{const a=boot(); r.push(['D: every grief resource starts verified:false', a.G('GRIEF_RESOURCES.length')===3 && a.G('GRIEF_RESOURCES.every(e=>e.verified===false)')]);
- a.G('GRIEF_RESOURCES[0].verified=true; GRIEF_RESOURCES[0].phone="5550100"; GRIEF_RESOURCES[2].verified=true; GRIEF_RESOURCES[2].url="https://example.org"'); toHelp(a);
- r.push(['D: once verified, "Grief support near you" shows (988 still shown)', a.T().includes('Grief support near you') && a.T().includes('Hospice bereavement program') && a.has('#app main a[href="tel:988"]')]);
+{const a=boot(); r.push(['D: owner verified all three on 2026-10-05 (source, date)', a.G('GRIEF_RESOURCES.length')===3 && a.G('GRIEF_RESOURCES.every(e=>e.verified===true && e.checked==="2026-10-05" && /^https:\\/\\//.test(e.source))')]);
+ toHelp(a);
+ r.push(['D: "Grief support near you" shows Treasure Coast Hospice and the Cornell pet-loss line (988 still shown)', a.T().includes('Grief support near you') && a.T().includes('Treasure Coast Hospice grief support (Treasure Health)') && a.has('a[href="tel:7724034500"]') && a.T().includes('Cornell University Pet Loss Support Hotline') && a.has('a[href="tel:6072187457"]') && a.has('#app main a[href="tel:988"]')]);
  r.push(['D: GriefShare only when Faith & hope is on', !a.T().includes('GriefShare')]);
  a.G('prefs.strength="bible"; lastRendered=null; render()'); r.push(['D: GriefShare shows with Faith & hope on', a.T().includes('GriefShare')]);
- a.G('GRIEF_RESOURCES[1].verified=true'); r.push(['D: a verified entry with no phone or website still never renders', !a.T().includes('Pet loss support line')]); }
+ a.G('GRIEF_RESOURCES[1].phone=""; GRIEF_RESOURCES[1].url=""; lastRendered=null; render()'); r.push(['D: a verified entry with no phone or website still never renders', !a.T().includes('Cornell University Pet Loss')]);
+ a.G('GRIEF_RESOURCES.forEach(e=>e.verified=false); lastRendered=null; render()'); r.push(['D: unverified entries never render', !a.T().includes('Grief support near you')]); }
 
 // ---- C. safety phrases ----
 {const a=boot(); const sc=t=>a.G(`safetyCheck(${JSON.stringify(t)})`);

@@ -1232,7 +1232,8 @@ function isNight(){ const h = new Date().getHours(); return h >= 0 && h < 6; }
 /* 6.19 D: Crisis Text Line. Hidden everywhere until the owner sets verified:true (CRISIS_RESOURCE_VERIFICATION.md).
    When shown: one line below the 988 buttons, never above or instead of 988. The supporter guide's line is written
    from this constant by sync-support.js. */
-const CRISIS_TEXT_LINE = { name:"Crisis Text Line", instruction:"Text HOME to 741741", hours:"24/7", sms:"sms:741741?&body=HOME", verified:false };
+// Owner verified 2026-10-05 (JB opened the official page; text HOME to 741741, free, 24/7).
+const CRISIS_TEXT_LINE = { name:"Crisis Text Line", instruction:"Text HOME to 741741", hours:"24/7", sms:"sms:741741?&body=HOME", verified:true, checked:"2026-10-05", source:"https://www.crisistextline.org/text-us/" };
 const CTL_LINE = "Rather text a stranger? Text HOME to 741741 (Crisis Text Line).";
 /* FIND SOMETHING (owner handoff, 2026-10-04). Look outward: one photo mission at a time; the person decides what they
    found. The camera is optional (the phone's own camera through a file input; no in-page camera, no permission prompt
@@ -1369,15 +1370,20 @@ const VET_RESOURCES = {
 /* 6.28 G: hidden until the owner verifies (CRISIS_RESOURCE_VERIFICATION.md). The domestic violence entry is the one
    6.25 is meant to reuse (6.25 isn't built yet). */
 const TRAUMA_RESOURCES = [
-  { key:"rainn", name:"RAINN National Sexual Assault Hotline", what:"Free, confidential support, any time.", phone:"", url:"", verified:false },
-  { key:"ndvh", name:"National Domestic Violence Hotline", what:"Free, confidential support, any time.", phone:"", url:"", verified:false }
+  { key:"rainn", name:"RAINN National Sexual Assault Hotline", what:"Free, confidential support, any time.", phone:"8006564673", number:"800-656-4673", textTo:"64673", textBody:"HOPE", textLabel:"Text HOPE to 64673", url:"https://rainn.org/help-and-healing/hotline/", source:"https://rainn.org/help-and-healing/hotline/", verified:true, checked:"2026-10-05", basis:"Found on the official site by search; owner (JB) opened the official pages and confirmed they work, 2026-10-05." },
+  // Phone and text only (the website also offers an AI chat bot; ZigZag Mind links to people).
+  { key:"ndvh", name:"National Domestic Violence Hotline", what:"Free, confidential support, any time.", phone:"18007997233", number:"1-800-799-7233", textTo:"88788", textBody:"START", textLabel:"Text START to 88788", url:"", source:"https://www.thehotline.org/get-help/", verified:true, checked:"2026-10-05", basis:"Found on the official site by search; owner (JB) opened the official pages and confirmed they work, 2026-10-05." }
 ];
+/* Owner verification 2026-10-05: one way to draw a verified outside resource (call, text, website). */
+function resourceBits(e){
+  return `${e.phone ? `<a class="btn btn-secondary" href="${telLink(e.phone)}">${callText(e.number ? `Call ${esc(e.number)}` : "Call", e.number || e.phone)}</a>` : ""}
+    ${e.textTo ? textOrCopy({ phone:e.textTo, body:e.textBody || "", label:esc(e.textLabel || `Text ${e.textTo}`), cls:"btn btn-secondary" }) : ""}
+    ${/^https:\/\/\S+$/.test(e.url) ? `<a class="conn-more" href="${esc(e.url)}" target="_blank" rel="noopener">Website</a>` : ""}`;
+}
 function traumaResourceCard(){
   const list = TRAUMA_RESOURCES.filter(e => e.verified === true && (e.phone || /^https:\/\/\S+$/.test(e.url)));
   if (!list.length) return "";
-  return `<div class="panel trauma-res">${list.map(e => `<h3>${esc(e.name)}</h3><p class="small">${esc(e.what)}</p>
-    ${e.phone ? `<a class="btn btn-secondary" href="${telLink(e.phone)}">${callText("Call", e.phone)}</a>` : ""}
-    ${/^https:\/\/\S+$/.test(e.url) ? `<a class="conn-more" href="${esc(e.url)}" target="_blank" rel="noopener">Website</a>` : ""}`).join("")}</div>`;
+  return `<div class="panel trauma-res">${list.map(e => `<h3>${esc(e.name)}</h3><p class="small">${esc(e.what)}</p>${resourceBits(e)}`).join("")}</div>`;
 }
 function vetCenterButton(){ const v = VET_RESOURCES.vetCenter; return v.verified === true ? `<a class="btn btn-primary" href="${v.tel}">${callText(PTSD.vetCall, v.number)}</a>` : ""; }
 const PTSD_PLAIN = ["ptsd","ptsd-now","ptsd-night","ptsd-night-opts","ptsd-reach"];   // no screen-enter animation on these
@@ -1475,16 +1481,16 @@ const BULLY = {
 };
 /* 6.27: outside resources, each hidden until the owner verifies it (CRISIS_RESOURCE_VERIFICATION.md). */
 const BULLY_RESOURCES = [
-  { key:"wbi", path:"work", name:"Workplace Bullying Institute", what:"Information about bullying at work and what you can do.", phone:"", url:"", verified:false },
-  { key:"ccri", path:"online", name:"Cyber Civil Rights Initiative helpline", what:"For private images shared without your consent.", phone:"", url:"", verified:false },
-  { key:"stopbullying", path:"love", name:"StopBullying.gov", what:"U.S. government information on bullying and how to help.", phone:"", url:"", verified:false }
+  // Owner decision 2026-10-05: keep as an information link (its founders are stepping aside; no hotline).
+  { key:"wbi", path:"work", name:"Workplace Bullying Institute", what:"Information about bullying at work and what you can do.", phone:"", url:"https://workplacebullying.org/help4targets/", source:"https://workplacebullying.org/help4targets/", verified:true, checked:"2026-10-05", basis:"Found on the official site by search; owner (JB) opened the official pages and confirmed they work, 2026-10-05." },
+  { key:"ccri", path:"online", name:"Cyber Civil Rights Initiative helpline", what:"For private images shared without your consent, including sextortion. Free, any time.", phone:"18448782274", number:"1-844-878-2274", url:"https://cybercivilrights.org/ccri-crisis-helpline/", source:"https://cybercivilrights.org/ccri-crisis-helpline/", verified:true, checked:"2026-10-05", basis:"Found on the official site by search; owner (JB) opened the official pages and confirmed they work, 2026-10-05." },
+  // Informational government site, not a crisis line.
+  { key:"stopbullying", path:"love", name:"StopBullying.gov", what:"U.S. government information on bullying and how to help.", phone:"", url:"https://www.stopbullying.gov/resources/get-help-now", source:"https://www.stopbullying.gov/resources/get-help-now", verified:true, checked:"2026-10-05", basis:"Found on the official site by search; owner (JB) opened the official pages and confirmed they work, 2026-10-05." }
 ];
 function bullyResources(path){ return BULLY_RESOURCES.filter(e => e.path === path && e.verified === true && (e.phone || /^https:\/\/\S+$/.test(e.url))); }
 function bullyResourceCard(path){
   const list = bullyResources(path); if (!list.length) return "";
-  return `<div class="panel bully-res">${list.map(e => `<h3>${esc(e.name)}</h3><p class="small">${esc(e.what)}</p>
-    ${e.phone ? `<a class="btn btn-secondary" href="${telLink(e.phone)}">${callText("Call", e.phone)}</a>` : ""}
-    ${/^https:\/\/\S+$/.test(e.url) ? `<a class="conn-more" href="${esc(e.url)}" target="_blank" rel="noopener">Website</a>` : ""}`).join("")}</div>`;
+  return `<div class="panel bully-res">${list.map(e => `<h3>${esc(e.name)}</h3><p class="small">${esc(e.what)}</p>${resourceBits(e)}`).join("")}</div>`;
 }
 const DIARY_TAGS = { younger:"Note to my younger self", work:"Work notes" };   // 6.27: tagged diary entries
 function bullyIdeas(){ const p = ui.bully && BULLY[ui.bully.path]; return (p && p.ideas) || []; }
@@ -1546,9 +1552,11 @@ const DOODLE_MISSION = "doodle", DOODLE_EDGE = 640;
    initials in CRISIS_RESOURCE_VERIFICATION.md), fills in phone/url and sets verified:true. faith:true entries show
    only when Faith & hope is on. */
 const GRIEF_RESOURCES = [
-  { name:"Hospice bereavement program (Treasure Coast)", what:"Free grief support for anyone in the community.", phone:"", url:"", area:"Treasure Coast", verified:false },
-  { name:"Pet loss support line", what:"Someone to talk to after losing a pet.", phone:"", url:"", area:"", verified:false },
-  { name:"GriefShare", what:"Faith-based grief support groups.", phone:"", url:"", area:"", verified:false, faith:true }
+  { name:"Treasure Coast Hospice grief support (Treasure Health)", what:"Free grief support for anyone in Martin, St. Lucie or Okeechobee counties, whether or not their loved one was in hospice care.", phone:"7724034500", number:"772-403-4500", url:"https://www.treasurehealth.org/care-services/grief-support", source:"https://www.treasurehealth.org/care-services/grief-support", area:"Treasure Coast", verified:true, checked:"2026-10-05", basis:"Found on the official site by search; owner (JB) opened the official pages and confirmed they work, 2026-10-05." },
+  // Owner decision 2026-10-05: no local pet-loss line was found; Cornell's national line (veterinary students; hours vary).
+  { name:"Cornell University Pet Loss Support Hotline", what:"Someone to talk to after losing a pet. Evenings and weekends; hours vary by season.", phone:"6072187457", number:"607-218-7457", url:"https://www.vet.cornell.edu/impact/community-impact/pet-loss-resources-and-support", source:"https://www.vet.cornell.edu/impact/community-impact/pet-loss-resources-and-support", area:"", verified:true, checked:"2026-10-05", basis:"Found on the official site by search; owner (JB) opened the official pages and confirmed they work, 2026-10-05." },
+  // Christ-centered, church-hosted peer groups (not treatment); shown only when Faith & hope is on.
+  { name:"GriefShare", what:"Faith-based grief support groups.", phone:"", url:"https://find.griefshare.org/find", source:"https://find.griefshare.org/find", area:"", verified:true, faith:true, checked:"2026-10-05", basis:"Found on the official site by search; owner (JB) opened the official pages and confirmed they work, 2026-10-05." }
 ];
 const NOTICED_KEY = "next.v1.noticed", NOTICED_CAP = 20, NOTICED_EDGE = 640;
 function noticed(){ return store.noticed || (store.noticed = []); }
@@ -4389,9 +4397,7 @@ const SCREENS = {
       <p class="sub">${GRIEF.helpSub}</p>
       ${ui.flash ? `<p class="flash" role="status">${esc(ui.flash)}</p>` : ""}
       <div class="list">${GRIEF.helpOpts.map(([k, t, m]) => `<button class="card" data-act="griefPick" data-arg="${k}"><span>${t}${m ? `<span class="meta">${m}</span>` : ""}</span></button>`).join("")}</div>
-      ${res.length ? `<div class="panel grief-res"><p class="lbl">${GRIEF.resources}</p>${res.map(e => `<h3>${esc(e.name)}</h3><p class="small">${esc(e.what)}</p>
-        ${e.phone ? `<a class="btn btn-secondary" href="${telLink(e.phone)}">${callText("Call", e.phone)}</a>` : ""}
-        ${/^https:\/\/\S+$/.test(e.url) ? `<a class="conn-more" href="${esc(e.url)}" target="_blank" rel="noopener">Website</a>` : ""}`).join("")}</div>` : ""}
+      ${res.length ? `<div class="panel grief-res"><p class="lbl">${GRIEF.resources}</p>${res.map(e => `<h3>${esc(e.name)}</h3><p class="small">${esc(e.what)}</p>${resourceBits(e)}`).join("")}</div>` : ""}
       <p class="lbl" style="margin-top:18px">${l10n("connect.heavier")}</p>
       ${row988()}`,
       actions:`<button class="btn btn-secondary" data-act="griefEnd">${GRIEF.doneForNow}</button>` };
