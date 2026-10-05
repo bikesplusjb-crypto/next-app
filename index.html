@@ -163,6 +163,8 @@ textarea.field{min-height:150px;resize:vertical}
 .und-lead{margin:0 0 6px}
 .und-entry{margin-top:12px}
 .und-list .card{min-height:56px}
+.heavy-988{margin-top:22px;padding-top:12px;border-top:1px solid var(--line)}
+.heavy-line{font-family:var(--serif);font-size:19px}
 .bully-988{margin-top:22px;padding-top:12px;border-top:1px solid var(--line)}
 .doodle-prompt{margin:0 0 8px;font-family:var(--serif);font-size:19px;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline}
 .doodle-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
@@ -723,6 +725,7 @@ const L10N = {
     "home.bullied":"Bullied — now or before",
     "home.more":"More",
     "home.ptsd":"PTSD, trauma, or military",
+    "home.heavy":"Most of my days feel heavy",
     "home.tech":"Tech check",
     "home.techMeta":"AI, scrolling, or checking is getting to me",
     "home.tip":"Add ZigZag Mind to your home screen so your plan stays with you. Tap Share, then Add to Home Screen.",
@@ -946,6 +949,7 @@ const L10N = {
     "home.bullied":{ text:"Acoso, ahora o antes", draft:true },
     "home.more":{ text:"Más", draft:true },
     "home.ptsd":{ text:"TEPT, trauma o servicio militar", draft:true },
+    "home.heavy":{ text:"Casi todos mis días se sienten pesados", draft:true },
     "home.tech":{ text:"Revisión de tecnología", draft:true },
     "home.techMeta":{ text:"La IA, las redes o revisar el teléfono me están afectando", draft:true },
     "home.tip":{ text:"Agrega ZigZag Mind a tu pantalla de inicio para tener tu plan a mano. Toca Compartir y luego Agregar a inicio.", draft:true },
@@ -1303,6 +1307,26 @@ function griefMsgs(name){
 }
 const GRIEF_MISSION = { id:"remembering", title:"Remembering", prompt:"Find something that reminds you of them — their spot, a photo, something they loved." };
 const GRIEF_NOTE_MAX = 1000;
+/* MOST OF MY DAYS FEEL HEAVY (owner request, 2026-10-05). For when heavy isn't one bad moment but most days: take it
+   seriously without labels, make it easier to tell a doctor, counselor or friend, offer one small thing for today, and
+   keep 988 close. No typing, no diagnosis, no scores, nothing saved, never suggested by the engine. Clinician review. */
+const HEAVY = {
+  say:"When most days feel heavy, that's worth taking seriously.",
+  sub:"It's not weakness, and it's not your fault. You don't have to fix all of it.",
+  steps:[
+    ["talk","Tell someone who can help","If you've felt this way most days for two weeks or more, talking to a doctor or counselor can really help. You don't need the right words. One sentence is enough:"],
+    ["small","One small thing for today","Not to fix it. Just to get through today a little easier."]
+  ],
+  doctorLine:"Most of my days have felt heavy for a while, and I'd like some help with it.",
+  doctorNote:"Say it at a doctor's visit, or write it down to bring with you.",
+  friendMsg:"Most of my days have felt heavy lately. Can we talk sometime soon?",
+  friendLbl:"Or tell someone you trust:",
+  smallOpts:[["tiny","Do one tiny thing"],["line","Write a line about today"],["borrow","Borrow ten minutes"]],
+  end:"You don't have to carry all of it today. One small thing is enough.",
+  more:"If it ever feels like more than heavy, call or text 988, any time.",
+  next:"Next"
+};
+
 /* HOLD & ANSWER (owner handoff, 2026-10-05). A very small grounding exercise: hold your thumb gently, squeeze and
    release, while answering five easy questions, one at a time. Not therapy or treatment; no claims that it stops
    anxiety; no scores, ratings, symptom questions or body explanations. Nothing saved; a typed answer is safety-checked
@@ -3400,7 +3424,8 @@ const SCREENS = {
         ${ui.homeMore ? `<button class="sit" data-act="afterStart">${l10n("home.er")}</button>
         <button class="sit" data-act="griefStart">${l10n("home.lost")}</button>
         <button class="sit" data-act="bullyStart">${l10n("home.bullied")}</button>
-        <button class="sit" data-act="ptsdStart">${l10n("home.ptsd")}</button>`
+        <button class="sit" data-act="ptsdStart">${l10n("home.ptsd")}</button>
+        <button class="sit" data-act="heavyStart">${l10n("home.heavy")}</button>`
         : `<button class="sit sit-more" data-act="homeMore" aria-expanded="false">${l10n("home.more")}</button>`}
       </div>
       <button class="card wide tech-row" data-act="techStart">${icon("phone")}<span>${l10n("home.tech")}<span class="meta">${l10n("home.techMeta")}</span></span></button>
@@ -3980,6 +4005,38 @@ const SCREENS = {
         <button class="btn btn-primary" data-act="putDown">${PTSD.nightDown}</button>` };
   },
 
+  /* MOST OF MY DAYS FEEL HEAVY */
+  heavy(){
+    const i = (ui.heavy || {}).step || 0;
+    const line988 = `<p class="small heavy-988">${HEAVY.more} <a href="${LINKS.call988}">Call 988</a> · ${text988Inline()}</p>`;
+    if (i === 0) return { close:true, body:`${stepTitle(HEAVY.say, true)}<p class="sub" style="font-size:19px">${HEAVY.sub}</p>${line988}`,
+      actions:`<button class="btn btn-primary" data-act="heavyNext">${HEAVY.next}</button>` };
+    if (i === 1){
+      const [, t, m] = HEAVY.steps[0]; const p = person();
+      return { close:true, body:`
+        ${stepTitle(t, true)}
+        <p class="sub">${m}</p>
+        <p class="copy-text heavy-line">"${HEAVY.doctorLine}"</p>
+        <p class="small">${HEAVY.doctorNote}</p>
+        <p class="small" style="margin-top:14px">${HEAVY.friendLbl}</p>
+        <div class="sits">${canPhone() ? `<a class="sit idea" href="${smsLink(p ? p.phone : "", HEAVY.friendMsg)}">${esc(HEAVY.friendMsg)}</a>` : copyButton(HEAVY.friendMsg, "sit idea", esc(HEAVY.friendMsg))}</div>
+        ${line988}`,
+        actions:`<button class="btn btn-primary" data-act="heavyNext">${HEAVY.next}</button>` };
+    }
+    if (i === 2){
+      const [, t, m] = HEAVY.steps[1];
+      return { close:true, body:`
+        ${stepTitle(t, true)}
+        <p class="sub">${m}</p>
+        <div class="list">${HEAVY.smallOpts.map(([k, l]) => `<button class="card" data-act="heavySmall" data-arg="${k}"><span>${l}</span></button>`).join("")}</div>
+        ${line988}`,
+        actions:`<button class="btn btn-secondary" data-act="heavyNext">${HEAVY.next}</button>` };
+    }
+    return { close:true, body:`${stepTitle(HEAVY.end, true)}${line988}`,
+      actions:`<button class="btn btn-primary" data-act="putDown">Put the phone down</button>
+        <button class="btn btn-secondary" data-act="route" data-arg="connect">Talk to someone</button>` };
+  },
+
   /* HOLD & ANSWER: one screen at a time; no inputs except an optional own answer on the last question */
   hold(){
     const h = ui.hold || { step:-1 };
@@ -4237,7 +4294,8 @@ const SCREENS = {
       ${stepTitle(SAD.q, true)}
       <p class="sub" style="font-size:19px">${SAD.ok}</p>
       <p class="small sad-sky">${SAD.sky}</p>
-      <p class="und-entry"><button class="link" data-act="undStart">${UNDERSTAND.link}</button></p>`,
+      <p class="und-entry"><button class="link" data-act="undStart">${UNDERSTAND.link}</button></p>
+      <p class="und-entry"><button class="link" data-act="heavyStart">${l10n("home.heavy")}</button></p>`,
       actions:`<button class="btn btn-primary" data-act="sadOut">${SAD.letOut}</button>
         <button class="btn btn-secondary" data-act="sadTiny">${SAD.tiny}</button>` };
   },
@@ -7192,6 +7250,15 @@ const ACTIONS = {
     const to = { now:"ptsd-now", nightmare:"ptsd-night", edge:null, vet:"ptsd-vet", other:"ptsd-other", love:"ptsd-love" }[arg];
     if (arg === "edge"){ if (ACTIONS.ptsdEdge) ACTIONS.ptsdEdge(); return; }
     if (SCREENS[to]) go(to);
+  },
+  /* MOST OF MY DAYS FEEL HEAVY: nothing typed, nothing saved */
+  heavyStart(){ if (blockIfRed()) return; dispatch({ type:"SET_CURRENT_STATE", state:"low" }); ui.heavy = { step:0 }; go("heavy"); },
+  heavyNext(){ if (blockIfRed()) return; const h = ui.heavy || (ui.heavy = { step:0 }); h.step = Math.min((h.step || 0) + 1, 3); lastRendered = null; render(); },
+  heavySmall(arg){
+    if (blockIfRed()) return;
+    if (arg === "tiny"){ dispatch({ type:"SET_CURRENT_STATE", state:"low" }); go("low-choose"); }
+    else if (arg === "line") ACTIONS.diaryWrite();
+    else if (arg === "borrow") startIntervention("borrow_ten");
   },
   /* HOLD & ANSWER: answers aren't kept; a typed answer is safety-checked and dropped */
   holdStart(){ if (blockIfRed()) return; startIntervention("hold_answer"); },

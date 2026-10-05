@@ -63,6 +63,7 @@ ZigZag Mind is comfortable with people leaving. That is the goal, not a failure.
 | 6.23 | 6.23 | I feel sad or low (owner request, 2026-10-04) |
 | 6.27 | 6.27 | Bullied, now or before (STAGE6-27-ADDENDUM.md) |
 | 6.28 | 6.28 | PTSD, trauma, or military (STAGE6-28-ADDENDUM.md) |
+| — | Most of my days feel heavy | Owner request, 2026-10-05 |
 | — | Hold & answer | Owner handoff, 2026-10-05 |
 | — | Understand it | Owner handoff, 2026-10-04 (FEEL → UNDERSTAND → ACT, optional) |
 | 3 People & safety | 6.8 | Code word |
@@ -628,3 +629,7 @@ Tests: `ptsd.test.js`; `home.test.js` checks five chips plus More.
 ## Hold & answer (owner handoff, as built, 2026-10-05)
 
 `hold_answer` (BODY; anxious, spiraling) on screens `hold` (intro → hand step → questions 1–5, by `ui.hold.step`) and `hold-end`. Copy in `HOLD`. Entry: a card on Calm (7 choices) and the engine / Let's Zig. "I'd rather not" skips the hand step; the reminder "Keep holding your thumb gently while you answer." is on question 1 only. Questions 1–3 have one Next; question 4 has three answers (any continues); question 5 has five choices plus an optional own answer (`handleSafeTextSubmit`; RED → the existing crisis screen; not kept). The end screen keeps four choices (Calm, Get out of my head, Connect, I don't know what I need) and lists the one matching the question-5 answer first (quiet → Calm, a distraction → Get out of my head, someone → Connect, a small step / I don't know → I'm not sure); "That's enough for now. You can put me away for a few minutes." sits under them, with the usual close button. No question counter, no Zags, no animation, nothing saved. Tests: `hold.test.js`, `hold-viewport.test.js` (each question fits a 390x844 and 375x667 phone and 200% text without scrolling).
+
+## Most of my days feel heavy (owner request, as built, 2026-10-05)
+
+A short path for persistent heaviness (not one hard moment): `heavy` screen, steps by `ui.heavy.step` (0 opening, 1 tell someone who can help, 2 one small thing for today, 3 end). Copy in `HEAVY`. Entry: Home → More chip, and a small link on the "I feel sad or low" first screen. Step 1 repeats the existing two-weeks doctor/counselor line and offers one sentence to say at a visit plus a prepared text to a trusted person (sms, or Copy on computers). Step 2 opens existing steps only (the low tiny things, A line for today, Borrow ten minutes). A 988 line on every screen. No typing, nothing saved, not in the engine, never on crisis screens. Built from a one-line owner request; wording is a clinician item (D37). Tests: `heavy.test.js`.

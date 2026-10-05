@@ -317,6 +317,17 @@ list([
   'H. Someone I love: "'+PT.loveSay+'" → '+PT.loveGuide.map(x=>`"${x}"`).join(' · ')+' · "'+PT.loveVet+'" (call button) · "'+PT.loveGuideLink+'"'
 ]);
 
+H(3,'Most of my days feel heavy (owner request, 2026-10-05; CLINICIAN REVIEW REQUIRED)');
+const HV=G('HEAVY');
+list([
+  'Entry: Home → More → "'+G('l10n("home.heavy")')+'", and a small link on "I feel sad or low". Not in the engine. No typing; nothing saved.',
+  '1: "'+HV.say+'" / "'+HV.sub+'"',
+  '2: "'+HV.steps[0][1]+'" / "'+HV.steps[0][2]+'" → "'+HV.doctorLine+'" / "'+HV.doctorNote+'" / "'+HV.friendLbl+'" → prepared text "'+HV.friendMsg+'" (Copy on computers)',
+  '3: "'+HV.steps[1][1]+'" / "'+HV.steps[1][2]+'" → '+HV.smallOpts.map(o=>`"${o[1]}"`).join(' · ')+' (the low tiny things / A line for today / Borrow ten minutes)',
+  'End: "'+HV.end+'" → Put the phone down · Talk to someone',
+  'Every screen: "'+HV.more+'" Call 988 · Text 988 (computers: chat)'
+]);
+
 H(3,'Hold & answer (owner handoff, 2026-10-05; CLINICIAN REVIEW REQUIRED)');
 P('A small grounding exercise: hold your thumb gently while answering five easy questions, one at a time. Calm → "'+G('HOLD.name')+'" ("'+G('HOLD.entryMeta')+'"); the engine and Let\'s Zig may offer it for anxious or spiraling moments. Not therapy or treatment; no claims it stops anxiety; no scores; nothing saved.');
 const HO=G('HOLD');

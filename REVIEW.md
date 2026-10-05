@@ -1215,7 +1215,7 @@ Contact line (only when CONTACT_EMAIL is set): "Questions? Email [address]."
 
 D. Crisis Text Line (**hidden until the owner verifies it**; CRISIS_TEXT_LINE.verified is true): one line below the 988 buttons on the full crisis screen and Connect, on the printed plan, and in the supporter guide's "Get help together": "Rather text a stranger? Text HOME to 741741 (Crisis Text Line)." (phones: Text HOME to 741741 is a text link; computers: shown as text).
 
-E. Spanish interface: **scaffolding only, nothing shown**. SPANISH_ENABLED is false. 221 strings (onboarding, Home, crisis screens, Calm, Connect, My Plan, Help, Settings labels) now live in one table; English is unchanged. Every Spanish line is a DRAFT for a human translator and the clinician: docs/SPANISH_REVIEW.md. A draft crisis-screen line is never shown, even with Spanish on.
+E. Spanish interface: **scaffolding only, nothing shown**. SPANISH_ENABLED is false. 222 strings (onboarding, Home, crisis screens, Calm, Connect, My Plan, Help, Settings labels) now live in one table; English is unchanged. Every Spanish line is a DRAFT for a human translator and the clinician: docs/SPANISH_REVIEW.md. A draft crisis-screen line is never shown, even with Spanish on.
 
 F. Feedback (only when FEEDBACK_URL is set; it is empty): on About only, "Did ZigZag Mind help? Tell us anonymously →" (new tab). Privacy page adds: "If you use the feedback link on About, that form is a separate service. It receives only what you type there."
 
@@ -1246,6 +1246,15 @@ Why (for reviewers only; never shown as statements about people): in 2023 an ave
 - Guns (OWNER-APPROVED INTERIM, clinician review): "A lot of vets have a buddy hold their guns for a while when things get heavy. It's temporary, and it's yours." → "Open my time and distance plan" (My Plan → Time and distance plan)
 - G. Something happened to me (not military): "Whatever happened, it wasn't your fault. You don't have to explain it here." → "Come back to now" (C) · "I'm on edge" (E) · resources hidden until verified (RAINN National Sexual Assault Hotline; National Domestic Violence Hotline) · "Talking to a trauma-trained counselor can really help. It's never too late." → "Talk to someone"
 - H. Someone I love: "Thank you for showing up for them." → "Don't push them to talk about what happened." · "Notice what helps them settle, and offer it." · "Don't take snapping or distance personally, and still look after yourself." · "If they talk about not wanting to be alive, call or text 988 together (press 1 if they're a veteran)." · "Vet Center Call Center (1-877-927-8387) also supports families." (call button) · "More on how to help: the supporter guide →"
+
+### Most of my days feel heavy (owner request, 2026-10-05; CLINICIAN REVIEW REQUIRED)
+
+- Entry: Home → More → "Most of my days feel heavy", and a small link on "I feel sad or low". Not in the engine. No typing; nothing saved.
+- 1: "When most days feel heavy, that's worth taking seriously." / "It's not weakness, and it's not your fault. You don't have to fix all of it."
+- 2: "Tell someone who can help" / "If you've felt this way most days for two weeks or more, talking to a doctor or counselor can really help. You don't need the right words. One sentence is enough:" → "Most of my days have felt heavy for a while, and I'd like some help with it." / "Say it at a doctor's visit, or write it down to bring with you." / "Or tell someone you trust:" → prepared text "Most of my days have felt heavy lately. Can we talk sometime soon?" (Copy on computers)
+- 3: "One small thing for today" / "Not to fix it. Just to get through today a little easier." → "Do one tiny thing" · "Write a line about today" · "Borrow ten minutes" (the low tiny things / A line for today / Borrow ten minutes)
+- End: "You don't have to carry all of it today. One small thing is enough." → Put the phone down · Talk to someone
+- Every screen: "If it ever feels like more than heavy, call or text 988, any time." Call 988 · Text 988 (computers: chat)
 
 ### Hold & answer (owner handoff, 2026-10-05; CLINICIAN REVIEW REQUIRED)
 
@@ -2259,6 +2268,15 @@ _When: distraction_
 - **Button:** Talk to someone
 - **Button:** Put the phone down
 
+### `heavy`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** When most days feel heavy, that's worth taking seriously.
+- It's not weakness, and it's not your fault. You don't have to fix all of it.
+- If it ever feels like more than heavy, call or text 988, any time. Call 988 · Text 988
+- **Button:** Next
+
 ### `hold`
 
 - **Button:** × _(screen reader: "Close and go to home")_
@@ -2581,6 +2599,7 @@ _When: distraction_
 - It's okay to feel sad. You don't have to fix it right now.
 - You're the sky, not the cloud. Clouds can be heavy, and they still move.
 - **Button:** Understand it first
+- **Button:** Most of my days feel heavy
 - **Button:** Let it out
 - **Button:** Do one tiny thing
 
