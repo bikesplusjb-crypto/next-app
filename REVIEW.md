@@ -533,6 +533,18 @@ Steps:
 2. Keep it or let it go.
 3. Put the phone down.
 
+### On edge (`on_edge`)
+
+- Button: "On edge"
+- Description: "Your body learned to stay ready. One small thing at a time."
+- For:  · about 5 min
+
+Steps:
+1. A seat where you can see the door.
+2. Breathe.
+3. A short walk.
+4. Step away.
+
 ### Is this helping? (`social_zig`)
 
 - Button: "Is this helping?"
@@ -1072,7 +1084,7 @@ On the guide when a name is given: "[name] would like you to check in now and th
 ### Let's Zig + real-world steps (6.17)
 
 **Let's Zig** is a simple product rule, not a clinical method: after "I still feel bad" or a game's "No", the next suggestion comes from a different channel when one is available. After a recent rating of 8 or more, BODY, SPACE and PEOPLE steps come first. Safety routing always comes first: RED stops everything, and the YELLOW order (connection, own plan, grounding, fresh air) still wins.
-- `BODY`: grounding, breathing, hydration, walking, touch_real_world
+- `BODY`: grounding, breathing, hydration, walking, touch_real_world, on_edge
 - `SPACE`: change_scene, environment_change, find_alive, craving_delay, break_the_loop
 - `SENSE`: distraction_game, distraction_color_hunt, distraction_around_me, distraction_categories, distraction_memory, distraction_pattern, distraction_60_second, ridiculous_mode, zags, song, find_something, doodle, warm_comfort, cozy_up, coffee_with_zigzag
 - `PEOPLE`: ai_relationship_check, be_around_people, ai_loss, connection
@@ -1210,6 +1222,7 @@ Why (for reviewers only; never shown as statements about people): in 2023 an ave
 - Home → More → "PTSD, trauma, or military" → "What's going on right now?" → "It's happening right now" ("A flashback, or feeling like I'm back there") · "I woke up from a nightmare" · "I'm on edge" · "I'm a veteran or service member" · "Something happened to me" ("Not military") · "Someone I love has PTSD or served"
 - C. It's happening right now (plain, large type, one instruction per screen, Next only, no typing): Now screen "It's [Weekday, Month Day, Year]. It's [h:mm AM/PM]." / "That was then. This is now." → "Put both feet flat on the floor. Press down." → "Look around. Name three things you can see, out loud or in your head." → "Drink something cold, or hold something cool in your hands." → "Say where you are, out loud if you can." → the Now screen again → "Do you want to reach someone?" → "I'm a veteran: talk to someone who's been there" · "Talk to someone" · "I'm okay for now"
 - D. Nightmare (plain, no typing): "Turn on a light." → the Now screen with "It's over. You're here now." → "Drink some water. Sit up for a minute." → "Calm down with Zags" · "Cozy up for sleep" (night only) · "Talk to someone" · "Put the phone down"
+- E. On edge: "Your body learned to stay ready. It's not a flaw, and it's not your fault." → one idea at a time ("Another idea", "How do I feel now?"): "Sit where you can see the door, if that helps." · "Breathe for 1 minute" · "Take a short walk" · "Step away before you say something you don't mean. You can come back to it." → the normal check-in and Let's Zig ("Make it smaller" not built yet)
 
 ### Understand it (owner handoff, 2026-10-04; CLINICIAN REVIEW REQUIRED; not validated)
 
@@ -2117,6 +2130,13 @@ _When: distraction_
 - **Button:** I'm a veteran or service member
 - **Button:** Something happened to me — Not military
 - **Button:** Someone I love has PTSD or served
+
+### `ptsd-edge`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Your body learned to stay ready. It's not a flaw, and it's not your fault.
+- **Button:** Next
 
 ### `ptsd-now`
 
@@ -4202,6 +4222,14 @@ _When: distraction_
 - **Button:** Help _(screen reader: "Get help now")_
 - Doodle · Step 1 of 3
 - **Heading:** Draw anything.
+- **Button:** Next
+
+#### On edge
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- On edge · Step 1 of 4
+- **Heading:** A seat where you can see the door.
 - **Button:** Next
 
 #### Is this helping?

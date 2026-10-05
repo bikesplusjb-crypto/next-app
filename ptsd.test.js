@@ -63,6 +63,22 @@ const NIGHT=new Date(2026,9,5,2,41).getTime();   // night mode (midnight to 6am)
 {const a=boot(); a.G('ACTIONS.ptsdStart(); ACTIONS.ptsdPath("now")'); a.G('dispatch({type:"SET_SAFETY_LEVEL",level:"RED"})'); a.G('ACTIONS.ptsdStep()');
  r.push(['C/D: blockIfRed on Next', a.S()==='crisis']); }
 
+// ================= E. On edge =================
+{const a=boot(); a.G('ACTIONS.ptsdStart()'); a.click(act('ptsdPath','edge'));
+ r.push(['E1: "Your body learned to stay ready. It\'s not a flaw, and it\'s not your fault."', a.S()==='ptsd-edge' && a.T().includes("Your body learned to stay ready. It's not a flaw, and it's not your fault.") && a.G('session.currentInterventionId')==='on_edge']);
+ a.click(act('ptsdEdgeNext')); const seen=[a.w.document.getElementById('screen-title').textContent];
+ r.push(['E2: one idea at a time, optional ("Another idea", "How do I feel now?")', a.has(act('stepCheckin')) && a.w.document.querySelectorAll('.actions .btn-secondary[data-act="ptsdEdgeNext"]').length===1]);
+ for(let i=0;i<3;i++){ a.w.document.querySelector('.actions .btn-secondary[data-act="ptsdEdgeNext"], .actions .btn-primary[data-act="ptsdEdgeNext"]').dispatchEvent(new a.w.MouseEvent('click',{bubbles:true})); seen.push(a.w.document.getElementById('screen-title').textContent); }
+ r.push(['E2: the four ideas in order', JSON.stringify(seen)===JSON.stringify(["Sit where you can see the door, if that helps.","Breathe for 1 minute.","Take a short walk.","Step away before you say something you don't mean. You can come back to it."])]);
+ a.click(act('ptsdEdgeNext')); r.push(['E3: then the normal check-in', a.S()==='checkin']); }
+{const a=boot(); a.G('ACTIONS.ptsdStart(); ACTIONS.ptsdPath("edge"); ACTIONS.ptsdEdgeNext(); ACTIONS.ptsdEdgeNext()'); a.click(act('calmPick','breathe'));
+ r.push(['E2: Breathe for 1 minute → the existing breathing step', a.G('session.currentInterventionId')==='breathing']);
+ const b=boot(); b.G('ACTIONS.ptsdStart(); ACTIONS.ptsdPath("edge"); ACTIONS.ptsdEdgeNext(); ACTIONS.ptsdEdgeNext(); ACTIONS.ptsdEdgeNext()'); b.click(act('scenePick','walk'));
+ r.push(['E2: Take a short walk → the existing walk step', b.G('session.currentInterventionId')==='change_scene' && b.G('ui.sceneOpt')==='walk']); }
+{const a=boot(); a.G('ACTIONS.ptsdStart(); ACTIONS.ptsdPath("edge"); ACTIONS.ptsdEdgeNext()'); a.click(act('stepCheckin')); a.click(act('ciBad'));
+ r.push(['E3: "I still feel bad" → Let\'s Zig: the next step comes from a different direction than BODY', ['recommendation','human-first'].includes(a.S()) && a.G('ui.zigFrom')==='BODY' && a.G('!ui.engine.interventionId || findIntervention(ui.engine.interventionId).channel!=="BODY"')]); }
+{const a=boot(); r.push(['E: never suggested by the engine (no states)', a.G('findIntervention("on_edge").states.length')===0 && a.G('findIntervention("on_edge").channel')==='BODY']); }
+
 //@@PARTS@@
 
 for(const [n,ok,info] of r) console.log((ok?'PASS':'FAIL')+' '+n+(ok||info===undefined?'':' ('+info+')'));

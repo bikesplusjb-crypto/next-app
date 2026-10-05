@@ -1323,6 +1323,10 @@ const PTSD = {
   // D: woke up from a nightmare
   night:["Turn on a light.","now","Drink some water. Sit up for a minute."],
   over:"It's over. You're here now.",
+  // E: on edge
+  edgeSay:"Your body learned to stay ready. It's not a flaw, and it's not your fault.",
+  edge:[["door","Sit where you can see the door, if that helps."],["breathe","Breathe for 1 minute"],["walk","Take a short walk"],["away","Step away before you say something you don't mean. You can come back to it."]],
+  okay:"Okay", another:"Another idea", howNow:"How do I feel now?",
   nightZags:"Calm down with Zags", nightCozy:"Cozy up for sleep", nightTalk:"Talk to someone", nightDown:"Put the phone down"
 };
 /* "It's Monday, October 5, 2026. It's 9:41 PM." from the phone's own clock, every time the screen draws. */
@@ -2030,6 +2034,12 @@ INTERVENTION_LIBRARY.push(
     states:["anxious","spiraling","low","distraction"], intensityRange:[0,10], needsMobility:false, realWorld:true,
     steps:["Draw anything.","Keep it or let it go.","Put the phone down."], completion:"tap_done" }
 );
+// 6.28 E: "I'm on edge" (BODY). Opened from PTSD, trauma, or military only (no states, so never suggested elsewhere);
+// it ends at the normal check-in, so Let's Zig works from there.
+INTERVENTION_LIBRARY.push(
+  { id:"on_edge", name:"On edge", tryLabel:"On edge", description:"Your body learned to stay ready. One small thing at a time.", durationSec:300,
+    states:[], intensityRange:[0,10], needsMobility:false, steps:["A seat where you can see the door.","Breathe.","A short walk.","Step away."], completion:"tap_done" }
+);
 // SOCIAL ZIG: opened from Tech check only (no states, so the engine never suggests it elsewhere).
 INTERVENTION_LIBRARY.push(
   { id:"social_zig", name:"Is this helping?", tryLabel:"Is this helping?", description:"Notice whether scrolling is helping right now, and choose a different direction if it isn't.", durationSec:120,
@@ -2070,7 +2080,7 @@ const CHANNEL_OF = {
   grounding:"BODY", breathing:"BODY", hydration:"BODY", walking:"BODY", touch_real_world:"BODY",
   change_scene:"SPACE", environment_change:"SPACE", find_alive:"SPACE", craving_delay:"SPACE",
   distraction_game:"SENSE", distraction_color_hunt:"SENSE", distraction_around_me:"SENSE", distraction_categories:"SENSE",
-  distraction_memory:"SENSE", distraction_pattern:"SENSE", distraction_60_second:"SENSE", ridiculous_mode:"SENSE", zags:"SENSE", song:"SENSE", break_the_loop:"SPACE", ai_relationship_check:"PEOPLE", be_around_people:"PEOPLE", find_something:"SENSE", doodle:"SENSE", warm_comfort:"SENSE", cozy_up:"SENSE", social_zig:"ACTION", coffee_with_zigzag:"SENSE", ai_loss:"PEOPLE", ai_reliance_check:"ACTION", ai_fomo:"ACTION",
+  distraction_memory:"SENSE", distraction_pattern:"SENSE", distraction_60_second:"SENSE", ridiculous_mode:"SENSE", zags:"SENSE", song:"SENSE", break_the_loop:"SPACE", ai_relationship_check:"PEOPLE", be_around_people:"PEOPLE", find_something:"SENSE", doodle:"SENSE", on_edge:"BODY", warm_comfort:"SENSE", cozy_up:"SENSE", social_zig:"ACTION", coffee_with_zigzag:"SENSE", ai_loss:"PEOPLE", ai_reliance_check:"ACTION", ai_fomo:"ACTION",
   connection:"PEOPLE",
   thought_parking:"ACTION", still_true:"ACTION", true_sentence:"ACTION", kind_stranger:"ACTION", borrow_ten:"ACTION", behavioral_activation:"ACTION"
 };
@@ -3813,6 +3823,20 @@ const SCREENS = {
       <div class="list ptsd-list">${PTSD.opts.map(([k, t, m]) => `<button class="card" data-act="ptsdPath" data-arg="${k}"><span>${t}${m ? `<span class="meta">${m}</span>` : ""}</span></button>`).join("")}</div>` };
   },
 
+  /* 6.28 E: on edge (an intervention, so it ends at the normal check-in and Let's Zig) */
+  "ptsd-edge"(){
+    const i = (ui.ptsd || {}).edge;
+    if (i === undefined || i === null || i < 0) return { close:true, body:`${stepTitle(PTSD.edgeSay, true)}`,
+      actions:`<button class="btn btn-primary" data-act="ptsdEdgeNext">${PTSD.next}</button>` };
+    const [k, t] = PTSD.edge[i];
+    const main = k === "breathe" ? `<button class="btn btn-primary" data-act="calmPick" data-arg="breathe">${t}</button>`
+      : k === "walk" ? `<button class="btn btn-primary" data-act="scenePick" data-arg="walk">${t}</button>`
+      : `<button class="btn btn-primary" data-act="ptsdEdgeNext">${PTSD.okay}</button>`;
+    return { close:true, body:`${stepTitle(k === "breathe" || k === "walk" ? t + "." : t, true)}`,
+      actions:`${main}
+        ${i < PTSD.edge.length - 1 ? `<button class="btn btn-secondary" data-act="ptsdEdgeNext">${PTSD.another}</button>` : ""}
+        <button class="link" data-act="stepCheckin">${PTSD.howNow}</button>` };
+  },
   /* 6.28 C: it's happening right now (one instruction per screen, no typing, no Zags, no animation) */
   "ptsd-now"(){
     const i = Math.min((ui.ptsd || {}).step || 0, PTSD.flash.length - 1), x = PTSD.flash[i];
@@ -7000,6 +7024,13 @@ const ACTIONS = {
     const seq = session.screen === "ptsd-night" ? PTSD.night : PTSD.flash;
     if ((p.step || 0) >= seq.length - 1){ go(session.screen === "ptsd-night" ? "ptsd-night-opts" : "ptsd-reach"); return; }
     p.step = (p.step || 0) + 1; lastRendered = null; render();
+  },
+  ptsdEdge(){ if (blockIfRed()) return; dispatch({ type:"SET_CURRENT_STATE", state:"anxious" }); ui.ptsd = { ...(ui.ptsd || {}), path:"edge", edge:-1 }; startIntervention("on_edge", { route:"ptsd-edge" }); },
+  ptsdEdgeNext(){
+    if (blockIfRed()) return;
+    const p = ui.ptsd || (ui.ptsd = { edge:-1 });
+    if ((p.edge ?? -1) >= PTSD.edge.length - 1){ go("checkin"); return; }   // then the normal check-in and Let's Zig
+    p.edge = (p.edge ?? -1) + 1; lastRendered = null; render();
   },
   ptsdCozy(){ if (blockIfRed()) return; if (!isNight()) return; startIntervention("cozy_up"); ACTIONS.cozySleep(); },
   ptsdPath(arg){

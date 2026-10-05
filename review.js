@@ -300,6 +300,9 @@ list([
   'C. It\'s happening right now (plain, large type, one instruction per screen, Next only, no typing): Now screen "It\'s [Weekday, Month Day, Year]. It\'s [h:mm AM/PM]." / "'+PT.thenNow+'" → '+PT.flash.filter(x=>x!=='now').map(x=>`"${x}"`).join(' → ')+' → the Now screen again → "'+PT.reachQ+'" → "'+PT.reachVet+'" · "'+PT.reachTalk+'" · "'+PT.reachOk+'"',
   'D. Nightmare (plain, no typing): "'+PT.night[0]+'" → the Now screen with "'+PT.over+'" → "'+PT.night[2]+'" → "'+PT.nightZags+'" · "'+PT.nightCozy+'" (night only) · "'+PT.nightTalk+'" · "'+PT.nightDown+'"'
 ]);
+list([
+  'E. On edge: "'+PT.edgeSay+'" → one idea at a time ("'+PT.another+'", "'+PT.howNow+'"): '+PT.edge.map(([,t])=>`"${t}"`).join(' · ')+' → the normal check-in and Let\'s Zig ("Make it smaller" not built yet)'
+]);
 //@@PTSD@@
 
 H(3,'Understand it (owner handoff, 2026-10-04; CLINICIAN REVIEW REQUIRED; not validated)');
