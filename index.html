@@ -1309,6 +1309,16 @@ const BULLY = {
       ["talk","Talk to someone you trust","A coworker, a friend outside work, or HR if it feels safe."],
       ["today","Make it through today","Just today. One small thing at a time."]]
   },
+  online:{
+    say:"Being targeted online is real harm, even if it's 'just a screen.'",
+    ideas:[["noreply","Don't reply","Replying usually feeds it."],["shots","Take screenshots","Keep a record, even if you never use it."],
+      ["mute","Mute, block, and report","Every app has these. You're allowed to use them."],["tell","Tell one person",""],["away","Step away for a bit","Put some space between you and the screen."]]
+  },
+  onlineMsg:"Someone's been going after me online and I don't want to deal with it alone.",
+  threatsQ:"If there are threats, stalking, or private images shared without your consent",
+  threatsMore:"That's more than bullying.",
+  threats:"You can report threats to the police. If you're in danger right now, call 911.",
+  call911:"Call 911", okay:"Okay", scene:"Change the scene",
   workDate:"Date", workWhat:"What happened", workWho:"Who saw it (optional)",
   workTip:"Tip: lock your diary first if someone else might see your phone.",
   saveDiary:"Save in my diary", dontSave:"Don't save", notSaved:"Not saved.",
@@ -1349,6 +1359,12 @@ async function bullyToDiary(text, tag){
   store.diary = { ...(store.diary || {}), entries:[entry, ...diaryEntries()] };
   if (!(await saveDiary())){ store.diary.entries = diaryEntries().filter(e => e.id !== entry.id); ui.msg = BULLY.full; render(); return false; }
   return true;
+}
+function bullyThreats(){
+  return `<div class="panel bully-threats"><p style="margin:0"><b>${BULLY.threatsQ}</b></p>
+    <p style="margin:6px 0 0">${BULLY.threatsMore} ${BULLY.threats}</p>
+    <a class="btn btn-safety" style="margin-top:10px" href="${LINKS.call911}">${callText(BULLY.call911, "911")}</a>
+    ${bullyResourceCard("online")}</div>`;
 }
 function bully988(){ return `<p class="small bully-988">${BULLY.line988} <a href="${LINKS.call988}">Call 988</a> · ${text988Inline()}</p>`; }
 
@@ -3702,6 +3718,21 @@ const SCREENS = {
       ${bully988()}` };
   },
 
+  /* 6.27 D: it's happening online */
+  "bully-online"(){
+    return { close:true, body:`${stepTitle(BULLY.online.say, true)}${bullyThreats()}${bully988()}`,
+      actions:`<button class="btn btn-primary" data-act="bullyIdeas">${BULLY.next}</button>` };
+  },
+  "bully-online-tell"(){
+    const p = person();
+    return { close:true, body:`
+      ${title(BULLY.online.ideas[3][1])}
+      <p class="small">${canPhone() ? BULLY.talkPick : l10n("connect.tapCopy")}</p>
+      <div class="sits">${canPhone() ? `<a class="sit idea" href="${smsLink(p ? p.phone : "", BULLY.onlineMsg)}">${esc(BULLY.onlineMsg)}</a>` : copyButton(BULLY.onlineMsg, "sit idea", esc(BULLY.onlineMsg))}</div>
+      ${bully988()}`,
+      actions:`<button class="btn btn-secondary" data-act="bullyIdeasBack">Back</button>` };
+  },
+
   /* 6.27 C: it's happening at work */
   "bully-work"(){
     return { close:true, body:`${stepTitle(BULLY.work.say, true)}${bullyResourceCard("work")}${bully988()}`,
@@ -3758,6 +3789,11 @@ const SCREENS = {
       younger:`<button class="btn btn-primary" data-act="bullyGo" data-arg="bully-younger">Write it</button>`,
       ground:`<button class="btn btn-primary" data-act="calmPick" data-arg="ground">${BULLY.ground}</button><button class="btn btn-secondary" data-act="zags" data-arg="calm">${BULLY.zags}</button>`,
       write:`<button class="btn btn-primary" data-act="bullyGo" data-arg="bully-work-write">Write it down</button>`,
+      noreply:`<button class="btn btn-primary" data-act="bullyNext">${BULLY.okay}</button>`,
+      shots:`<button class="btn btn-primary" data-act="bullyNext">${BULLY.okay}</button>`,
+      mute:`<button class="btn btn-primary" data-act="bullyNext">${BULLY.okay}</button>`,
+      tell:`<button class="btn btn-primary" data-act="bullyGo" data-arg="bully-online-tell">Open a message</button>`,
+      away:`<button class="btn btn-primary" data-act="route" data-arg="scene">${BULLY.scene}</button>`,
       talk:`<button class="btn btn-primary" data-act="bullyGo" data-arg="bully-work-talk">Open a message</button>`,
       today:`<button class="btn btn-primary" data-act="lowPick" data-arg="borrow_ten">${BULLY.borrow}</button>${typeof ACTIONS.smallerStart === "function" ? `<button class="btn btn-secondary" data-act="smallerStart">${BULLY.smaller}</button>` : ""}`
     }[k] || "";
@@ -3818,7 +3854,7 @@ const SCREENS = {
   },
   "bully-end"(){
     const p = BULLY[(ui.bully || {}).path] || {};
-    return { close:true, body:`${stepTitle(p.end || PUT_DOWN_NOW, true)}${bully988()}`,
+    return { close:true, body:`${stepTitle(p.end || PUT_DOWN_NOW, true)}${(ui.bully || {}).path === "online" ? bullyThreats() : ""}${bully988()}`,
       actions:`<button class="btn btn-primary" data-act="putDown">Put the phone down</button>
         <button class="btn btn-secondary" data-act="route" data-arg="connect">Talk to someone</button>
         <button class="link" data-act="bullyStart">${BULLY.backStart}</button>` };

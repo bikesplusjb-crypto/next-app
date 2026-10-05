@@ -308,6 +308,10 @@ list([
   'Make it through today: "'+BU.borrow+'" ("'+BU.smaller+'" appears once 6.24 is built)',
   'Resource (hidden until verified): Workplace Bullying Institute'
 ]);
+list([
+  'D. Online: "'+BU.online.say+'" → one idea at a time: '+BU.online.ideas.map(([,t,m])=>`"${t}"${m?` ("${m}")`:''}`).join(' · ')+'; Tell one person: "'+BU.onlineMsg+'"; Step away → "'+BU.scene+'"',
+  'On the first and last screen: "'+BU.threatsQ+'" / "'+BU.threatsMore+' '+BU.threats+'" → "'+BU.call911+'"; resource (hidden until verified): Cyber Civil Rights Initiative helpline'
+]);
 //@@BULLY@@
 
 H(3,'Stage 6.23: I feel sad or low (CLINICIAN REVIEW REQUIRED for all of it)');

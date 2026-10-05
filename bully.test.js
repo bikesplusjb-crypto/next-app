@@ -140,6 +140,22 @@ for(const [id,txt] of [['wkWhat','They told me to go kill myself'],['wkWho','I w
  a.fill('bullyPass',PASS); a.click(act('bullyUnlock')); await until(()=>a.S()==='bully-idea');
  r.push(['C2: locked diary: saved encrypted, locked again', a.dump()['next.v1.diary']!==lockedBefore && !a.dump()['next.v1.diary'].includes('Locked work note') && a.G('diaryKey')===null]); }
 
+// ================= D. Online =================
+const toOnline=a=>{ a.G('ACTIONS.bullyStart()'); a.click(act('bullyPath','online')); };
+{const a=boot(); toOnline(a); const t=a.T();
+ r.push(['D1: "Being targeted online is real harm, even if it\'s \'just a screen.\'"', a.S()==='bully-online' && t.includes("Being targeted online is real harm, even if it's 'just a screen.'") && has988(a)]);
+ r.push(['D3: threats, stalking, private images: report to police; danger → 911', t.includes('If there are threats, stalking, or private images shared without your consent') && t.includes("You can report threats to the police. If you're in danger right now, call 911.") && a.has('.bully-threats a[href="tel:911"]')]);
+ r.push(['D3: Cyber Civil Rights Initiative hidden while unverified', !t.includes('Cyber Civil Rights')]);
+ a.click(act('bullyIdeas')); const seen=[[a.w.document.getElementById('screen-title').textContent, a.T()]];
+ for(let i=0;i<4;i++){ a.click(act('bullyNext')); seen.push([a.w.document.getElementById('screen-title').textContent, a.T()]); }
+ r.push(['D2: five ideas in order', JSON.stringify(seen.map(x=>x[0]))==='["Don\'t reply","Take screenshots","Mute, block, and report","Tell one person","Step away for a bit"]']);
+ r.push(['D2: their lines', seen[0][1].includes('Replying usually feeds it.') && seen[1][1].includes('Keep a record, even if you never use it.') && seen[2][1].includes("Every app has these. You're allowed to use them.")]);
+ r.push(['D2: Step away → Change the scene', a.has(act('route','scene'))]);
+ a.click(act('bullyNext')); r.push(['D: the end repeats the threats line and 911', a.S()==='bully-end' && a.has('.bully-threats a[href="tel:911"]') && has988(a)]); }
+{const a=boot(); toOnline(a); a.click(act('bullyIdeas')); for(let i=0;i<3;i++) a.click(act('bullyNext')); a.click(act('bullyGo','bully-online-tell'));
+ r.push(['D2: Tell one person: "Someone\'s been going after me online and I don\'t want to deal with it alone."', decodeURIComponent(a.w.document.querySelector('a.sit').getAttribute('href')).endsWith("Someone's been going after me online and I don't want to deal with it alone.")]); }
+{const a=boot(); toOnline(a); r.push(['D: nothing helps look up, contact or expose anyone (no links out but 988/911)', [...a.w.document.querySelectorAll('#app main a[href]')].every(x=>/^(tel:(988|911)|sms:988)/.test(x.getAttribute('href')))]); }
+
 //@@PARTS@@
 
 for(const [n,ok,info] of r) console.log((ok?'PASS':'FAIL')+' '+n+(ok||info===undefined?'':' ('+info+')'));

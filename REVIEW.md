@@ -1213,6 +1213,8 @@ Why (for reviewers only; never shown to people as statements about them): freque
 - Talk: "Something's been going on at work and it's getting to me. Can we talk?" ("Tap to open a message. You choose who it goes to, and nothing is sent until you send it.")
 - Make it through today: "Borrow ten minutes" ("Make it smaller" appears once 6.24 is built)
 - Resource (hidden until verified): Workplace Bullying Institute
+- D. Online: "Being targeted online is real harm, even if it's 'just a screen.'" → one idea at a time: "Don't reply" ("Replying usually feeds it.") · "Take screenshots" ("Keep a record, even if you never use it.") · "Mute, block, and report" ("Every app has these. You're allowed to use them.") · "Tell one person" · "Step away for a bit" ("Put some space between you and the screen."); Tell one person: "Someone's been going after me online and I don't want to deal with it alone."; Step away → "Change the scene"
+- On the first and last screen: "If there are threats, stalking, or private images shared without your consent" / "That's more than bullying. You can report threats to the police. If you're in danger right now, call 911." → "Call 911"; resource (hidden until verified): Cyber Civil Rights Initiative helpline
 
 ### Stage 6.23: I feel sad or low (CLINICIAN REVIEW REQUIRED for all of it)
 
@@ -2084,6 +2086,26 @@ _When: distraction_
 - **Button:** It's happening online
 - **Button:** Someone I love is being bullied
 - Call or text 988 any time. Call 988 · Text 988
+
+### `bully-online`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Being targeted online is real harm, even if it's 'just a screen.'
+- That's more than bullying. You can report threats to the police. If you're in danger right now, call 911.
+- **Link → `tel:911`:** Call 911
+- Call or text 988 any time. Call 988 · Text 988
+- **Button:** Next
+
+### `bully-online-tell`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Tell one person
+- Tap to open a message. You choose who it goes to, and nothing is sent until you send it.
+- **Link → `sms:5550142?&body=Someone's been going after me online and I don't want to deal with it alone.`:** Someone's been going after me online and I don't want to deal with it alone.
+- Call or text 988 any time. Call 988 · Text 988
+- **Button:** Back
 
 ### `bully-work`
 
