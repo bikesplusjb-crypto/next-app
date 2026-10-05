@@ -524,6 +524,17 @@ Steps:
 2. Take a photo if you want.
 3. Put the phone down.
 
+### Hold & answer (`hold_answer`)
+
+- Button: "Hold & answer"
+- Description: "Hold your thumb gently and answer five easy questions, one at a time."
+- For: anxious, spiraling · about 2 min
+
+Steps:
+1. Hold your thumb gently.
+2. Answer five easy questions.
+3. Choose what helps next.
+
 ### Doodle (`doodle`)
 
 - Button: "Doodle"
@@ -1088,7 +1099,7 @@ On the guide when a name is given: "[name] would like you to check in now and th
 ### Let's Zig + real-world steps (6.17)
 
 **Let's Zig** is a simple product rule, not a clinical method: after "I still feel bad" or a game's "No", the next suggestion comes from a different channel when one is available. After a recent rating of 8 or more, BODY, SPACE and PEOPLE steps come first. Safety routing always comes first: RED stops everything, and the YELLOW order (connection, own plan, grounding, fresh air) still wins.
-- `BODY`: grounding, breathing, hydration, walking, touch_real_world, on_edge
+- `BODY`: grounding, breathing, hydration, walking, touch_real_world, hold_answer, on_edge
 - `SPACE`: change_scene, environment_change, find_alive, craving_delay, break_the_loop
 - `SENSE`: distraction_game, distraction_color_hunt, distraction_around_me, distraction_categories, distraction_memory, distraction_pattern, distraction_60_second, ridiculous_mode, zags, song, find_something, doodle, warm_comfort, cozy_up, coffee_with_zigzag
 - `PEOPLE`: ai_relationship_check, be_around_people, ai_loss, connection
@@ -1235,6 +1246,16 @@ Why (for reviewers only; never shown as statements about people): in 2023 an ave
 - Guns (OWNER-APPROVED INTERIM, clinician review): "A lot of vets have a buddy hold their guns for a while when things get heavy. It's temporary, and it's yours." → "Open my time and distance plan" (My Plan → Time and distance plan)
 - G. Something happened to me (not military): "Whatever happened, it wasn't your fault. You don't have to explain it here." → "Come back to now" (C) · "I'm on edge" (E) · resources hidden until verified (RAINN National Sexual Assault Hotline; National Domestic Violence Hotline) · "Talking to a trauma-trained counselor can really help. It's never too late." → "Talk to someone"
 - H. Someone I love: "Thank you for showing up for them." → "Don't push them to talk about what happened." · "Notice what helps them settle, and offer it." · "Don't take snapping or distance personally, and still look after yourself." · "If they talk about not wanting to be alive, call or text 988 together (press 1 if they're a veteran)." · "Vet Center Call Center (1-877-927-8387) also supports families." (call button) · "More on how to help: the supporter guide →"
+
+### Hold & answer (owner handoff, 2026-10-05; CLINICIAN REVIEW REQUIRED)
+
+A small grounding exercise: hold your thumb gently while answering five easy questions, one at a time. Calm → "Hold & answer" ("Hold your thumb gently and answer five easy questions"); the engine and Let's Zig may offer it for anxious or spiraling moments. Not therapy or treatment; no claims it stops anxiety; no scores; nothing saved.
+- Intro: "Try something with me." / "Hold your thumb gently." / "Squeeze while you answer each question." / "There's no right answer." → "Start"
+- Hand (optional): "Hold your thumb gently." / "Squeeze. Release." / "Keep doing that while you answer." → "Next" · "I'd rather not" (straight to the questions without the hand instruction)
+- Q1 "What do you see right now?" (small: "Keep holding your thumb gently while you answer.") → Q2 "What do you hear right now?" → Q3 "What can you feel right now?" (each "Next")
+- Q4 "Can you feel your feet on the floor?" → "Yes" · "A little" · "Not right now" (any answer continues)
+- Q5 "What do you need right now?" → "Quiet" · "A distraction" · "Someone" · "A small step" · "I don't know" or "Or in your own words (optional)" → "Next" (safety-checked, not kept)
+- End: "You stayed with this moment for five questions." / "You don't have to solve everything right now." / "What would help next?" → "Calm my body" · "Get out of my head" · "Connect" · "I'm not sure" (Calm / Get out of my head / Connect / I don't know what I need; the one matching Q5 is listed first) · "That's enough for now. You can put me away for a few minutes."
 
 ### Understand it (owner handoff, 2026-10-04; CLINICIAN REVIEW REQUIRED; not validated)
 
@@ -1611,6 +1632,7 @@ Rendered for each state where the screen changes by state. Identical renders are
 - **Button:** Have coffee with ZigZag — Make something warm. I'll sit with you for a few minutes.
 - **Button:** Cozy up — Something warm, a blanket, softer light
 - **Button:** Calm down with Zags — Breathe together for a few minutes
+- **Button:** Hold & answer — Hold your thumb gently and answer five easy questions
 - **Button:** What's true — What you know, and what else is true
 - **Button:** Something else — Breathe for a minute, grounding, feet on the floor, something real
 - **Button:** I'd rather talk to someone
@@ -2236,6 +2258,29 @@ _When: distraction_
 - **Button:** Calm down with Zags
 - **Button:** Talk to someone
 - **Button:** Put the phone down
+
+### `hold`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Try something with me.
+- Hold your thumb gently.
+- Squeeze while you answer each question.
+- There's no right answer.
+- **Button:** Start
+
+### `hold-end`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** You stayed with this moment for five questions.
+- You don't have to solve everything right now.
+- What would help next?
+- **Button:** Calm my body
+- **Button:** Get out of my head
+- **Button:** Connect
+- **Button:** I'm not sure
+- That's enough for now. You can put me away for a few minutes.
 
 ### `understand`
 
@@ -4317,6 +4362,14 @@ _When: distraction_
 - **Button:** Help _(screen reader: "Get help now")_
 - Find something · Step 1 of 3
 - **Heading:** Find something worth looking at.
+- **Button:** Next
+
+#### Hold & answer
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- Hold & answer · Step 1 of 3
+- **Heading:** Hold your thumb gently.
 - **Button:** Next
 
 #### Doodle

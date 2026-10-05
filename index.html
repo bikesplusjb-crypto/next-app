@@ -1303,6 +1303,29 @@ function griefMsgs(name){
 }
 const GRIEF_MISSION = { id:"remembering", title:"Remembering", prompt:"Find something that reminds you of them — their spot, a photo, something they loved." };
 const GRIEF_NOTE_MAX = 1000;
+/* HOLD & ANSWER (owner handoff, 2026-10-05). A very small grounding exercise: hold your thumb gently, squeeze and
+   release, while answering five easy questions, one at a time. Not therapy or treatment; no claims that it stops
+   anxiety; no scores, ratings, symptom questions or body explanations. Nothing saved; a typed answer is safety-checked
+   and dropped. No Zags, no animation. Clinician review: all of it. */
+const HOLD = {
+  name:"Hold & answer", entryMeta:"Hold your thumb gently and answer five easy questions",
+  intro:["Try something with me.","Hold your thumb gently.","Squeeze while you answer each question.","There's no right answer."],
+  start:"Start",
+  hand:["Hold your thumb gently.","Squeeze. Release.","Keep doing that while you answer."],
+  next:"Next", noHand:"I'd rather not",
+  keep:"Keep holding your thumb gently while you answer.",
+  q:["What do you see right now?","What do you hear right now?","What can you feel right now?","Can you feel your feet on the floor?","What do you need right now?"],
+  feet:[["yes","Yes"],["little","A little"],["notnow","Not right now"]],
+  need:[["quiet","Quiet"],["distraction","A distraction"],["someone","Someone"],["step","A small step"],["unsure","I don't know"]],
+  ownLabel:"Or in your own words (optional)", ownBtn:"Next",
+  done:["You stayed with this moment for five questions.","You don't have to solve everything right now."],
+  nextQ:"What would help next?",
+  after:[["calm","Calm my body"],["head","Get out of my head"],["connect","Connect"],["unsure","I'm not sure"]],
+  // what the person said they need → the matching next step is shown first (never forced; all four stay)
+  needTo:{ quiet:"calm", distraction:"head", someone:"connect", step:"unsure", unsure:"unsure" },
+  bye:["That's enough for now.","You can put me away for a few minutes."]
+};
+
 /* 6.28 PTSD, TRAUMA, OR MILITARY. Why it matters (for reviewers; never shown to people as statements about them):
    in 2023 an average of 17.5 veterans died by suicide each day; firearms were involved in 73.3% of veteran suicides
    (52.9% for non-veteran adults); 61% had not received VA health care in their last year (VA 2025 National Veteran
@@ -2077,6 +2100,12 @@ INTERVENTION_LIBRARY.push(
     states:["anxious","spiraling","low","distraction","alone"], intensityRange:[0,10], needsMobility:true, realWorld:true,
     steps:["Find something worth looking at.","Take a photo if you want.","Put the phone down."], completion:"tap_done" }
 );
+// HOLD & ANSWER (BODY): a grounding step for anxious or spiraling moments; the engine and Let's Zig may offer it.
+INTERVENTION_LIBRARY.push(
+  { id:"hold_answer", name:"Hold & answer", tryLabel:"Hold & answer", description:"Hold your thumb gently and answer five easy questions, one at a time.", durationSec:120,
+    states:["anxious","spiraling"], intensityRange:[0,10], needsMobility:false,
+    steps:["Hold your thumb gently.","Answer five easy questions.","Choose what helps next."], completion:"tap_done" }
+);
 // 6.22 DOODLE (SENSE, real world): a drawing on the phone, then the phone goes down. Let's Zig may pick it.
 INTERVENTION_LIBRARY.push(
   { id:"doodle", name:"Doodle", tryLabel:"Doodle", description:"Draw anything for a few minutes. No skill needed, and nobody has to see it.", durationSec:300,
@@ -2129,7 +2158,7 @@ const CHANNEL_OF = {
   grounding:"BODY", breathing:"BODY", hydration:"BODY", walking:"BODY", touch_real_world:"BODY",
   change_scene:"SPACE", environment_change:"SPACE", find_alive:"SPACE", craving_delay:"SPACE",
   distraction_game:"SENSE", distraction_color_hunt:"SENSE", distraction_around_me:"SENSE", distraction_categories:"SENSE",
-  distraction_memory:"SENSE", distraction_pattern:"SENSE", distraction_60_second:"SENSE", ridiculous_mode:"SENSE", zags:"SENSE", song:"SENSE", break_the_loop:"SPACE", ai_relationship_check:"PEOPLE", be_around_people:"PEOPLE", find_something:"SENSE", doodle:"SENSE", on_edge:"BODY", warm_comfort:"SENSE", cozy_up:"SENSE", social_zig:"ACTION", coffee_with_zigzag:"SENSE", ai_loss:"PEOPLE", ai_reliance_check:"ACTION", ai_fomo:"ACTION",
+  distraction_memory:"SENSE", distraction_pattern:"SENSE", distraction_60_second:"SENSE", ridiculous_mode:"SENSE", zags:"SENSE", song:"SENSE", break_the_loop:"SPACE", ai_relationship_check:"PEOPLE", be_around_people:"PEOPLE", find_something:"SENSE", doodle:"SENSE", hold_answer:"BODY", on_edge:"BODY", warm_comfort:"SENSE", cozy_up:"SENSE", social_zig:"ACTION", coffee_with_zigzag:"SENSE", ai_loss:"PEOPLE", ai_reliance_check:"ACTION", ai_fomo:"ACTION",
   connection:"PEOPLE",
   thought_parking:"ACTION", still_true:"ACTION", true_sentence:"ACTION", kind_stranger:"ACTION", borrow_ten:"ACTION", behavioral_activation:"ACTION"
 };
@@ -3164,6 +3193,7 @@ function startIntervention(interventionId, opts = {}){
   if (interventionId === "coffee_with_zigzag"){ route = "coffee"; ui.warmDrink = null; ui.coffee = { phase:"intro", turns:0, talkIdx:0, randomUsed:0, line:"" }; }
   if (interventionId === "warm_comfort"){ route = "warm"; ui.warmDrink = null; ui.warmStep = 0; ui.warmSlow = false; }
   if (interventionId === "find_something"){ route = "fs"; fsDropPhoto(); ui.fsIdx = opts.mission != null ? opts.mission : 1; ui.fsYours = opts.yours || null; ui.fsCaption = ""; ui.fsKept = false; ui.msg = ""; }
+  if (interventionId === "hold_answer"){ route = "hold"; ui.hold = { step:-1, noHand:false }; ui.msg = ""; }
   if (interventionId === "doodle"){ route = "doodle"; ui.doodle = { strokes:[], color:0, size:0, erase:false, prompt:0, clearAsk:false, img:null, kept:false, letGo:false }; ui.msg = ""; }
   if (interventionId === "song"){ route = "song"; ui.songMood = null; ui.songIdx = 0; ui.songLines = ["", "", ""]; ui.song = null; ui.songEnded = false; ui.songKept = false; ui.songReplay = false; ui.msg = ""; }
   if (interventionId === "zags"){ route = "zags"; if (!ui.zags || ui.zags.phase !== "hello") ui.zags = { phase:"hello", step:0, rounds:0, hard:0, breath:0, half:null }; }
@@ -3399,6 +3429,7 @@ const SCREENS = {
       <button class="card wide coffee-card" data-act="coffeeStart">${icon("calm")}<span>${COFFEE.entry}<span class="meta">${COFFEE.entrySub}</span></span></button>
       <button class="card wide cozy-card" data-act="cozyStart">${icon("calm")}<span>Cozy up<span class="meta">Something warm, a blanket, softer light</span></span></button>
       <button class="card wide zcard" data-act="zags" data-arg="calm">${zagsFace()}<span>${l10n("calm.zags")}<span class="meta">${l10n("calm.zagsMeta")}</span></span></button>
+      <button class="card wide hold-card" data-act="holdStart">${icon("calm")}<span>${HOLD.name}<span class="meta">${HOLD.entryMeta}</span></span></button>
       <div class="list">${opts.map(([arg, ic, t, m]) =>
         `<button class="card" data-act="calmPick" data-arg="${arg}">${icon(ic)}<span>${t}<span class="meta">${m}</span></span></button>`).join("")}
         ${ui.calmMoreOpen ? "" : `<button class="card calm-more" data-act="calmMore" aria-expanded="false">${icon("calm")}<span>${l10n("calm.more")}<span class="meta">${l10n("calm.moreMeta")}</span></span></button>`}
@@ -3947,6 +3978,42 @@ const SCREENS = {
         ${isNight() ? `<button class="btn btn-secondary" data-act="ptsdCozy">${PTSD.nightCozy}</button>` : ""}
         <button class="btn btn-secondary" data-act="route" data-arg="connect">${PTSD.nightTalk}</button>
         <button class="btn btn-primary" data-act="putDown">${PTSD.nightDown}</button>` };
+  },
+
+  /* HOLD & ANSWER: one screen at a time; no inputs except an optional own answer on the last question */
+  hold(){
+    const h = ui.hold || { step:-1 };
+    if (h.step === -1) return { close:true, body:`
+      ${stepTitle(HOLD.intro[0], true)}
+      ${HOLD.intro.slice(1).map(l => `<p class="sub" style="font-size:19px;margin:6px 0 0">${l}</p>`).join("")}`,
+      actions:`<button class="btn btn-primary" data-act="holdNext">${HOLD.start}</button>` };
+    if (h.step === 0) return { close:true, body:`
+      ${stepTitle(HOLD.hand[0], true)}
+      ${HOLD.hand.slice(1).map(l => `<p class="sub" style="font-size:19px;margin:6px 0 0">${l}</p>`).join("")}`,
+      actions:`<button class="btn btn-primary" data-act="holdNext">${HOLD.next}</button>
+        <button class="link" data-act="holdNoHand">${HOLD.noHand}</button>` };
+    const q = h.step - 1;   // 0..4
+    const keep = !h.noHand && q === 0 ? `<p class="small hold-keep">${HOLD.keep}</p>` : "";   // the reminder on the first question
+    if (q <= 2) return { close:true, body:`${stepTitle(HOLD.q[q], true)}${keep}`,
+      actions:`<button class="btn btn-primary" data-act="holdNext">${HOLD.next}</button>` };
+    if (q === 3) return { close:true, body:`${stepTitle(HOLD.q[3], true)}`,
+      actions:HOLD.feet.map(([k, t], i) => `<button class="btn ${i ? "btn-secondary" : "btn-primary"}" data-act="holdFeet" data-arg="${k}">${t}</button>`).join("") };
+    return { close:true, body:`
+      ${stepTitle(HOLD.q[4], true)}
+      <div class="sits hold-need">${HOLD.need.map(([k, t]) => `<button class="sit" data-act="holdNeed" data-arg="${k}">${t}</button>`).join("")}</div>
+      <label class="small" for="holdOwn" style="display:block;margin-top:14px">${HOLD.ownLabel}</label>
+      <input class="field" id="holdOwn" maxlength="140" autocomplete="off">`,
+      actions:`<button class="btn btn-secondary" data-act="holdOwn">${HOLD.ownBtn}</button>` };
+  },
+  "hold-end"(){
+    const first = HOLD.needTo[(ui.hold || {}).need] || null;
+    const order = first ? [...HOLD.after.filter(a => a[0] === first), ...HOLD.after.filter(a => a[0] !== first)] : HOLD.after;
+    return { close:true, body:`
+      ${stepTitle(HOLD.done[0], true)}
+      <p class="sub" style="font-size:19px">${HOLD.done[1]}</p>
+      <p class="lbl" style="margin-top:18px">${HOLD.nextQ}</p>
+      <div class="list">${order.map(([k, t]) => `<button class="card" data-act="holdAfter" data-arg="${k}"><span>${t}</span></button>`).join("")}</div>
+      <p class="sub hold-bye" style="margin-top:18px">${HOLD.bye[0]} ${HOLD.bye[1]}</p>` };
   },
 
   /* UNDERSTAND IT */
@@ -7125,6 +7192,30 @@ const ACTIONS = {
     const to = { now:"ptsd-now", nightmare:"ptsd-night", edge:null, vet:"ptsd-vet", other:"ptsd-other", love:"ptsd-love" }[arg];
     if (arg === "edge"){ if (ACTIONS.ptsdEdge) ACTIONS.ptsdEdge(); return; }
     if (SCREENS[to]) go(to);
+  },
+  /* HOLD & ANSWER: answers aren't kept; a typed answer is safety-checked and dropped */
+  holdStart(){ if (blockIfRed()) return; startIntervention("hold_answer"); },
+  holdNext(){ if (blockIfRed()) return; const h = ui.hold || (ui.hold = { step:-1 }); h.step = Math.min((h.step ?? -1) + 1, 5); lastRendered = null; render(); },
+  holdNoHand(){ if (blockIfRed()) return; const h = ui.hold || (ui.hold = { step:0 }); h.noHand = true; h.step = 1; lastRendered = null; render(); },   // the questions, without the hand instruction
+  holdFeet(arg){ if (blockIfRed()) return; if (!HOLD.feet.some(f => f[0] === arg)) return; const h = ui.hold || (ui.hold = {}); h.step = 5; lastRendered = null; render(); },   // any answer continues
+  holdNeed(arg){ if (blockIfRed()) return; if (!HOLD.need.some(n => n[0] === arg)) return; (ui.hold || (ui.hold = {})).need = arg; go("hold-end"); },
+  holdOwn(){
+    if (blockIfRed()) return;
+    const box = document.getElementById("holdOwn"); const text = ((box && box.value) || "").trim().slice(0, 140);
+    if (box) box.value = "";
+    if (!text){ go("hold-end"); return; }
+    handleSafeTextSubmit({ text,
+      onRed(){ applySafetyResult("RED"); },   // crisis first; nothing kept
+      onYellow(){ applySafetyResult("YELLOW"); go("hold-end"); },
+      onGreen(){ go("hold-end"); } });
+  },
+  holdAfter(arg){
+    if (blockIfRed()) return;
+    ui.hold = null;
+    if (arg === "calm") ACTIONS.route("calm");
+    else if (arg === "head") ACTIONS.route("head");
+    else if (arg === "connect") ACTIONS.route("connect");
+    else if (arg === "unsure") ACTIONS.dontKnow();
   },
   /* UNDERSTAND IT: answers live in ui.und for this visit only; nothing is saved or scored. */
   undStart(){ if (blockIfRed()) return; ui.und = { from:session.screen }; ui.msg = ""; go("understand"); },

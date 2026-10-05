@@ -317,6 +317,18 @@ list([
   'H. Someone I love: "'+PT.loveSay+'" → '+PT.loveGuide.map(x=>`"${x}"`).join(' · ')+' · "'+PT.loveVet+'" (call button) · "'+PT.loveGuideLink+'"'
 ]);
 
+H(3,'Hold & answer (owner handoff, 2026-10-05; CLINICIAN REVIEW REQUIRED)');
+P('A small grounding exercise: hold your thumb gently while answering five easy questions, one at a time. Calm → "'+G('HOLD.name')+'" ("'+G('HOLD.entryMeta')+'"); the engine and Let\'s Zig may offer it for anxious or spiraling moments. Not therapy or treatment; no claims it stops anxiety; no scores; nothing saved.');
+const HO=G('HOLD');
+list([
+  'Intro: '+HO.intro.map(x=>`"${x}"`).join(' / ')+' → "'+HO.start+'"',
+  'Hand (optional): '+HO.hand.map(x=>`"${x}"`).join(' / ')+' → "'+HO.next+'" · "'+HO.noHand+'" (straight to the questions without the hand instruction)',
+  'Q1 "'+HO.q[0]+'" (small: "'+HO.keep+'") → Q2 "'+HO.q[1]+'" → Q3 "'+HO.q[2]+'" (each "'+HO.next+'")',
+  'Q4 "'+HO.q[3]+'" → '+HO.feet.map(f=>`"${f[1]}"`).join(' · ')+' (any answer continues)',
+  'Q5 "'+HO.q[4]+'" → '+HO.need.map(f=>`"${f[1]}"`).join(' · ')+' or "'+HO.ownLabel+'" → "'+HO.ownBtn+'" (safety-checked, not kept)',
+  'End: "'+HO.done[0]+'" / "'+HO.done[1]+'" / "'+HO.nextQ+'" → '+HO.after.map(f=>`"${f[1]}"`).join(' · ')+' (Calm / Get out of my head / Connect / I don\'t know what I need; the one matching Q5 is listed first) · "'+HO.bye.join(' ')+'"'
+]);
+
 H(3,'Understand it (owner handoff, 2026-10-04; CLINICIAN REVIEW REQUIRED; not validated)');
 P('Optional and short (2–3 questions), one question at a time, then one real step through the existing routes or the engine. No labels, scores or storage. Reached from: I don\'t know what I need (small link), the first screen of I\'m anxious / I\'m spiraling (small link), I feel sad or low (small link), Connect → Something else. Not on Home.');
 const UN=G('UNDERSTAND');

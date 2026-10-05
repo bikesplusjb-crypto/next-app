@@ -63,6 +63,7 @@ ZigZag Mind is comfortable with people leaving. That is the goal, not a failure.
 | 6.23 | 6.23 | I feel sad or low (owner request, 2026-10-04) |
 | 6.27 | 6.27 | Bullied, now or before (STAGE6-27-ADDENDUM.md) |
 | 6.28 | 6.28 | PTSD, trauma, or military (STAGE6-28-ADDENDUM.md) |
+| — | Hold & answer | Owner handoff, 2026-10-05 |
 | — | Understand it | Owner handoff, 2026-10-04 (FEEL → UNDERSTAND → ACT, optional) |
 | 3 People & safety | 6.8 | Code word |
 | 3 People & safety | 6.9 | Supporter guide page |
@@ -623,3 +624,7 @@ Built per STAGE6-28-ADDENDUM.md A–H; C and D share one step screen, so they we
 - **H** uses the addendum's guidance, which includes "talk about what happened" as advice to the supporter; the banned-phrase test allows only that line.
 - **D's "Calm down with Zags"** is a plain text button (no Zags image on C/D screens).
 Tests: `ptsd.test.js`; `home.test.js` checks five chips plus More.
+
+## Hold & answer (owner handoff, as built, 2026-10-05)
+
+`hold_answer` (BODY; anxious, spiraling) on screens `hold` (intro → hand step → questions 1–5, by `ui.hold.step`) and `hold-end`. Copy in `HOLD`. Entry: a card on Calm (7 choices) and the engine / Let's Zig. "I'd rather not" skips the hand step; the reminder "Keep holding your thumb gently while you answer." is on question 1 only. Questions 1–3 have one Next; question 4 has three answers (any continues); question 5 has five choices plus an optional own answer (`handleSafeTextSubmit`; RED → the existing crisis screen; not kept). The end screen keeps four choices (Calm, Get out of my head, Connect, I don't know what I need) and lists the one matching the question-5 answer first (quiet → Calm, a distraction → Get out of my head, someone → Connect, a small step / I don't know → I'm not sure); "That's enough for now. You can put me away for a few minutes." sits under them, with the usual close button. No question counter, no Zags, no animation, nothing saved. Tests: `hold.test.js`, `hold-viewport.test.js` (each question fits a 390x844 and 375x667 phone and 200% text without scrolling).
