@@ -1,5 +1,80 @@
 # Crisis resource verification
 
+# OWNER VERIFICATION — 2026-10-05
+
+Checked by Claude Code for JB on 2026-10-05, at JB's request. **How:** the build environment's network blocks every one of these websites (the official pages could not be opened directly). Each resource was instead searched with web search **restricted to the organization's own official domain**, and the search results (page titles, addresses and quoted page text) were recorded below. Under the owner's own rule ("do not rely on search-result snippets alone; open the official page"), **that is not enough to mark anything VERIFIED**, so:
+
+- Every resource below is **PENDING VERIFICATION** (or **OWNER DECISION REQUIRED**), with what the official site's indexed text says, so JB can confirm each one in a minute by opening the listed page.
+- **Nothing was activated in the app.** Every `verified:false` entry stays hidden. No phone number, URL or wording in the app changed.
+- "Initials JB" records who requested this check, not that JB opened the page. When JB opens a page and it matches, change its status to VERIFIED (or tell Claude Code: "RAINN verified: …") and it will be switched on.
+- To let Claude Code open these pages itself next time: add the domains to the environment's allowed network domains (environment settings → Network access → Custom → Allowed domains), e.g. `rainn.org`, `thehotline.org`, `crisistextline.org`, `211pbtc.org`, `treasurehealth.org`, `vet.cornell.edu`, `griefshare.org`, `workplacebullying.org`, `cybercivilrights.org`, `stopbullying.gov`, `va.gov`, `vetcenter.va.gov`, `veteranscrisisline.net`, `ptsd.va.gov`, `nami.org`.
+
+## Resources
+
+| Resource | Phone | Official Website | Relevant Page | Status | Verified | Initials |
+|---|---|---|---|---|---|---|
+| RAINN (National Sexual Assault Hotline) | 800-656-HOPE (4673); text HOPE to 64673; online chat | https://rainn.org | https://rainn.org/help-and-healing/hotline/ | PENDING VERIFICATION | 2026-10-05 (search of rainn.org) | JB |
+| National Domestic Violence Hotline | 1-800-799-SAFE (7233); text START to 88788; chat | https://www.thehotline.org | https://www.thehotline.org/get-help/ | PENDING VERIFICATION (qualification noted) | 2026-10-05 (search of thehotline.org) | JB |
+| Crisis Text Line | Text only: text HOME to 741741 (Spanish: AYUDA or HOLA to 741741) | https://www.crisistextline.org | https://www.crisistextline.org/text-us/ | PENDING VERIFICATION | 2026-10-05 (search of crisistextline.org) | JB |
+| Florida Warm Line | 1-800-945-1355 | (no official program page found) | news coverage only (WFSU / WUSF / WGCU, 2022) | PENDING VERIFICATION | 2026-10-05 (web search) | JB |
+| Florida 211 (211 Palm Beach / Treasure Coast) | 2-1-1, or (561) 383-1112; text question + ZIP to 898211 | 211 Palm Beach/Treasure Coast (211pbtc.org: not confirmed) | (official page not found in search) | PENDING VERIFICATION | 2026-10-05 (web search) | JB |
+| Treasure Coast Help Near Me | see notes (four entries) | — | — | PENDING VERIFICATION | 2026-10-05 (web search) | JB |
+| Treasure Coast Hospice bereavement (now part of Treasure Health) | 772-403-4500 | https://www.treasurehealth.org | https://www.treasurehealth.org/care-services/grief-support | PENDING VERIFICATION | 2026-10-05 (search of treasurehealth.org) | JB |
+| Pet Loss | Cornell Pet Loss Support Hotline 607-218-7457 (candidate) | https://www.vet.cornell.edu | https://www.vet.cornell.edu/impact/community-impact/pet-loss-resources-and-support | OWNER DECISION REQUIRED | 2026-10-05 (search of cornell.edu) | JB |
+| GriefShare | (no single phone; local groups) | https://www.griefshare.org | https://find.griefshare.org/find | PENDING VERIFICATION (qualification noted) | 2026-10-05 (search of griefshare.org) | JB |
+| Workplace Bullying Institute | (none found) | https://workplacebullying.org | https://workplacebullying.org/help4targets/ | OWNER DECISION REQUIRED | 2026-10-05 (search of workplacebullying.org) | JB |
+| Cyber Civil Rights Initiative | 1-844-878-2274 (844-878-CCRI) | https://cybercivilrights.org | https://cybercivilrights.org/ccri-crisis-helpline/ | PENDING VERIFICATION | 2026-10-05 (search of cybercivilrights.org) | JB |
+| StopBullying.gov | (informational site; HHS line 1-877-696-6775 is general, not a bullying hotline) | https://www.stopbullying.gov | https://www.stopbullying.gov/resources/get-help-now | PENDING VERIFICATION (informational, not a crisis line) | 2026-10-05 (search of stopbullying.gov) | JB |
+
+### Verification notes
+
+- **RAINN.** rainn.org's indexed hotline and contact pages say: call 800.656.HOPE (4673), chat at RAINN.org/hotline, or text "HOPE" to 64673; free, confidential, 24/7, English and Spanish; also WhatsApp. Appropriate for ZigZag (6.28 G, "Something happened to me"). To activate: JB opens https://rainn.org/help-and-healing/hotline/ and confirms the number and 24/7.
+- **National Domestic Violence Hotline.** thehotline.org's indexed home and Get Help pages say: call 1.800.799.SAFE (7233), chat, or text "START" to 88788; 24/7, free, confidential. **Qualification:** the search summary says the site also offers an A.I. chat bot when a live advocate isn't available. ZigZag has no AI of its own; linking to the phone and text lines (not the AI bot) is the safer choice. Owner to confirm on the Get Help page.
+- **Crisis Text Line.** crisistextline.org's indexed pages say: text HOME to 741741, free, 24/7, confidential, English and Spanish, anywhere in the U.S.; Spanish: HOLA or AYUDA to 741741. **A text line, not a phone hotline.** The app's current wording ("Text HOME to 741741 (Crisis Text Line)") matches. Note: the app's Spanish screens are off, so the Spanish keyword isn't needed yet.
+- **Florida Warm Line.** No official program web page was found (searches return 2022 public-radio coverage and third-party lists). That coverage says: 1-800-945-1355, 365 days a year, 4pm–10pm, not a crisis line, staffed by certified peer specialists, funded by the Florida Department of Children and Families through the Peer Support Coalition of Florida. Current operator and 2025–2026 status could not be confirmed from an official source. **Note: this number is already shown in the app (Connect) from the original spec.** Owner to call the number during hours to confirm it is still operating (the earlier "OPEN" row below stays open).
+- **Florida 211.** For the Treasure Coast, the provider is **211 Palm Beach/Treasure Coast**. Third-party and city pages (e.g. City of Port St. Lucie flyers) say it serves **Indian River, Martin, Okeechobee, Palm Beach and St. Lucie** counties: dial 2-1-1 or (561) 383-1112 (24/7), text question and ZIP code to 898211, chat 10am–8pm, email help@211pbtc.org. So all three of Martin, St. Lucie and Okeechobee are covered, and dialing 211 is still the instruction. The organization's own website did not come up in search, so this stays PENDING until JB confirms on its official site or by dialing 211.
+- **Treasure Coast Help Near Me.** In the repo this is `NEAR_ME` (index.html, 6.19 G): a hidden screen with four entries. Search results: (1) **211 Treasure Coast**: see Florida 211 above. (2) **New Horizons of the Treasure Coast mobile response**: news and Florida Department of Health (Indian River) pages say the Mobile Response Team is reached by **dialing 211**; New Horizons main office (772) 468-5600, Fort Pierce. (3) **NAMI (local affiliate)**: nami.org lists **NAMI Treasure Coast, FL** (NAMI Martin County, Inc.), 101 SE Central Pkwy, Stuart; 772-223-4440; serves Martin, Indian River, Okeechobee and St. Lucie; https://www.nami.org/find-your-local-nami/florida/nami-treasure-coast-fl/ . (4) **Local recovery meetings**: no single official source; needs an owner choice. All four stay hidden.
+- **Treasure Coast Hospice bereavement.** treasurehealth.org (Treasure Coast Hospice is part of **Treasure Health**) indexed pages say grief support is **open to anyone in Martin, St. Lucie and Okeechobee counties, whether or not their loved one was in hospice care**: individual counseling, support groups, children's and family programs (Good Grief); no cost; call 772-403-4500 any hour. Another listing gives 1-800-435-7352 and 772-403-4530 (youth and family programs). Appropriate for ZigZag (6.20 grief resources). Owner to confirm the number on https://www.treasurehealth.org/care-services/grief-support .
+- **Pet loss.** No local Treasure Coast pet-loss grief line was found. The UF College of Veterinary Medicine's pet-loss page points people to the **Cornell University Pet Loss Support Hotline (607-218-7457)** and the **Tufts University Pet Loss Support Hotline (508-839-7966)**; Cornell's page gives evening and weekend hours that vary by season (staffed by veterinary students). Treasure Health also mentions a "Treasured Pets Program", likely for patients' pets rather than pet-loss grief. **OWNER DECISION REQUIRED:** use the Cornell line (national, limited hours), or leave the pet-loss slot empty. Shelters and animal control were not considered.
+- **GriefShare.** griefshare.org says it is a **Christ-centered** grief recovery support group that "helps people apply biblical principles", meeting weekly in churches (and online) with a 30-minute video; find a group at https://find.griefshare.org/find . **Qualification:** religious, peer-led, local-chapter dependent, not clinical treatment. The app already shows it only when Faith & hope is on, labeled "Faith-based grief support groups." Owner to confirm.
+- **Workplace Bullying Institute.** workplacebullying.org is online with a "Help for Workplace Bullied Workers" page (https://workplacebullying.org/help4targets/). Search summaries mention the founders, **Drs. Namie, "stepping aside"**, but no clear official statement of the organization's current status or services was found. **STATUS: CURRENT (site online), but founders stepping aside: unclear. OWNER DECISION REQUIRED:** keep it as an information link, or remove it. No other organization was substituted.
+- **Cyber Civil Rights Initiative.** cybercivilrights.org's indexed helpline page: **CCRI Crisis Helpline 1-844-878-2274 (844-878-CCRI), toll-free, 24/7**, free, interpretation in most languages; provides information, guidance on image documentation and takedown, attorney referrals and emotional support to victims of nonconsensual pornography, recorded sexual assault and **sextortion**. Relevant page: https://cybercivilrights.org/ccri-crisis-helpline/ (the "Safety Center" page wasn't in the results). Appropriate for 6.27 D (online: private images). Owner to confirm.
+- **StopBullying.gov.** The federal site's "Get Help Now" page (https://www.stopbullying.gov/resources/get-help-now) gives what to do and who to contact, including: if there's a crime or immediate risk, call 911; if someone is thinking of suicide, call or text 988; for cyberbullying, document it and report it to the platform. **Informational government resource, not a crisis hotline.** The HHS number on the site (1-877-696-6775) is a general HHS line and shouldn't be shown as a bullying hotline. Appropriate for 6.27 E (someone I love).
+
+## VA verification
+
+These three are already shown in the app (`VET_RESOURCES`, `verified:true`, owner-confirmed 2026-10-04). They could not be opened from the build environment. The search index of each official domain lists the exact URL the app uses, with the right page title:
+
+| VA Resource | Existing ZigZag URL | Destination | Result | Verified | Initials |
+|---|---|---|---|---|---|
+| VA Vet Center | https://www.vetcenter.va.gov/ | "Vet Centers (Readjustment Counseling) Home" (va.gov). Indexed text: the Vet Center Call Center, 1-877-927-8387, is free, around the clock, confidential, staffed by combat veterans and family members; Vet Centers counsel for PTSD and military sexual trauma | RIGHT PAGE (by official search index; not opened) | 2026-10-05 | JB |
+| Veterans Crisis Line | https://www.veteranscrisisline.net/ (also used for chat) | "Veterans Crisis Line" home. Indexed text: dial 988 then press 1, chat online, or text 838255; 24/7, confidential; no VA enrollment needed. The site's dedicated chat page is https://www.veteranscrisisline.net/get-help-now/chat/ | RIGHT PAGE (by official search index; not opened) | 2026-10-05 | JB |
+| PTSD Coach | https://www.ptsd.va.gov/appvid/mobile/ptsdcoach_app.asp | "National Center for PTSD - Apps Videos - PTSD Coach". Indexed text: free, publicly available, created by VA's National Center for PTSD and DoD | RIGHT PAGE (by official search index; not opened) | 2026-10-05 | JB |
+
+No VA link was changed. Optional improvement for the owner: point the app's "Chat online" button at the dedicated chat page above instead of the home page (not changed; owner decision).
+
+## Owner settings (searched the whole repo)
+
+- **Contact email:** `PENDING OWNER INPUT` (`CONTACT_EMAIL = ""` in index.html; the only address in the repo is a test placeholder, `hello@example.org`).
+- **Feedback link:** `PENDING OWNER INPUT` (`FEEDBACK_URL = ""`).
+- **Why ZigZag Mind exists:** `PENDING OWNER INPUT` (`FOUNDER_NOTE = ""`; no approved wording anywhere in the repo or review files).
+- **Urge chip:** `PENDING OWNER DECISION` (the app says "I have an urge to use (drink or drugs)"; the 6.28 addendum lists "(drink, drugs, or vape)"; no owner yes/no is recorded anywhere).
+
+## Clinician
+
+`PENDING CLINICIAN REVIEW`. docs/CLINICIAN_REVIEW.md lists D1–D35 plus D-diary; every row's status is OPEN, and no clinician name, date or decision is recorded. The OWNER-APPROVED INTERIM items are owner decisions, not clinician decisions.
+
+## Translator
+
+`PENDING TRANSLATOR REVIEW`. docs/SPANISH_REVIEW.md lists every Spanish string as a draft (`draft:true`); no translator or clinician approval is recorded. `SPANISH_ENABLED` stays `false`.
+
+## Resources not safe to activate yet
+
+All of them, until JB confirms each on its official page: RAINN, National Domestic Violence Hotline, Crisis Text Line, 211 / Help near me (four entries), Treasure Coast Hospice bereavement, pet loss (owner decision), GriefShare, Workplace Bullying Institute (owner decision), Cyber Civil Rights Initiative, StopBullying.gov. The Florida Warm Line is already live from the original spec and still needs the owner's phone check.
+
+---
+
+
 | | |
 |---|---|
 | ZigZag Mind version | 0.5.0 (app, export and `package.json` now match: F4 fixed) |

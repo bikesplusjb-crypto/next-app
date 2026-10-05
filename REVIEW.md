@@ -1212,6 +1212,10 @@ G. "Help near me (Treasure Coast)" (**hidden until the owner verifies at least o
 
 H. Simplicity audit: report only, nothing applied (docs/SIMPLICITY_AUDIT.md).
 
+### Owner verification, 2026-10-05 (docs/CRISIS_RESOURCE_VERIFICATION.md)
+
+Every outside resource was checked by web search restricted to its official domain (the build environment cannot open those pages). None is marked verified from search alone, and nothing was switched on: each waits for the owner to open its official page. Owner decisions needed: a pet-loss line (Cornell's national hotline, or none) and whether to keep the Workplace Bullying Institute link (founders stepping aside). Owner settings (contact email, feedback link, Why ZigZag Mind exists, the urge chip wording): pending owner input. Clinician and translator decisions: pending (none recorded).
+
 ### Stage 6.28 A: Home chips
 
 "Or tell me what's happening" now shows five chips plus "More": I'm anxious · I'm spiraling · I feel sad or low · I have an urge to use (drink or drugs) · I feel alone · More → (in place) Just out of the ER · I lost someone · Bullied — now or before · PTSD, trauma, or military.

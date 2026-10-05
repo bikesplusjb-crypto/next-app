@@ -14,7 +14,7 @@ They stay hidden until you confirm them. Check the official website or call the 
 - **Older items:** Florida Warm Line · Crisis Text Line · the 211 county list · Help near me
 - **VA:** tap the three links once on your phone (Vet Center, Veterans Crisis Line, PTSD Coach) and say whether each opens the right page
 
-Details for each: `docs/CRISIS_RESOURCE_VERIFICATION.md`.
+Details for each: `docs/CRISIS_RESOURCE_VERIFICATION.md`. **Start with its "OWNER VERIFICATION — 2026-10-05" section:** Claude Code already found each organization's official page, number and hours by search (the pages couldn't be opened from the build environment). Open each listed page, check it matches, and reply "verified" for it. Two need your decision: the pet-loss line, and whether to keep the Workplace Bullying Institute.
 
 ## 2. Your settings (5 minutes)
 

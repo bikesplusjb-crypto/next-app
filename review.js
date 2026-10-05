@@ -287,6 +287,9 @@ P(''); P('G. "Help near me (Treasure Coast)" (**hidden until the owner verifies 
 list(G('NEAR_ME').map(e=>`${e.name}: "${e.what}"${e.phone?' · '+e.phone:''} (verified: ${e.verified})`));
 P(''); P('H. Simplicity audit: report only, nothing applied (docs/SIMPLICITY_AUDIT.md).');
 
+H(3,'Owner verification, 2026-10-05 (docs/CRISIS_RESOURCE_VERIFICATION.md)');
+P('Every outside resource was checked by web search restricted to its official domain (the build environment cannot open those pages). None is marked verified from search alone, and nothing was switched on: each waits for the owner to open its official page. Owner decisions needed: a pet-loss line (Cornell\'s national hotline, or none) and whether to keep the Workplace Bullying Institute link (founders stepping aside). Owner settings (contact email, feedback link, Why ZigZag Mind exists, the urge chip wording): pending owner input. Clinician and translator decisions: pending (none recorded).');
+
 H(3,'Stage 6.28 A: Home chips');
 P('"'+G('l10n("home.sitLabel")')+'" now shows five chips plus "'+G('l10n("home.more")')+'": I\'m anxious · I\'m spiraling · I feel sad or low · '+G('l10n("home.craving")')+' · I feel alone · More → (in place) Just out of the ER · I lost someone · Bullied — now or before · PTSD, trauma, or military.');
 
