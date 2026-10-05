@@ -350,6 +350,24 @@ list([
   'Every screen: "'+AN.danger+'" Get help now (opens the crisis screen)'
 ]);
 
+H(3,'Park it for later (worry time; 2026-10-05 research pass; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)');
+const WO=G('WORRY');
+list([
+  'Entry: a small link "'+WO.link+'" on the first "I\'m spiraling" screen. No typing, no reminders, nothing saved.',
+  '1: "'+WO.say+'" / "'+WO.sub+'" → '+WO.times.map(o=>`"${o[1]}"`).join(' · '),
+  '2 (e.g. After dinner): "'+G('WORRY.parked("After dinner")')+'" / "'+G('WORRY.notNow("After dinner")')+'" / "'+WO.paper+'"',
+  '3: "'+WO.laterHead+'" → '+WO.later.map(x=>`"${x}"`).join(' · ')+' · "'+WO.scared+'" Get help now → Put the phone down · Get out of my head'
+]);
+
+H(3,'One problem, one step (2026-10-05 research pass; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)');
+const PR=G('PROBLEM');
+list([
+  'Entry: a small link "'+PR.link+'" on the first "I\'m spiraling" screen. Said out loud or in your head: no typing, nothing saved.',
+  ...PR.steps.map((x,i)=>(i+1)+': "'+x[0]+'" / "'+x[1]+'"'),
+  '4: "'+PR.whenQ+'" → '+PR.whens.map(o=>`"${o[1]}"`).join(' · '),
+  'End: "'+PR.endNow+'" (Now) or "'+PR.end+'" · "'+PR.big+'" Talk to someone → Put the phone down'
+]);
+
 H(3,'My hope box (2026-10-05 research pass; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)');
 const HB=G('HOPE_BOX');
 list([

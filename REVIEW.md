@@ -1280,6 +1280,22 @@ Why (for reviewers only; never shown as statements about people): in 2023 an ave
 - End: "Come back when your body has calmed down. You can talk about it then." → Put the phone down · Talk to someone
 - Every screen: "Afraid you might hurt someone, or afraid of someone?" Get help now (opens the crisis screen)
 
+### Park it for later (worry time; 2026-10-05 research pass; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)
+
+- Entry: a small link "Park it for later" on the first "I'm spiraling" screen. No typing, no reminders, nothing saved.
+- 1: "Park it for later." / "You don't have to solve it right now. Pick a time later to give it 15 minutes." → "After work" · "After dinner" · "Tomorrow morning"
+- 2 (e.g. After dinner): "Okay. It's parked until after dinner." / "If it comes back before then, say: "Not now. After dinner." Then go back to what you were doing." / "If it helps, write it on paper or in your phone's notes, so you don't have to hold it."
+- 3: "When the time comes" → "Give it 15 minutes. Then stop, even if it isn't solved." · "If it doesn't feel important anymore, you can let it go." · "Scared of what you might do?" Get help now → Put the phone down · Get out of my head
+
+### One problem, one step (2026-10-05 research pass; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)
+
+- Entry: a small link "One problem, one step" on the first "I'm spiraling" screen. Said out loud or in your head: no typing, nothing saved.
+- 1: "One problem, one step." / "Pick one problem. Just one. Say it in a few words, out loud or in your head."
+- 2: "What could you do about it?" / "Think of two or three ideas, even small or silly ones."
+- 3: "Pick the smallest one." / "The one you could actually start."
+- 4: "When will you do it?" → "Now" · "Later today" · "Tomorrow"
+- End: "Go do it. That's the whole step." (Now) or "That's the step. You don't have to solve the whole thing." · "Too big to do alone?" Talk to someone → Put the phone down
+
 ### My hope box (2026-10-05 research pass; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)
 
 - Entry: My Plan → "My hope box" ("Your reasons, songs and photos in one place."). Read-only: shows reasons to stay, saved songs (Play) and up to 6 things from Things I noticed. Stores nothing of its own. Not on crisis screens.
@@ -1734,6 +1750,8 @@ _When: spiraling_
 - **Button:** Skip
 - **Button:** Understand it first
 - **Button:** Stop figuring it out
+- **Button:** Park it for later
+- **Button:** One problem, one step
 
 _When: low_
 
@@ -2325,6 +2343,24 @@ _When: distraction_
 - **Heading:** Angry is allowed.
 - What you do next is the part you choose. Give it some room first.
 - Afraid you might hurt someone, or afraid of someone? Get help now
+- **Button:** Next
+
+### `worry`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Park it for later.
+- You don't have to solve it right now. Pick a time later to give it 15 minutes.
+- **Button:** After work
+- **Button:** After dinner
+- **Button:** Tomorrow morning
+
+### `problem`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** One problem, one step.
+- Pick one problem. Just one. Say it in a few words, out loud or in your head.
 - **Button:** Next
 
 ### `hope-box`

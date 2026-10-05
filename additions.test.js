@@ -1,4 +1,5 @@
-// 2026-10-05 research pass: "It feels like panic", "I'm really angry" (step away) and "My hope box".
+// 2026-10-05 research pass: "It feels like panic", "I'm really angry" (step away), "My hope box",
+// "Park it for later" and "One problem, one step".
 // Wording drafted by Claude Code and waiting on the clinician. No typing, nothing saved, never on crisis screens.
 const {JSDOM}=require('jsdom');
 const fs=require('fs'), path=require('path');
@@ -63,17 +64,36 @@ for(const [k,ok] of [['breathe',a=>a.G('session.currentInterventionId')==='breat
  r.push(['hope box: read-only (nothing saved by opening it)', a.dump()===before && noInputs(a)]);
  a.G('getPlan().reasons=["<img src=x onerror=alert(1)>"]; lastRendered=null; render()'); r.push(['hope box: escapes what it shows', !a.has('.hope-reasons img')]); }
 
+// ---- Park it for later ----
+{const b=boot(); b.G('ACTIONS.flow("spiraling")'); r.push(['worry/problem: links on the first "I\'m spiraling" screen', b.S()==='before' && b.has('button.link[data-act="worryStart"]') && b.has('button.link[data-act="problemStart"]')]);
+ const c=boot(); c.G('ACTIONS.flow("anxious")'); r.push(['worry/problem: not on the anxious first screen', !c.has(act('worryStart')) && !c.has(act('problemStart'))]); }
+{const a=boot(); a.G('ACTIONS.flow("spiraling")'); a.click(act('worryStart')); const W=a.G('WORRY');
+ r.push(['worry: "Park it for later." with three times', title(a)===W.say && ['work','dinner','morning'].every(k=>a.has(act('worryTime',k))) && noInputs(a)]);
+ a.click(act('worryTime','dinner'));
+ r.push(['worry: "It\'s parked until after dinner." and "Not now. After dinner."', title(a)==="Okay. It's parked until after dinner." && a.T().includes('"Not now. After dinner."') && noInputs(a)]);
+ a.click(act('worryNext'));
+ r.push(['worry: 15 minutes, then stop · Get help now · Put the phone down', title(a)===W.laterHead && a.T().includes(W.later[0]) && a.has(act('getHelpNow')) && a.has(act('putDown')) && noInputs(a)]);
+ r.push(['worry: no reminders or notifications promised', !/remind|notif|we'll tell|alert you/i.test(JSON.stringify(W))]); }
+
+// ---- One problem, one step ----
+{const a=boot(); a.G('ACTIONS.problemStart()'); const P=a.G('PROBLEM'); let ok=true, inputs=true;
+ for(let i=0;i<P.steps.length;i++){ if(title(a)!==P.steps[i][0] || !a.T().includes(P.steps[i][1])) ok=false; if(!noInputs(a)) inputs=false; a.click(act('problemNext')); }
+ r.push(['problem: three steps, one per screen', ok]); r.push(['problem: no typing', inputs && noInputs(a)]);
+ r.push(['problem: "When will you do it?" now / later today / tomorrow', title(a)===P.whenQ && ['now','today','tomorrow'].every(k=>a.has(act('problemWhen',k)))]);
+ a.click(act('problemWhen','tomorrow')); r.push(['problem: end + "Too big to do alone?" Talk to someone', title(a)===P.end && a.has(act('route','connect')) && a.has(act('putDown'))]);
+ const b=boot(); b.G('ACTIONS.problemStart(); for(let i=0;i<3;i++) ACTIONS.problemNext()'); b.click(act('problemWhen','now')); r.push(['problem: "Now" → "Go do it."', title(b)===P.endNow]); }
+
 // ---- shared rules ----
 {const a=boot(); a.G('saveStore()'); const before=a.dump();
- a.G('ACTIONS.panicStart(); for(let i=0;i<4;i++) ACTIONS.panicNext(); ACTIONS.panicEnd("down"); ACTIONS.angryStart(); for(let i=0;i<4;i++) ACTIONS.angryNext()');
- r.push(['nothing saved by panic or angry', a.dump()===before]);
- r.push(['not in the engine', a.G('INTERVENTION_LIBRARY.every(i=>!/panic|angry|hope/.test(i.id))')]);
- let on=''; for(const sc of ['crisis','crisis-full','crisis-no','safety-check']){ a.G(`session.screen=${JSON.stringify(sc)}; lastRendered=null; render()`); if(/panicStart|angryStart|hopeOpen|panic-911|angry-danger/.test(a.w.document.getElementById('app').innerHTML)) on=sc; }
+ a.G('ACTIONS.panicStart(); for(let i=0;i<4;i++) ACTIONS.panicNext(); ACTIONS.panicEnd("down"); ACTIONS.angryStart(); for(let i=0;i<4;i++) ACTIONS.angryNext(); ACTIONS.worryStart(); ACTIONS.worryTime("work"); ACTIONS.worryNext(); ACTIONS.problemStart(); for(let i=0;i<3;i++) ACTIONS.problemNext(); ACTIONS.problemWhen("now")');
+ r.push(['nothing saved by panic, angry, worry or problem', a.dump()===before]);
+ r.push(['not in the engine', a.G('INTERVENTION_LIBRARY.every(i=>!/panic|angry|hope|worry|problem/.test(i.id))')]);
+ let on=''; for(const sc of ['crisis','crisis-full','crisis-no','safety-check']){ a.G(`session.screen=${JSON.stringify(sc)}; lastRendered=null; render()`); if(/panicStart|angryStart|hopeOpen|worryStart|problemStart|panic-911|angry-danger/.test(a.w.document.getElementById('app').innerHTML)) on=sc; }
  r.push(['never on crisis screens', !on]);
- for(const x of ['panicStart','panicNext','panicEnd','angryStart','angryNext','angryDown','hopeOpen','hopeAdd']){ const b=boot(); b.G('dispatch({type:"SET_SAFETY_LEVEL",level:"RED"})'); b.G(`ACTIONS.${x}("down")`);
+ for(const x of ['panicStart','panicNext','panicEnd','angryStart','angryNext','angryDown','hopeOpen','hopeAdd','worryStart','worryTime','worryNext','problemStart','problemNext','problemWhen']){ const b=boot(); b.G('dispatch({type:"SET_SAFETY_LEVEL",level:"RED"})'); b.G(`ACTIONS.${x}("down")`);
    if(!b.S().startsWith('crisis')) r.push([`blockIfRed: ${x}`, false]); }
  r.push(['blockIfRed on every new action', true]);
- for(const s of ['panicStart','angryStart','hopeOpen']){ const b=boot(); b.G(`ACTIONS.${s}()`); r.push([`Help visible (${s})`, b.has('header .help-pill[data-act="crisis"]')]); }
+ for(const s of ['panicStart','angryStart','hopeOpen','worryStart','problemStart']){ const b=boot(); b.G(`ACTIONS.${s}()`); r.push([`Help visible (${s})`, b.has('header .help-pill[data-act="crisis"]')]); }
  r.push(['Home: "I don\'t feel safe" still first', (()=>{ const b=boot(); b.click(act('homeMore')); const f=[...b.w.document.querySelectorAll('#app main [data-act]')].find(e=>!['wordmark','zags'].includes(e.dataset.act)); return f && f.dataset.act==='crisis'; })()]);
  r.push(['no script errors', a.errs.length===0]); }
 for(const [n,ok] of r) console.log((ok?'PASS':'FAIL')+' '+n);

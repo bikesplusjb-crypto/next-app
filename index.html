@@ -1376,6 +1376,42 @@ const ANGRY = {
   next:"Next"
 };
 
+/* PARK IT FOR LATER (worry postponement; from the 2026-10-05 research pass; wording drafted by Claude Code, CLINICIAN
+   REVIEW REQUIRED). Pick a time later to think about it, say "Not now" when it comes back, then give it 15 minutes
+   and stop. No typing, no reminder (the app sends no notifications), nothing saved; the chosen time lives only in
+   memory for the next screen. */
+const WORRY = {
+  link:"Park it for later",
+  say:"Park it for later.",
+  sub:"You don't have to solve it right now. Pick a time later to give it 15 minutes.",
+  times:[["work","After work"],["dinner","After dinner"],["morning","Tomorrow morning"]],
+  parked:t => `Okay. It's parked until ${t.toLowerCase()}.`,
+  notNow:t => `If it comes back before then, say: "Not now. ${t}." Then go back to what you were doing.`,
+  paper:"If it helps, write it on paper or in your phone's notes, so you don't have to hold it.",
+  laterHead:"When the time comes",
+  later:["Give it 15 minutes. Then stop, even if it isn't solved.","If it doesn't feel important anymore, you can let it go."],
+  next:"Next",
+  scared:"Scared of what you might do?"
+};
+
+/* ONE PROBLEM, ONE STEP (a cut-down problem-solving sequence; from the 2026-10-05 research pass; wording drafted by
+   Claude Code, CLINICIAN REVIEW REQUIRED). One problem, a few ideas, the smallest one, when. Said out loud or in
+   your head: no typing, nothing saved. */
+const PROBLEM = {
+  link:"One problem, one step",
+  steps:[
+    ["One problem, one step.","Pick one problem. Just one. Say it in a few words, out loud or in your head."],
+    ["What could you do about it?","Think of two or three ideas, even small or silly ones."],
+    ["Pick the smallest one.","The one you could actually start."]
+  ],
+  whenQ:"When will you do it?",
+  whens:[["now","Now"],["today","Later today"],["tomorrow","Tomorrow"]],
+  endNow:"Go do it. That's the whole step.",
+  end:"That's the step. You don't have to solve the whole thing.",
+  big:"Too big to do alone?",
+  next:"Next"
+};
+
 /* MY HOPE BOX (from the 2026-10-05 research pass, after the VA's Virtual Hope Box; wording drafted by Claude Code,
    CLINICIAN REVIEW REQUIRED). One place for what the person already kept: reasons to stay, their songs, and
    Things I noticed (photos, doodles, Remembering notes). Read-only: it stores nothing of its own. Opened from My Plan;
@@ -3581,7 +3617,9 @@ const SCREENS = {
       actions:`<button class="btn btn-primary" data-act="beforeContinue">Continue</button>
         <button class="link" data-act="beforeSkip">Skip</button>
         ${["anxious","spiraling","low"].includes(session.currentState) ? `<button class="link und-entry" data-act="undStart">${UNDERSTAND.link}</button>` : ""}
-        ${session.currentState === "spiraling" ? `<button class="link" data-act="undStopStart">${UNDERSTAND.stopLink}</button>` : ""}
+        ${session.currentState === "spiraling" ? `<button class="link" data-act="undStopStart">${UNDERSTAND.stopLink}</button>
+        <button class="link worry-link" data-act="worryStart">${WORRY.link}</button>
+        <button class="link problem-link" data-act="problemStart">${PROBLEM.link}</button>` : ""}
         ${session.currentState === "anxious" ? `<button class="link panic-link" data-act="panicStart">${PANIC.link}</button>` : ""}` };
   },
 
@@ -4138,6 +4176,32 @@ const SCREENS = {
     return { close:true, body:`${stepTitle(ANGRY.end, true)}${danger}`,
       actions:`<button class="btn btn-primary" data-act="putDown">Put the phone down</button>
         <button class="btn btn-secondary" data-act="route" data-arg="connect">Talk to someone</button>` };
+  },
+
+  /* PARK IT FOR LATER: pick a time, "Not now", then 15 minutes and stop */
+  worry(){
+    const w = ui.worry || {}, t = (WORRY.times.find(x => x[0] === w.time) || [])[1];
+    const scared = `<p class="note dk-help">${WORRY.scared} <button class="link" data-act="getHelpNow">Get help now</button></p>`;
+    if (!t) return { close:true, body:`${stepTitle(WORRY.say, true)}<p class="sub" style="font-size:19px">${WORRY.sub}</p>
+      <div class="list">${WORRY.times.map(([k, l]) => `<button class="card" data-act="worryTime" data-arg="${k}"><span>${l}</span></button>`).join("")}</div>` };
+    if (!w.later) return { close:true, body:`${stepTitle(WORRY.parked(t), true)}<p class="sub" style="font-size:19px">${WORRY.notNow(t)}</p><p class="small">${WORRY.paper}</p>`,
+      actions:`<button class="btn btn-primary" data-act="worryNext">${WORRY.next}</button>` };
+    return { close:true, body:`${stepTitle(WORRY.laterHead, true)}<ul class="worry-later">${WORRY.later.map(x => `<li>${x}</li>`).join("")}</ul>${scared}`,
+      actions:`<button class="btn btn-primary" data-act="putDown">Put the phone down</button>
+        <button class="btn btn-secondary" data-act="route" data-arg="head">${l10n("home.head")}</button>` };
+  },
+
+  /* ONE PROBLEM, ONE STEP: said out loud or in your head; nothing typed */
+  problem(){
+    const p = ui.problem || {}, i = p.step || 0;
+    if (i < PROBLEM.steps.length){ const [t, m] = PROBLEM.steps[i];
+      return { close:true, body:`${stepTitle(t, i === 0)}<p class="sub" style="font-size:19px">${m}</p>`,
+        actions:`<button class="btn btn-primary" data-act="problemNext">${PROBLEM.next}</button>` }; }
+    if (!p.when) return { close:true, body:`${stepTitle(PROBLEM.whenQ, true)}
+      <div class="list">${PROBLEM.whens.map(([k, l]) => `<button class="card" data-act="problemWhen" data-arg="${k}"><span>${l}</span></button>`).join("")}</div>` };
+    return { close:true, body:`${stepTitle(p.when === "now" ? PROBLEM.endNow : PROBLEM.end, true)}
+      <p class="note">${PROBLEM.big} <button class="link" data-act="route" data-arg="connect">Talk to someone</button></p>`,
+      actions:`<button class="btn btn-primary" data-act="putDown">Put the phone down</button>` };
   },
 
   /* MY HOPE BOX: read-only; shows what the person already kept */
@@ -7398,6 +7462,12 @@ const ACTIONS = {
     else if (arg === "head") ACTIONS.route("head");
     else if (arg === "borrow") startIntervention("borrow_ten");
   },
+  worryStart(){ if (blockIfRed()) return; ui.worry = { time:null, later:false }; lastRendered = null; go("worry"); },
+  worryTime(arg){ if (blockIfRed()) return; if (!WORRY.times.some(x => x[0] === arg)) return; (ui.worry || (ui.worry = {})).time = arg; lastRendered = null; render(); },
+  worryNext(){ if (blockIfRed()) return; const w = ui.worry || (ui.worry = {}); if (w.time) w.later = true; lastRendered = null; render(); },
+  problemStart(){ if (blockIfRed()) return; ui.problem = { step:0, when:null }; lastRendered = null; go("problem"); },
+  problemNext(){ if (blockIfRed()) return; const p = ui.problem || (ui.problem = { step:0 }); p.step = Math.min((p.step || 0) + 1, PROBLEM.steps.length); lastRendered = null; render(); },
+  problemWhen(arg){ if (blockIfRed()) return; if (!PROBLEM.whens.some(x => x[0] === arg)) return; const p = ui.problem || (ui.problem = {}); p.step = PROBLEM.steps.length; p.when = arg; lastRendered = null; render(); },
   hopeOpen(){ if (blockIfRed()) return; ui.flash = ""; go("hope-box"); },
   hopeAdd(arg){
     if (blockIfRed()) return;
