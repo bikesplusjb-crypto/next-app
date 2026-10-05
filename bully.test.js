@@ -175,6 +175,12 @@ const toOnline=a=>{ a.G('ACTIONS.bullyStart()'); a.click(act('bullyPath','online
  a.G('ACTIONS.bullyStart(); ACTIONS.bullyPath("love"); ACTIONS.bullyGo("bully-love-guide")'); const w3=a.T().includes('StopBullying.gov');
  r.push(['once verified, each shows on its own path', w1 && w2 && w3]); }
 
+// ================= F. Safety phrases =================
+{const a=boot(); const sc=t=>a.G(`safetyCheck(${JSON.stringify(t)})`);
+ r.push(['F: the four new phrases return YELLOW', ["Everyone hates me","Everyone would be happier without me","I'm a joke to everyone","Maybe I deserve it"].every(t=>sc(t)==='YELLOW')]);
+ r.push(['F: RED unchanged (43 phrases; "better off without me" still RED)', a.G('RED_PHRASES.length')===43 && sc('Everyone would be better off without me')==='RED' && sc('I want to kill myself')==='RED']);
+ r.push(['F: in the path, a YELLOW line turns on the support bar and continues', (()=>{ a.G('ACTIONS.bullyStart(); ACTIONS.bullyPath("past"); ACTIONS.bullyIdeas(); ACTIONS.bullyGo("bully-thennow")'); a.fill('tn-then','Everyone hates me'); a.click(act('bullyThenDone')); return a.G('session.yellow')===true && a.S()==='bully-thennow-end'; })()]); }
+
 //@@PARTS@@
 
 for(const [n,ok,info] of r) console.log((ok?'PASS':'FAIL')+' '+n+(ok||info===undefined?'':' ('+info+')'));

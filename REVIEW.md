@@ -73,7 +73,7 @@ The last 13 (from "kms" to "hurt somebody", including harm-to-others phrases) ar
 - "suicidarme"
 - "no quiero vivir"
 
-### YELLOW phrases (16) → support bar for the rest of the visit
+### YELLOW phrases (20) → support bar for the rest of the visit
 
 - "hopeless"
 - "can't take it"
@@ -91,6 +91,10 @@ The last 13 (from "kms" to "hurt somebody", including harm-to-others phrases) ar
 - "want to join him"
 - "want to join her"
 - "want to join them"
+- "everyone hates me"
+- "everyone would be happier without me"
+- "i'm a joke to everyone"
+- "i deserve it"
 
 ## 3. Crisis contacts and prepared messages
 
@@ -1216,6 +1220,7 @@ Why (for reviewers only; never shown to people as statements about them): freque
 - D. Online: "Being targeted online is real harm, even if it's 'just a screen.'" → one idea at a time: "Don't reply" ("Replying usually feeds it.") · "Take screenshots" ("Keep a record, even if you never use it.") · "Mute, block, and report" ("Every app has these. You're allowed to use them.") · "Tell one person" · "Step away for a bit" ("Put some space between you and the screen."); Tell one person: "Someone's been going after me online and I don't want to deal with it alone."; Step away → "Change the scene"
 - On the first and last screen: "If there are threats, stalking, or private images shared without your consent" / "That's more than bullying. You can report threats to the police. If you're in danger right now, call 911." → "Call 911"; resource (hidden until verified): Cyber Civil Rights Initiative helpline
 - E. Someone I love (adults supporting someone, including a parent of a child): "Thank you for taking it seriously. That matters more than anything." → "How to help": "Listen first. Let them tell it their way." · "Believe them, and say it's not their fault." · "Don't say "just ignore it" or "stand up to them."" · "Ask what they want to happen before you act." · "Keep checking in, not just once." · "If they talk about not wanting to be alive, take it seriously and call or text 988 together." · "More on how to help: the supporter guide →" (the supporter guide); resource (hidden until verified): StopBullying.gov
+- F. YELLOW phrases (OWNER-APPROVED INTERIM, pending clinician; should any be RED?): "everyone hates me", "everyone would be happier without me", "i'm a joke to everyone", "i deserve it"
 
 ### Stage 6.23: I feel sad or low (CLINICIAN REVIEW REQUIRED for all of it)
 
@@ -1271,7 +1276,7 @@ Entered only by the person: Home chip "I lost someone", and on Tech check's "My 
 - Hard date: "A gentle reminder for a hard date" / "Pick the date. It goes in your own calendar, once a year. Nothing is kept in ZigZag Mind." → calendar file, once a year at 9am: "Be gentle with yourself today." → "Added. Open the file to put it in your calendar."
 - Ending: "Grief comes and goes. You don't have to carry it all today." → Put the phone down · Something else (the engine, Let's Zig, state "low") · Talk to someone (Connect)
 - Resources (hidden until verified; card "Grief support near you"): Hospice bereavement program (Treasure Coast): "Free grief support for anyone in the community." (verified: false) · Pet loss support line: "Someone to talk to after losing a pet." (verified: false) · GriefShare: "Faith-based grief support groups." (verified: false; Faith & hope only)
-- YELLOW phrases (OWNER-APPROVED INTERIM, pending clinician; should any be RED?): "want to be with him again", "want to be with her again", "want to be with them again", "want to join him", "want to join her", "want to join them"
+- YELLOW phrases (OWNER-APPROVED INTERIM, pending clinician; should any be RED?): "want to be with him again", "want to be with her again", "want to be with them again", "want to join him", "want to join her", "want to join them", "everyone hates me", "everyone would be happier without me", "i'm a joke to everyone", "i deserve it"
 
 ### North star pass (2026-10-04): at most 8 choices, nothing removed
 

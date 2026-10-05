@@ -315,6 +315,9 @@ list([
 list([
   'E. Someone I love (adults supporting someone, including a parent of a child): "'+BU.love.say+'" → "'+BU.love.guideTitle+'": '+BU.love.guide.map(x=>`"${x}"`).join(' · ')+' · "'+BU.love.supporter+'" (the supporter guide); resource (hidden until verified): StopBullying.gov'
 ]);
+list([
+  'F. YELLOW phrases (OWNER-APPROVED INTERIM, pending clinician; should any be RED?): '+G('YELLOW_PHRASES.slice(16)').map(p=>`"${p}"`).join(', ')
+]);
 //@@BULLY@@
 
 H(3,'Stage 6.23: I feel sad or low (CLINICIAN REVIEW REQUIRED for all of it)');
