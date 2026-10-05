@@ -156,6 +156,25 @@ const toOnline=a=>{ a.G('ACTIONS.bullyStart()'); a.click(act('bullyPath','online
  r.push(['D2: Tell one person: "Someone\'s been going after me online and I don\'t want to deal with it alone."', decodeURIComponent(a.w.document.querySelector('a.sit').getAttribute('href')).endsWith("Someone's been going after me online and I don't want to deal with it alone.")]); }
 {const a=boot(); toOnline(a); r.push(['D: nothing helps look up, contact or expose anyone (no links out but 988/911)', [...a.w.document.querySelectorAll('#app main a[href]')].every(x=>/^(tel:(988|911)|sms:988)/.test(x.getAttribute('href')))]); }
 
+// ================= E. Someone I love =================
+{const a=boot(); a.G('ACTIONS.bullyStart()'); a.click(act('bullyPath','love'));
+ r.push(['E1: "Thank you for taking it seriously. That matters more than anything."', a.S()==='bully-love' && a.T().includes('Thank you for taking it seriously. That matters more than anything.') && has988(a)]);
+ a.click(act('bullyGo','bully-love-guide')); const items=[...a.w.document.querySelectorAll('.bully-guide li')].map(l=>l.textContent);
+ r.push(['E2: the six guidance lines', JSON.stringify(items)===JSON.stringify(["Listen first. Let them tell it their way.","Believe them, and say it's not their fault.","Don't say \"just ignore it\" or \"stand up to them.\"","Ask what they want to happen before you act.","Keep checking in, not just once.","If they talk about not wanting to be alive, take it seriously and call or text 988 together."])]);
+ r.push(['E3: StopBullying.gov hidden while unverified', !a.T().includes('StopBullying')]);
+ const l=a.w.document.querySelector('a.worried-link'); r.push(['E4: link to the existing supporter guide', !!l && l.getAttribute('href')==='support/' && l.target==='_blank']);
+ r.push(['E: 988 line', has988(a)]);
+ a.click(act('bullyEnd')); r.push(['E: Done → the ending', a.S()==='bully-end']); }
+// all resources: hidden while unverified, shown once verified
+{const a=boot(); r.push(['every bullying resource starts verified:false', a.G('BULLY_RESOURCES.length')===3 && a.G('BULLY_RESOURCES.every(e=>e.verified===false)')]);
+ let seen=''; for(const sc of ['bully','bully-past','bully-work','bully-online','bully-love','bully-love-guide','bully-end']){ a.G(`ui.bully={path:"online"}; session.screen=${JSON.stringify(sc)}; lastRendered=null; render()`); if(/Workplace Bullying|Cyber Civil|StopBullying/.test(a.T())) seen=sc; }
+ r.push(['no resource renders anywhere while unverified', !seen, seen]);
+ a.G('BULLY_RESOURCES.forEach(e=>{ e.verified=true; e.url="https://example.org/"+e.key; })');
+ a.G('ACTIONS.bullyStart(); ACTIONS.bullyPath("work")'); const w1=a.T().includes('Workplace Bullying Institute');
+ a.G('ACTIONS.bullyStart(); ACTIONS.bullyPath("online")'); const w2=a.T().includes('Cyber Civil Rights Initiative helpline');
+ a.G('ACTIONS.bullyStart(); ACTIONS.bullyPath("love"); ACTIONS.bullyGo("bully-love-guide")'); const w3=a.T().includes('StopBullying.gov');
+ r.push(['once verified, each shows on its own path', w1 && w2 && w3]); }
+
 //@@PARTS@@
 
 for(const [n,ok,info] of r) console.log((ok?'PASS':'FAIL')+' '+n+(ok||info===undefined?'':' ('+info+')'));

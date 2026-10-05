@@ -312,6 +312,9 @@ list([
   'D. Online: "'+BU.online.say+'" → one idea at a time: '+BU.online.ideas.map(([,t,m])=>`"${t}"${m?` ("${m}")`:''}`).join(' · ')+'; Tell one person: "'+BU.onlineMsg+'"; Step away → "'+BU.scene+'"',
   'On the first and last screen: "'+BU.threatsQ+'" / "'+BU.threatsMore+' '+BU.threats+'" → "'+BU.call911+'"; resource (hidden until verified): Cyber Civil Rights Initiative helpline'
 ]);
+list([
+  'E. Someone I love (adults supporting someone, including a parent of a child): "'+BU.love.say+'" → "'+BU.love.guideTitle+'": '+BU.love.guide.map(x=>`"${x}"`).join(' · ')+' · "'+BU.love.supporter+'" (the supporter guide); resource (hidden until verified): StopBullying.gov'
+]);
 //@@BULLY@@
 
 H(3,'Stage 6.23: I feel sad or low (CLINICIAN REVIEW REQUIRED for all of it)');

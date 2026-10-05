@@ -1215,6 +1215,7 @@ Why (for reviewers only; never shown to people as statements about them): freque
 - Resource (hidden until verified): Workplace Bullying Institute
 - D. Online: "Being targeted online is real harm, even if it's 'just a screen.'" → one idea at a time: "Don't reply" ("Replying usually feeds it.") · "Take screenshots" ("Keep a record, even if you never use it.") · "Mute, block, and report" ("Every app has these. You're allowed to use them.") · "Tell one person" · "Step away for a bit" ("Put some space between you and the screen."); Tell one person: "Someone's been going after me online and I don't want to deal with it alone."; Step away → "Change the scene"
 - On the first and last screen: "If there are threats, stalking, or private images shared without your consent" / "That's more than bullying. You can report threats to the police. If you're in danger right now, call 911." → "Call 911"; resource (hidden until verified): Cyber Civil Rights Initiative helpline
+- E. Someone I love (adults supporting someone, including a parent of a child): "Thank you for taking it seriously. That matters more than anything." → "How to help": "Listen first. Let them tell it their way." · "Believe them, and say it's not their fault." · "Don't say "just ignore it" or "stand up to them."" · "Ask what they want to happen before you act." · "Keep checking in, not just once." · "If they talk about not wanting to be alive, take it seriously and call or text 988 together." · "More on how to help: the supporter guide →" (the supporter guide); resource (hidden until verified): StopBullying.gov
 
 ### Stage 6.23: I feel sad or low (CLINICIAN REVIEW REQUIRED for all of it)
 
@@ -2086,6 +2087,29 @@ _When: distraction_
 - **Button:** It's happening online
 - **Button:** Someone I love is being bullied
 - Call or text 988 any time. Call 988 · Text 988
+
+### `bully-love`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Thank you for taking it seriously. That matters more than anything.
+- Call or text 988 any time. Call 988 · Text 988
+- **Button:** Next
+
+### `bully-love-guide`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** How to help
+- Listen first. Let them tell it their way.
+- Believe them, and say it's not their fault.
+- Don't say "just ignore it" or "stand up to them."
+- Ask what they want to happen before you act.
+- Keep checking in, not just once.
+- If they talk about not wanting to be alive, take it seriously and call or text 988 together.
+- **Link → `support/`:** More on how to help: the supporter guide →
+- Call or text 988 any time. Call 988 · Text 988
+- **Button:** Done
 
 ### `bully-online`
 

@@ -154,6 +154,7 @@ textarea.field{min-height:150px;resize:vertical}
 .tn-grid{display:grid;grid-template-columns:1fr;gap:16px}
 @media (min-width:600px){.tn-grid{grid-template-columns:1fr 1fr}}
 .tn-col .sit[aria-pressed="true"]{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
+.bully-guide{padding-left:20px;margin:8px 0 0}.bully-guide li{margin:8px 0;font-size:17px}
 .bully-988{margin-top:22px;padding-top:12px;border-top:1px solid var(--line)}
 .doodle-prompt{margin:0 0 8px;font-family:var(--serif);font-size:19px;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline}
 .doodle-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
@@ -1313,6 +1314,12 @@ const BULLY = {
     say:"Being targeted online is real harm, even if it's 'just a screen.'",
     ideas:[["noreply","Don't reply","Replying usually feeds it."],["shots","Take screenshots","Keep a record, even if you never use it."],
       ["mute","Mute, block, and report","Every app has these. You're allowed to use them."],["tell","Tell one person",""],["away","Step away for a bit","Put some space between you and the screen."]]
+  },
+  love:{
+    say:"Thank you for taking it seriously. That matters more than anything.",
+    guide:["Listen first. Let them tell it their way.","Believe them, and say it's not their fault.","Don't say \"just ignore it\" or \"stand up to them.\"",
+      "Ask what they want to happen before you act.","Keep checking in, not just once.","If they talk about not wanting to be alive, take it seriously and call or text 988 together."],
+    guideTitle:"How to help", supporter:"More on how to help: the supporter guide →"
   },
   onlineMsg:"Someone's been going after me online and I don't want to deal with it alone.",
   threatsQ:"If there are threats, stalking, or private images shared without your consent",
@@ -3716,6 +3723,21 @@ const SCREENS = {
       <p class="lbl" style="margin-top:18px">${BULLY.closest}</p>
       <div class="list">${BULLY.paths.map(([k, t]) => `<button class="card" data-act="bullyPath" data-arg="${k}"><span>${t}</span></button>`).join("")}</div>
       ${bully988()}` };
+  },
+
+  /* 6.27 E: someone I love is being bullied (for adults supporting someone, including a parent of a child) */
+  "bully-love"(){
+    return { close:true, body:`${stepTitle(BULLY.love.say, true)}${bully988()}`,
+      actions:`<button class="btn btn-primary" data-act="bullyGo" data-arg="bully-love-guide">${BULLY.next}</button>` };
+  },
+  "bully-love-guide"(){
+    return { close:true, body:`
+      ${title(BULLY.love.guideTitle)}
+      <ul class="bully-guide">${BULLY.love.guide.map(g => `<li>${esc(g)}</li>`).join("")}</ul>
+      ${bullyResourceCard("love")}
+      <p style="margin-top:14px"><a class="worried-link" href="support/" target="_blank" rel="noopener">${BULLY.love.supporter}</a></p>
+      ${bully988()}`,
+      actions:`<button class="btn btn-primary" data-act="bullyEnd">Done</button>` };
   },
 
   /* 6.27 D: it's happening online */
