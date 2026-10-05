@@ -8,7 +8,7 @@ Every Spanish line below is a **draft** (not reviewed). Please give each one a h
 
 Notes for the translator: keep "988", "911", "211" and "ZigZag Mind" as they are. Lines starting with a space or comma are joined to a name or number on screen (for example "Llamar a" + a name). `&` is shown on screen as "&".
 
-Strings: 218 (crisis-screen: 46).
+Strings: 219 (crisis-screen: 46).
 
 
 ## Help button
@@ -86,6 +86,7 @@ Strings: 218 (crisis-screen: 46).
 | `home.alone` | I feel alone | Me siento solo |  | DRAFT |
 | `home.er` | Just out of the ER | Acabo de salir de urgencias |  | DRAFT |
 | `home.lost` | I lost someone | Perdí a alguien |  | DRAFT |
+| `home.bullied` | Bullied — now or before | Acoso, ahora o antes |  | DRAFT |
 | `home.tech` | Tech check | Revisión de tecnología |  | DRAFT |
 | `home.techMeta` | AI, scrolling, or checking is getting to me | La IA, las redes o revisar el teléfono me están afectando |  | DRAFT |
 | `home.tip` | Add ZigZag Mind to your home screen so your plan stays with you. Tap Share, then Add to Home Screen. | Agrega ZigZag Mind a tu pantalla de inicio para tener tu plan a mano. Toca Compartir y luego Agregar a inicio. |  | DRAFT |

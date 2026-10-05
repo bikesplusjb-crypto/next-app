@@ -715,6 +715,7 @@ Filter by state → filter by intensity → never repeat the last pick → if YE
 - "I feel alone" → `route:connect`
 - "Just out of the ER" → `afterStart`
 - "I lost someone" → `griefStart`
+- "Bullied — now or before" → `bullyStart`
 
 Changed for review: the craving button now reads "I have an urge to use (drink or drugs)" (was "I want to use"). It still opens the same craving flow (`flow:craving`).
 
@@ -1185,7 +1186,7 @@ Contact line (only when CONTACT_EMAIL is set): "Questions? Email [address]."
 
 D. Crisis Text Line (**hidden until the owner verifies it**; CRISIS_TEXT_LINE.verified is false): one line below the 988 buttons on the full crisis screen and Connect, on the printed plan, and in the supporter guide's "Get help together": "Rather text a stranger? Text HOME to 741741 (Crisis Text Line)." (phones: Text HOME to 741741 is a text link; computers: shown as text).
 
-E. Spanish interface: **scaffolding only, nothing shown**. SPANISH_ENABLED is false. 218 strings (onboarding, Home, crisis screens, Calm, Connect, My Plan, Help, Settings labels) now live in one table; English is unchanged. Every Spanish line is a DRAFT for a human translator and the clinician: docs/SPANISH_REVIEW.md. A draft crisis-screen line is never shown, even with Spanish on.
+E. Spanish interface: **scaffolding only, nothing shown**. SPANISH_ENABLED is false. 219 strings (onboarding, Home, crisis screens, Calm, Connect, My Plan, Help, Settings labels) now live in one table; English is unchanged. Every Spanish line is a DRAFT for a human translator and the clinician: docs/SPANISH_REVIEW.md. A draft crisis-screen line is never shown, even with Spanish on.
 
 F. Feedback (only when FEEDBACK_URL is set; it is empty): on About only, "Did ZigZag Mind help? Tell us anonymously →" (new tab). Privacy page adds: "If you use the feedback link on About, that form is a separate service. It receives only what you type there."
 
@@ -1196,6 +1197,12 @@ G. "Help near me (Treasure Coast)" (**hidden until the owner verifies at least o
 - Local recovery meetings: "Meetings for people working on drinking or drug use." (verified: false)
 
 H. Simplicity audit: report only, nothing applied (docs/SIMPLICITY_AUDIT.md).
+
+### Stage 6.27: Bullied, now or before (CLINICIAN REVIEW REQUIRED for all of it)
+
+Why (for reviewers only; never shown to people as statements about them): frequent childhood bullying is linked to more adult depression (OR 1.95), anxiety disorders (OR 1.65) and suicidality (OR 2.21) (Takizawa, Maughan & Arseneault, 2014); 32% of Americans reported being directly bullied at work in 2024 (Workplace Bullying Institute); 41% of U.S. adults have experienced online harassment (Pew Research Center, 2021).
+- Home chip: "Bullied — now or before". First screen: "Being bullied is not your fault. Whether it's happening now or happened a long time ago, it's real." / "Which is closest?" → "It happened years ago, but it still gets to me" · "It's happening at work" · "It's happening online" · "Someone I love is being bullied"
+- Every screen in this path ends with: "Call or text 988 any time." Call 988 · Text 988 (computers: Chat with 988 online)
 
 ### Stage 6.23: I feel sad or low (CLINICIAN REVIEW REQUIRED for all of it)
 
@@ -1525,6 +1532,7 @@ Rendered for each state where the screen changes by state. Identical renders are
 - **Button:** I feel alone
 - **Button:** Just out of the ER
 - **Button:** I lost someone
+- **Button:** Bullied — now or before
 - **Button:** Tech check — AI, scrolling, or checking is getting to me
 - **Link → `support/#worried`:** Worried about someone? How to help →
 - **Button:** Home
@@ -2054,6 +2062,18 @@ _When: distraction_
 - Only on this phone. Not a feed, not shared.
 - Nothing here yet.
 - **Button:** Find something
+
+### `bully`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Being bullied is not your fault. Whether it's happening now or happened a long time ago, it's real.
+- Which is closest?
+- **Button:** It happened years ago, but it still gets to me
+- **Button:** It's happening at work
+- **Button:** It's happening online
+- **Button:** Someone I love is being bullied
+- Call or text 988 any time. Call 988 · Text 988
 
 ### `sad`
 
@@ -2821,6 +2841,7 @@ _When: distraction_
 - **Button:** I feel alone
 - **Button:** Just out of the ER
 - **Button:** I lost someone
+- **Button:** Bullied — now or before
 - **Button:** Tech check — AI, scrolling, or checking is getting to me
 - **Link → `support/#worried`:** Worried about someone? How to help →
 - **Button:** Home
@@ -2849,6 +2870,7 @@ _When: distraction_
 - **Button:** I feel alone
 - **Button:** Just out of the ER
 - **Button:** I lost someone
+- **Button:** Bullied — now or before
 - **Button:** Tech check — AI, scrolling, or checking is getting to me
 - **Link → `support/#worried`:** Worried about someone? How to help →
 - **Button:** Home
@@ -2877,6 +2899,7 @@ _When: distraction_
 - **Button:** I feel alone
 - **Button:** Just out of the ER
 - **Button:** I lost someone
+- **Button:** Bullied — now or before
 - **Button:** Tech check — AI, scrolling, or checking is getting to me
 - **Link → `support/#worried`:** Worried about someone? How to help →
 - **Button:** Home

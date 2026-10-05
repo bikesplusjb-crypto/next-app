@@ -61,6 +61,7 @@ ZigZag Mind is comfortable with people leaving. That is the goal, not a failure.
 | 6.21 | 6.21 | A line for today (STAGE6-21-ADDENDUM.md) |
 | 6.22 | 6.22 | Doodle (owner request, 2026-10-04) |
 | 6.23 | 6.23 | I feel sad or low (owner request, 2026-10-04) |
+| 6.27 | 6.27 | Bullied, now or before (STAGE6-27-ADDENDUM.md) |
 | 3 People & safety | 6.8 | Code word |
 | 3 People & safety | 6.9 | Supporter guide page |
 | 3 People & safety | 6.10 | Check-in reminders |

@@ -287,6 +287,15 @@ P(''); P('G. "Help near me (Treasure Coast)" (**hidden until the owner verifies 
 list(G('NEAR_ME').map(e=>`${e.name}: "${e.what}"${e.phone?' · '+e.phone:''} (verified: ${e.verified})`));
 P(''); P('H. Simplicity audit: report only, nothing applied (docs/SIMPLICITY_AUDIT.md).');
 
+H(3,'Stage 6.27: Bullied, now or before (CLINICIAN REVIEW REQUIRED for all of it)');
+P('Why (for reviewers only; never shown to people as statements about them): frequent childhood bullying is linked to more adult depression (OR 1.95), anxiety disorders (OR 1.65) and suicidality (OR 2.21) (Takizawa, Maughan & Arseneault, 2014); 32% of Americans reported being directly bullied at work in 2024 (Workplace Bullying Institute); 41% of U.S. adults have experienced online harassment (Pew Research Center, 2021).');
+const BU=G('BULLY');
+list([
+  'Home chip: "'+G('l10n("home.bullied")')+'". First screen: "'+BU.intro+'" / "'+BU.closest+'" → '+BU.paths.map(p=>`"${p[1]}"`).join(' · '),
+  'Every screen in this path ends with: "'+BU.line988+'" Call 988 · Text 988 (computers: Chat with 988 online)'
+]);
+//@@BULLY@@
+
 H(3,'Stage 6.23: I feel sad or low (CLINICIAN REVIEW REQUIRED for all of it)');
 const SA=G('SAD');
 list([

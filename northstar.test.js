@@ -36,7 +36,7 @@ for(const [name,s] of [['Calm','calm'],['Get out of my head','distract'],['Conne
  r.push(['Connect: around people / Zags / song hidden until "Something else"', !a.has(act('aroundPeople')) && !a.has(act('zags','connect')) && !a.has(act('songStart','connect')) && a.has(act('connMore'))]);
  a.click(act('connMore'));
  r.push(['Connect: one tap shows all three', a.has(act('aroundPeople')) && a.has(act('zags','connect')) && a.has(act('songStart','connect'))]);
- r.push(['Connect: 988 still last, below the extras', (()=>{const all=[...a.w.document.querySelectorAll('#app main [data-act], #app main a[href]')]; const i988=all.findIndex(e=>e.getAttribute('href')==='tel:988'); const iZ=all.findIndex(e=>e.dataset.act==='zags'); return i988>iZ; })()]); }
+ r.push(['Connect: 988 below the extras by day, first at night (6.18 D2)', (()=>{const all=[...a.w.document.querySelectorAll('#app main [data-act], #app main a[href]')]; const i988=all.findIndex(e=>e.getAttribute('href')==='tel:988'); const iZ=all.findIndex(e=>e.dataset.act==='zags'); return a.G('isNight()') ? i988<iZ : i988>iZ; })()]); }
 
 // ---- Change the scene: the two "Find" items behind "Find something" ----
 {const a=boot(); a.show('scene');

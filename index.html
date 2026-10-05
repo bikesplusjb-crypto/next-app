@@ -151,6 +151,7 @@ textarea.field{min-height:150px;resize:vertical}
 @keyframes cloudDrift{from{transform:translateX(-6px)}to{transform:translateX(6px)}}
 @media (prefers-reduced-motion:reduce){.sad-cloud{animation:none}}
 .sad-sky{margin-top:14px}
+.bully-988{margin-top:22px;padding-top:12px;border-top:1px solid var(--line)}
 .doodle-prompt{margin:0 0 8px;font-family:var(--serif);font-size:19px;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline}
 .doodle-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
 .doodle-swatch{width:44px;height:44px;border-radius:50%;border:2px solid var(--line)}
@@ -705,6 +706,7 @@ const L10N = {
     "home.alone":"I feel alone",
     "home.er":"Just out of the ER",
     "home.lost":"I lost someone",
+    "home.bullied":"Bullied — now or before",
     "home.tech":"Tech check",
     "home.techMeta":"AI, scrolling, or checking is getting to me",
     "home.tip":"Add ZigZag Mind to your home screen so your plan stays with you. Tap Share, then Add to Home Screen.",
@@ -925,6 +927,7 @@ const L10N = {
     "home.alone":{ text:"Me siento solo", draft:true },
     "home.er":{ text:"Acabo de salir de urgencias", draft:true },
     "home.lost":{ text:"Perdí a alguien", draft:true },
+    "home.bullied":{ text:"Acoso, ahora o antes", draft:true },
     "home.tech":{ text:"Revisión de tecnología", draft:true },
     "home.techMeta":{ text:"La IA, las redes o revisar el teléfono me están afectando", draft:true },
     "home.tip":{ text:"Agrega ZigZag Mind a tu pantalla de inicio para tener tu plan a mano. Toca Compartir y luego Agregar a inicio.", draft:true },
@@ -1278,6 +1281,22 @@ function griefMsgs(name){
 }
 const GRIEF_MISSION = { id:"remembering", title:"Remembering", prompt:"Find something that reminds you of them — their spot, a photo, something they loved." };
 const GRIEF_NOTE_MAX = 1000;
+/* 6.27 BULLIED, NOW OR BEFORE. Why it matters (not shown to people, never presented as statements about them):
+   frequent childhood bullying is linked in a five-decade British birth cohort to more depression (OR 1.95), anxiety
+   disorders (OR 1.65) and suicidality (OR 2.21) in adulthood, with fewer social relationships at 50 (Takizawa, Maughan
+   & Arseneault, 2014); 32% of Americans reported being directly bullied at work in 2024 (Workplace Bullying Institute);
+   41% of U.S. adults have experienced online harassment (Pew Research Center, 2021).
+   Rules: entered only by the person; never suggested; never helps anyone look up, contact, expose or retaliate against
+   anyone; nothing saved unless the person chooses the diary; a 988 line on every screen. Clinician review: all of it.
+   The copy never blames the person, never tells them to ignore it or toughen up, never advises confronting anyone. */
+const BULLY = {
+  intro:"Being bullied is not your fault. Whether it's happening now or happened a long time ago, it's real.",
+  closest:"Which is closest?",
+  paths:[["past","It happened years ago, but it still gets to me"],["work","It's happening at work"],["online","It's happening online"],["love","Someone I love is being bullied"]],
+  line988:"Call or text 988 any time."
+};
+function bully988(){ return `<p class="small bully-988">${BULLY.line988} <a href="${LINKS.call988}">Call 988</a> · ${text988Inline()}</p>`; }
+
 /* 6.23 I FEEL SAD OR LOW: a first screen before the tiny things. All wording: clinician review. Nothing saved. */
 const SAD = {
   q:"Feels like a dark cloud over you?",
@@ -3127,6 +3146,7 @@ const SCREENS = {
         <button class="sit" data-act="route" data-arg="connect">${l10n("home.alone")}</button>
         <button class="sit" data-act="afterStart">${l10n("home.er")}</button>
         <button class="sit" data-act="griefStart">${l10n("home.lost")}</button>
+        <button class="sit" data-act="bullyStart">${l10n("home.bullied")}</button>
       </div>
       <button class="card wide tech-row" data-act="techStart">${icon("phone")}<span>${l10n("home.tech")}<span class="meta">${l10n("home.techMeta")}</span></span></button>
       ${showHomeTip() ? `<div class="panel" id="homeTip" role="note">
@@ -3615,6 +3635,15 @@ const SCREENS = {
             : `<button class="link" data-act="noticedDel" data-arg="${esc(n.id)}">Delete</button>`}</div>`).join("")
         : `<p class="empty">Nothing here yet.</p>`}`,
       actions:`<button class="btn btn-secondary" data-act="fsStart">Find something</button>` };
+  },
+
+  /* 6.27 BULLIED, NOW OR BEFORE */
+  bully(){
+    return { close:true, body:`
+      ${stepTitle(BULLY.intro, true)}
+      <p class="lbl" style="margin-top:18px">${BULLY.closest}</p>
+      <div class="list">${BULLY.paths.map(([k, t]) => `<button class="card" data-act="bullyPath" data-arg="${k}"><span>${t}</span></button>`).join("")}</div>
+      ${bully988()}` };
   },
 
   /* 6.23 I FEEL SAD OR LOW */
@@ -6550,6 +6579,9 @@ const ACTIONS = {
   warmEnough(){ if (blockIfRed()) return; go("warm-end"); },
   warmFind(){ if (blockIfRed()) return; startIntervention("find_something"); },
 
+  /* 6.27 BULLIED, NOW OR BEFORE */
+  bullyStart(){ if (blockIfRed()) return; ui.bully = {}; ui.msg = ""; ui.flash = ""; go("bully"); },
+  bullyPath(arg){ if (blockIfRed()) return; if (!BULLY.paths.some(p => p[0] === arg)) return; ui.bully = { path:arg, idx:0 }; ui.msg = ""; ui.flash = ""; go("bully-" + arg); },
   /* 6.23 I FEEL SAD OR LOW */
   sadOut(){ if (blockIfRed()) return; ui.sadIdx = 0; ui.sadSeen = 1; go("sad-out"); },
   sadNext(){
