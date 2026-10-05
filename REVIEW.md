@@ -1208,6 +1208,11 @@ Why (for reviewers only; never shown to people as statements about them): freque
 - Younger self: "What would you tell them now?" / "Only on this screen unless you choose to keep it." → "You said it." → "Let it go" (default) · "Keep in my diary" (diary entry tagged "Note to my younger self"; a locked diary asks "Your diary is locked" / "Type your passcode to keep this in your diary." first) → "Let go. It isn't kept anywhere." / "Kept in your diary."
 - Ground: "Ground" (existing 5-4-3-2-1) · "Calm down with Zags" (existing)
 - End (years ago): "Old hurts like this are one of the things counselors help with most. It's never too late to talk about it." → Put the phone down · Talk to someone · "Back to the start"
+- C. At work: "This is about their behavior, not your worth. A lot of people go through this at work, and it's not something you have to just take." → one idea at a time: "Write down what happened" ("Writing it down as it happens can help later, if you decide to report it.") · "Talk to someone you trust" ("A coworker, a friend outside work, or HR if it feels safe.") · "Make it through today" ("Just today. One small thing at a time.")
+- Write it down: "Date" (today by default) · "What happened" · "Who saw it (optional)" (safety-checked) → "You wrote it down." → "Save in my diary" (diary entry tagged "Work notes"; a locked diary asks for the passcode first) · "Don't save" ("Not saved."). If the diary isn't locked: "Tip: lock your diary first if someone else might see your phone."
+- Talk: "Something's been going on at work and it's getting to me. Can we talk?" ("Tap to open a message. You choose who it goes to, and nothing is sent until you send it.")
+- Make it through today: "Borrow ten minutes" ("Make it smaller" appears once 6.24 is built)
+- Resource (hidden until verified): Workplace Bullying Institute
 
 ### Stage 6.23: I feel sad or low (CLINICIAN REVIEW REQUIRED for all of it)
 
@@ -2079,6 +2084,52 @@ _When: distraction_
 - **Button:** It's happening online
 - **Button:** Someone I love is being bullied
 - Call or text 988 any time. Call 988 · Text 988
+
+### `bully-work`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** This is about their behavior, not your worth. A lot of people go through this at work, and it's not something you have to just take.
+- Call or text 988 any time. Call 988 · Text 988
+- **Button:** Next
+
+### `bully-work-write`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Write down what happened
+- Writing it down as it happens can help later, if you decide to report it.
+- Date
+- **Text box**
+- What happened
+- Who saw it (optional)
+- **Text box**
+- Call or text 988 any time. Call 988 · Text 988
+- **Button:** Done
+- **Button:** Back
+
+### `bully-work-done`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Being bullied is not your fault. Whether it's happening now or happened a long time ago, it's real.
+- Which is closest?
+- **Button:** It happened years ago, but it still gets to me
+- **Button:** It's happening at work
+- **Button:** It's happening online
+- **Button:** Someone I love is being bullied
+- Call or text 988 any time. Call 988 · Text 988
+
+### `bully-work-talk`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Talk to someone you trust
+- A coworker, a friend outside work, or HR if it feels safe.
+- Tap to open a message. You choose who it goes to, and nothing is sent until you send it.
+- **Link → `sms:5550142?&body=Something's been going on at work and it's getting to me. Can we talk?`:** Something's been going on at work and it's getting to me. Can we talk?
+- Call or text 988 any time. Call 988 · Text 988
+- **Button:** Back
 
 ### `bully-past`
 

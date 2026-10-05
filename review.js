@@ -301,6 +301,13 @@ list([
   'Ground: "'+BU.ground+'" (existing 5-4-3-2-1) · "'+BU.zags+'" (existing)',
   'End (years ago): "'+BU.past.end+'" → Put the phone down · Talk to someone · "'+BU.backStart+'"'
 ]);
+list([
+  'C. At work: "'+BU.work.say+'" → one idea at a time: '+BU.work.ideas.map(([,t,m])=>`"${t}" ("${m}")`).join(' · '),
+  'Write it down: "'+BU.workDate+'" (today by default) · "'+BU.workWhat+'" · "'+BU.workWho+'" (safety-checked) → "You wrote it down." → "'+BU.saveDiary+'" (diary entry tagged "'+G('DIARY_TAGS.work')+'"; a locked diary asks for the passcode first) · "'+BU.dontSave+'" ("'+BU.notSaved+'"). If the diary isn\'t locked: "'+BU.workTip+'"',
+  'Talk: "'+BU.talkMsg+'" ("'+BU.talkPick+'")',
+  'Make it through today: "'+BU.borrow+'" ("'+BU.smaller+'" appears once 6.24 is built)',
+  'Resource (hidden until verified): Workplace Bullying Institute'
+]);
 //@@BULLY@@
 
 H(3,'Stage 6.23: I feel sad or low (CLINICIAN REVIEW REQUIRED for all of it)');

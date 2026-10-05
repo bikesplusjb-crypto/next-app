@@ -52,6 +52,16 @@ Every entry is **hidden** (`GRIEF_RESOURCES` in index.html, `verified:false`). S
 | Pet loss support line | "Someone to talk to after losing a pet." | (none: owner to identify and add) | (none: owner to add) | | | |
 | GriefShare (Faith & hope only) | "Faith-based grief support groups." | (none: owner to add) | (none: owner to add) | | | |
 
+## Bullied, now or before (6.27)
+
+Every entry is **hidden** (`BULLY_RESOURCES` in index.html, `verified:false`) until the owner confirms it by phone or official website, fills in phone and/or website, and sets `verified:true`. 988 is always shown in this path.
+
+| Entry | Where | What the app would say | Phone in code | Website in code | Confirmed by (phone / official site) | Date | Initials |
+|---|---|---|---|---|---|---|---|
+| Workplace Bullying Institute (information page) | It's happening at work | "Information about bullying at work and what you can do." | (none) | (none: owner to add) | | | |
+| Cyber Civil Rights Initiative helpline | It's happening online (threats, stalking, private images) | "For private images shared without your consent." | (none: owner to add) | (none: owner to add) | | | |
+| StopBullying.gov | Someone I love is being bullied | "U.S. government information on bullying and how to help." | (none) | (none: owner to add) | | | |
+
 ## Florida Warm Line (Amendment 4)
 
 | Field | Value |

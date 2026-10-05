@@ -101,6 +101,45 @@ for(const [k,txt] of [['then','I want to kill myself'],['now','I want to die']])
  a.G('ACTIONS.diaryBack()'); a.fill('diaryPass',PASS); a.click(act('diaryUnlock')); await until(()=>a.G('!!diaryKey'));
  r.push(['Locked diary: the note is there after unlocking', a.T().includes('Locked note text') && a.T().includes('Note to my younger self')]); }
 
+// ================= C. At work =================
+const toWork=a=>{ a.G('ACTIONS.bullyStart()'); a.click(act('bullyPath','work')); };
+{const a=boot(); toWork(a);
+ r.push(['C1: "This is about their behavior, not your worth..."', a.S()==='bully-work' && a.T().includes("This is about their behavior, not your worth. A lot of people go through this at work, and it's not something you have to just take.") && has988(a)]);
+ r.push(['C3: Workplace Bullying Institute hidden while unverified', !a.T().includes('Workplace Bullying Institute') && !a.has('.bully-res')]);
+ a.click(act('bullyIdeas')); const seen=[a.w.document.getElementById('screen-title').textContent];
+ a.click(act('bullyNext')); seen.push(a.w.document.getElementById('screen-title').textContent); r.push(['C2: talk: "a coworker, a friend outside work, or HR if it feels safe"', a.T().includes('A coworker, a friend outside work, or HR if it feels safe.')]);
+ a.click(act('bullyNext')); seen.push(a.w.document.getElementById('screen-title').textContent);
+ r.push(['C2: Write down what happened · Talk to someone you trust · Make it through today', JSON.stringify(seen)==='["Write down what happened","Talk to someone you trust","Make it through today"]']);
+ r.push(['C2: Make it through today → Borrow ten minutes ("Make it smaller" only once 6.24 exists)', a.has(act('lowPick','borrow_ten')) && !a.has(act('smallerStart'))]); }
+{const a=boot(); a.G('getPlan().trustedPeople=[{name:"Jordan",phone:"555-0142",relationship:"friend"}]'); toWork(a); a.click(act('bullyIdeas')); a.click(act('bullyNext')); a.click(act('bullyGo','bully-work-talk'));
+ const h=decodeURIComponent(a.w.document.querySelector('a.sit').getAttribute('href'));
+ r.push(['C2: prepared text opens Messages (the person sends it)', h==="sms:5550142?&body=Something's been going on at work and it's getting to me. Can we talk?"]);
+ const c=boot({phone:false}); toWork(c); c.click(act('bullyIdeas')); c.click(act('bullyNext')); c.click(act('bullyGo','bully-work-talk'));
+ r.push(['C2: on a computer, Copy instead of a text link', !c.has('a[href^="sms:"]') && c.has('[data-copy]')]); }
+{const a=boot(); toWork(a); a.click(act('bullyIdeas')); a.click(act('bullyGo','bully-work-write'));
+ r.push(['C2: the note: date (defaults to today), what happened, who saw it; explainer', a.w.document.getElementById('wkDate').value===a.G('diaryDay()') && !!a.w.document.getElementById('wkWhat') && !!a.w.document.getElementById('wkWho') && a.T().includes('Writing it down as it happens can help later, if you decide to report it.')]);
+ const before=JSON.stringify(a.dump());
+ a.fill('wkDate','2026-10-01'); a.fill('wkWhat','My manager yelled at me in front of the team.'); a.fill('wkWho','Sam, Lee'); a.click(act('bullyWorkDone'));
+ r.push(['C2: then Save in my diary / Don\'t save, with the lock tip when the diary isn\'t locked', a.S()==='bully-work-done' && a.has(act('bullyKeepDiary','work')) && a.has(act('bullyDontSave')) && a.T().includes('Tip: lock your diary first if someone else might see your phone.')]);
+ a.click(act('bullyDontSave'));
+ r.push(['C2: Don\'t save stores nothing', JSON.stringify(a.dump())===before && a.G('ui.bully.work')===null && a.T().includes('Not saved.')]);
+ a.G('ACTIONS.bullyGo("bully-work-write")'); a.fill('wkDate','2026-10-01'); a.fill('wkWhat','My manager yelled at me in front of the team.'); a.fill('wkWho','Sam, Lee'); a.click(act('bullyWorkDone'));
+ a.click(act('bullyKeepDiary','work')); await tick(5);
+ const d=JSON.parse(a.dump()['next.v1.diary']||'null'); const e=d && d.entries[0];
+ r.push(['C2: Save in my diary: one entry tagged "Work notes" with the date, what happened and who saw it', !!e && e.tag==='work' && e.text==="Date: 2026-10-01\nWhat happened: My manager yelled at me in front of the team.\nWho saw it: Sam, Lee"]);
+ a.G('ACTIONS.diaryBack()'); r.push(['Looking back labels it "Work notes"', a.T().includes('Work notes')]); }
+for(const [id,txt] of [['wkWhat','They told me to go kill myself'],['wkWho','I want to die']]){
+ const a=boot(); toWork(a); a.click(act('bullyIdeas')); a.click(act('bullyGo','bully-work-write')); const before=JSON.stringify(a.dump());
+ a.fill(id,txt); a.click(act('bullyWorkDone'));
+ r.push([`C2: RED in "${id==='wkWhat'?'what happened':'who saw it'}" → crisis, nothing saved`, a.S()==='crisis' && JSON.stringify(a.dump())===before && !JSON.stringify(a.G('ui')).includes(txt)]); }
+{const a=boot(); await lockDiary(a); const lockedBefore=a.dump()['next.v1.diary'];
+ toWork(a); a.click(act('bullyIdeas')); a.click(act('bullyGo','bully-work-write')); a.fill('wkWhat','Locked work note'); a.click(act('bullyWorkDone'));
+ r.push(['C2: no lock tip once the diary is locked', !a.T().includes('Tip: lock your diary first')]);
+ a.click(act('bullyKeepDiary','work')); await tick(5);
+ r.push(['C2: locked diary: passcode first', a.S()==='bully-unlock' && a.dump()['next.v1.diary']===lockedBefore]);
+ a.fill('bullyPass',PASS); a.click(act('bullyUnlock')); await until(()=>a.S()==='bully-idea');
+ r.push(['C2: locked diary: saved encrypted, locked again', a.dump()['next.v1.diary']!==lockedBefore && !a.dump()['next.v1.diary'].includes('Locked work note') && a.G('diaryKey')===null]); }
+
 //@@PARTS@@
 
 for(const [n,ok,info] of r) console.log((ok?'PASS':'FAIL')+' '+n+(ok||info===undefined?'':' ('+info+')'));

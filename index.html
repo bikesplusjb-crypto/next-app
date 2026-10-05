@@ -1303,6 +1303,18 @@ const BULLY = {
     ideas:[["thennow","Then and now","What was true then, and what's true now."],["younger","A note to your younger self","What would you tell them now?"],["ground","Ground yourself","Notice what's around you, or calm down with Zags."]],
     end:"Old hurts like this are one of the things counselors help with most. It's never too late to talk about it."
   },
+  work:{
+    say:"This is about their behavior, not your worth. A lot of people go through this at work, and it's not something you have to just take.",
+    ideas:[["write","Write down what happened","Writing it down as it happens can help later, if you decide to report it."],
+      ["talk","Talk to someone you trust","A coworker, a friend outside work, or HR if it feels safe."],
+      ["today","Make it through today","Just today. One small thing at a time."]]
+  },
+  workDate:"Date", workWhat:"What happened", workWho:"Who saw it (optional)",
+  workTip:"Tip: lock your diary first if someone else might see your phone.",
+  saveDiary:"Save in my diary", dontSave:"Don't save", notSaved:"Not saved.",
+  talkMsg:"Something's been going on at work and it's getting to me. Can we talk?",
+  talkPick:"Tap to open a message. You choose who it goes to, and nothing is sent until you send it.",
+  borrow:"Borrow ten minutes", smaller:"Make it smaller",
   then:{ lbl:"What was true then", chips:["I couldn't get away","No one stood up for me","I was alone with it","I was a kid"] },
   now:{ lbl:"What's true now", chips:["I'm an adult","I choose who's in my life","I can leave a room","I can ask for help","I'm still here"] },
   lineOpt:"Add a short line (optional)",
@@ -1314,6 +1326,19 @@ const BULLY = {
   unlockTitle:"Your diary is locked", unlockSub:"Type your passcode to keep this in your diary.", unlockBtn:"Unlock and keep",
   full:"This phone's storage is full, so this couldn't be saved. Your words are still here."
 };
+/* 6.27: outside resources, each hidden until the owner verifies it (CRISIS_RESOURCE_VERIFICATION.md). */
+const BULLY_RESOURCES = [
+  { key:"wbi", path:"work", name:"Workplace Bullying Institute", what:"Information about bullying at work and what you can do.", phone:"", url:"", verified:false },
+  { key:"ccri", path:"online", name:"Cyber Civil Rights Initiative helpline", what:"For private images shared without your consent.", phone:"", url:"", verified:false },
+  { key:"stopbullying", path:"love", name:"StopBullying.gov", what:"U.S. government information on bullying and how to help.", phone:"", url:"", verified:false }
+];
+function bullyResources(path){ return BULLY_RESOURCES.filter(e => e.path === path && e.verified === true && (e.phone || /^https:\/\/\S+$/.test(e.url))); }
+function bullyResourceCard(path){
+  const list = bullyResources(path); if (!list.length) return "";
+  return `<div class="panel bully-res">${list.map(e => `<h3>${esc(e.name)}</h3><p class="small">${esc(e.what)}</p>
+    ${e.phone ? `<a class="btn btn-secondary" href="${telLink(e.phone)}">${callText("Call", e.phone)}</a>` : ""}
+    ${/^https:\/\/\S+$/.test(e.url) ? `<a class="conn-more" href="${esc(e.url)}" target="_blank" rel="noopener">Website</a>` : ""}`).join("")}</div>`;
+}
 const DIARY_TAGS = { younger:"Note to my younger self", work:"Work notes" };   // 6.27: tagged diary entries
 function bullyIdeas(){ const p = ui.bully && BULLY[ui.bully.path]; return (p && p.ideas) || []; }
 /* 6.27: keep a note in A line for today, only when the person chooses; a locked diary is unlocked first. */
@@ -3677,6 +3702,47 @@ const SCREENS = {
       ${bully988()}` };
   },
 
+  /* 6.27 C: it's happening at work */
+  "bully-work"(){
+    return { close:true, body:`${stepTitle(BULLY.work.say, true)}${bullyResourceCard("work")}${bully988()}`,
+      actions:`<button class="btn btn-primary" data-act="bullyIdeas">${BULLY.next}</button>` };
+  },
+  "bully-work-write"(){
+    return { close:true, body:`
+      ${title(BULLY.work.ideas[0][1])}
+      <p class="sub">${BULLY.work.ideas[0][2]}</p>
+      <label class="small" for="wkDate" style="display:block;margin-top:10px">${BULLY.workDate}</label>
+      <input class="field" id="wkDate" type="date" value="${diaryDay()}">
+      <label class="small" for="wkWhat" style="display:block;margin-top:10px">${BULLY.workWhat}</label>
+      <textarea class="field" id="wkWhat" maxlength="700" style="min-height:120px"></textarea>
+      <label class="small" for="wkWho" style="display:block;margin-top:10px">${BULLY.workWho}</label>
+      <input class="field" id="wkWho" maxlength="200" autocomplete="off">
+      ${bully988()}`,
+      actions:`<button class="btn btn-primary" data-act="bullyWorkDone">Done</button><button class="link" data-act="bullyIdeasBack">Back</button>` };
+  },
+  "bully-work-done"(){
+    const b = ui.bully || {};
+    if (!b.work) return SCREENS["bully-idea"]();
+    return { close:true, body:`
+      ${stepTitle("You wrote it down.", true)}
+      <p class="copy-text" style="white-space:pre-wrap">${esc(b.work)}</p>
+      ${!store.diaryLock && diaryCryptoOk() && persistOn && STORAGE_OK ? `<p class="small bully-tip">${BULLY.workTip}</p>` : ""}
+      ${ui.msg ? `<p class="err" role="alert">${esc(ui.msg)}</p>` : ""}
+      ${bully988()}`,
+      actions:`<button class="btn btn-primary" data-act="bullyKeepDiary" data-arg="work">${BULLY.saveDiary}</button>
+        <button class="btn btn-secondary" data-act="bullyDontSave">${BULLY.dontSave}</button>` };
+  },
+  "bully-work-talk"(){
+    const p = person();
+    return { close:true, body:`
+      ${title(BULLY.work.ideas[1][1])}
+      <p class="sub">${BULLY.work.ideas[1][2]}</p>
+      <p class="small">${canPhone() ? BULLY.talkPick : l10n("connect.tapCopy")}</p>
+      <div class="sits">${canPhone() ? `<a class="sit idea" href="${smsLink(p ? p.phone : "", BULLY.talkMsg)}">${esc(BULLY.talkMsg)}</a>` : copyButton(BULLY.talkMsg, "sit idea", esc(BULLY.talkMsg))}</div>
+      ${bully988()}`,
+      actions:`<button class="btn btn-secondary" data-act="bullyIdeasBack">Back</button>` };
+  },
+
   /* 6.27 B: it happened years ago (and the shared one-idea-at-a-time screens) */
   "bully-past"(){
     return { close:true, body:`${stepTitle(BULLY.past.say, true)}${bully988()}`,
@@ -3690,7 +3756,10 @@ const SCREENS = {
     const main = {
       thennow:`<button class="btn btn-primary" data-act="bullyGo" data-arg="bully-thennow">Start</button>`,
       younger:`<button class="btn btn-primary" data-act="bullyGo" data-arg="bully-younger">Write it</button>`,
-      ground:`<button class="btn btn-primary" data-act="calmPick" data-arg="ground">${BULLY.ground}</button><button class="btn btn-secondary" data-act="zags" data-arg="calm">${BULLY.zags}</button>`
+      ground:`<button class="btn btn-primary" data-act="calmPick" data-arg="ground">${BULLY.ground}</button><button class="btn btn-secondary" data-act="zags" data-arg="calm">${BULLY.zags}</button>`,
+      write:`<button class="btn btn-primary" data-act="bullyGo" data-arg="bully-work-write">Write it down</button>`,
+      talk:`<button class="btn btn-primary" data-act="bullyGo" data-arg="bully-work-talk">Open a message</button>`,
+      today:`<button class="btn btn-primary" data-act="lowPick" data-arg="borrow_ten">${BULLY.borrow}</button>${typeof ACTIONS.smallerStart === "function" ? `<button class="btn btn-secondary" data-act="smallerStart">${BULLY.smaller}</button>` : ""}`
     }[k] || "";
     return { close:true, body:`
       ${stepTitle(t, true)}
@@ -6724,6 +6793,21 @@ const ACTIONS = {
     if (yellow) applySafetyResult("YELLOW");
     go("bully-thennow-end");
   },
+  bullyWorkDone(){
+    if (blockIfRed()) return;
+    const v = id => { const el = document.getElementById(id); return ((el && el.value) || "").trim(); };
+    const date = /^\d{4}-\d{2}-\d{2}$/.test(v("wkDate")) ? v("wkDate") : diaryDay();
+    const what = v("wkWhat").slice(0, 700), who = v("wkWho").slice(0, 200);
+    ["wkWhat","wkWho"].forEach(id => { const el = document.getElementById(id); if (el) el.value = ""; });
+    if (!what && !who){ go("bully-idea"); return; }
+    let red = false, yellow = false;
+    for (const t of [what, who]) handleSafeTextSubmit({ text:t, onRed(){ red = true; }, onYellow(){ yellow = true; }, onGreen(){} });
+    if (red){ if (ui.bully) ui.bully.work = null; openCrisis(); return; }   // nothing kept
+    if (yellow) applySafetyResult("YELLOW");
+    ui.bully.work = [`Date: ${date}`, what ? `What happened: ${what}` : "", who ? `Who saw it: ${who}` : ""].filter(Boolean).join("\n");
+    ui.msg = ""; go("bully-work-done");
+  },
+  bullyDontSave(){ if (blockIfRed()) return; const b = ui.bully || {}; b.work = null; b.pending = null; ui.msg = ""; ui.flash = BULLY.notSaved; go("bully-idea"); },
   bullyYounger(){
     if (blockIfRed()) return;
     const box = document.getElementById("youngerBox"); const text = ((box && box.value) || "").trim().slice(0, DIARY_TEXT_MAX);
