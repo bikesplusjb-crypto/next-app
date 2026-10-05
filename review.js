@@ -631,6 +631,9 @@ for(const i of G('INTERVENTION_LIBRARY')){
   H(4,i.name);
   md.push(...screenText(w, `${withPerson}; session.screen="intervention"; session.currentState=${JSON.stringify(i.states[0])}; session.currentInterventionId=${JSON.stringify(i.id)}`));
 }
+H(3,'Home, first visit: the Zags hint (owner request, 2026-10-05)');
+P('A small bubble beside Zags (or, in large text, a small card under "I don\'t feel safe" with a tappable Zags): "'+G('l10n("home.zagsHint")')+'" ['+G('l10n("home.zagsHintOk")')+']. Shown once: gone after Okay or the first tap on Zags (remembered on this phone as "Zags hint seen"). Never while YELLOW or RED, never over "I don\'t feel safe".');
+
 H(3,'Home, iPhone Safari (shows the add-to-home-screen tip)');
 w.eval('prefs.homeTipDismissed=false; Object.defineProperty(navigator,"userAgent",{value:"Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1",configurable:true})');
 md.push(...screenText(w, `ACTIONS.deleteAll(); session.screen="home"`).filter(l=>/home screen|Got it/.test(l)));

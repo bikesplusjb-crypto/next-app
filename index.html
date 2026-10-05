@@ -400,6 +400,18 @@ a.cw-open,a.ci-open{text-decoration:none;display:flex;align-items:center;justify
 .ready-mark{margin-top:10vh}
 .zmark-btn{background:none;border:none;padding:0;width:44px;height:44px;flex:none;display:flex;align-items:center;justify-content:center;border-radius:50%}
 .zmark{display:block;width:38px;height:38px;flex:none}
+/* One-time hint that Zags can be tapped (owner request, 2026-10-05). Floats over the hero so Home doesn't move. */
+.brand-row{position:relative}
+.zhint{position:absolute;top:0;left:0;z-index:3;width:min(240px,62vw);background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:16px;padding:8px 12px;box-shadow:var(--card-shadow);font-size:15px;line-height:1.3;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:flex-end;gap:2px 10px}
+.zhint p{margin:0;flex:1 1 130px}
+.zhint .link{flex:none;font-size:15px}
+.zhint .zhint-z{display:none}
+.zhint.zhint-inline{position:static;width:auto !important;margin-top:12px;align-items:center;justify-content:flex-start;flex-wrap:wrap;gap:4px 10px}
+.zhint.zhint-inline p{flex:1 1 90px}
+.zhint.zhint-inline .link{margin-left:auto}
+.zhint.zhint-inline::after{display:none}
+.zhint.zhint-inline .zhint-z{display:flex}
+.zhint::after{content:"";position:absolute;right:-7px;top:var(--zhint-y,50%);width:12px;height:12px;margin-top:-6px;background:var(--surface);border-right:1px solid var(--line);border-top:1px solid var(--line);transform:rotate(45deg)}
 .zmark svg{width:100%;height:100%;display:block;overflow:visible}
 .zmark-lg{width:72px;height:72px}
 .zmark-wave .zmark-body{transform-box:fill-box;transform-origin:50% 100%;animation:zwave 1.1s ease-in-out 3}
@@ -733,6 +745,8 @@ const L10N = {
     "home.angry":"I'm really angry",
     "home.tech":"Tech check",
     "home.techMeta":"AI, scrolling, or checking is getting to me",
+    "home.zagsHint":"Tap me when you want to breathe together.",
+    "home.zagsHintOk":"Okay",
     "home.tip":"Add ZigZag Mind to your home screen so your plan stays with you. Tap Share, then Add to Home Screen.",
     "home.tipOk":"Got it",
     "home.buildPlan":"Build your plan for hard moments",
@@ -959,6 +973,8 @@ const L10N = {
     "home.angry":{ text:"Estoy muy enojado", draft:true },
     "home.tech":{ text:"Revisión de tecnología", draft:true },
     "home.techMeta":{ text:"La IA, las redes o revisar el teléfono me están afectando", draft:true },
+    "home.zagsHint":{ text:"Tócame cuando quieras respirar juntos.", draft:true },
+    "home.zagsHintOk":{ text:"De acuerdo", draft:true },
     "home.tip":{ text:"Agrega ZigZag Mind a tu pantalla de inicio para tener tu plan a mano. Toca Compartir y luego Agregar a inicio.", draft:true },
     "home.tipOk":{ text:"Entendido", draft:true },
     "home.buildPlan":{ text:"Haz tu plan para los momentos difíciles", draft:true },
@@ -2944,7 +2960,7 @@ function logActivity(type){
   store.sensitive.activity.push({ type, ts:Date.now() }); saveStore();
 }
 
-const prefs = { reduce:false, haptics:false, homeTipDismissed:false, onboarded:false, country:"auto", under18:false, strength:null };   // strength: 6.15, the person's own answer; null until they choose   // under18: remembered on this device
+const prefs = { reduce:false, haptics:false, homeTipDismissed:false, zagsHintSeen:false, onboarded:false, country:"auto", under18:false, strength:null };   // strength: 6.15, the person's own answer; null until they choose   // under18: remembered on this device
 function finishOnboarding(){ prefs.onboarded = true; savePrefs(); }   // remembered in prefs only
 
 /* Outside the US? Only ever ADDS "Find a helpline in your country" next to 988; never hides 911 or 988.
@@ -2960,6 +2976,27 @@ function likelyOutsideUS(){
   return !!region && region !== "US";
 }
 /* iPhone Safari only, and only when not already opened from the home screen. Shown on Home until dismissed. */
+/* One-time Home hint that Zags can be tapped. Shown until "Okay" or the first tap on Zags; never while YELLOW/RED. */
+function showZagsHint(){ return !prefs.zagsHintSeen && session.safetyLevel === "GREEN"; }
+function zagsHintPlace(){   // beside Zags, over the wordmark, pointing at him; never over "I don't feel safe"
+  const h = document.getElementById("zagsHint"), z = document.querySelector(".brand-row .zmark-btn"), row = document.querySelector(".brand-row");
+  const safe = document.querySelector("main .home-safe");
+  if (!h || !z || !row || !safe) return;
+  try {
+    const rr = row.getBoundingClientRect(), zr = z.getBoundingClientRect();
+    const w = Math.max(110, Math.min(260, zr.left - rr.left - 12));
+    h.style.width = w + "px";
+    h.style.left = Math.max(0, zr.left - rr.left - 12 - w) + "px";
+    const zy = (zr.top - rr.top) + zr.height / 2, hh = h.offsetHeight;
+    const minTop = -6, maxBottom = safe.getBoundingClientRect().top - rr.top - 8;
+    if (hh > maxBottom - minTop){   // no room beside him (large text): a small card under "I don't feel safe", with a tappable Zags
+      h.classList.add("zhint-inline"); h.removeAttribute("style"); safe.after(h); return;
+    }
+    const top = Math.max(minTop, Math.min(zy - hh / 2, maxBottom - hh));
+    h.style.top = top + "px";
+    h.style.setProperty("--zhint-y", Math.max(14, Math.min(hh - 14, zy - top)) + "px");
+  } catch (_){}
+}
 function showHomeTip(){
   if (prefs.homeTipDismissed) return false;
   const ua = navigator.userAgent || "";
@@ -3498,6 +3535,7 @@ const SCREENS = {
         <div class="brand-row">
           <button class="brand" data-act="wordmark" aria-label="ZigZag Mind">ZigZag Mind</button>
           <button class="zmark-btn" data-act="zags" data-arg="calm" aria-label="Calm down with Zags">${zagsMark()}</button>
+          ${showZagsHint() ? `<div class="zhint" id="zagsHint" role="note"><button class="zmark-btn zhint-z" data-act="zags" data-arg="calm" aria-label="Calm down with Zags">${zagsMark()}</button><p>${l10n("home.zagsHint")}</p><button class="link" data-act="zagsHintOk">${l10n("home.zagsHintOk")}</button></div>` : ""}
         </div>
         ${zigzag()}
         <h1 id="screen-title" tabindex="-1" class="home-tag">${l10n("home.tagline")}</h1>
@@ -6336,7 +6374,7 @@ document.addEventListener("pointermove", e => {
 const doodleEnd = e => { if (!doodleLive || (e && e.pointerId !== doodleLive.id)) return; doodleLive = null; if (session.screen === "doodle"){ const u = document.querySelector('[data-act="doodleUndo"]'), c = document.querySelector('[data-act="doodleClear"]'); if (u) u.disabled = false; if (c) c.disabled = false; } };
 document.addEventListener("pointerup", doodleEnd);
 document.addEventListener("pointercancel", doodleEnd);
-window.addEventListener("resize", () => { if (session.screen === "doodle") doodleMount(); });
+window.addEventListener("resize", () => { if (session.screen === "doodle") doodleMount(); if (session.screen === "home" && document.getElementById("zagsHint")){ lastRendered = null; render(); } });
 /* A shrunk PNG on a white page (longest edge 640px). Null if the browser can't draw. */
 function doodlePng(){
   const k = doodleCtx(); if (!k) return null;
@@ -6718,6 +6756,7 @@ function render(){
     ${session.devPanelOpen ? devPanel() : ""}`;
   fitChrome();
   if (s === "doodle") doodleMount();   // 6.22: the canvas is new after every render; redraw the strokes
+  if (s === "home") zagsHintPlace();
   if (changed){
     if (!/^doodle/.test(s) && ui.doodle && ui.doodle.strokes){ ui.doodle.strokes = []; ui.doodle.img = null; doodleLive = null; }   // 6.22: nothing outlives the doodle
     if (s !== "grief-write-done") ui.griefNote = null;
@@ -6775,6 +6814,7 @@ const ACTIONS = {
   home(){ go("home"); },
   crisis(){ openCrisis(); },
   dismissHomeTip(){ prefs.homeTipDismissed = true; savePrefs(); render(); },
+  zagsHintOk(){ prefs.zagsHintSeen = true; savePrefs(); lastRendered = null; render(); },
   obNext(){ go("ob-age"); },
   obBack(){ go("ob-about"); },
   obAdult(){ if (prefs.under18){ go("ob-minor"); return; } go("ob-plan"); },
@@ -6961,6 +7001,7 @@ const ACTIONS = {
   spNextDone(){ if (blockIfRed()) return; go("checkin"); },
 
   zags(arg){
+    if (!prefs.zagsHintSeen && session.screen === "home"){ prefs.zagsHintSeen = true; savePrefs(); }   // found him: the hint is done
     const state = arg === "connect" ? "alone" : arg === "head" ? "distraction" : arg === "calm" ? "anxious" : null;
     startZags(state);
   },

@@ -1215,7 +1215,7 @@ Contact line (only when CONTACT_EMAIL is set): "Questions? Email [address]."
 
 D. Crisis Text Line (**hidden until the owner verifies it**; CRISIS_TEXT_LINE.verified is true): one line below the 988 buttons on the full crisis screen and Connect, on the printed plan, and in the supporter guide's "Get help together": "Rather text a stranger? Text HOME to 741741 (Crisis Text Line)." (phones: Text HOME to 741741 is a text link; computers: shown as text).
 
-E. Spanish interface: **scaffolding only, nothing shown**. SPANISH_ENABLED is false. 224 strings (onboarding, Home, crisis screens, Calm, Connect, My Plan, Help, Settings labels) now live in one table; English is unchanged. Every Spanish line is a DRAFT for a human translator and the clinician: docs/SPANISH_REVIEW.md. A draft crisis-screen line is never shown, even with Spanish on.
+E. Spanish interface: **scaffolding only, nothing shown**. SPANISH_ENABLED is false. 226 strings (onboarding, Home, crisis screens, Calm, Connect, My Plan, Help, Settings labels) now live in one table; English is unchanged. Every Spanish line is a DRAFT for a human translator and the clinician: docs/SPANISH_REVIEW.md. A draft crisis-screen line is never shown, even with Spanish on.
 
 F. Feedback (only when FEEDBACK_URL is set; it is empty): on About only, "Did ZigZag Mind help? Tell us anonymously →" (new tab). Privacy page adds: "If you use the feedback link on About, that form is a separate service. It receives only what you type there."
 
@@ -1661,6 +1661,9 @@ Rendered for each state where the screen changes by state. Identical renders are
 - **Heading:** It's okay not to be okay.
 - You don't have to figure everything out right now.
 - **Button:** I don't feel safe — Get to a real person fast
+- **Button:** Calm down with Zags
+- Tap me when you want to breathe together.
+- **Button:** Okay
 - **Button:** I don't know what I need
 - **Button:** Calm down
 - **Button:** Get out of my head
@@ -3470,6 +3473,9 @@ _When: distraction_
 - **Button:** Help _(screen reader: "Get help now")_
 - **Button:** ZigZag Mind
 - **Button:** Calm down with Zags
+- **Button:** Calm down with Zags
+- Tap me when you want to breathe together.
+- **Button:** Okay
 - **Heading:** It's okay not to be okay.
 - You don't have to figure everything out right now.
 - **Button:** I don't feel safe — Get to a real person fast
@@ -3497,6 +3503,9 @@ _When: distraction_
 - **Button:** Help _(screen reader: "Get help now")_
 - **Button:** ZigZag Mind
 - **Button:** Calm down with Zags
+- **Button:** Calm down with Zags
+- Tap me when you want to breathe together.
+- **Button:** Okay
 - **Heading:** It's okay not to be okay.
 - You don't have to figure everything out right now.
 - **Button:** I don't feel safe — Get to a real person fast
@@ -3524,6 +3533,9 @@ _When: distraction_
 - **Button:** Help _(screen reader: "Get help now")_
 - **Button:** ZigZag Mind
 - **Button:** Calm down with Zags
+- **Button:** Calm down with Zags
+- Tap me when you want to breathe together.
+- **Button:** Okay
 - **Heading:** It's okay not to be okay.
 - You don't have to figure everything out right now.
 - **Button:** I don't feel safe — Get to a real person fast
@@ -4587,6 +4599,10 @@ _When: distraction_
 - My AI changed or is gone · Step 1 of 3
 - **Heading:** Ground for a moment.
 - **Button:** Next
+
+### Home, first visit: the Zags hint (owner request, 2026-10-05)
+
+A small bubble beside Zags (or, in large text, a small card under "I don't feel safe" with a tappable Zags): "Tap me when you want to breathe together." [Okay]. Shown once: gone after Okay or the first tap on Zags (remembered on this phone as "Zags hint seen"). Never while YELLOW or RED, never over "I don't feel safe".
 
 ### Home, iPhone Safari (shows the add-to-home-screen tip)
 
