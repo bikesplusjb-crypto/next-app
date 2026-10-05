@@ -110,6 +110,34 @@ const GUNS="A lot of vets have a buddy hold their guns for a while when things g
 {const a=boot(); a.G('TRAUMA_RESOURCES[0].verified=true; TRAUMA_RESOURCES[0].phone="8006564673"; ACTIONS.ptsdStart(); ACTIONS.ptsdPath("other")');
  r.push(['G3: once verified (with a number), RAINN shows', a.T().includes('RAINN National Sexual Assault Hotline') && a.has('a[href="tel:8006564673"]') && !a.T().includes('Domestic Violence')]); }
 
-//@@PARTS@@
+// ================= H. Someone I love =================
+{const a=boot(); a.G('ACTIONS.ptsdStart()'); a.click(act('ptsdPath','love'));
+ r.push(['H1: "Thank you for showing up for them."', a.S()==='ptsd-love' && a.T().includes('Thank you for showing up for them.')]);
+ r.push(['H2: the four guidance lines', JSON.stringify([...a.w.document.querySelectorAll('.bully-guide li')].map(l=>l.textContent))===JSON.stringify(["Don't push them to talk about what happened.","Notice what helps them settle, and offer it.","Don't take snapping or distance personally, and still look after yourself.","If they talk about not wanting to be alive, call or text 988 together (press 1 if they're a veteran)."])]);
+ r.push(['H3: Vet Center also supports families (call button) and the supporter guide link', a.T().includes('Vet Center Call Center (1-877-927-8387) also supports families.') && a.has('a[href="tel:18779278387"]') && a.has('a.worried-link[href="support/"]')]); }
+
+// ================= Path-wide =================
+const SCREENS_P=['ptsd','ptsd-now','ptsd-reach','ptsd-night','ptsd-night-opts','ptsd-edge','ptsd-vet','ptsd-other','ptsd-love'];
+{const a=boot(); let bad='';
+ const BANNED=/What happened\??(?! to me)|Tell me about it|Thank you for your service|you're safe now|you are safe now|get over it|it was a long time ago|combat (zone|details|stories)|weak/i;
+ for(const sc of SCREENS_P){ a.G(`ui.ptsd={path:"now",step:0,edge:0}; session.screen=${JSON.stringify(sc)}; lastRendered=null; render()`);
+   const txt=a.T().replace("Don't push them to talk about what happened.",'');   // H's guidance line is allowed (it tells the supporter not to ask)
+   if(a.S()!==sc) bad+=sc+':route '; if(BANNED.test(txt)) bad+=sc+':'+txt.match(BANNED)[0]+' '; if(!a.has('header .help-pill[data-act="crisis"]')) bad+=sc+':help '; }
+ r.push(['no screen asks what happened or uses a banned phrase; Help on every screen', !bad, bad]);
+ const copy=JSON.stringify(a.G('PTSD')).replace("Don't push them to talk about what happened.",'');
+ r.push(['copy rules in the strings too', !/What happened\?|Tell me about it|Thank you for your service|safe now|get over it|long time ago|weak/i.test(copy)]);
+ r.push(['the statistics are never shown to people', !/17\.5|73\.3|52\.9|61%/.test(copy)]);
+ let inputs=''; for(const sc of SCREENS_P){ a.G(`session.screen=${JSON.stringify(sc)}; lastRendered=null; render()`); if(a.has('#app main input, #app main textarea')) inputs+=sc+' '; }
+ r.push(['no typing anywhere in this path', !inputs, inputs]); }
+{const a=boot(); a.G('dispatch({type:"SET_SAFETY_LEVEL",level:"RED"})');
+ for(const x of ['ptsdStart','ptsdPath','ptsdStep','ptsdEdge','ptsdEdgeNext','ptsdTD','ptsdCozy']) a.G(`ACTIONS.${x}("now")`);
+ r.push(['blockIfRed on every action', a.S()==='crisis']); }
+{const a=boot(); a.G('saveStore()'); const strip=()=>{ const o=JSON.parse(a.dump()); const sv=JSON.parse(o['next.v1.sensitive']||'{}'); delete sv.activity; delete sv.history; o['next.v1.sensitive']=sv; return JSON.stringify(o); };
+ const before=strip();
+ a.G('ACTIONS.ptsdStart(); ACTIONS.ptsdPath("now"); for(let i=0;i<7;i++) ACTIONS.ptsdStep(); ACTIONS.ptsdStart(); ACTIONS.ptsdPath("nightmare"); for(let i=0;i<4;i++) ACTIONS.ptsdStep(); ACTIONS.ptsdStart(); ACTIONS.ptsdPath("vet"); ACTIONS.ptsdStart(); ACTIONS.ptsdPath("other"); ACTIONS.ptsdStart(); ACTIONS.ptsdPath("love")');
+ r.push(['nothing saved walking the paths (beyond the usual activity / check-in history)', strip()===before]);
+ r.push(['reduced motion: the plain screens have no animation of their own', !/\.ptsd-[a-z]+\{[^}]*(animation|transition)/.test(HTML)]);
+ r.push(['no script errors', a.errs.length===0]); }
+
 
 for(const [n,ok,info] of r) console.log((ok?'PASS':'FAIL')+' '+n+(ok||info===undefined?'':' ('+info+')'));

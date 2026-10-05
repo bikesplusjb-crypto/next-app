@@ -1341,6 +1341,12 @@ const PTSD = {
   otherSay:"Whatever happened, it wasn't your fault. You don't have to explain it here.",
   otherNow:"Come back to now", otherEdge:"I'm on edge",
   counselor:"Talking to a trauma-trained counselor can really help. It's never too late.",
+  // H: someone I love has PTSD or served
+  loveSay:"Thank you for showing up for them.",
+  loveGuide:["Don't push them to talk about what happened.","Notice what helps them settle, and offer it.",
+    "Don't take snapping or distance personally, and still look after yourself.","If they talk about not wanting to be alive, call or text 988 together (press 1 if they're a veteran)."],
+  loveVet:"Vet Center Call Center (1-877-927-8387) also supports families.",
+  loveGuideLink:"More on how to help: the supporter guide →",
   nightZags:"Calm down with Zags", nightCozy:"Cozy up for sleep", nightTalk:"Talk to someone", nightDown:"Put the phone down"
 };
 /* "It's Monday, October 5, 2026. It's 9:41 PM." from the phone's own clock, every time the screen draws. */
@@ -3858,6 +3864,14 @@ const SCREENS = {
       <div class="list ptsd-list">${PTSD.opts.map(([k, t, m]) => `<button class="card" data-act="ptsdPath" data-arg="${k}"><span>${t}${m ? `<span class="meta">${m}</span>` : ""}</span></button>`).join("")}</div>` };
   },
 
+  /* 6.28 H: someone I love has PTSD or served */
+  "ptsd-love"(){
+    return { close:true, body:`
+      ${stepTitle(PTSD.loveSay, true)}
+      <ul class="bully-guide">${PTSD.loveGuide.map(g => `<li>${esc(g)}</li>`).join("")}</ul>
+      ${VET_RESOURCES.vetCenter.verified === true ? `<div class="panel"><p style="margin:0">${PTSD.loveVet}</p>${vetCenterButton()}</div>` : ""}
+      <p style="margin-top:14px"><a class="worried-link" href="support/" target="_blank" rel="noopener">${PTSD.loveGuideLink}</a></p>` };
+  },
   /* 6.28 G: something happened to me (not military). Never asks what. */
   "ptsd-other"(){
     return { close:true, body:`

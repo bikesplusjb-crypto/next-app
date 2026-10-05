@@ -34,6 +34,7 @@ Everything is in one file, `index.html` (vanilla JS, no build step, no runtime d
 | 6.22 | Doodle (Get out of my head; SENSE, real world; canvas, Keep to Things I noticed or Let it go) |
 | 6.23 | I feel sad or low (Home chip renamed; Zags under a small cloud; Let it out, one idea at a time; the two-weeks line; clinician D32) |
 | 6.27 | STAGE6-27-ADDENDUM.md (Bullied, now or before: years ago, at work, online, someone I love; diary notes on request; 4 YELLOW phrases; resources hidden until verified; FOUNDER_NOTE) |
+| 6.28 | STAGE6-28-ADDENDUM.md (Home: five chips plus More; PTSD, trauma, or military: flashback, nightmare, on edge, veterans with VA resources, something happened to me, someone I love; never asks what happened) |
 | Understand it | Owner handoff (optional 2–3 questions, What else could be true?, Stop figuring it out; existing routes; clinician D34) |
 | Owner handoffs | Find something (+ Things I noticed), Warm & comfort, Social Zig, Have coffee with ZigZag, Cozy up; simplicity audit proposals 1–6, 8, 10 applied |
 

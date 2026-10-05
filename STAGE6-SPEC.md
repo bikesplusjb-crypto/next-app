@@ -612,3 +612,14 @@ Optional, 2–3 questions, one at a time: `understand` (Q1) → `understand-2` (
 - **Stop figuring it out** (also a small link on I'm spiraling): Look → Find something; Touch → Find something real; Move → Change the scene (small moves); Drink → Make something warm; Step outside → "Step outside for 5 minutes".
 - **"To get it out"** goes to Get out of my head (Mind Scribble doesn't exist yet). **Zags** isn't added (the handoff keeps his role minimal and optional).
 Tests: `understand.test.js`.
+
+## 6.28 PTSD, trauma, or military (as built, 2026-10-05)
+
+Built per STAGE6-28-ADDENDUM.md A–H; C and D share one step screen, so they were built and committed together. Home: five chips plus "More" (`homeMore`, in place). Entry `ptsdStart` → `ptsd` → `ptsd-now` (C) / `ptsd-night` + `ptsd-night-opts` (D) / `on_edge` intervention on `ptsd-edge` (E) / `ptsd-vet` (F) / `ptsd-other` (G) / `ptsd-love` (H); `ptsd-reach` ends C. Copy in `PTSD`; `VET_RESOURCES` (verified:true, source, checked 2026-10-04); `TRAUMA_RESOURCES` (verified:false). `PTSD_PLAIN` screens skip the screen-enter animation. No text inputs anywhere in the path. Differences from the text, and why:
+- **The urge chip** keeps its current wording ("I have an urge to use (drink or drugs)"); the addendum's "(drink, drugs, or vape)" reads like a rename that belongs to an unbuilt stage and is a clinician item (D35). The visible order follows the addendum (sad or low before the urge chip).
+- **Veterans Crisis Line call** is `tel:988` with the instruction "Call 988, then press 1" (no auto-dialed digits). The three VA links couldn't be opened from the build environment; the numbers and resources are as the owner confirmed.
+- **"Make it smaller"** (6.24) isn't built, so E offers the existing short walk.
+- **G's domestic violence hotline:** 6.25 isn't built, so the entry is added here (verified:false) for 6.25 to reuse.
+- **H** uses the addendum's guidance, which includes "talk about what happened" as advice to the supporter; the banned-phrase test allows only that line.
+- **D's "Calm down with Zags"** is a plain text button (no Zags image on C/D screens).
+Tests: `ptsd.test.js`; `home.test.js` checks five chips plus More.

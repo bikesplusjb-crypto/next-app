@@ -1226,6 +1226,7 @@ Why (for reviewers only; never shown as statements about people): in 2023 an ave
 - F. Veteran or service member: "You don't have to carry this alone, and you don't have to explain it to a civilian." → "Talk to someone who's been there": Vet Center Call Center — 1-877-927-8387 ("Free, confidential, 24/7. You'll talk with combat veterans and their families. They also help with PTSD and military sexual trauma.") "Call the Vet Center Call Center" · Veterans Crisis Line ("Free, confidential, 24/7."): "Call 988, then press 1" · "Text 838255" · "Chat online" · PTSD Coach ("A free app from the VA's National Center for PTSD.") "About PTSD Coach" · "Even if you've never used the VA, some help is available right away."
 - Guns (OWNER-APPROVED INTERIM, clinician review): "A lot of vets have a buddy hold their guns for a while when things get heavy. It's temporary, and it's yours." → "Open my time and distance plan" (My Plan → Time and distance plan)
 - G. Something happened to me (not military): "Whatever happened, it wasn't your fault. You don't have to explain it here." → "Come back to now" (C) · "I'm on edge" (E) · resources hidden until verified (RAINN National Sexual Assault Hotline; National Domestic Violence Hotline) · "Talking to a trauma-trained counselor can really help. It's never too late." → "Talk to someone"
+- H. Someone I love: "Thank you for showing up for them." → "Don't push them to talk about what happened." · "Notice what helps them settle, and offer it." · "Don't take snapping or distance personally, and still look after yourself." · "If they talk about not wanting to be alive, call or text 988 together (press 1 if they're a veteran)." · "Vet Center Call Center (1-877-927-8387) also supports families." (call button) · "More on how to help: the supporter guide →"
 
 ### Understand it (owner handoff, 2026-10-04; CLINICIAN REVIEW REQUIRED; not validated)
 
@@ -2133,6 +2134,19 @@ _When: distraction_
 - **Button:** I'm a veteran or service member
 - **Button:** Something happened to me — Not military
 - **Button:** Someone I love has PTSD or served
+
+### `ptsd-love`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Thank you for showing up for them.
+- Don't push them to talk about what happened.
+- Notice what helps them settle, and offer it.
+- Don't take snapping or distance personally, and still look after yourself.
+- If they talk about not wanting to be alive, call or text 988 together (press 1 if they're a veteran).
+- Vet Center Call Center (1-877-927-8387) also supports families.
+- **Link → `tel:18779278387`:** Call the Vet Center Call Center
+- **Link → `support/`:** More on how to help: the supporter guide →
 
 ### `ptsd-other`
 

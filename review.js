@@ -310,7 +310,9 @@ list([
 list([
   'G. Something happened to me (not military): "'+PT.otherSay+'" → "'+PT.otherNow+'" (C) · "'+PT.otherEdge+'" (E) · resources hidden until verified (RAINN National Sexual Assault Hotline; National Domestic Violence Hotline) · "'+PT.counselor+'" → "'+PT.reachTalk+'"'
 ]);
-//@@PTSD@@
+list([
+  'H. Someone I love: "'+PT.loveSay+'" → '+PT.loveGuide.map(x=>`"${x}"`).join(' · ')+' · "'+PT.loveVet+'" (call button) · "'+PT.loveGuideLink+'"'
+]);
 
 H(3,'Understand it (owner handoff, 2026-10-04; CLINICIAN REVIEW REQUIRED; not validated)');
 P('Optional and short (2–3 questions), one question at a time, then one real step through the existing routes or the engine. No labels, scores or storage. Reached from: I don\'t know what I need (small link), the first screen of I\'m anxious / I\'m spiraling (small link), I feel sad or low (small link), Connect → Something else. Not on Home.');
