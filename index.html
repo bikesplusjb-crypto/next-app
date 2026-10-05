@@ -1337,6 +1337,10 @@ const PTSD = {
   noVA:"Even if you've never used the VA, some help is available right away.",
   guns:"A lot of vets have a buddy hold their guns for a while when things get heavy. It's temporary, and it's yours.",   // OWNER-APPROVED INTERIM, clinician review
   gunsLink:"Open my time and distance plan",
+  // G: something happened to me (not military)
+  otherSay:"Whatever happened, it wasn't your fault. You don't have to explain it here.",
+  otherNow:"Come back to now", otherEdge:"I'm on edge",
+  counselor:"Talking to a trauma-trained counselor can really help. It's never too late.",
   nightZags:"Calm down with Zags", nightCozy:"Cozy up for sleep", nightTalk:"Talk to someone", nightDown:"Put the phone down"
 };
 /* "It's Monday, October 5, 2026. It's 9:41 PM." from the phone's own clock, every time the screen draws. */
@@ -1356,6 +1360,19 @@ const VET_RESOURCES = {
   vcl:{ name:"Veterans Crisis Line", call:"tel:988", text:"838255", chat:"https://www.veteranscrisisline.net/", source:"https://www.veteranscrisisline.net/", checked:"2026-10-04", verified:true },
   ptsdCoach:{ name:"PTSD Coach", url:"https://www.ptsd.va.gov/appvid/mobile/ptsdcoach_app.asp", source:"https://www.ptsd.va.gov/appvid/mobile/ptsdcoach_app.asp", checked:"2026-10-04", verified:true }
 };
+/* 6.28 G: hidden until the owner verifies (CRISIS_RESOURCE_VERIFICATION.md). The domestic violence entry is the one
+   6.25 is meant to reuse (6.25 isn't built yet). */
+const TRAUMA_RESOURCES = [
+  { key:"rainn", name:"RAINN National Sexual Assault Hotline", what:"Free, confidential support, any time.", phone:"", url:"", verified:false },
+  { key:"ndvh", name:"National Domestic Violence Hotline", what:"Free, confidential support, any time.", phone:"", url:"", verified:false }
+];
+function traumaResourceCard(){
+  const list = TRAUMA_RESOURCES.filter(e => e.verified === true && (e.phone || /^https:\/\/\S+$/.test(e.url)));
+  if (!list.length) return "";
+  return `<div class="panel trauma-res">${list.map(e => `<h3>${esc(e.name)}</h3><p class="small">${esc(e.what)}</p>
+    ${e.phone ? `<a class="btn btn-secondary" href="${telLink(e.phone)}">${callText("Call", e.phone)}</a>` : ""}
+    ${/^https:\/\/\S+$/.test(e.url) ? `<a class="conn-more" href="${esc(e.url)}" target="_blank" rel="noopener">Website</a>` : ""}`).join("")}</div>`;
+}
 function vetCenterButton(){ const v = VET_RESOURCES.vetCenter; return v.verified === true ? `<a class="btn btn-primary" href="${v.tel}">${callText(PTSD.vetCall, v.number)}</a>` : ""; }
 const PTSD_PLAIN = ["ptsd","ptsd-now","ptsd-night","ptsd-night-opts","ptsd-reach"];   // no screen-enter animation on these
 
@@ -3841,6 +3858,18 @@ const SCREENS = {
       <div class="list ptsd-list">${PTSD.opts.map(([k, t, m]) => `<button class="card" data-act="ptsdPath" data-arg="${k}"><span>${t}${m ? `<span class="meta">${m}</span>` : ""}</span></button>`).join("")}</div>` };
   },
 
+  /* 6.28 G: something happened to me (not military). Never asks what. */
+  "ptsd-other"(){
+    return { close:true, body:`
+      ${stepTitle(PTSD.otherSay, true)}
+      <div class="list" style="margin-top:14px">
+        <button class="card" data-act="ptsdPath" data-arg="now"><span>${PTSD.otherNow}</span></button>
+        <button class="card" data-act="ptsdPath" data-arg="edge"><span>${PTSD.otherEdge}</span></button>
+      </div>
+      ${traumaResourceCard()}
+      <p class="sub" style="margin-top:16px">${PTSD.counselor}</p>`,
+      actions:`<button class="btn btn-secondary" data-act="route" data-arg="connect">${PTSD.reachTalk}</button>` };
+  },
   /* 6.28 F: veteran or service member */
   "ptsd-vet"(){
     const V = VET_RESOURCES, vc = V.vetCenter, vcl = V.vcl, pc = V.ptsdCoach;

@@ -99,6 +99,17 @@ const GUNS="A lot of vets have a buddy hold their guns for a while when things g
 {const a=boot(); a.G('VET_RESOURCES.vetCenter.verified=false; VET_RESOURCES.vcl.verified=false; VET_RESOURCES.ptsdCoach.verified=false; ACTIONS.ptsdStart(); ACTIONS.ptsdPath("vet")');
  r.push(['F7: if a resource is ever unmarked, it disappears', !a.T().includes('1-877-927-8387') && !a.has('a[href^="sms:838255"]') && !a.T().includes('PTSD Coach')]); }
 
+// ================= G. Something happened to me =================
+{const a=boot(); a.G('ACTIONS.ptsdStart()'); a.click(act('ptsdPath','other')); const t=a.T();
+ r.push(['G1: "Whatever happened, it wasn\'t your fault. You don\'t have to explain it here."', a.S()==='ptsd-other' && t.includes("Whatever happened, it wasn't your fault. You don't have to explain it here.")]);
+ r.push(['G2: grounding links to C and E', a.has(act('ptsdPath','now')) && a.has(act('ptsdPath','edge'))]);
+ r.push(['G3: RAINN and the domestic violence hotline hidden while unverified', !/RAINN|Domestic Violence/.test(t) && a.G('TRAUMA_RESOURCES.every(e=>e.verified===false)')]);
+ r.push(['G4: "Talking to a trauma-trained counselor can really help. It\'s never too late."', t.includes("Talking to a trauma-trained counselor can really help. It's never too late.")]);
+ r.push(['G: no text inputs (never asks what happened)', !a.has('#app main input, #app main textarea')]);
+ a.click(act('ptsdPath','now')); r.push(['G2: → the Now screen', a.S()==='ptsd-now']); }
+{const a=boot(); a.G('TRAUMA_RESOURCES[0].verified=true; TRAUMA_RESOURCES[0].phone="8006564673"; ACTIONS.ptsdStart(); ACTIONS.ptsdPath("other")');
+ r.push(['G3: once verified (with a number), RAINN shows', a.T().includes('RAINN National Sexual Assault Hotline') && a.has('a[href="tel:8006564673"]') && !a.T().includes('Domestic Violence')]); }
+
 //@@PARTS@@
 
 for(const [n,ok,info] of r) console.log((ok?'PASS':'FAIL')+' '+n+(ok||info===undefined?'':' ('+info+')'));

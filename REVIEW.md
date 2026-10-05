@@ -1225,6 +1225,7 @@ Why (for reviewers only; never shown as statements about people): in 2023 an ave
 - E. On edge: "Your body learned to stay ready. It's not a flaw, and it's not your fault." → one idea at a time ("Another idea", "How do I feel now?"): "Sit where you can see the door, if that helps." · "Breathe for 1 minute" · "Take a short walk" · "Step away before you say something you don't mean. You can come back to it." → the normal check-in and Let's Zig ("Make it smaller" not built yet)
 - F. Veteran or service member: "You don't have to carry this alone, and you don't have to explain it to a civilian." → "Talk to someone who's been there": Vet Center Call Center — 1-877-927-8387 ("Free, confidential, 24/7. You'll talk with combat veterans and their families. They also help with PTSD and military sexual trauma.") "Call the Vet Center Call Center" · Veterans Crisis Line ("Free, confidential, 24/7."): "Call 988, then press 1" · "Text 838255" · "Chat online" · PTSD Coach ("A free app from the VA's National Center for PTSD.") "About PTSD Coach" · "Even if you've never used the VA, some help is available right away."
 - Guns (OWNER-APPROVED INTERIM, clinician review): "A lot of vets have a buddy hold their guns for a while when things get heavy. It's temporary, and it's yours." → "Open my time and distance plan" (My Plan → Time and distance plan)
+- G. Something happened to me (not military): "Whatever happened, it wasn't your fault. You don't have to explain it here." → "Come back to now" (C) · "I'm on edge" (E) · resources hidden until verified (RAINN National Sexual Assault Hotline; National Domestic Violence Hotline) · "Talking to a trauma-trained counselor can really help. It's never too late." → "Talk to someone"
 
 ### Understand it (owner handoff, 2026-10-04; CLINICIAN REVIEW REQUIRED; not validated)
 
@@ -2132,6 +2133,16 @@ _When: distraction_
 - **Button:** I'm a veteran or service member
 - **Button:** Something happened to me — Not military
 - **Button:** Someone I love has PTSD or served
+
+### `ptsd-other`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Whatever happened, it wasn't your fault. You don't have to explain it here.
+- **Button:** Come back to now
+- **Button:** I'm on edge
+- Talking to a trauma-trained counselor can really help. It's never too late.
+- **Button:** Talk to someone
 
 ### `ptsd-vet`
 

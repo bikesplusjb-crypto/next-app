@@ -62,6 +62,15 @@ These are `verified:true` in `VET_RESOURCES` (index.html) with `source` and `che
 | Veterans Crisis Line | "Free, confidential, 24/7." · "Call 988, then press 1" · "Text 838255" · "Chat online" | `tel:988` (the person presses 1), `sms:838255` | https://www.veteranscrisisline.net/ | 2026-10-04 (owner) | Owner to re-check periodically |
 | PTSD Coach (VA National Center for PTSD) | "A free app from the VA's National Center for PTSD." | (none) | https://www.ptsd.va.gov/appvid/mobile/ptsdcoach_app.asp | 2026-10-04 (owner) | Owner to re-check periodically; confirm the page address |
 
+## Trauma (6.28 G): hidden until verified
+
+Both are `verified:false` in `TRAUMA_RESOURCES` and not shown. Owner to confirm by phone or official website, fill in phone and/or website, and set `verified:true`. The domestic violence entry is the one 6.25 should reuse when it's built.
+
+| Entry | What the app would say | Phone in code | Website in code | Confirmed by (phone / official site) | Date | Initials |
+|---|---|---|---|---|---|---|
+| RAINN National Sexual Assault Hotline | "Free, confidential support, any time." | (none: owner to add) | (none: owner to add) | | | |
+| National Domestic Violence Hotline | "Free, confidential support, any time." | (none: owner to add) | (none: owner to add) | | | |
+
 ## Bullied, now or before (6.27)
 
 Every entry is **hidden** (`BULLY_RESOURCES` in index.html, `verified:false`) until the owner confirms it by phone or official website, fills in phone and/or website, and sets `verified:true`. 988 is always shown in this path.
