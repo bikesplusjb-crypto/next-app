@@ -328,6 +328,37 @@ list([
   'Every screen: "'+HV.more+'" Call 988 · Text 988 (computers: chat)'
 ]);
 
+H(3,'It feels like panic (2026-10-05 research pass; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)');
+const PA=G('PANIC');
+list([
+  'Entry: Home → More → "'+G('l10n("home.panic")')+'", and a small link "'+PA.link+'" on the first "I\'m anxious" screen. Not in the engine. No typing; nothing saved.',
+  ...PA.steps.map((x,i)=>(i+1)+': "'+x[0]+'" / "'+x[1]+'" → "'+PA.next+'"'),
+  'Then: "'+PA.endQ+'" → '+PA.ends.map(e=>`"${e[1]}"`).join(' · '),
+  'Coming down: "'+PA.downSay+'" → Put the phone down · Calm down',
+  'Still strong: "'+PA.strongSay+'" → "'+PA.again+'" · Talk to someone · "'+PA.scared+'" Get help now',
+  'Every screen: "'+PA.medical+'" ['+PA.call911+']'
+]);
+
+H(3,'I\'m really angry: step away (2026-10-05 research pass; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)');
+const AN=G('ANGRY');
+list([
+  'Entry: Home → More → "'+G('l10n("home.angry")')+'". Not in the engine. Never asks what happened or who. No typing; nothing saved.',
+  ...AN.steps.map((x,i)=>(i+1)+': "'+x[0]+'" / "'+x[1]+'"'),
+  'Step 2 also: "'+AN.msgLbl+'" → prepared text "'+AN.msg+'" (they choose who; Copy on computers)',
+  'Step 4 options: '+AN.downOpts.map(o=>`"${o[1]}"`).join(' · '),
+  'End: "'+AN.end+'" → Put the phone down · Talk to someone',
+  'Every screen: "'+AN.danger+'" Get help now (opens the crisis screen)'
+]);
+
+H(3,'My hope box (2026-10-05 research pass; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)');
+const HB=G('HOPE_BOX');
+list([
+  'Entry: My Plan → "'+HB.name+'" ("'+HB.planHint+'"). Read-only: shows reasons to stay, saved songs (Play) and up to '+HB.shown+' things from Things I noticed. Stores nothing of its own. Not on crisis screens.',
+  'Screen: "'+HB.name+'" / "'+HB.sub+'" → sections "'+HB.reasons+'" · "'+HB.songs+'" · "'+HB.noticed+'"',
+  'Empty: "'+HB.empty+'" → '+HB.add.map(o=>`"${o[1]}"`).join(' · ')+' (only the missing ones are shown)',
+  'End line: "'+HB.end+'"'
+]);
+
 H(3,'Hold & answer (owner handoff, 2026-10-05; CLINICIAN REVIEW REQUIRED)');
 P('A small grounding exercise: hold your thumb gently while answering five easy questions, one at a time. Calm → "'+G('HOLD.name')+'" ("'+G('HOLD.entryMeta')+'"); the engine and Let\'s Zig may offer it for anxious or spiraling moments. Not therapy or treatment; no claims it stops anxiety; no scores; nothing saved.');
 const HO=G('HOLD');

@@ -20,7 +20,7 @@ const r=[];
  r.push(['6.28 A: the rest are hidden until More', !a.doc.querySelector('[data-act="afterStart"],[data-act="griefStart"],[data-act="bullyStart"]')]);
  a.click('[data-act="homeMore"]');
  const more=[...a.doc.querySelectorAll('#sitLabel + .sits .sit')].map(c=>c.textContent);
- r.push(['6.28 A: More opens them in place (same screen), every earlier chip still reachable', a.S().screen==='home' && JSON.stringify(more)===JSON.stringify(["I'm anxious","I'm spiraling","I feel sad or low","I have an urge to use (drink or drugs)","I feel alone","Just out of the ER","I lost someone","Bullied — now or before","PTSD, trauma, or military","Most of my days feel heavy"])]);
+ r.push(['6.28 A: More opens them in place (same screen), every earlier chip still reachable', a.S().screen==='home' && JSON.stringify(more)===JSON.stringify(["I'm anxious","I'm spiraling","I feel sad or low","I have an urge to use (drink or drugs)","I feel alone","Just out of the ER","I lost someone","Bullied — now or before","PTSD, trauma, or military","Most of my days feel heavy","It feels like panic","I'm really angry"])]);
  r.push(['four escape routes in a 2x2 grid, each with a stroke icon', a.doc.querySelectorAll('.routes .route').length===4 && [...a.doc.querySelectorAll('.routes .route')].every(b=>b.querySelector('.ico[aria-hidden="true"] svg'))]);
  r.push(['no emoji on Home', !/\p{Extended_Pictographic}/u.test(t)]);
  r.push(['bottom tabs: Home, My Plan, Progress, Settings', [...a.doc.querySelectorAll('.tabbar .tab')].map(b=>b.textContent.trim()).join('|')==='Home|My Plan|Progress|Settings']);

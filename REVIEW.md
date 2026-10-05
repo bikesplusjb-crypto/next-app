@@ -1215,7 +1215,7 @@ Contact line (only when CONTACT_EMAIL is set): "Questions? Email [address]."
 
 D. Crisis Text Line (**hidden until the owner verifies it**; CRISIS_TEXT_LINE.verified is true): one line below the 988 buttons on the full crisis screen and Connect, on the printed plan, and in the supporter guide's "Get help together": "Rather text a stranger? Text HOME to 741741 (Crisis Text Line)." (phones: Text HOME to 741741 is a text link; computers: shown as text).
 
-E. Spanish interface: **scaffolding only, nothing shown**. SPANISH_ENABLED is false. 222 strings (onboarding, Home, crisis screens, Calm, Connect, My Plan, Help, Settings labels) now live in one table; English is unchanged. Every Spanish line is a DRAFT for a human translator and the clinician: docs/SPANISH_REVIEW.md. A draft crisis-screen line is never shown, even with Spanish on.
+E. Spanish interface: **scaffolding only, nothing shown**. SPANISH_ENABLED is false. 224 strings (onboarding, Home, crisis screens, Calm, Connect, My Plan, Help, Settings labels) now live in one table; English is unchanged. Every Spanish line is a DRAFT for a human translator and the clinician: docs/SPANISH_REVIEW.md. A draft crisis-screen line is never shown, even with Spanish on.
 
 F. Feedback (only when FEEDBACK_URL is set; it is empty): on About only, "Did ZigZag Mind help? Tell us anonymously →" (new tab). Privacy page adds: "If you use the feedback link on About, that form is a separate service. It receives only what you type there."
 
@@ -1255,6 +1255,37 @@ Why (for reviewers only; never shown as statements about people): in 2023 an ave
 - 3: "One small thing for today" / "Not to fix it. Just to get through today a little easier." → "Do one tiny thing" · "Write a line about today" · "Borrow ten minutes" (the low tiny things / A line for today / Borrow ten minutes)
 - End: "You don't have to carry all of it today. One small thing is enough." → Put the phone down · Talk to someone
 - Every screen: "If it ever feels like more than heavy, call or text 988, any time." Call 988 · Text 988 (computers: chat)
+
+### It feels like panic (2026-10-05 research pass; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)
+
+- Entry: Home → More → "It feels like panic", and a small link "Feels like panic?" on the first "I'm anxious" screen. Not in the engine. No typing; nothing saved.
+- 1: "This feels like panic." / "It's awful, and it comes in a wave. It rises, it peaks, and it comes down. You don't have to stop it." → "Next"
+- 2: "Breathe out slowly." / "Make the out-breath longer than the in-breath. In for 4, out for 6. A few times." → "Next"
+- 3: "Put both feet on the floor. Press down." / "Feel the floor holding you up." → "Next"
+- 4: "Let it rise. It will come down." / "You don't have to do anything else right now. Just the next breath." → "Next"
+- Then: "How is it now?" → "It's coming down" · "It's still strong"
+- Coming down: "Good. Go slowly for a few minutes." → Put the phone down · Calm down
+- Still strong: "That's okay. Sometimes it comes in more than one wave." → "Go through it again" · Talk to someone · "Scared of what you might do?" Get help now
+- Every screen: "If this is new for you, or you have chest pain or trouble breathing, call 911." [Call 911]
+
+### I'm really angry: step away (2026-10-05 research pass; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)
+
+- Entry: Home → More → "I'm really angry". Not in the engine. Never asks what happened or who. No typing; nothing saved.
+- 1: "Angry is allowed." / "What you do next is the part you choose. Give it some room first."
+- 2: "Step away." / "Say it out loud or in your head: "I need a few minutes. I'll come back." Then go."
+- 3: "Go somewhere else for 20 minutes or more." / "Walk, get some air, or run cold water over your hands. Don't drive while you're this angry."
+- 4: "Let your body come down." / "Try not to replay it. Pick one:"
+- Step 2 also: "Or send this, if it helps:" → prepared text "I need a few minutes to cool down. I'll come back and we can talk." (they choose who; Copy on computers)
+- Step 4 options: "Breathe for 1 minute" · "Get out of my head" · "Borrow ten minutes"
+- End: "Come back when your body has calmed down. You can talk about it then." → Put the phone down · Talk to someone
+- Every screen: "Afraid you might hurt someone, or afraid of someone?" Get help now (opens the crisis screen)
+
+### My hope box (2026-10-05 research pass; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)
+
+- Entry: My Plan → "My hope box" ("Your reasons, songs and photos in one place."). Read-only: shows reasons to stay, saved songs (Play) and up to 6 things from Things I noticed. Stores nothing of its own. Not on crisis screens.
+- Screen: "My hope box" / "Things you kept for harder days. Only on this phone." → sections "Reasons to stay" · "My songs" · "Things I noticed"
+- Empty: "Nothing here yet. It fills up with things you keep:" → "Add a reason to stay" · "Make a song" · "Find something" (only the missing ones are shown)
+- End line: "Take your time with it. It's here whenever you need it."
 
 ### Hold & answer (owner handoff, 2026-10-05; CLINICIAN REVIEW REQUIRED)
 
@@ -1686,6 +1717,7 @@ _When: anxious_
 - **Button:** Continue
 - **Button:** Skip
 - **Button:** Understand it first
+- **Button:** Feels like panic?
 
 _When: spiraling_
 
@@ -2276,6 +2308,36 @@ _When: distraction_
 - It's not weakness, and it's not your fault. You don't have to fix all of it.
 - If it ever feels like more than heavy, call or text 988, any time. Call 988 · Text 988
 - **Button:** Next
+
+### `panic`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** This feels like panic.
+- It's awful, and it comes in a wave. It rises, it peaks, and it comes down. You don't have to stop it.
+- If this is new for you, or you have chest pain or trouble breathing, call 911. Call 911
+- **Button:** Next
+
+### `angry`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Angry is allowed.
+- What you do next is the part you choose. Give it some room first.
+- Afraid you might hurt someone, or afraid of someone? Get help now
+- **Button:** Next
+
+### `hope-box`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** My hope box
+- Things you kept for harder days. Only on this phone.
+- Nothing here yet. It fills up with things you keep:
+- **Button:** Add a reason to stay
+- **Button:** Make a song
+- **Button:** Find something
+- **Button:** Back
 
 ### `hold`
 
@@ -3940,6 +4002,8 @@ _When: distraction_
 - **Button:** Print my plan
 - Photos you keep from Find something show up here.
 - **Button:** Find something
+- Your reasons, songs and photos in one place.
+- **Button:** Open
 - Only on this phone.
 - **Button:** Open
 - Songs you make and keep show up here.
