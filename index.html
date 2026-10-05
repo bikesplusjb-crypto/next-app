@@ -718,6 +718,7 @@ const L10N = {
     "home.lost":"I lost someone",
     "home.bullied":"Bullied — now or before",
     "home.more":"More",
+    "home.ptsd":"PTSD, trauma, or military",
     "home.tech":"Tech check",
     "home.techMeta":"AI, scrolling, or checking is getting to me",
     "home.tip":"Add ZigZag Mind to your home screen so your plan stays with you. Tap Share, then Add to Home Screen.",
@@ -940,6 +941,7 @@ const L10N = {
     "home.lost":{ text:"Perdí a alguien", draft:true },
     "home.bullied":{ text:"Acoso, ahora o antes", draft:true },
     "home.more":{ text:"Más", draft:true },
+    "home.ptsd":{ text:"TEPT, trauma o servicio militar", draft:true },
     "home.tech":{ text:"Revisión de tecnología", draft:true },
     "home.techMeta":{ text:"La IA, las redes o revisar el teléfono me están afectando", draft:true },
     "home.tip":{ text:"Agrega ZigZag Mind a tu pantalla de inicio para tener tu plan a mano. Toca Compartir y luego Agregar a inicio.", draft:true },
@@ -1296,6 +1298,22 @@ function griefMsgs(name){
 }
 const GRIEF_MISSION = { id:"remembering", title:"Remembering", prompt:"Find something that reminds you of them — their spot, a photo, something they loved." };
 const GRIEF_NOTE_MAX = 1000;
+/* 6.28 PTSD, TRAUMA, OR MILITARY. Why it matters (for reviewers; never shown to people as statements about them):
+   in 2023 an average of 17.5 veterans died by suicide each day; firearms were involved in 73.3% of veteran suicides
+   (52.9% for non-veteran adults); 61% had not received VA health care in their last year (VA 2025 National Veteran
+   Suicide Prevention Annual Report). A free site veterans find on their own can reach people outside the VA.
+   THE RULE ABOVE ALL OTHERS: ZigZag Mind never asks about the trauma. No questions about it, no text boxes in the
+   flashback or nightmare flows, no reliving, no exposure. This path only helps someone through the moment and to a
+   person. Nothing saved. Flashback and nightmare screens are plain: no Zags, no animation, large type, one action.
+   Clinician review: all of it. */
+const PTSD = {
+  q:"What's going on right now?",
+  opts:[["now","It's happening right now","A flashback, or feeling like I'm back there"],["nightmare","I woke up from a nightmare",""],["edge","I'm on edge",""],
+    ["vet","I'm a veteran or service member",""],["other","Something happened to me","Not military"],["love","Someone I love has PTSD or served",""]],
+  next:"Next"
+};
+const PTSD_PLAIN = ["ptsd","ptsd-now","ptsd-night","ptsd-night-opts","ptsd-reach"];   // no screen-enter animation on these
+
 /* UNDERSTAND IT (owner handoff, 2026-10-04). An optional, short step before acting: FEEL → UNDERSTAND → ACT. One
    question at a time (2–3 at most), then a real next step through the existing routes and engine. Not therapy, not
    an assessment: no labels, no scores, nothing saved (answers live in memory for this visit and are dropped). Never
@@ -3269,7 +3287,8 @@ const SCREENS = {
         <button class="sit" data-act="route" data-arg="connect">${l10n("home.alone")}</button>
         ${ui.homeMore ? `<button class="sit" data-act="afterStart">${l10n("home.er")}</button>
         <button class="sit" data-act="griefStart">${l10n("home.lost")}</button>
-        <button class="sit" data-act="bullyStart">${l10n("home.bullied")}</button>`
+        <button class="sit" data-act="bullyStart">${l10n("home.bullied")}</button>
+        <button class="sit" data-act="ptsdStart">${l10n("home.ptsd")}</button>`
         : `<button class="sit sit-more" data-act="homeMore" aria-expanded="false">${l10n("home.more")}</button>`}
       </div>
       <button class="card wide tech-row" data-act="techStart">${icon("phone")}<span>${l10n("home.tech")}<span class="meta">${l10n("home.techMeta")}</span></span></button>
@@ -3762,6 +3781,13 @@ const SCREENS = {
             : `<button class="link" data-act="noticedDel" data-arg="${esc(n.id)}">Delete</button>`}</div>`).join("")
         : `<p class="empty">Nothing here yet.</p>`}`,
       actions:`<button class="btn btn-secondary" data-act="fsStart">Find something</button>` };
+  },
+
+  /* 6.28 PTSD, TRAUMA, OR MILITARY */
+  ptsd(){
+    return { close:true, body:`
+      ${title(PTSD.q)}
+      <div class="list ptsd-list">${PTSD.opts.map(([k, t, m]) => `<button class="card" data-act="ptsdPath" data-arg="${k}"><span>${t}${m ? `<span class="meta">${m}</span>` : ""}</span></button>`).join("")}</div>` };
   },
 
   /* UNDERSTAND IT */
@@ -6198,7 +6224,7 @@ function render(){
   const showY = session.yellow && !NO_YBAR.includes(s);
   app.innerHTML = `
     <header class="top">${topBar(def)}${showY ? yellowBar() : ""}</header>
-    <main class="screen${changed && !crisis ? " enter" : ""}">
+    <main class="screen${changed && !crisis && !PTSD_PLAIN.includes(s) ? " enter" : ""}">
       <div class="content">${def.body}</div>
       ${def.actions ? `<div class="actions">${def.actions}</div>` : ""}
     </main>
@@ -6917,6 +6943,16 @@ const ACTIONS = {
   warmEnough(){ if (blockIfRed()) return; go("warm-end"); },
   warmFind(){ if (blockIfRed()) return; startIntervention("find_something"); },
 
+  /* 6.28 PTSD, TRAUMA, OR MILITARY */
+  ptsdStart(){ if (blockIfRed()) return; ui.ptsd = {}; ui.flash = ""; go("ptsd"); },
+  ptsdPath(arg){
+    if (blockIfRed()) return;
+    if (!PTSD.opts.some(o => o[0] === arg)) return;
+    ui.ptsd = { path:arg, step:0 };
+    const to = { now:"ptsd-now", nightmare:"ptsd-night", edge:null, vet:"ptsd-vet", other:"ptsd-other", love:"ptsd-love" }[arg];
+    if (arg === "edge"){ if (ACTIONS.ptsdEdge) ACTIONS.ptsdEdge(); return; }
+    if (SCREENS[to]) go(to);
+  },
   /* UNDERSTAND IT: answers live in ui.und for this visit only; nothing is saved or scored. */
   undStart(){ if (blockIfRed()) return; ui.und = { from:session.screen }; ui.msg = ""; go("understand"); },
   undA1(arg){ if (blockIfRed()) return; if (!UNDERSTAND.a1.some(a => a[0] === arg)) return; ui.und = { ...(ui.und || {}), a1:arg, ten:null };

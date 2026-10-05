@@ -1188,7 +1188,7 @@ Contact line (only when CONTACT_EMAIL is set): "Questions? Email [address]."
 
 D. Crisis Text Line (**hidden until the owner verifies it**; CRISIS_TEXT_LINE.verified is false): one line below the 988 buttons on the full crisis screen and Connect, on the printed plan, and in the supporter guide's "Get help together": "Rather text a stranger? Text HOME to 741741 (Crisis Text Line)." (phones: Text HOME to 741741 is a text link; computers: shown as text).
 
-E. Spanish interface: **scaffolding only, nothing shown**. SPANISH_ENABLED is false. 220 strings (onboarding, Home, crisis screens, Calm, Connect, My Plan, Help, Settings labels) now live in one table; English is unchanged. Every Spanish line is a DRAFT for a human translator and the clinician: docs/SPANISH_REVIEW.md. A draft crisis-screen line is never shown, even with Spanish on.
+E. Spanish interface: **scaffolding only, nothing shown**. SPANISH_ENABLED is false. 221 strings (onboarding, Home, crisis screens, Calm, Connect, My Plan, Help, Settings labels) now live in one table; English is unchanged. Every Spanish line is a DRAFT for a human translator and the clinician: docs/SPANISH_REVIEW.md. A draft crisis-screen line is never shown, even with Spanish on.
 
 F. Feedback (only when FEEDBACK_URL is set; it is empty): on About only, "Did ZigZag Mind help? Tell us anonymously →" (new tab). Privacy page adds: "If you use the feedback link on About, that form is a separate service. It receives only what you type there."
 
@@ -1203,6 +1203,11 @@ H. Simplicity audit: report only, nothing applied (docs/SIMPLICITY_AUDIT.md).
 ### Stage 6.28 A: Home chips
 
 "Or tell me what's happening" now shows five chips plus "More": I'm anxious · I'm spiraling · I feel sad or low · I have an urge to use (drink or drugs) · I feel alone · More → (in place) Just out of the ER · I lost someone · Bullied — now or before · PTSD, trauma, or military.
+
+### Stage 6.28: PTSD, trauma, or military (CLINICIAN REVIEW REQUIRED for the whole path)
+
+Why (for reviewers only; never shown as statements about people): in 2023 an average of 17.5 veterans died by suicide each day; firearms were involved in 73.3% of veteran suicides (52.9% non-veteran); 61% had not received VA care in their last year (VA 2025 National Veteran Suicide Prevention Annual Report). The rule above all others: ZigZag Mind never asks about the trauma; no typing in the flashback or nightmare flows.
+- Home → More → "PTSD, trauma, or military" → "What's going on right now?" → "It's happening right now" ("A flashback, or feeling like I'm back there") · "I woke up from a nightmare" · "I'm on edge" · "I'm a veteran or service member" · "Something happened to me" ("Not military") · "Someone I love has PTSD or served"
 
 ### Understand it (owner handoff, 2026-10-04; CLINICIAN REVIEW REQUIRED; not validated)
 
@@ -2098,6 +2103,18 @@ _When: distraction_
 - Only on this phone. Not a feed, not shared.
 - Nothing here yet.
 - **Button:** Find something
+
+### `ptsd`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** What's going on right now?
+- **Button:** It's happening right now — A flashback, or feeling like I'm back there
+- **Button:** I woke up from a nightmare
+- **Button:** I'm on edge
+- **Button:** I'm a veteran or service member
+- **Button:** Something happened to me — Not military
+- **Button:** Someone I love has PTSD or served
 
 ### `understand`
 
