@@ -1296,6 +1296,16 @@ Why (for reviewers only; never shown as statements about people): in 2023 an ave
 - 4: "When will you do it?" → "Now" · "Later today" · "Tomorrow"
 - End: "Go do it. That's the whole step." (Now) or "That's the step. You don't have to solve the whole thing." · "Too big to do alone?" Talk to someone → Put the phone down
 
+### Bridge: reaching a person, with follow-through (owner request, 2026-10-06; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)
+
+- Entry: Human First → "Someone else, or 988". Also, tapping Call someone / Text someone on Human First now waits with the follow-up question when the person comes back. The app never contacts anyone; nothing is saved (who was tried lives only in this visit).
+- 1: "Who could you reach right now?" / "Another exercise may not be what you need. A person might help more." / "Text sends this, and you can change it first:" "I'm having a really hard time. Can you call me?" → each trusted person: Text (that message) · Call; then 988: Call · Text (computers: Copy, chat)
+- After a tap: "Did Jordan answer?" (988: "Did you get through to 988?") / "It can take a few minutes. It's okay to wait here." → "Yes" · "Not yet"
+- Yes: "Good. Put the phone down and talk." → Put the phone down
+- Not yet: "Who else could you reach?" / "That's okay. People miss messages. You can try someone else." (people not tried yet, then 988). No one left: "Would you like to call or text 988?" / "988 is free and open 24/7. You can talk or text with a trained person." (988 first)
+- Nobody in the plan: "No one in your plan yet. You can add someone you trust in My Plan." [988] [Add someone]
+- Every screen: "If you're in danger right now, call 911." [Call 911]; "Try something else" → I don't know what I need
+
 ### Butterfly hug (owner request, 2026-10-05, after the crossing-the-midline research; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)
 
 - Entry: Calm → Something else → "Butterfly hug" ("Cross your arms and tap, left and right"). From EMDR, used here only as a calming moment: never asks the person to think about or remember anything; no claims about the brain or trauma. No typing, no timer, nothing saved, not in the engine.
@@ -2339,6 +2349,23 @@ _When: distraction_
 - It's not weakness, and it's not your fault. You don't have to fix all of it.
 - If it ever feels like more than heavy, call or text 988, any time. Call 988 · Text 988
 - **Button:** Next
+
+### `bridge`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Who could you reach right now?
+- Another exercise may not be what you need. A person might help more.
+- Text sends this, and you can change it first:
+- "I'm having a really hard time. Can you call me?"
+- Jordan · friend
+- **Link → `sms:5550142?&body=I'm having a really hard time. Can you call me?`:** Text Jordan
+- **Link → `tel:5550142`:** Call Jordan
+- 988
+- **Link → `tel:988`:** Call 988
+- **Link → `sms:988`:** Text 988
+- If you're in danger right now, call 911. Call 911
+- **Button:** Try something else
 
 ### `butterfly`
 
@@ -3451,6 +3478,7 @@ _When: distraction_
 - **Link → `tel:5550142`:** Call someone
 - **Link → `sms:5550142`:** Text someone
 - **Button:** Be around people
+- **Button:** Someone else, or 988
 - **Button:** Not right now
 
 ### `after-setup`

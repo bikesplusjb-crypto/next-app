@@ -74,7 +74,7 @@ const HF="Would talking to a person help more than another answer?";
  elseTap(a);
  r.push(['two "Something else" taps → Human First', a.S().screen==='human-first' && a.doc.getElementById('screen-title').textContent===HF]);
  const labels=[...a.doc.querySelectorAll('.actions a, .actions button')].map(x=>x.textContent.trim());
- r.push(['Call someone · Text someone · Be around people · Not right now', labels.join('|')==='Call someone|Text someone|Be around people|Not right now']);
+ r.push(['Call someone · Text someone · Be around people · Someone else, or 988 · Not right now', labels.join('|')==='Call someone|Text someone|Be around people|Someone else, or 988|Not right now']);
  a.click(act('hfNotNow')); r.push(['Not right now → back to the suggestion', a.S().screen==='recommendation']);
  for(let i=0;i<4;i++) elseTap(a);
  finishStep(a,'ciSkip'); finishStep(a,'ciBad');

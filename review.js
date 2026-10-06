@@ -368,6 +368,18 @@ list([
   'End: "'+PR.endNow+'" (Now) or "'+PR.end+'" · "'+PR.big+'" Talk to someone → Put the phone down'
 ]);
 
+H(3,'Bridge: reaching a person, with follow-through (owner request, 2026-10-06; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)');
+const BR=G('BRIDGE');
+list([
+  'Entry: Human First → "'+BR.link+'". Also, tapping Call someone / Text someone on Human First now waits with the follow-up question when the person comes back. The app never contacts anyone; nothing is saved (who was tried lives only in this visit).',
+  '1: "'+BR.whoQ+'" / "'+BR.sub+'" / "'+BR.msgNote+'" "'+G('HARD_TIME_MSG')+'" → each trusted person: Text (that message) · Call; then 988: Call · Text (computers: Copy, chat)',
+  'After a tap: "'+G('BRIDGE.waitQ("Jordan")')+'" (988: "'+BR.wait988+'") / "'+BR.waitSub+'" → "'+BR.yes+'" · "'+BR.notYet+'"',
+  'Yes: "'+BR.done+'" → Put the phone down',
+  'Not yet: "'+BR.elseQ+'" / "'+BR.elseSub+'" (people not tried yet, then 988). No one left: "'+BR.noneLeft+'" / "'+BR.noneLeftSub+'" (988 first)',
+  'Nobody in the plan: "'+BR.noPeople+'" [988] ['+BR.addPeople+']',
+  'Every screen: "'+BR.danger+'" [Call 911]; "'+BR.notNow+'" → I don\'t know what I need'
+]);
+
 H(3,'Butterfly hug (owner request, 2026-10-05, after the crossing-the-midline research; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)');
 const BF=G('BUTTERFLY');
 list([

@@ -1432,6 +1432,31 @@ const PROBLEM = {
   next:"Next"
 };
 
+/* BRIDGE (owner request, 2026-10-06: "the missing human handoff"; wording drafted by Claude Code, CLINICIAN REVIEW
+   REQUIRED). When steps aren't helping, ZigZag stops offering exercises and helps the person reach a person, then
+   follows through: "Did Jordan answer?" Yes → put the phone down and talk. Not yet → who else? → 988. The app never
+   contacts anyone: every call or text is the person's own tap, with the prepared message. Session only, nothing
+   saved (who was tried lives in memory for this visit). Never on crisis screens; the crisis flow is unchanged. */
+const BRIDGE = {
+  link:"Someone else, or 988",
+  whoQ:"Who could you reach right now?",
+  sub:"Another exercise may not be what you need. A person might help more.",
+  elseQ:"Who else could you reach?",
+  elseSub:"That's okay. People miss messages. You can try someone else.",
+  msgNote:"Text sends this, and you can change it first:",
+  noPeople:"No one in your plan yet. You can add someone you trust in My Plan.",
+  addPeople:"Add someone",
+  noneLeft:"Would you like to call or text 988?",
+  noneLeftSub:"988 is free and open 24/7. You can talk or text with a trained person.",
+  waitQ:n => `Did ${n} answer?`,
+  wait988:"Did you get through to 988?",
+  waitSub:"It can take a few minutes. It's okay to wait here.",
+  yes:"Yes", notYet:"Not yet",
+  done:"Good. Put the phone down and talk.",
+  danger:"If you're in danger right now, call 911.",
+  notNow:"Try something else"
+};
+
 /* BUTTERFLY HUG (owner request, 2026-10-05, after the "crossing the midline" research; wording drafted by Claude Code,
    CLINICIAN REVIEW REQUIRED). Arms crossed, slow left-right taps, a slow out-breath. Comes from EMDR, but here it is
    only a calming moment: it never asks the person to think about or remember anything, and makes no claims about the
@@ -4206,6 +4231,36 @@ const SCREENS = {
         <button class="btn btn-secondary" data-act="route" data-arg="connect">Talk to someone</button>` };
   },
 
+  /* BRIDGE: pick a person (or 988), then "Did they answer?"; the person always taps the call or text themselves */
+  bridge(){
+    const b = ui.bridge || { tried:[] }, people = getPlan().trustedPeople;
+    const danger = `<p class="note bridge-danger">${BRIDGE.danger} <a href="${LINKS.call911}">Call 911</a></p>`;
+    if (b.done) return { close:true, body:`${stepTitle(BRIDGE.done, true)}`,
+      actions:`<button class="btn btn-primary" data-act="putDown">Put the phone down</button>` };
+    if (b.waiting != null){
+      const who = b.waiting === "988" ? null : people[Number(b.waiting)];
+      return { close:true, body:`${stepTitle(who ? BRIDGE.waitQ(esc(who.name)) : BRIDGE.wait988, true)}<p class="sub">${BRIDGE.waitSub}</p>${danger}`,
+        actions:`<button class="btn btn-primary" data-act="bridgeAnswer" data-arg="yes">${BRIDGE.yes}</button>
+          <button class="btn btn-secondary" data-act="bridgeAnswer" data-arg="no">${BRIDGE.notYet}</button>` };
+    }
+    const left = people.map((p, i) => [p, i]).filter(([, i]) => !b.tried.includes(String(i)));
+    const first = !b.tried.length;
+    const head = !people.length ? BRIDGE.whoQ : !left.length ? BRIDGE.noneLeft : first ? BRIDGE.whoQ : BRIDGE.elseQ;
+    const sub = !people.length ? BRIDGE.noPeople : !left.length ? BRIDGE.noneLeftSub : first ? BRIDGE.sub : BRIDGE.elseSub;
+    const rows = left.map(([p, i]) => `<div class="panel bridge-person"><p class="lbl" style="margin:0 0 8px">${esc(p.name)}${p.relationship ? ` <span class="small">· ${esc(p.relationship)}</span>` : ""}</p>
+      ${pairOrStack(textOrCopy({ phone:p.phone, body:HARD_TIME_MSG, label:`Text ${esc(p.name)}`, cls:"btn btn-primary", attr:`data-bridge="${i}"` }),
+        `<a class="btn btn-secondary" href="${telLink(p.phone)}" data-bridge="${i}">${callText(`Call ${esc(p.name)}`, p.phone)}</a>`)}</div>`).join("");
+    const c988 = `<div class="panel bridge-988"><p class="lbl" style="margin:0 0 8px">988</p>${pairOrStack(
+      `<a class="btn btn-safety" href="${LINKS.call988}" data-bridge="988">${l10n("r988.call")}</a>`,
+      canPhone() ? `<a class="btn btn-safety" href="${LINKS.text988}" data-bridge="988">${l10n("r988.text")}</a>` : `<a class="btn btn-safety" href="${LINKS.chat988}" target="_blank" rel="noopener" data-bridge="988">${l10n("r988.chat")}</a>`)}</div>`;
+    return { close:true, body:`${stepTitle(head, true)}<p class="sub">${sub}</p>
+      ${left.length ? `<p class="small" style="margin-bottom:6px">${BRIDGE.msgNote}</p><p class="copy-text heavy-line">"${HARD_TIME_MSG}"</p>` : ""}
+      ${!left.length ? c988 : ""}${rows}${left.length ? c988 : ""}
+      ${!people.length ? `<button class="btn btn-secondary" data-act="tab" data-arg="plan">${BRIDGE.addPeople}</button>` : ""}
+      ${danger}`,
+      actions:`<button class="link" data-act="dontKnow">${BRIDGE.notNow}</button>` };
+  },
+
   /* BUTTERFLY HUG: calming only; never asks the person to remember anything */
   butterfly(){
     const b = ui.butterfly || {}, i = b.step || 0;
@@ -5371,13 +5426,14 @@ const SCREENS = {
 
   "human-first"(){
     const p = person();
-    const call = p ? `<a class="btn btn-primary" href="${telLink(p.phone)}">${callText("Call someone", p.phone)}</a>` : `<button class="btn btn-primary" data-act="route" data-arg="connect">Call someone</button>`;
-    const text = p ? textOrCopy({ phone:p.phone, label:"Text someone", cls:"btn btn-secondary" }) : `<button class="btn btn-secondary" data-act="route" data-arg="connect">Text someone</button>`;
+    const call = p ? `<a class="btn btn-primary" href="${telLink(p.phone)}" data-bridge="0">${callText("Call someone", p.phone)}</a>` : `<button class="btn btn-primary" data-act="route" data-arg="connect">Call someone</button>`;
+    const text = p ? textOrCopy({ phone:p.phone, label:"Text someone", cls:"btn btn-secondary", attr:`data-bridge="0"` }) : `<button class="btn btn-secondary" data-act="route" data-arg="connect">Text someone</button>`;
     return { close:true, body:`
       ${title("Would talking to a person help more than another answer?")}
       ${p ? `<p class="sub">${esc(p.name)} is in your plan.</p>` : ""}`,
       actions:`${call}${text}
         <button class="btn btn-secondary" data-act="hfPeople">Be around people</button>
+        <button class="link bridge-link" data-act="bridgeStart">${BRIDGE.link}</button>
         <button class="link" data-act="hfNotNow">Not right now</button>` };
   },
 
@@ -7546,6 +7602,14 @@ const ACTIONS = {
     else if (arg === "line") ACTIONS.diaryWrite();
     else if (arg === "borrow") startIntervention("borrow_ten");
   },
+  bridgeStart(){ if (blockIfRed()) return; ui.bridge = { tried:[], waiting:null, done:false }; lastRendered = null; go("bridge"); },
+  bridgeAnswer(arg){
+    if (blockIfRed()) return;
+    const b = ui.bridge || (ui.bridge = { tried:[] });
+    if (b.waiting == null) return;
+    if (arg === "yes") b.done = true;
+    b.waiting = null; lastRendered = null; render();
+  },
   butterflyStart(){ if (blockIfRed()) return; ui.butterfly = { step:0, end:null }; lastRendered = null; go("butterfly"); },
   butterflyNext(){ if (blockIfRed()) return; const b = ui.butterfly || (ui.butterfly = { step:0 }); b.step = Math.min((b.step || 0) + 1, BUTTERFLY.steps.length); lastRendered = null; render(); },
   butterflyEnd(arg){ if (blockIfRed()) return; if (!BUTTERFLY.ends.some(e => e[0] === arg)) return; const b = ui.butterfly || (ui.butterfly = {}); b.step = BUTTERFLY.steps.length; b.end = arg; lastRendered = null; render(); },
@@ -8239,6 +8303,17 @@ document.addEventListener("click", e => {
   if (session.screen === "zags" && ui.zagsVoice) zagsHush();   // Zags's voice stops the moment the person taps anything
   const cp = e.target.closest("[data-copy]");
   if (cp) copyMsg(cp);   // desktop: copy the prepared message (a data-noexit copy still goes to the safety check below)
+  const br = e.target.closest("[data-bridge]");
+  if (br && (session.screen === "bridge" || session.screen === "human-first") && session.safetyLevel !== "RED"){
+    const k = br.getAttribute("data-bridge");
+    if (session.screen === "human-first") ui.bridge = { tried:[], waiting:null, done:false };
+    const b = ui.bridge || (ui.bridge = { tried:[] });
+    if (!b.tried.includes(k)) b.tried.push(k);
+    b.waiting = k; b.done = false;
+    if (session.screen !== "bridge") dispatch({ type:"SET_SCREEN", screen:"bridge" });
+    setTimeout(() => { lastRendered = null; render(); }, 400);   // the phone link opens; "Did they answer?" is waiting on return
+    return;
+  }
   const el = e.target.closest("[data-act]");
   if (!el) return;
   const act = el.getAttribute("data-act");
