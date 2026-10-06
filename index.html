@@ -1432,6 +1432,47 @@ const PROBLEM = {
   next:"Next"
 };
 
+/* YOUR RESET MAP (owner request, 2026-10-06; wording drafted by Claude Code, CLINICIAN REVIEW REQUIRED). What has
+   helped this person before, by situation, from the check-ins already kept on this phone (nothing new is stored,
+   except that "That helped" is now noted on its check-in). Counts, never percentages or scores ("Helped 3 of 4
+   times"). Nothing from RED moments exists to count (it is never saved). Shown in Progress, and as one line on the
+   first screen of a flow: "You've been here before. Last time, Walking took you from 8 → 5." */
+const RESET_MAP = {
+  title:"Your reset map",
+  sub:"What has helped you before, by situation. Only on this phone.",
+  empty:"This fills in as you use ZigZag Mind and say what helped.",
+  states:[["anxious","When you're anxious"],["spiraling","When you're spiraling"],["low","When you feel low"],["craving","When there's an urge"],["distraction","When you need to get out of your head"]],
+  helped:(h, n) => `Helped ${h} of ${n} ${n === 1 ? "time" : "times"}`,
+  tryIt:"Try it",
+  beenHere:"You've been here before.",
+  lastTime:(name, b, a) => `Last time, ${name} took you from ${b} → ${a}.`,
+  again:"Try that again",
+  okay:name => `Okay. We'll start with ${name}.`,
+  note:"Not a score. Just what you told ZigZag Mind.",
+  shown:3
+};
+function mapHelped(h){ return h.helped === true || h.change === "yes" || h.change === "a_little" || (typeof h.before === "number" && typeof h.after === "number" && h.after < h.before); }
+function mapHistory(){ return [ ...store.sensitive.baseHistory, ...session.sessionHistory ].filter(h => h && findIntervention(h.interventionId)); }
+function resetMap(){
+  const out = [];
+  for (const [st, label] of RESET_MAP.states){
+    const by = {};
+    mapHistory().filter(h => h.state === st).forEach(h => {
+      const x = by[h.interventionId] || (by[h.interventionId] = { id:h.interventionId, tries:0, helped:0, last:0 });
+      x.tries++; if (mapHelped(h)){ x.helped++; x.last = Math.max(x.last, h.timestamp || 0); }
+    });
+    const items = Object.values(by).filter(x => x.helped > 0)
+      .sort((a, b) => (b.helped - a.helped) || (b.helped / b.tries - a.helped / a.tries) || (b.last - a.last)).slice(0, RESET_MAP.shown);
+    if (items.length) out.push({ state:st, label, items });
+  }
+  return out;
+}
+function lastWin(st){   // the most recent check-in in this situation with a real before → after drop
+  const h = mapHistory().filter(x => x.state === st && typeof x.before === "number" && typeof x.after === "number" && x.after < x.before)
+    .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0))[0];
+  return h ? { id:h.interventionId, name:findIntervention(h.interventionId).name, before:h.before, after:h.after } : null;
+}
+
 /* BRIDGE (owner request, 2026-10-06: "the missing human handoff"; wording drafted by Claude Code, CLINICIAN REVIEW
    REQUIRED). When steps aren't helping, ZigZag stops offering exercises and helps the person reach a person, then
    follows through: "Did Jordan answer?" Yes → put the phone down and talk. Not yet → who else? → 988. The app never
@@ -3429,6 +3470,7 @@ function completeCheckIn({ after, action, change }){
   const outcome = { source:"session", state:session.currentState, interventionId:session.currentInterventionId,
     before:session.currentBeforeRating, after:afterVal, timestamp:Date.now() };
   if (change) outcome.change = change;   // games: "yes" | "a_little" | "no"
+  if (action === "helped") outcome.helped = true;   // 2026-10-06: the reset map counts "That helped" too
   if (outcome.interventionId === "change_scene" && ui.sceneOpt) outcome.option = ui.sceneOpt;
   const ended = session.currentInterventionId;
   dispatch({ type:"ADD_OUTCOME", outcome });
@@ -3696,9 +3738,15 @@ const SCREENS = {
 
   before(){
     const [h, s] = BEFORE_HEAD[session.currentState] || ["",""];
+    const win = session.safetyLevel === "GREEN" && RESET_MAP.states.some(x => x[0] === session.currentState) ? lastWin(session.currentState) : null;
+    const picked = ui.firstPick && ui.mapPicked ? findIntervention(ui.firstPick) : null;
+    const been = picked ? `<p class="notice been-here">${RESET_MAP.okay(esc(picked.name))}</p>`
+      : win && !ui.firstPick ? `<div class="panel been-here" style="margin-top:12px"><p style="margin:0">${RESET_MAP.beenHere} ${RESET_MAP.lastTime(esc(win.name), win.before, win.after)}</p>
+        <div style="display:flex;justify-content:flex-end"><button class="link" data-act="mapAgain" data-arg="${win.id}">${RESET_MAP.again}</button></div></div>` : "";
     return { close:true, body:`
       ${title(h)}
       ${s ? `<p class="sub">${s}</p>` : ""}
+      ${been}
       <h2>${session.currentState === "craving" ? "How strong is the craving right now?" : "How intense is this right now?"}</h2>
       <p class="small">Optional. You can skip this.</p>
       ${ratingRow(ui.rating, "calm", "the most intense")}`,
@@ -6184,6 +6232,10 @@ const SCREENS = {
       <div class="panel"><h3>Average change during a session</h3>
         ${P.rated >= 3 ? `<p class="big-change">${P.avgBefore} → ${P.avgAfter}</p><p class="small" style="margin:0">Across ${P.rated} check-ins where you rated before and after.</p>`
           : `<p class="small" style="margin:6px 0 0">Shows after 3 check-ins with a before and after rating.</p>`}</div>`}
+      ${(() => { const m = resetMap(); return `<div class="panel reset-map"><h3>${RESET_MAP.title}</h3><p class="small" style="margin:4px 0 8px">${m.length ? RESET_MAP.sub : RESET_MAP.empty}</p>
+        ${m.map(g => `<p class="lbl" style="margin:14px 0 4px">${g.label}</p>${g.items.map(x => `<div class="song-row"><span><b>${esc(findIntervention(x.id).name)}</b><span class="small">${RESET_MAP.helped(x.helped, x.tries)}</span></span>
+          <span class="song-btns"><button class="edit-btn" data-act="mapTry" data-arg="${g.state}|${x.id}" aria-label="${RESET_MAP.tryIt}: ${esc(findIntervention(x.id).name)}">${RESET_MAP.tryIt}</button></span></div>`).join("")}`).join("")}
+        ${m.length ? `<p class="small" style="margin:12px 0 0">${RESET_MAP.note}</p>` : ""}</div>`; })()}
       ${P.hasSample ? `<p class="note">Includes fictional sample data. You can remove it in Settings.</p>` : ""}` };
   },
 
@@ -6393,7 +6445,7 @@ function computeProgress(){
 }
 
 function buildExport(){
-  const strip = h => ({ state:h.state, interventionId:h.interventionId, before:h.before, after:h.after,
+  const strip = h => ({ state:h.state, interventionId:h.interventionId, before:h.before, after:h.after, helped:h.helped || undefined,
     date:h.timestamp ? new Date(h.timestamp).toISOString() : null, sample:h.source === "sample" || undefined });
   return {
     exportedAt:new Date().toISOString(),
@@ -7601,6 +7653,19 @@ const ACTIONS = {
     if (arg === "tiny"){ dispatch({ type:"SET_CURRENT_STATE", state:"low" }); go("low-choose"); }
     else if (arg === "line") ACTIONS.diaryWrite();
     else if (arg === "borrow") startIntervention("borrow_ten");
+  },
+  mapTry(arg){
+    if (blockIfRed()) return;
+    const [st, id] = String(arg || "").split("|");
+    if (!RESET_MAP.states.some(x => x[0] === st) || !findIntervention(id)) return;
+    startFlow(st, { firstPick:id }); ui.mapPicked = true; lastRendered = null; render();
+  },
+  mapAgain(arg){
+    if (blockIfRed()) return;
+    if (!findIntervention(arg)) return;
+    ui.firstPick = arg; ui.mapPicked = true;
+    dispatch({ type:"SET_ENGINE_RESULT", pick:arg, reason:`${findIntervention(arg).name} helped you before.` });
+    lastRendered = null; render();
   },
   bridgeStart(){ if (blockIfRed()) return; ui.bridge = { tried:[], waiting:null, done:false }; lastRendered = null; go("bridge"); },
   bridgeAnswer(arg){

@@ -368,6 +368,13 @@ list([
   'End: "'+PR.endNow+'" (Now) or "'+PR.end+'" · "'+PR.big+'" Talk to someone → Put the phone down'
 ]);
 
+H(3,'Your reset map (owner request, 2026-10-06; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)');
+const RM=G('RESET_MAP');
+list([
+  'Progress → "'+RM.title+'": "'+RM.sub+'" (empty: "'+RM.empty+'"). Grouped by '+RM.states.map(x=>`"${x[1]}"`).join(' · ')+'; up to '+RM.shown+' things each that helped, e.g. "'+G('RESET_MAP.helped(2,3)')+'", each with ['+RM.tryIt+']. "'+RM.note+'" Counts only, never percentages or scores. Built from check-ins already kept on this phone; "That helped" is now noted on its check-in.',
+  'First screen of I\'m anxious / spiraling / low / urge (GREEN only): "'+RM.beenHere+' '+G('RESET_MAP.lastTime("Walking",8,5)')+'" ['+RM.again+'] → "'+G('RESET_MAP.okay("Walking")')+'"'
+]);
+
 H(3,'Bridge: reaching a person, with follow-through (owner request, 2026-10-06; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)');
 const BR=G('BRIDGE');
 list([

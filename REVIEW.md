@@ -1296,6 +1296,11 @@ Why (for reviewers only; never shown as statements about people): in 2023 an ave
 - 4: "When will you do it?" → "Now" · "Later today" · "Tomorrow"
 - End: "Go do it. That's the whole step." (Now) or "That's the step. You don't have to solve the whole thing." · "Too big to do alone?" Talk to someone → Put the phone down
 
+### Your reset map (owner request, 2026-10-06; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)
+
+- Progress → "Your reset map": "What has helped you before, by situation. Only on this phone." (empty: "This fills in as you use ZigZag Mind and say what helped."). Grouped by "When you're anxious" · "When you're spiraling" · "When you feel low" · "When there's an urge" · "When you need to get out of your head"; up to 3 things each that helped, e.g. "Helped 2 of 3 times", each with [Try it]. "Not a score. Just what you told ZigZag Mind." Counts only, never percentages or scores. Built from check-ins already kept on this phone; "That helped" is now noted on its check-in.
+- First screen of I'm anxious / spiraling / low / urge (GREEN only): "You've been here before. Last time, Walking took you from 8 → 5." [Try that again] → "Okay. We'll start with Walking."
+
 ### Bridge: reaching a person, with follow-through (owner request, 2026-10-06; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)
 
 - Entry: Human First → "Someone else, or 988". Also, tapping Call someone / Text someone on Human First now waits with the follow-up question when the person comes back. The app never contacts anyone; nothing is saved (who was tried lives only in this visit).
@@ -1748,6 +1753,8 @@ _When: anxious_
 - **Button:** Help _(screen reader: "Get help now")_
 - **Heading:** Let's get through the next 10 minutes.
 - Don't solve everything right now.
+- You've been here before. Last time, Grounding took you from 6 → 4.
+- **Button:** Try that again
 - **Heading:** How intense is this right now?
 - Optional. You can skip this.
 - Rating buttons: 0 to 10
@@ -1764,6 +1771,8 @@ _When: spiraling_
 - **Button:** Help _(screen reader: "Get help now")_
 - **Heading:** Let's get it out of your head.
 - One thing at a time.
+- You've been here before. Last time, Thought Parking took you from 8 → 6.
+- **Button:** Try that again
 - **Heading:** How intense is this right now?
 - Optional. You can skip this.
 - Rating buttons: 0 to 10
@@ -1782,6 +1791,8 @@ _When: low_
 - **Button:** Help _(screen reader: "Get help now")_
 - **Heading:** Let's do one tiny thing.
 - Small is enough.
+- You've been here before. Last time, Reaching out took you from 8 → 5.
+- **Button:** Try that again
 - **Heading:** How intense is this right now?
 - Optional. You can skip this.
 - Rating buttons: 0 to 10
@@ -4162,6 +4173,24 @@ _When: distraction_
 - **Heading:** Average change during a session
 - 7.4 → 5.3
 - Across 7 check-ins where you rated before and after.
+- **Heading:** Your reset map
+- What has helped you before, by situation. Only on this phone.
+- When you're anxious
+- Helped 2 of 2 times
+- **Button:** Try it _(screen reader: "Try it: Walking")_
+- Helped 1 of 1 time
+- **Button:** Try it _(screen reader: "Try it: Grounding")_
+- Helped 1 of 1 time
+- **Button:** Try it _(screen reader: "Try it: Breathing")_
+- When you're spiraling
+- Helped 1 of 1 time
+- **Button:** Try it _(screen reader: "Try it: Thought Parking")_
+- When you feel low
+- Helped 1 of 1 time
+- **Button:** Try it _(screen reader: "Try it: Reaching out")_
+- Helped 1 of 1 time
+- **Button:** Try it _(screen reader: "Try it: Water")_
+- Not a score. Just what you told ZigZag Mind.
 - Includes fictional sample data. You can remove it in Settings.
 - **Button:** Home
 - **Button:** My Plan
