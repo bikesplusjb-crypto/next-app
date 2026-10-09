@@ -8,7 +8,8 @@
     "review": "node review.js",
     "safety-audit": "node safety-audit.js",
     "sync-support": "node sync-support.js",
-    "spanish-review": "node spanish-review.js"
+    "spanish-review": "node spanish-review.js",
+    "help-pages": "node help-pages.js"
   },
   "devDependencies": {
     "jsdom": "^24.0.0",

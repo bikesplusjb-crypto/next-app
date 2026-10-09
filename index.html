@@ -1692,6 +1692,7 @@ const JOIN = {
   friendHead:"Share with a friend",
   friendMeta:"Only this message and the link are shared. Nothing about you.",
   friend:"Share with a friend",
+  cards:"Print cards with a QR code (for clinics, libraries, meetings)",
   supportHead:"Support ZigZag Mind",
   supportMeta:"Free for everyone, always. If it helped, you can help keep it running."
 };
@@ -4773,7 +4774,8 @@ const SCREENS = {
       <p class="sub">${JOIN.sub}</p>
       <div class="panel join-friend"><p class="small" style="margin:0 0 6px">${JOIN.preview}</p>
         <p class="copy-text share-preview">${esc(SHARE.text)} ${esc(shareUrl())}</p>
-        <p class="small" style="margin:8px 0 10px">${JOIN.friendMeta}</p>${shareButton("btn btn-primary", JOIN.friend)}</div>
+        <p class="small" style="margin:8px 0 10px">${JOIN.friendMeta}</p>${shareButton("btn btn-primary", JOIN.friend)}
+        <p class="small" style="margin:10px 0 0"><a href="card/" target="_blank" rel="noopener">${JOIN.cards}</a></p></div>
       <div class="panel join-app"><h3>${JOIN.appHead}</h3><p class="small" style="margin:4px 0 0">${JOIN.appMeta}</p>${app}</div>
       ${donateUrl() ? `<div class="panel join-support"><h3>${JOIN.supportHead}</h3><p class="small" style="margin:4px 0 10px">${JOIN.supportMeta}</p>
         <a class="btn btn-secondary donate" href="${esc(donateUrl())}" target="_blank" rel="noopener">${JOIN.supportHead}</a></div>` : ""}` };

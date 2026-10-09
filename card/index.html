@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>ZigZag Mind card</title>
+<meta name="description" content="A printable card with a QR code for ZigZag Mind, for clinics, libraries, churches and recovery meetings.">
+<link rel="icon" href="../icon.svg">
+<style>
+:root{--bg:#f7f3ec;--text:#1f2a2a;--muted:#5b6464;--primary:#33726b;--safety:#b85c44;--line:#d8d0c3}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.top{max-width:720px;margin:0 auto;padding:16px}
+.top h1{font-size:24px;margin:8px 0}
+.top p{color:var(--muted);margin:6px 0}
+.top button{font:inherit;font-weight:600;background:var(--primary);color:#fff;border:none;border-radius:12px;padding:12px 18px;margin:10px 0}
+.sheet{display:grid;grid-template-columns:repeat(2,3.5in);gap:.25in;justify-content:center;padding:.25in}
+.card{width:3.5in;height:2in;background:#fff;color:#1f2a2a;border:1px dashed var(--line);border-radius:8px;padding:.14in;display:grid;grid-template-columns:1fr 1.25in;gap:.1in;align-items:center;break-inside:avoid}
+.card h2{font-size:15pt;margin:0;color:#33726b}
+.card .tag{font-size:9pt;margin:2px 0 6px}
+.card .crisis{font-size:8.5pt;font-weight:700;color:#b85c44;margin:0}
+.card .fine{font-size:6.5pt;color:#5b6464;margin:4px 0 0}
+.card .qr svg{width:1.25in;height:1.25in;display:block}
+.card .url{font-size:6.5pt;color:#5b6464;text-align:center;margin:2px 0 0;word-break:break-all}
+@media print{.top{display:none}body{background:#fff}.sheet{padding:0}}
+@media (max-width:760px){.sheet{grid-template-columns:3.5in}}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>Print ZigZag Mind cards</h1>
+  <p>For clinics, libraries, churches, recovery meetings and waiting rooms. Eight cards per page; cut along the dashed lines.</p>
+  <p>The code opens: <b id="where"></b>. Check it opens on your phone before you print.</p>
+  <button type="button" id="print">Print</button>
+</div>
+<div class="sheet" id="sheet"></div>
+<script src="qrcode.js"></script>
+<script>
+// No tracking: the code is the site's plain address, nothing added. Built on this device; nothing is sent anywhere.
+(function(){
+  var url = /^https?:$/.test(location.protocol) ? location.origin + "/" : "https://zigzagmind.com/";
+  document.getElementById("where").textContent = url;
+  var svg = "";
+  try { var q = qrcode(0, "M"); q.addData(url); q.make(); svg = q.createSvgTag({ cellSize:4, margin:2, scalable:true, alt:"QR code for " + url }); } catch (e) { svg = ""; }
+  var one = '<div class="card"><div><h2>ZigZag Mind</h2>' +
+    '<p class="tag">Small steps for hard moments. Free, no account.</p>' +
+    '<p class="crisis">In crisis? Call or text 988. In danger? Call 911.</p>' +
+    '<p class="fine">Not therapy or an emergency service.</p></div>' +
+    '<div class="qr">' + svg + '<p class="url">' + url.replace(/^https?:\/\//, "").replace(/\/$/, "") + '</p></div></div>';
+  var html = ""; for (var i = 0; i < 8; i++) html += one;
+  document.getElementById("sheet").innerHTML = html;
+  document.getElementById("print").addEventListener("click", function(){ window.print(); });
+})();
+</script>
+</body>
+</html>
