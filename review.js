@@ -368,6 +368,9 @@ list([
   'End: "'+PR.endNow+'" (Now) or "'+PR.end+'" · "'+PR.big+'" Talk to someone → Put the phone down'
 ]);
 
+H(3,'Read aloud (owner request, 2026-10-09)');
+list(['Settings → "'+G('l10n("set.read")')+'" Off / On: "'+G('l10n("set.readHint")')+'" When on, a speaker button next to Help reads the screen (headings and text, then "You can choose: …") with the phone\'s own voice. Not on crisis screens. Off by default; only the on/off setting is saved.']);
+
 H(3,'My Plan: a note for a hard day, and "When this happens, I\'ll…" (owner request, 2026-10-09; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)');
 list([
   '"A note for a hard day": "'+G('HARD_NOTE.hint')+'" '+G('HARD_NOTE.example')+' Empty: "'+G('HARD_NOTE.empty')+'" Up to '+G('HARD_NOTE_MAX')+' characters. Shown as "'+G('HARD_NOTE.shown')+'" on I need my plan now and first in the Hope box; in My Plan and the printed plan.',

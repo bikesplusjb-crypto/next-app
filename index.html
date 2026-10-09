@@ -289,6 +289,8 @@ h1.home-tag{font-size:22px;font-weight:500;line-height:1.25;letter-spacing:-.01e
 .home-search{display:flex;align-items:center;gap:10px;width:100%;margin:12px 0 4px;padding:0 14px;min-height:46px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--text-muted);font-size:16px;text-align:left}
 .home-search svg,.search-btn svg{width:18px;height:18px;flex:none}
 .top-right{display:flex;align-items:center;gap:8px}
+.read-btn{display:grid;place-items:center;width:48px;height:48px;border-radius:24px;border:1px solid var(--line);background:var(--surface);color:var(--text)}
+.read-btn svg{width:20px;height:20px}
 .search-btn{display:none;width:48px;height:48px;border-radius:24px;border:1px solid var(--line);background:var(--surface);color:var(--text);place-items:center}
 @media (max-width:320px){.home-search{display:none}.search-btn{display:grid}}
 .search-form{display:flex;gap:8px;margin-top:8px}
@@ -925,6 +927,9 @@ const L10N = {
     "set.off":"Off",
     "set.on":"On",
     "set.hapticsHint":"A light tap when you finish a step. Not every phone supports this.",
+    "set.read":"Read aloud",
+    "set.readHint":"Adds a Read aloud button at the top of each screen. It uses your phone's own voice, and nothing is sent anywhere. It stops when you tap anything.",
+    "read.btn":"Read aloud",
     "set.where":"Where you are",
     "set.inUS":"In the US",
     "set.outsideUS":"Outside the US",
@@ -1156,6 +1161,9 @@ const L10N = {
     "set.off":{ text:"Apagado", draft:true },
     "set.on":{ text:"Encendido", draft:true },
     "set.hapticsHint":{ text:"Una vibración suave al terminar un paso. No todos los teléfonos lo permiten.", draft:true },
+    "set.read":{ text:"Leer en voz alta", draft:true },
+    "set.readHint":{ text:"Agrega un botón Leer en voz alta arriba de cada pantalla. Usa la voz de tu teléfono y no se envía nada. Se detiene cuando tocas cualquier cosa.", draft:true },
+    "read.btn":{ text:"Leer en voz alta", draft:true },
     "set.where":{ text:"Dónde estás", draft:true },
     "set.inUS":{ text:"En EE. UU.", draft:true },
     "set.outsideUS":{ text:"Fuera de EE. UU.", draft:true },
@@ -3456,7 +3464,7 @@ function logActivity(type){
   store.sensitive.activity.push({ type, ts:Date.now() }); saveStore();
 }
 
-const prefs = { reduce:false, haptics:false, homeTipDismissed:false, zagsHintSeen:false, onboarded:false, country:"auto", under18:false, strength:null };   // strength: 6.15, the person's own answer; null until they choose   // under18: remembered on this device
+const prefs = { reduce:false, haptics:false, readAloud:false, homeTipDismissed:false, zagsHintSeen:false, onboarded:false, country:"auto", under18:false, strength:null };   // strength: 6.15, the person's own answer; null until they choose   // under18: remembered on this device
 function finishOnboarding(){ prefs.onboarded = true; savePrefs(); }   // remembered in prefs only
 
 /* Outside the US? Only ever ADDS "Find a helpline in your country" next to 988; never hides 911 or 988.
@@ -3503,6 +3511,37 @@ function showHomeTip(){
 }
 const mqReduce = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
 function reducedMotion(){ return prefs.reduce || !!(mqReduce && mqReduce.matches); }
+/* READ ALOUD (owner request, 2026-10-09). For people who can't read well in the moment, have trouble seeing, or are too
+   overwhelmed to read. Off by default (Settings). Reads the current screen with the phone's own speech voice
+   (prefers a voice that runs on the phone; never an online-only one), works offline, sends nothing, saves nothing but
+   the on/off setting. Stops on any tap and when the screen changes. Not added to crisis screens (their structure is
+   fixed; clinician question D59). */
+function canSpeak(){ try { return "speechSynthesis" in window && typeof window.SpeechSynthesisUtterance === "function"; } catch (_){ return false; } }
+function readVoice(){
+  try {
+    const all = (speechSynthesis.getVoices ? speechSynthesis.getVoices() : []) || [];
+    return all.find(v => v && v.localService !== false && /^en/i.test(v.lang || "") && v.default) || all.find(v => v && v.localService !== false && /^en/i.test(v.lang || "")) || null;
+  } catch (_){ return null; }
+}
+function screenSpeech(){
+  const main = document.querySelector("#app main"); if (!main) return "";
+  const t = el => (el.textContent || "").replace(/\s+/g, " ").trim();
+  const parts = [...main.querySelectorAll(".content h1, .content h2, .content h3, .content p, .content li, .content label")]
+    .filter(el => !el.closest("button, a")).map(t).filter(Boolean);
+  const choices = [...main.querySelectorAll("button, a[href]")].map(el => (el.getAttribute("aria-label") || t(el))).filter(Boolean);
+  return [...parts, choices.length ? "You can choose: " + choices.join(". ") + "." : ""].filter(Boolean).join(". ").replace(/\.\s*\./g, ".");
+}
+function readNow(){
+  if (!canSpeak()) return;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(screenSpeech());
+    const v = readVoice(); if (v) u.voice = v;
+    u.rate = 0.92; u.pitch = 1;
+    speechSynthesis.speak(u);
+  } catch (_){}
+}
+function readStop(){ try { if (canSpeak()) speechSynthesis.cancel(); } catch (_){} }
 function buzz(){ if (prefs.haptics && navigator.vibrate) { try { navigator.vibrate(10); } catch(_){} } }
 
 /* ---------- CENTRAL SESSION STATE ---------- */
@@ -6742,6 +6781,11 @@ const SCREENS = {
         ${seg("haptics","off",prefs.haptics ? "on" : "off",l10n("set.off"))}${seg("haptics","on",prefs.haptics ? "on" : "off",l10n("set.on"))}
       </div>
       <p class="small" style="margin-top:8px">${l10n("set.hapticsHint")}</p>
+      ${canSpeak() ? `<h2>${l10n("set.read")}</h2>
+      <div class="seg-theme" role="group" aria-label="${l10n("set.read")}" style="grid-template-columns:1fr 1fr">
+        ${seg("readAloudSet","off",prefs.readAloud ? "on" : "off",l10n("set.off"))}${seg("readAloudSet","on",prefs.readAloud ? "on" : "off",l10n("set.on"))}
+      </div>
+      <p class="small" style="margin-top:8px">${l10n("set.readHint")}</p>` : ""}
       <h2>${l10n("set.where")}</h2>
       <div class="seg-theme" role="group" aria-label="${l10n("set.where")}">
         ${seg("country","auto",prefs.country,l10n("set.auto"))}${seg("country","us",prefs.country,l10n("set.inUS"))}${seg("country","other",prefs.country,l10n("set.outsideUS"))}
@@ -7349,7 +7393,9 @@ function patternTap(i){
 function topBar(def){
   const left = def.close ? `<button class="icon-btn" data-act="home" aria-label="${l10n("help.close")}">×</button>` : `<span class="spacer"></span>`;
   const search = def.searchBtn ? `<button class="search-btn" data-act="searchOpen" aria-label="${SEARCH.aria}">${searchIcon()}</button>` : "";
-  return `<div class="topbar">${left}<div class="top-right">${search}
+  const read = prefs.readAloud && canSpeak() && !CRISIS_SCREENS.includes(session.screen)
+    ? `<button class="read-btn" data-act="readAloud" aria-label="${l10n("read.btn")}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 8.5a5 5 0 010 7M18.5 6a8.5 8.5 0 010 12"/></svg></button>` : "";
+  return `<div class="topbar">${left}<div class="top-right">${read}${search}
     <button class="help-pill" data-act="crisis" aria-label="${l10n("help.aria")}">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"/></svg>
       ${l10n("help.label")}</button></div></div>`;
@@ -7421,6 +7467,7 @@ function render(){
   if (s === "doodle") doodleMount();   // 6.22: the canvas is new after every render; redraw the strokes
   if (s === "home") zagsHintPlace();
   if (changed){
+    if (prefs.readAloud) readStop();   // a new screen: stop reading the old one
     if (!/^doodle/.test(s) && ui.doodle && ui.doodle.strokes){ ui.doodle.strokes = []; ui.doodle.img = null; doodleLive = null; }   // 6.22: nothing outlives the doodle
     if (s !== "grief-write-done") ui.griefNote = null;
     if (!/^bully/.test(s) && ui.bully){ ui.bully.note = null; ui.bully.work = null; ui.bully.pending = null; ui.bully.lines = {}; }   // 6.27: unsaved notes go when the person leaves   // 6.20: a written note is deleted unless the person taps Keep
@@ -8898,6 +8945,8 @@ const ACTIONS = {
   about(){ ui.flash = ""; go("about"); },
   howScroll(){ const el = document.getElementById("how"); if (el) el.scrollIntoView({ behavior:reducedMotion() ? "auto" : "smooth" }); },
   motion(arg){ prefs.reduce = arg === "reduce"; document.documentElement.classList.toggle("reduce", prefs.reduce); savePrefs(); render(); },
+  readAloudSet(arg){ prefs.readAloud = arg === "on"; if (!prefs.readAloud) readStop(); savePrefs(); render(); },
+  readAloud(){ readNow(); },
   haptics(arg){ prefs.haptics = arg === "on"; if (prefs.haptics) buzz(); savePrefs(); render(); },
   country(arg){ if (["auto","us","other"].includes(arg)){ prefs.country = arg; savePrefs(); } render(); },
   persist(arg){
@@ -8920,6 +8969,7 @@ document.addEventListener("click", e => {
   const link = e.target.closest("a[href]");
   if (link && !link.hasAttribute("data-kind") && /^(tel:|sms:|https:\/\/988lifeline)/.test(link.getAttribute("href"))) logActivity("reach");
   if (session.screen === "zags" && ui.zagsVoice) zagsHush();   // Zags's voice stops the moment the person taps anything
+  if (prefs.readAloud && !e.target.closest('[data-act="readAloud"]')) readStop();   // reading stops on any tap
   const cp = e.target.closest("[data-copy]");
   if (cp) copyMsg(cp);   // desktop: copy the prepared message (a data-noexit copy still goes to the safety check below)
   const br = e.target.closest("[data-bridge]");

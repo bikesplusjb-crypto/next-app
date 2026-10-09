@@ -8,7 +8,7 @@ Every Spanish line below is a **draft** (not reviewed). Please give each one a h
 
 Notes for the translator: keep "988", "911", "211" and "ZigZag Mind" as they are. Lines starting with a space or comma are joined to a name or number on screen (for example "Llamar a" + a name). `&` is shown on screen as "&".
 
-Strings: 229 (crisis-screen: 46).
+Strings: 232 (crisis-screen: 46).
 
 
 ## Help button
@@ -356,6 +356,19 @@ Strings: 229 (crisis-screen: 46).
 | `set.off` | Off | Apagado |  | DRAFT |
 | `set.on` | On | Encendido |  | DRAFT |
 | `set.hapticsHint` | A light tap when you finish a step. Not every phone supports this. | Una vibración suave al terminar un paso. No todos los teléfonos lo permiten. |  | DRAFT |
+| `set.read` | Read aloud | Leer en voz alta |  | DRAFT |
+| `set.readHint` | Adds a Read aloud button at the top of each screen. It uses your phone's own voice, and nothing is sent anywhere. It stops when you tap anything. | Agrega un botón Leer en voz alta arriba de cada pantalla. Usa la voz de tu teléfono y no se envía nada. Se detiene cuando tocas cualquier cosa. |  | DRAFT |
+
+## read
+
+| Key | English (live) | Spanish (draft) | Crisis | Status |
+|---|---|---|---|---|
+| `read.btn` | Read aloud | Leer en voz alta |  | DRAFT |
+
+## Settings
+
+| Key | English (live) | Spanish (draft) | Crisis | Status |
+|---|---|---|---|---|
 | `set.where` | Where you are | Dónde estás |  | DRAFT |
 | `set.inUS` | In the US | En EE. UU. |  | DRAFT |
 | `set.outsideUS` | Outside the US | Fuera de EE. UU. |  | DRAFT |

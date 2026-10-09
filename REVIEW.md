@@ -1217,7 +1217,7 @@ Contact line (only when CONTACT_EMAIL is set): "Questions? Email [address]."
 
 D. Crisis Text Line (**hidden until the owner verifies it**; CRISIS_TEXT_LINE.verified is true): one line below the 988 buttons on the full crisis screen and Connect, on the printed plan, and in the supporter guide's "Get help together": "Rather text a stranger? Text HOME to 741741 (Crisis Text Line)." (phones: Text HOME to 741741 is a text link; computers: shown as text).
 
-E. Spanish interface: **scaffolding only, nothing shown**. SPANISH_ENABLED is false. 229 strings (onboarding, Home, crisis screens, Calm, Connect, My Plan, Help, Settings labels) now live in one table; English is unchanged. Every Spanish line is a DRAFT for a human translator and the clinician: docs/SPANISH_REVIEW.md. A draft crisis-screen line is never shown, even with Spanish on.
+E. Spanish interface: **scaffolding only, nothing shown**. SPANISH_ENABLED is false. 232 strings (onboarding, Home, crisis screens, Calm, Connect, My Plan, Help, Settings labels) now live in one table; English is unchanged. Every Spanish line is a DRAFT for a human translator and the clinician: docs/SPANISH_REVIEW.md. A draft crisis-screen line is never shown, even with Spanish on.
 
 F. Feedback (only when FEEDBACK_URL is set; it is empty): on About only, "Did ZigZag Mind help? Tell us anonymously →" (new tab). Privacy page adds: "If you use the feedback link on About, that form is a separate service. It receives only what you type there."
 
@@ -1297,6 +1297,10 @@ Why (for reviewers only; never shown as statements about people): in 2023 an ave
 - 3: "Pick the smallest one." / "The one you could actually start."
 - 4: "When will you do it?" → "Now" · "Later today" · "Tomorrow"
 - End: "Go do it. That's the whole step." (Now) or "That's the step. You don't have to solve the whole thing." · "Too big to do alone?" Talk to someone → Put the phone down
+
+### Read aloud (owner request, 2026-10-09)
+
+- Settings → "Read aloud" Off / On: "Adds a Read aloud button at the top of each screen. It uses your phone's own voice, and nothing is sent anywhere. It stops when you tap anything." When on, a speaker button next to Help reads the screen (headings and text, then "You can choose: …") with the phone's own voice. Not on crisis screens. Off by default; only the on/off setting is saved.
 
 ### My Plan: a note for a hard day, and "When this happens, I'll…" (owner request, 2026-10-09; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)
 
