@@ -1706,13 +1706,53 @@ const PATHS = {
       { h:"If you're behind", p:"Talk to your teacher or professor early. Many will help if you ask.", say:"I'm struggling to keep up. Can we talk about options for this assignment?" },
       { h:"Look after the basics.", list:["Sleep matters more than one more hour of cramming.","Eat something.","Move for a few minutes."] }
     ],
-    end:{ h:"One assignment at a time.", p:"" } }
+    end:{ h:"One assignment at a time.", p:"" } },
+  // Round 3 (2026-10-09). Wording drafted by Claude Code; clinician item D62.
+  scary:{ title:"Before something scary", meta:"An appointment, a flight, an event, a hard talk",
+    steps:[
+      { h:"Nerves before something big are normal.", p:"Your body is getting ready. It doesn't mean it will go badly." },
+      { h:"Plan the first five minutes.", list:["Where you'll be, and what you'll do first.","One thing you'll say, or one question you'll ask.","What you'll bring that helps (water, headphones, a snack)."] },
+      { h:"Right before", list:["Breathe out slowly, longer than you breathe in.","Feet on the floor. Shoulders down.","You only have to do the next part."], opts:[["Breathe for 1 minute","calmPick","breathe"]] },
+      { h:"After", p:"Whatever happens, do one kind thing for yourself afterward." }
+    ],
+    end:{ h:"You can do hard things one part at a time.", p:"" } },
+  sensory:{ title:"Too much noise, light or people", meta:"Sensory overload",
+    steps:[
+      { h:"Too much input is real.", p:"When it's too loud, too bright or too busy, your body can go into overload. That's not overreacting." },
+      { h:"Turn it down.", list:["Step somewhere quieter, even a bathroom or your car (parked).","Headphones, earplugs, sunglasses, or a hood up.","Dim the lights and put the phone face down."] },
+      { h:"Something steady", list:["Press your feet into the floor or your hands together.","Hold something with a texture you like.","Slow, long breaths out."] }
+    ],
+    end:{ h:"Take the time you need to come back down.", p:"", opts:[["Calm down with Zags","zags","calm"]] } },
+  holidays:{ title:"Holidays or anniversaries", meta:"When a date or season is hard",
+    steps:[
+      { h:"Some days carry a lot.", p:"Holidays, anniversaries and birthdays can bring back loss, loneliness or family stress. You're not the only one." },
+      { h:"Plan the day a little.", list:["Decide ahead what you'll do, and what you'll skip.","Have an exit plan: a time to leave, a reason, a ride.","Plan one small thing just for you."] },
+      { h:"Don't do it alone.", p:"Tell one person it's a hard day.", msg:"Today's a hard day for me. Could you check in on me later?" }
+    ],
+    end:{ h:"Be gentle with yourself today.", p:"", opts:[["I lost someone","griefStart",""]] } },
+  sunday:{ title:"Sunday night dread", meta:"Worrying about the week ahead",
+    steps:[
+      { h:"The night before a hard week can feel heavy.", p:"Often the dread is bigger than the week turns out to be." },
+      { h:"Get it out of your head.", list:["Write down what's worrying you about this week.","Pick the first small thing you'll do Monday.","Lay out what you need for the morning."], opts:[["Park it for later","worryStart",""]] },
+      { h:"Then let tonight be tonight.", list:["Something calm: a shower, a show, a walk.","Put work away, including your phone's work apps."], opts:[["Cozy up","cozyStart",""]] }
+    ],
+    end:{ h:"You only have to do Monday one hour at a time.", p:"" } },
+  newplace:{ title:"New place, no one around yet", meta:"After a move, a new job or a new school",
+    steps:[
+      { h:"Starting over somewhere new is lonely.", p:"It takes time to build people around you. That's normal, not a sign something's wrong with you." },
+      { h:"Keep your old people close.", p:"A quick message counts.", msg:"I miss you. Can we catch up this week?" },
+      { h:"Small ways to meet people", list:["Go to the same place regularly: a café, gym, library, park.","Try one group: a class, a volunteer shift, a faith community, a club.","Say yes to one invitation, even a small one."], opts:[["Be around people","aroundPeople",""]] }
+    ],
+    end:{ h:"One small connection at a time.", p:"" } }
 };
 const PATH_EXIT = { label:"Leave quickly", note:"Opens a plain weather page.", url:"https://www.weather.gov/" };
 const MORE_HELP = {
   title:"Other kinds of help", sub:"Pick what fits. Each one is short, and nothing is saved.",
   first:["care","slipped","heartbreak","money","notsafe","newparent","caregiver"],
-  rest:["bed","fight","health","burnout","pain","school","gambling","lgbtq","eating"],
+  rest:["bed","fight","health","burnout","pain","school","gambling","lgbtq","eating","scary","sensory","holidays","sunday","newplace"],
+  groups:[["Right now",["slipped","notsafe","fight","scary","sensory"]],["Day to day",["bed","burnout","sunday","school","money"]],
+    ["People and relationships",["heartbreak","newplace","holidays","caregiver","lgbtq"]],["Body and health",["health","pain","eating","newparent","gambling"]],
+    ["Getting help",["care"]]],
   more:"More", next:"Next", putDown:"Put the phone down", talk:"Talk to someone",
   sendLbl:"Or send this, if it helps:", sayLbl:"You could say:", call211:"Call 211"
 };
@@ -1893,6 +1933,16 @@ const SEARCH_INDEX = [
     words:["pain","chronic pain","in pain","hurts","migraine","back pain","flare","flare up","fibromyalgia","pain day"] },
   { id:"school", title:"School or exam stress", desc:"Tests, deadlines, falling behind", screen:"path", act:"pathStart", arg:"school",
     words:["school","exam","exams","test","finals","midterm","deadline","homework","assignment","college","class","behind in school","studying","grades"] },
+  { id:"scary", title:"Before something scary", desc:"An appointment, a flight, an event, a hard talk", screen:"path", act:"pathStart", arg:"scary",
+    words:["nervous about","scared of","before an appointment","flight","flying","job interview","interview","presentation","speech","public speaking","first day","party","social anxiety","event","date","dentist","hard conversation"] },
+  { id:"sensory", title:"Too much noise, light or people", desc:"Sensory overload", screen:"path", act:"pathStart", arg:"sensory",
+    words:["sensory","sensory overload","overstimulated","too loud","too noisy","too bright","too many people","crowds","meltdown","shutdown","autism","autistic","adhd"] },
+  { id:"holidays", title:"Holidays or anniversaries", desc:"When a date or season is hard", screen:"path", act:"pathStart", arg:"holidays",
+    words:["holidays","holiday","christmas","thanksgiving","new year","birthday","anniversary","mothers day","fathers day","valentines","family gathering","hard date"] },
+  { id:"sunday", title:"Sunday night dread", desc:"Worrying about the week ahead", screen:"path", act:"pathStart", arg:"sunday",
+    words:["sunday","sunday scaries","dread","dreading","monday","week ahead","dread work","dont want to go to work"] },
+  { id:"newplace", title:"New place, no one around yet", desc:"After a move, a new job or a new school", screen:"path", act:"pathStart", arg:"newplace",
+    words:["moved","new city","new town","new place","new job","new school","dont know anyone","no friends here","homesick","miss home","relocated"] },
   { id:"morehelp", title:"Other kinds of help", desc:"Short paths for more situations", screen:"more-help", act:"moreHelp",
     words:["other help","more help","something else","other","self help","categories"] },
   { id:"join", title:"Share with a friend", desc:"Send the link to someone, get the app, or support it. No account.", screen:"join", act:"joinOpen",
@@ -4790,12 +4840,15 @@ const SCREENS = {
 
   /* OTHER KINDS OF HELP: the hub, and every short path on one engine */
   "more-help"(){
-    const ids = ui.moreHelpAll ? [...MORE_HELP.first, ...MORE_HELP.rest] : MORE_HELP.first;
+    const card = id => `<button class="card" data-act="pathStart" data-arg="${id}"><span>${PATHS[id].title}<span class="meta">${PATHS[id].meta}</span></span></button>`;
+    const list = ui.moreHelpAll
+      ? MORE_HELP.groups.map(([h, ids]) => `<p class="lbl" style="margin:18px 0 6px">${h}</p><div class="list">${ids.filter(id => PATHS[id]).map(card).join("")}</div>`).join("")
+      : `<div class="list">${MORE_HELP.first.filter(id => PATHS[id]).map(card).join("")}
+        <button class="card more-help-more" data-act="moreHelpAll" aria-expanded="false"><span>${MORE_HELP.more}</span></button></div>`;
     return { close:true, body:`
       ${title(MORE_HELP.title)}
       <p class="sub">${MORE_HELP.sub}</p>
-      <div class="list">${ids.filter(id => PATHS[id]).map(id => `<button class="card" data-act="pathStart" data-arg="${id}"><span>${PATHS[id].title}<span class="meta">${PATHS[id].meta}</span></span></button>`).join("")}
-        ${ui.moreHelpAll ? "" : `<button class="card more-help-more" data-act="moreHelpAll" aria-expanded="false"><span>${MORE_HELP.more}</span></button>`}</div>
+      ${list}
       <p class="small heavy-988">${LINE988} <a href="${LINKS.call988}">Call 988</a> · ${text988Inline()}</p>` };
   },
   path(){

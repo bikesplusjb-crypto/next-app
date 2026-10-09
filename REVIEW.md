@@ -1391,6 +1391,27 @@ Plain pages at /help/ for things people search for at night. Each: "In crisis or
 - 2: "One small thing." / "A glass of water. Wash your face. Clothes for the day, even comfortable ones."
 - 3: "Then one tiny task." / "Just one. That counts."
 - Note: "If most of your days feel this heavy, talking to a doctor or counselor can really help."
+
+#### Nervous before something big
+
+- Lead: "Nerves are your body getting ready. They don't mean it will go badly."
+- 1: "Plan the first five minutes." / "Where you'll be, what you'll do first, one thing you'll say."
+- 2: "Breathe out slowly." / "Longer out than in. Feet on the floor. Shoulders down."
+- 3: "Just the next part." / "You don't have to get through all of it at once. Afterward, do one kind thing for yourself."
+
+#### Sensory overload: too loud, too bright, too much
+
+- Lead: "Too much input is real. It's not overreacting."
+- 1: "Turn it down." / "Step somewhere quieter. Headphones, earplugs, sunglasses or a hood."
+- 2: "Something steady." / "Press your feet into the floor. Hold something with a texture you like."
+- 3: "Breathe out slowly." / "Take the time you need to come back down."
+
+#### When the holidays are hard
+
+- Lead: "Some days carry a lot: loss, loneliness, family stress. You're not the only one."
+- 1: "Plan the day a little." / "Decide what you'll do and what you'll skip. Have a time to leave and a way home."
+- 2: "One thing just for you." / "A walk, a favorite food, a quiet hour."
+- 3: "Tell one person." / ""Today's a hard day for me. Could you check in on me later?""
 Printable card (/card/, linked from Share with a friend): eight wallet cards per page with a QR code of the site's plain address (made on the device by a small MIT-licensed library), "Small steps for hard moments. Free, no account.", "In crisis? Call or text 988. In danger? Call 911.", "Not therapy or an emergency service." Check the address opens before printing.
 
 ### Read aloud (owner request, 2026-10-09)
@@ -1534,6 +1555,42 @@ Home → More → "Other kinds of help" → "Other kinds of help" / "Pick what f
 - 4: "Look after the basics." · "Sleep matters more than one more hour of cramming." · "Eat something." · "Move for a few minutes."
 - End: "One assignment at a time."
 
+#### Before something scary — An appointment, a flight, an event, a hard talk
+
+- 1: "Nerves before something big are normal." / "Your body is getting ready. It doesn't mean it will go badly."
+- 2: "Plan the first five minutes." · "Where you'll be, and what you'll do first." · "One thing you'll say, or one question you'll ask." · "What you'll bring that helps (water, headphones, a snack)."
+- 3: "Right before" · "Breathe out slowly, longer than you breathe in." · "Feet on the floor. Shoulders down." · "You only have to do the next part." · [Breathe for 1 minute]
+- 4: "After" / "Whatever happens, do one kind thing for yourself afterward."
+- End: "You can do hard things one part at a time."
+
+#### Too much noise, light or people — Sensory overload
+
+- 1: "Too much input is real." / "When it's too loud, too bright or too busy, your body can go into overload. That's not overreacting."
+- 2: "Turn it down." · "Step somewhere quieter, even a bathroom or your car (parked)." · "Headphones, earplugs, sunglasses, or a hood up." · "Dim the lights and put the phone face down."
+- 3: "Something steady" · "Press your feet into the floor or your hands together." · "Hold something with a texture you like." · "Slow, long breaths out."
+- End: "Take the time you need to come back down." · [Calm down with Zags]
+
+#### Holidays or anniversaries — When a date or season is hard
+
+- 1: "Some days carry a lot." / "Holidays, anniversaries and birthdays can bring back loss, loneliness or family stress. You're not the only one."
+- 2: "Plan the day a little." · "Decide ahead what you'll do, and what you'll skip." · "Have an exit plan: a time to leave, a reason, a ride." · "Plan one small thing just for you."
+- 3: "Don't do it alone." / "Tell one person it's a hard day." · prepared text: "Today's a hard day for me. Could you check in on me later?"
+- End: "Be gentle with yourself today." · [I lost someone]
+
+#### Sunday night dread — Worrying about the week ahead
+
+- 1: "The night before a hard week can feel heavy." / "Often the dread is bigger than the week turns out to be."
+- 2: "Get it out of your head." · "Write down what's worrying you about this week." · "Pick the first small thing you'll do Monday." · "Lay out what you need for the morning." · [Park it for later]
+- 3: "Then let tonight be tonight." · "Something calm: a shower, a show, a walk." · "Put work away, including your phone's work apps." · [Cozy up]
+- End: "You only have to do Monday one hour at a time."
+
+#### New place, no one around yet — After a move, a new job or a new school
+
+- 1: "Starting over somewhere new is lonely." / "It takes time to build people around you. That's normal, not a sign something's wrong with you."
+- 2: "Keep your old people close." / "A quick message counts." · prepared text: "I miss you. Can we catch up this week?"
+- 3: "Small ways to meet people" · "Go to the same place regularly: a café, gym, library, park." · "Try one group: a class, a volunteer shift, a faith community, a club." · "Say yes to one invitation, even a small one." · [Be around people]
+- End: "One small connection at a time."
+
 ### Share with a friend: share it, get the app, support it (owner request, 2026-10-09: "make it safe and honest")
 
 - Where: "Share with a friend" at the bottom of Home (under "Worried about someone?"), in Settings under About (with "Only this message and the link are shared. Nothing about you."), and on the About page; Search ("share", "tell a friend", "install", "donate"). Never on crisis screens. Not called "Join": there is nothing to join.
@@ -1550,7 +1607,7 @@ Home → More → "Other kinds of help" → "Other kinds of help" / "Pick what f
 - Every query: safety check first, on each pause (~600 ms) and on submit. RED → the crisis screen, query discarded. YELLOW → support bar on, results still shown.
 - Results: up to 5 cards (title + one line), then "Not it? I don't know what I need →". Nothing matches: "Here are some places to start:" I don't know what I need · Talk to someone · Calm down with Zags · Help. Never "No results".
 - Nothing remembered: no history, no recent searches, no saved query; it clears when you leave the screen.
-- Index: 62 paths, 864 words. Breakup / heartbreak words lead to "I feel sad or low" (no heartbreak path yet). "pills" alone → the urge path; "took all my pills" → crisis (safety check).
+- Index: 67 paths, 925 words. Breakup / heartbreak words lead to "I feel sad or low" (no heartbreak path yet). "pills" alone → the urge path; "took all my pills" → crisis (safety check).
 Every path in the index (title — one line):
 - "It feels like panic" — One wave at a time, with a 911 line if it's new
 - "Calm down" — Slow your body down: breathing, grounding, Zags
@@ -1611,6 +1668,11 @@ Every path in the index (title — one line):
 - "Burned out" — Running on empty from work, school or caring
 - "A hard pain day" — When pain is wearing you down
 - "School or exam stress" — Tests, deadlines, falling behind
+- "Before something scary" — An appointment, a flight, an event, a hard talk
+- "Too much noise, light or people" — Sensory overload
+- "Holidays or anniversaries" — When a date or season is hard
+- "Sunday night dread" — Worrying about the week ahead
+- "New place, no one around yet" — After a move, a new job or a new school
 - "Other kinds of help" — Short paths for more situations
 - "Share with a friend" — Send the link to someone, get the app, or support it. No account.
 - "Help now" — 988, 911, and a real person fast

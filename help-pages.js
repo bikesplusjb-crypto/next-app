@@ -81,7 +81,26 @@ const PAGES = [
     steps:[["Start in bed.","Sit up. Feet on the floor. Open the curtains or turn on a light."],
       ["One small thing.","A glass of water. Wash your face. Clothes for the day, even comfortable ones."],
       ["Then one tiny task.","Just one. That counts."]],
-    note:"If most of your days feel this heavy, talking to a doctor or counselor can really help." }
+    note:"If most of your days feel this heavy, talking to a doctor or counselor can really help." },
+  // Round 3 (2026-10-09)
+  { slug:"nervous-before-something-big", title:"Nervous before something big",
+    desc:"Three steps for nerves before an appointment, interview, flight or event.",
+    lead:"Nerves are your body getting ready. They don't mean it will go badly.",
+    steps:[["Plan the first five minutes.","Where you'll be, what you'll do first, one thing you'll say."],
+      ["Breathe out slowly.","Longer out than in. Feet on the floor. Shoulders down."],
+      ["Just the next part.","You don't have to get through all of it at once. Afterward, do one kind thing for yourself."]] },
+  { slug:"sensory-overload", title:"Sensory overload: too loud, too bright, too much",
+    desc:"Three steps when noise, light or crowds become too much.",
+    lead:"Too much input is real. It's not overreacting.",
+    steps:[["Turn it down.","Step somewhere quieter. Headphones, earplugs, sunglasses or a hood."],
+      ["Something steady.","Press your feet into the floor. Hold something with a texture you like."],
+      ["Breathe out slowly.","Take the time you need to come back down."]] },
+  { slug:"hard-holiday", title:"When the holidays are hard",
+    desc:"Small steps for holidays, anniversaries and hard dates.",
+    lead:"Some days carry a lot: loss, loneliness, family stress. You're not the only one.",
+    steps:[["Plan the day a little.","Decide what you'll do and what you'll skip. Have a time to leave and a way home."],
+      ["One thing just for you.","A walk, a favorite food, a quiet hour."],
+      ["Tell one person.","\"Today's a hard day for me. Could you check in on me later?\""]] }
 ];
 const CSS = `:root{--bg:#f7f3ec;--surface:#fff;--text:#1f2a2a;--muted:#5b6464;--primary:#33726b;--safety:#b85c44;--line:#e4ddd2}
 @media (prefers-color-scheme:dark){:root{--bg:#141a1a;--surface:#1d2525;--text:#eef2f1;--muted:#a9b4b2;--primary:#7cc3b8;--safety:#e59a84;--line:#2c3636}}
