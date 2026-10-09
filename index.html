@@ -1589,7 +1589,7 @@ const SEARCH_INDEX = [
   { id:"find", title:"Find something", desc:"Photo missions: notice something around you", screen:"find-something", act:"fsStart",
     words:["find something","photo","photos","camera","picture","take a picture","notice","mission","scavenger hunt"] },
   { id:"low", title:"I feel sad or low", desc:"One small step. Also for breakups and heartbreak.", screen:"sad", act:"flow", arg:"low",
-    words:["sad","sadness","depressed","depresed","depressd","depression","down","feeling down","feel down","low","empty","numb","crying","cry","cant stop crying","tears","dark cloud","no energy","unmotivated","no motivation","blah","blue","miserable","unhappy","gloomy",
+    words:["sad","sadness","depressed","depresed","depressd","depression","down","feeling down","feel down","low","empty","numb","crying","cry","cant stop crying","tears","dark cloud","no energy","unmotivated","no motivation","blah","blue","miserable","unhappy","gloomy","hopeless",
       "breakup","break up","broke up","broken up","breaking up","dumped","got dumped","ex","my ex","cheated","cheated on","cheating","divorce","divorced","separated","miss them","heartbroken","heart broken","heartbreak","broken heart","rejected","relationship ended","she left","he left","they left me"] },
   { id:"heavy", title:"Most of my days feel heavy", desc:"When it's not one bad day but most days", screen:"heavy", act:"heavyStart",
     words:["most days","every day","everyday","all the time","for weeks","for months","always sad","always tired","heavy","weighed down","been like this","nothing feels good"] },
@@ -1636,7 +1636,7 @@ const SEARCH_INDEX = [
   { id:"faith", title:"Faith & hope", desc:"A few verses for hard moments", screen:"faith", act:"faith", faith:true,
     words:["pray","prayer","praying","bible","god","jesus","lord","faith","verse","verses","scripture","church","christian"] },
   { id:"progress", title:"Progress", desc:"What you did this week, and your reset map", screen:"progress", act:"tab", arg:"progress",
-    words:["progress","reset map","what helped","what helps me","what works","what worked","my week"] },
+    words:["progress","reset map","what helped","what helped me","what works","what worked","my week"] },
   { id:"settings", title:"Settings", desc:"Dark mode, text size, export or delete everything", screen:"settings", act:"tab", arg:"settings",
     words:["settings","dark mode","light mode","large text","text size","bigger text","delete","delete everything","export","download my data","reduce motion"] },
   { id:"privacy", title:"Privacy & terms", desc:"What stays on your phone, and what doesn't", screen:"privacy", act:"privacyOpen",
@@ -1645,6 +1645,57 @@ const SEARCH_INDEX = [
     words:["help","help me","crisis","988","911","emergency","hotline","lifeline","crisis line","i need help","need help now","dont feel safe","not safe","unsafe","danger","in danger"] }
 ];
 let searchQ = "", searchTimer = null;   // memory only, while the Search screen is open
+/* 6.29 C: matching. Same normalizer as the safety check (lowercase, no punctuation or apostrophes, accents folded).
+   Rank: exact phrase > a whole phrase inside the query > every word present > partial (a word, one letter off for
+   words of 5+ letters, or the start of a word while typing). Crisis words never get here: safetyCheck runs first. */
+const SEARCH_STOP = new Set("i im ive id me my myself a an the to of and or is am are was be been it its so just really very feel feeling feels felt like about with in on at for have has had do does did get got this that what how why when want need right now today can cant dont wont not no too much bit little lot some any nothing".split(" "));
+let searchPrep = null;
+function searchPrepared(){
+  if (!searchPrep) searchPrep = SEARCH_INDEX.map((e, i) => {
+    const phrases = [e.title, ...e.words].map(w => normalizeText(w).trim()).filter(Boolean);
+    return { e, i, phrases, toks:new Set(phrases.flatMap(p => p.split(" "))) };
+  });
+  return searchPrep;
+}
+function oneOff(a, b){   // edit distance <= 1
+  if (a === b) return true;
+  if (Math.abs(a.length - b.length) > 1) return false;
+  let i = 0, j = 0, edits = 0;
+  while (i < a.length && j < b.length){
+    if (a[i] === b[j]){ i++; j++; continue; }
+    if (++edits > 1) return false;
+    if (a.length > b.length) i++; else if (b.length > a.length) j++; else { i++; j++; }
+  }
+  return edits + (a.length - i) + (b.length - j) <= 1;
+}
+function searchMatch(q){
+  const n = normalizeText(q).trim();
+  if (!n) return [];
+  const padded = ` ${n} `, words = n.split(" ").filter(w => !SEARCH_STOP.has(w));
+  const out = [];
+  for (const { e, i, phrases, toks } of searchPrepared()){
+    if (e.faith && !faithOn()) continue;   // Faith & hope only when it's turned on
+    let tier = 0, sub = 0;
+    if (phrases.includes(n)){ tier = 4; sub = n.length; }
+    else {
+      const inside = phrases.filter(p => padded.includes(` ${p} `) && !(p.length < 3 && SEARCH_STOP.has(p)));
+      if (inside.length){ tier = 3; sub = Math.max(...inside.map(p => p.length)); }
+      else if (words.length && words.every(w => toks.has(w))){ tier = 2; sub = words.length; }
+      else if (words.length){
+        let pts = 0;
+        for (const w of words){
+          if (toks.has(w)) pts += 4;
+          else if (w.length >= 5 && [...toks].some(t => t.length >= 5 && oneOff(w, t))) pts += 3;
+          else if (w.length >= 3 && [...toks].some(t => t.startsWith(w))) pts += 2;
+        }
+        if (pts){ tier = 1; sub = pts; }
+      }
+    }
+    if (tier) out.push({ e, tier, sub, i });
+  }
+  const top = Math.max(0, ...out.map(x => x.tier));   // a strong hit doesn't drag in weak partial ones
+  return out.filter(x => x.tier >= top - 1).sort((a, b) => (b.tier - a.tier) || (b.sub - a.sub) || (a.i - b.i)).slice(0, SEARCH.max).map(x => x.e);
+}
 const searchIcon = () => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.2-4.2"/></svg>`;
 function searchResultsHtml(q){
   const n = normalizeText(q).trim();
