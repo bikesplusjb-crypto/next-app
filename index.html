@@ -487,6 +487,7 @@ label.fs-start{margin-top:16px;cursor:pointer}
 .print-check{display:flex;align-items:center;gap:10px;min-height:44px;font-size:15px}
 .print-check input{width:22px;height:22px}
 .worried-row{margin:18px 0 8px;text-align:center}
+.worried-row.share-row{margin-top:0}
 .worried-link{display:inline-flex;align-items:center;min-height:44px;color:var(--text-muted);font-size:15px;text-decoration:underline;text-underline-offset:3px}
 
 /* Stage 6.18 */
@@ -1530,6 +1531,25 @@ const BUTTERFLY = {
   next:"Next"
 };
 
+/* SHARE ZIGZAG MIND (owner request, 2026-10-09). Shares only the site's address and one line about it, through the
+   phone's own share sheet (Web Share API); where there isn't one, a Copy link button. Never anything about the
+   person: no plan, no history, no tracking codes in the link. Not on crisis screens. */
+const SHARE = {
+  label:"Share ZigZag Mind",
+  title:"ZigZag Mind",
+  text:"ZigZag Mind: free, private help for hard moments, one small step at a time.",
+  copy:"Copy link",
+  note:"Shares the link only. Nothing about you."
+};
+function shareUrl(){ try { return /^https?:$/.test(location.protocol) ? location.origin + "/" : "https://zigzagmind.com/"; } catch (_){ return "https://zigzagmind.com/"; } }
+function canShare(){ try { return typeof navigator.share === "function"; } catch (_){ return false; } }
+function shareButton(cls){
+  if (canShare()) return `<button class="${cls}" data-act="shareApp">${SHARE.label}</button>`;
+  // data-kind: sharing the app isn't "reaching out". Phones without a share sheet text it; computers copy it.
+  if (canPhone()) return `<a class="${cls}" href="sms:?&body=${encodeURIComponent(`${SHARE.text} ${shareUrl()}`)}" data-kind="share">${SHARE.label}</a>`;
+  return copyButton(`${SHARE.text} ${shareUrl()}`, cls, `${SHARE.label}: ${SHARE.copy}`, `data-kind="share"`);
+}
+
 /* 6.29 SEARCH (STAGE6-29-ADDENDUM.md). Searches only ZigZag Mind's own paths: SEARCH_INDEX is a constant in this file;
    nothing goes to the web, an API or a server. Every query goes through safetyCheck first, on each pause in typing
    (debounced) and on every submit: RED → openCrisis() and the query is discarded; YELLOW → support bar on, results
@@ -1641,6 +1661,8 @@ const SEARCH_INDEX = [
     words:["settings","dark mode","light mode","large text","text size","bigger text","delete","delete everything","export","download my data","reduce motion"] },
   { id:"privacy", title:"Privacy & terms", desc:"What stays on your phone, and what doesn't", screen:"privacy", act:"privacyOpen",
     words:["privacy","terms","private","is this private","who can see","my data","data","tracking"] },
+  { id:"share", title:"Share ZigZag Mind", desc:"Send the link to someone (the link only, nothing about you)", screen:"settings", act:"tab", arg:"settings",
+    words:["share","share the app","share zigzag","send the app","send the link","tell a friend","recommend","invite"] },
   { id:"help", title:"Help now", desc:"988, 911, and a real person fast", screen:"crisis", act:"crisis",
     words:["help","help me","crisis","988","911","emergency","hotline","lifeline","crisis line","i need help","need help now","dont feel safe","not safe","unsafe","danger","in danger"] }
 ];
@@ -3883,7 +3905,8 @@ const SCREENS = {
         <div style="display:flex;justify-content:flex-end"><button class="link" data-act="dismissHomeTip">${l10n("home.tipOk")}</button></div>
       </div>` : ""}
       ${!getPlan().trustedPeople.length && !getPlan().helps.length ? `<button class="card wide" data-act="tab" data-arg="plan" style="margin:14px 0 16px;width:100%">${icon("plan")}<span>${l10n("home.buildPlan")}<span class="meta">${l10n("home.buildPlanMeta")}</span></span></button>` : ""}
-      <p class="worried-row"><a class="worried-link" href="support/#worried" target="_blank" rel="noopener">${l10n("home.worried")}</a></p>` };   // 6.19 A: a door for friends and family
+      <p class="worried-row"><a class="worried-link" href="support/#worried" target="_blank" rel="noopener">${l10n("home.worried")}</a></p>
+      <p class="worried-row share-row">${shareButton("link")}</p>` };   // 6.19 A: a door for friends and family
   },
 
   /* 6.3: Calm. (Zags, 6.7, will be the featured card here.) */
@@ -6519,6 +6542,8 @@ const SCREENS = {
       <h2>${l10n("set.about")}</h2>
       <button class="btn btn-secondary" data-act="about">${l10n("set.aboutApp")}</button>
       <button class="btn btn-secondary" style="margin-top:10px" data-act="privacyOpen">${l10n("privacy.link")}</button>
+      <div style="margin-top:10px">${shareButton("btn btn-secondary")}</div>
+      <p class="small" style="margin:6px 0 0">${SHARE.note}</p>
       <p class="disclaimer" style="margin-bottom:16px">ZigZag Mind is a self-help support tool. It is not therapy, medical care, or an emergency service. If you're in danger, call 911 or call or text 988.</p>
       ${donateUrl() ? `<div class="donate-row"><a class="donate" href="${esc(donateUrl())}" target="_blank" rel="noopener">Support ZigZag Mind</a>
         <p class="small" style="margin:2px 0 0">Free for everyone, always. If it helped, you can help keep it running.</p></div>` : ""}` };
@@ -6608,6 +6633,7 @@ const SCREENS = {
       <div class="stack" style="margin-top:20px">
         <button class="btn btn-primary" data-act="home">Try ZigZag Mind</button>
         <button class="btn btn-secondary" data-act="howScroll">How it works</button>
+        ${shareButton("btn btn-secondary")}
       </div>
       <div class="panel"><h3>When your mind is racing</h3><p class="small" style="margin:4px 0 0">Turn tangled thoughts into one next step.</p></div>
       <div class="panel" style="margin-top:10px"><h3>When you feel stuck</h3><p class="small" style="margin:4px 0 0">Take one tiny action.</p></div>
@@ -7898,6 +7924,10 @@ const ACTIONS = {
     ui.firstPick = arg; ui.mapPicked = true;
     dispatch({ type:"SET_ENGINE_RESULT", pick:arg, reason:`${findIntervention(arg).name} helped you before.` });
     lastRendered = null; render();
+  },
+  shareApp(){   // the phone's share sheet; if the person closes it, nothing happens
+    if (!canShare()) return;
+    try { const p = navigator.share({ title:SHARE.title, text:SHARE.text, url:shareUrl() }); if (p && p.catch) p.catch(() => {}); } catch (_){}
   },
   searchOpen(){ if (blockIfRed()) return; searchQ = ""; go("search"); },
   searchGo(arg){   // straight into the path, with the same function its normal button calls

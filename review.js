@@ -368,6 +368,13 @@ list([
   'End: "'+PR.endNow+'" (Now) or "'+PR.end+'" · "'+PR.big+'" Talk to someone → Put the phone down'
 ]);
 
+H(3,'Share ZigZag Mind (owner request, 2026-10-09)');
+list([
+  'Where: the bottom of Home (next to "Worried about someone?"), Settings (under About) with "'+G('SHARE.note')+'", and the About page. Never on crisis screens.',
+  'Phone: the share sheet with "'+G('SHARE.title')+'" / "'+G('SHARE.text')+'" and the site link. Computers without a share sheet: "'+G('SHARE.label')+': '+G('SHARE.copy')+'" copies the same line and link.',
+  'Shares the link only: nothing about the person, no tracking codes.'
+]);
+
 H(3,'Search (6.29, STAGE6-29-ADDENDUM.md; CLINICIAN REVIEW REQUIRED for the routing)');
 const SE=G('SEARCH');
 list([
