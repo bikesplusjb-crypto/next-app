@@ -1659,13 +1659,60 @@ const PATHS = {
       { h:"For right now", list:["Step away from mirrors, scales, and apps that make it worse.","Text or sit with someone you trust.","Be as kind to your body as you would to a friend's."] },
       { h:"A doctor can help.", p:"One sentence is enough:", say:"I've been struggling with food and my body, and I'd like some help." }
     ],
-    end:{ h:"Small steps count.", p:"" } }
+    end:{ h:"Small steps count.", p:"" } },
+  // Round 2 (owner: "Just keep adding", 2026-10-09). Wording drafted by Claude Code; clinician item D61.
+  bed:{ title:"Can't get out of bed", meta:"When the morning feels like too much",
+    steps:[
+      { h:"Mornings can be the hardest part.", p:"You don't have to fix the whole day. Just the next small thing." },
+      { h:"Start small, still in bed.", list:["Sit up.","Put your feet on the floor.","Open the curtains or turn on a light."] },
+      { h:"One more small thing.", list:["Drink a glass of water.","Wash your face or brush your teeth.","Put on clothes for the day, even comfortable ones."], opts:[["Borrow ten minutes","lowPick","borrow_ten"]] }
+    ],
+    end:{ h:"You're up. That counts.", p:"", opts:[["One tiny task","lowPick","behavioral_activation"],["Most of my days feel heavy","heavyStart",""]] } },
+  fight:{ title:"After a fight or argument", meta:"When you're still shaken up",
+    steps:[
+      { h:"Fights shake us up.", p:"Your body may still feel it. Let it settle before you decide anything." },
+      { h:"Let your body come down first.", list:["Step away for a while.","Breathe out slowly.","Drink some water."], opts:[["Breathe for 1 minute","calmPick","breathe"]] },
+      { h:"Before you reach out", list:["Wait until you're calmer, maybe tomorrow.","Say what you felt, not everything they did wrong."], say:"I didn't like how that went. Can we try again when we're both calmer?" }
+    ],
+    end:{ h:"You can come back to it when you're calmer.", p:"If you're afraid of someone, this can help:", opts:[["Not safe at home","pathStart","notsafe"]] } },
+  health:{ title:"Health worry or waiting for results", meta:"When your mind keeps going to the worst",
+    danger:"If you have new or severe symptoms, call your doctor, or 911 in an emergency.",
+    steps:[
+      { h:"Waiting is hard.", p:"Not knowing can feel worse than knowing. Your mind may jump to the worst. That's common." },
+      { h:"Go easy on the searching.", list:["Searching symptoms late at night often makes it worse.","Write your questions down for the doctor instead.","Ask when and how you'll get results."] },
+      { h:"Get through today.", list:["Do one normal thing.","Tell one person you're waiting."], opts:[["Park it for later","worryStart",""]] }
+    ],
+    end:{ h:"One day at a time.", p:"" } },
+  burnout:{ title:"Burned out", meta:"Running on empty from work, school or caring",
+    steps:[
+      { h:"Burnout means it's been too much for too long.", p:"It's not weakness or laziness." },
+      { h:"Drop or delay one thing.", p:"What's one thing you could say no to, move, or do less perfectly this week?", say:"I can't take that on this week. Can we move it?" },
+      { h:"One small refill", list:["Step outside for five minutes.","Eat a real meal, away from a screen.","Go to bed a little earlier tonight."] },
+      { h:"If it's been weeks", p:"Talking to a doctor or counselor can help, and so can looking at time off or support at work.", opts:[["Getting to real care","pathStart","care"]] }
+    ],
+    end:{ h:"Rest is part of the work.", p:"" } },
+  pain:{ title:"A hard pain day", meta:"When pain is wearing you down",
+    danger:"If the pain is new, sudden or severe, get medical help or call 911.",
+    steps:[
+      { h:"Pain days are exhausting.", p:"It makes sense to feel low or short-tempered. You're not making it up." },
+      { h:"Be gentle with today.", list:["Cut today's list to one or two things.","Use what usually helps you: heat, rest, a change of position, the plan from your care team.","Slow breathing can ease some of the tension."], opts:[["Breathe for 1 minute","calmPick","breathe"]] },
+      { h:"Give your mind somewhere else to go.", p:"Even a few minutes can help.", opts:[["Get out of my head","route","head"],["Cozy up","cozyStart",""]] }
+    ],
+    end:{ h:"You got through this much of today.", p:"" } },
+  school:{ title:"School or exam stress", meta:"Tests, deadlines, falling behind",
+    steps:[
+      { h:"Stress before a test or deadline is common.", p:"Let's make it smaller." },
+      { h:"Shrink it.", list:["Write down everything that's due.","Pick the one that's due first.","Work on it for 25 minutes, then take a 5-minute break."] },
+      { h:"If you're behind", p:"Talk to your teacher or professor early. Many will help if you ask.", say:"I'm struggling to keep up. Can we talk about options for this assignment?" },
+      { h:"Look after the basics.", list:["Sleep matters more than one more hour of cramming.","Eat something.","Move for a few minutes."] }
+    ],
+    end:{ h:"One assignment at a time.", p:"" } }
 };
 const PATH_EXIT = { label:"Leave quickly", note:"Opens a plain weather page.", url:"https://www.weather.gov/" };
 const MORE_HELP = {
   title:"Other kinds of help", sub:"Pick what fits. Each one is short, and nothing is saved.",
   first:["care","slipped","heartbreak","money","notsafe","newparent","caregiver"],
-  rest:["gambling","lgbtq","eating"],
+  rest:["bed","fight","health","burnout","pain","school","gambling","lgbtq","eating"],
   more:"More", next:"Next", putDown:"Put the phone down", talk:"Talk to someone",
   sendLbl:"Or send this, if it helps:", sayLbl:"You could say:", call211:"Call 211"
 };
@@ -1834,6 +1881,18 @@ const SEARCH_INDEX = [
     words:["eating","eating disorder","food","binge","binging","purging","not eating","body image","hate my body","weight","fat","anorexia","bulimia","diet"] },
   { id:"care", title:"Getting to real care", desc:"Finding a counselor or doctor, and what to say", screen:"path", act:"pathStart", arg:"care",
     words:["therapist","therapy","counselor","counseling","psychiatrist","find a therapist","find help","doctor","appointment","insurance","low cost","cant afford therapy","sliding scale","treatment","rehab","what to say"] },
+  { id:"bed", title:"Can't get out of bed", desc:"When the morning feels like too much", screen:"path", act:"pathStart", arg:"bed",
+    words:["cant get out of bed","stuck in bed","cant get up","morning","mornings","get out of bed","no motivation to get up","stay in bed all day"] },
+  { id:"fight", title:"After a fight or argument", desc:"When you're still shaken up", screen:"path", act:"pathStart", arg:"fight",
+    words:["fight","fought","argument","argued","yelled at me","we fought","had a fight","conflict","shaken up","upset with my partner"] },
+  { id:"health", title:"Health worry or waiting for results", desc:"When your mind keeps going to the worst", screen:"path", act:"pathStart", arg:"health",
+    words:["health anxiety","health worry","waiting for results","test results","biopsy","scan","symptoms","googling symptoms","what if its cancer","doctor appointment","diagnosis"] },
+  { id:"burnout", title:"Burned out", desc:"Running on empty from work, school or caring", screen:"path", act:"pathStart", arg:"burnout",
+    words:["burnout","burned out","burnt out","running on empty","exhausted from work","too much work","overworked","drained","no energy for work"] },
+  { id:"pain", title:"A hard pain day", desc:"When pain is wearing you down", screen:"path", act:"pathStart", arg:"pain",
+    words:["pain","chronic pain","in pain","hurts","migraine","back pain","flare","flare up","fibromyalgia","pain day"] },
+  { id:"school", title:"School or exam stress", desc:"Tests, deadlines, falling behind", screen:"path", act:"pathStart", arg:"school",
+    words:["school","exam","exams","test","finals","midterm","deadline","homework","assignment","college","class","behind in school","studying","grades"] },
   { id:"morehelp", title:"Other kinds of help", desc:"Short paths for more situations", screen:"more-help", act:"moreHelp",
     words:["other help","more help","something else","other","self help","categories"] },
   { id:"join", title:"Share with a friend", desc:"Send the link to someone, get the app, or support it. No account.", screen:"join", act:"joinOpen",

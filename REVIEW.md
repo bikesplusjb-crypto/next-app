@@ -1345,6 +1345,52 @@ Plain pages at /help/ for things people search for at night. Each: "In crisis or
 - 1: "Write every thought down." / "On paper or in your notes. One line each. Don't sort them yet."
 - 2: "Pick one you can do something about." / "Just one small step for it. Park the rest for later."
 - 3: "Give your mind somewhere else to go." / "Ten minutes: a walk, a game, music, a shower."
+
+#### So angry right now: what to do first
+
+- Lead: "Angry is allowed. What you do next is the part you choose. Give it some room first."
+- 1: "Step away." / "Say "I need a few minutes. I'll come back." Then leave the room or go outside."
+- 2: "Let your body come down." / "Breathe out slowly. Cold water on your hands. Walk it off. Don't drive while you're this angry."
+- 3: "Come back later." / "Talk about it when your body has calmed down, maybe tomorrow."
+- Note: "If you're afraid you might hurt someone, or you're afraid of someone, call 911 if there's danger now, or call or text 988."
+
+#### Woke up from a nightmare
+
+- Lead: "It's over. You're here now."
+- 1: "Turn on a light." / "Look around and name where you are, out loud if you can."
+- 2: "Feel the room." / "Feet on the floor. Hold something cool. Drink some water."
+- 3: "Settle again." / "Sit up for a few minutes and breathe out slowly. Go back to bed when you feel calmer."
+
+#### Feeling numb or empty
+
+- Lead: "Numb is a real feeling too. You don't have to force anything."
+- 1: "Wake up your senses." / "Something cold to hold, something with a strong smell or taste, a few minutes outside."
+- 2: "Do one tiny thing." / "Make the bed, wash one dish, step outside. Small is enough."
+- 3: "Tell someone." / ""I've been feeling kind of empty lately." One sentence is enough."
+- Note: "If you've felt this way most days for two weeks or more, talking to a doctor or counselor can really help."
+
+#### After a breakup: getting through tonight
+
+- Lead: "Heartbreak is a real loss. It can hurt in your body and come in waves."
+- 1: "Don't text them tonight." / "If you want to, write it in your notes instead and decide tomorrow."
+- 2: "Step back from their profile." / "Mute or hide them for now. You can undo it later."
+- 3: "Lean on someone." / ""I'm having a hard time with the breakup. Can we talk?""
+
+#### Grief tonight: when you miss them
+
+- Lead: "Grief comes and goes. There's no right way to do this."
+- 1: "Let it be what it is." / "Sad, numb, angry, foggy: all of it is normal in grief."
+- 2: "Do something with the missing." / "Look at a photo, hold something of theirs, or write them a few lines."
+- 3: "Reach one person." / ""Today's a hard day. I'm thinking about them.""
+- Note: "If you lost someone to suicide, you're not alone. You can call or text 988 to talk about it, any time."
+
+#### Can't get out of bed
+
+- Lead: "You don't have to fix the whole day. Just the next small thing."
+- 1: "Start in bed." / "Sit up. Feet on the floor. Open the curtains or turn on a light."
+- 2: "One small thing." / "A glass of water. Wash your face. Clothes for the day, even comfortable ones."
+- 3: "Then one tiny task." / "Just one. That counts."
+- Note: "If most of your days feel this heavy, talking to a doctor or counselor can really help."
 Printable card (/card/, linked from Share with a friend): eight wallet cards per page with a QR code of the site's plain address (made on the device by a small MIT-licensed library), "Small steps for hard moments. Free, no account.", "In crisis? Call or text 988. In danger? Call 911.", "Not therapy or an emergency service." Check the address opens before printing.
 
 ### Read aloud (owner request, 2026-10-09)
@@ -1442,6 +1488,52 @@ Home → More → "Other kinds of help" → "Other kinds of help" / "Pick what f
 - End: "Small steps count." · resources (hidden until verified, except ndvh): anad
 - Also: "If you feel very unwell in your body, get medical help or call 911."
 
+#### Can't get out of bed — When the morning feels like too much
+
+- 1: "Mornings can be the hardest part." / "You don't have to fix the whole day. Just the next small thing."
+- 2: "Start small, still in bed." · "Sit up." · "Put your feet on the floor." · "Open the curtains or turn on a light."
+- 3: "One more small thing." · "Drink a glass of water." · "Wash your face or brush your teeth." · "Put on clothes for the day, even comfortable ones." · [Borrow ten minutes]
+- End: "You're up. That counts." · [One tiny task] [Most of my days feel heavy]
+
+#### After a fight or argument — When you're still shaken up
+
+- 1: "Fights shake us up." / "Your body may still feel it. Let it settle before you decide anything."
+- 2: "Let your body come down first." · "Step away for a while." · "Breathe out slowly." · "Drink some water." · [Breathe for 1 minute]
+- 3: "Before you reach out" · "Wait until you're calmer, maybe tomorrow." · "Say what you felt, not everything they did wrong." · You could say: "I didn't like how that went. Can we try again when we're both calmer?"
+- End: "You can come back to it when you're calmer." · [Not safe at home]
+
+#### Health worry or waiting for results — When your mind keeps going to the worst
+
+- 1: "Waiting is hard." / "Not knowing can feel worse than knowing. Your mind may jump to the worst. That's common."
+- 2: "Go easy on the searching." · "Searching symptoms late at night often makes it worse." · "Write your questions down for the doctor instead." · "Ask when and how you'll get results."
+- 3: "Get through today." · "Do one normal thing." · "Tell one person you're waiting." · [Park it for later]
+- End: "One day at a time."
+- Also: "If you have new or severe symptoms, call your doctor, or 911 in an emergency."
+
+#### Burned out — Running on empty from work, school or caring
+
+- 1: "Burnout means it's been too much for too long." / "It's not weakness or laziness."
+- 2: "Drop or delay one thing." / "What's one thing you could say no to, move, or do less perfectly this week?" · You could say: "I can't take that on this week. Can we move it?"
+- 3: "One small refill" · "Step outside for five minutes." · "Eat a real meal, away from a screen." · "Go to bed a little earlier tonight."
+- 4: "If it's been weeks" / "Talking to a doctor or counselor can help, and so can looking at time off or support at work." · [Getting to real care]
+- End: "Rest is part of the work."
+
+#### A hard pain day — When pain is wearing you down
+
+- 1: "Pain days are exhausting." / "It makes sense to feel low or short-tempered. You're not making it up."
+- 2: "Be gentle with today." · "Cut today's list to one or two things." · "Use what usually helps you: heat, rest, a change of position, the plan from your care team." · "Slow breathing can ease some of the tension." · [Breathe for 1 minute]
+- 3: "Give your mind somewhere else to go." / "Even a few minutes can help." · [Get out of my head] [Cozy up]
+- End: "You got through this much of today."
+- Also: "If the pain is new, sudden or severe, get medical help or call 911."
+
+#### School or exam stress — Tests, deadlines, falling behind
+
+- 1: "Stress before a test or deadline is common." / "Let's make it smaller."
+- 2: "Shrink it." · "Write down everything that's due." · "Pick the one that's due first." · "Work on it for 25 minutes, then take a 5-minute break."
+- 3: "If you're behind" / "Talk to your teacher or professor early. Many will help if you ask." · You could say: "I'm struggling to keep up. Can we talk about options for this assignment?"
+- 4: "Look after the basics." · "Sleep matters more than one more hour of cramming." · "Eat something." · "Move for a few minutes."
+- End: "One assignment at a time."
+
 ### Share with a friend: share it, get the app, support it (owner request, 2026-10-09: "make it safe and honest")
 
 - Where: "Share with a friend" at the bottom of Home (under "Worried about someone?"), in Settings under About (with "Only this message and the link are shared. Nothing about you."), and on the About page; Search ("share", "tell a friend", "install", "donate"). Never on crisis screens. Not called "Join": there is nothing to join.
@@ -1458,7 +1550,7 @@ Home → More → "Other kinds of help" → "Other kinds of help" / "Pick what f
 - Every query: safety check first, on each pause (~600 ms) and on submit. RED → the crisis screen, query discarded. YELLOW → support bar on, results still shown.
 - Results: up to 5 cards (title + one line), then "Not it? I don't know what I need →". Nothing matches: "Here are some places to start:" I don't know what I need · Talk to someone · Calm down with Zags · Help. Never "No results".
 - Nothing remembered: no history, no recent searches, no saved query; it clears when you leave the screen.
-- Index: 56 paths, 802 words. Breakup / heartbreak words lead to "I feel sad or low" (no heartbreak path yet). "pills" alone → the urge path; "took all my pills" → crisis (safety check).
+- Index: 62 paths, 864 words. Breakup / heartbreak words lead to "I feel sad or low" (no heartbreak path yet). "pills" alone → the urge path; "took all my pills" → crisis (safety check).
 Every path in the index (title — one line):
 - "It feels like panic" — One wave at a time, with a 911 line if it's new
 - "Calm down" — Slow your body down: breathing, grounding, Zags
@@ -1513,6 +1605,12 @@ Every path in the index (title — one line):
 - "LGBTQ+ and struggling" — When people don't get who you are
 - "Food, eating or body image" — When food or your body feels hard
 - "Getting to real care" — Finding a counselor or doctor, and what to say
+- "Can't get out of bed" — When the morning feels like too much
+- "After a fight or argument" — When you're still shaken up
+- "Health worry or waiting for results" — When your mind keeps going to the worst
+- "Burned out" — Running on empty from work, school or caring
+- "A hard pain day" — When pain is wearing you down
+- "School or exam stress" — Tests, deadlines, falling behind
 - "Other kinds of help" — Short paths for more situations
 - "Share with a friend" — Send the link to someone, get the app, or support it. No account.
 - "Help now" — 988, 911, and a real person fast

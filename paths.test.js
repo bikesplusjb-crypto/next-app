@@ -20,7 +20,7 @@ const IDS=boot().G('Object.keys(PATHS)');
 {const a=boot(); a.click(act('homeMore')); r.push(['Home → More → "Other kinds of help"', a.w.document.querySelector(act('moreHelp')).textContent==='Other kinds of help']);
  a.click(act('moreHelp')); const first=[...a.w.document.querySelectorAll(act('pathStart'))].map(b=>b.dataset.arg);
  r.push(['hub: 7 paths, then "More" (at most 8 choices)', first.length===7 && a.has(act('moreHelpAll')) && first.join()==='care,slipped,heartbreak,money,notsafe,newparent,caregiver']);
- a.click(act('moreHelpAll')); r.push(['hub: "More" shows all ten', a.w.document.querySelectorAll(act('pathStart')).length===10]);
+ a.click(act('moreHelpAll')); r.push([`hub: "More" shows all ${IDS.length}`, a.w.document.querySelectorAll(act('pathStart')).length===IDS.length]);
  r.push(['hub: Home\'s first choice still "I don\'t feel safe"', (()=>{ const b=boot(); return [...b.w.document.querySelectorAll('#app main [data-act]')].find(e=>!['wordmark','zags'].includes(e.dataset.act)).dataset.act==='crisis'; })()]); }
 // ---- every path ----
 for(const id of IDS){
@@ -66,7 +66,7 @@ for(const id of IDS){
  const e=boot(); e.G('ACTIONS.pathStart("care"); ACTIONS.pathNext()'); r.push(['Getting to real care: what to say on the call', e.T().includes('sliding scale') && e.T().includes('You could say:')]);
  const f=boot({phone:false}); f.G('ACTIONS.pathStart("slipped"); ACTIONS.pathNext(); ACTIONS.pathNext()'); r.push(['computer: Copy instead of a text link', f.has('[data-copy]') && !f.has('a.sit[href^="sms:"]')]); }
 // ---- search ----
-{const a=boot(); for(const [q,id] of [['broke up','heartbreak'],['i slipped','slipped'],['rent','money'],['abuse','notsafe'],['postpartum','newparent'],['caregiver','caregiver'],['sports betting','gambling'],['trans','lgbtq'],['binge','eating'],['find a therapist','care']]){
+{const a=boot(); for(const [q,id] of [['cant get out of bed','bed'],['we had a fight','fight'],['waiting for test results','health'],['burned out','burnout'],['chronic pain','pain'],['finals','school'],['broke up','heartbreak'],['i slipped','slipped'],['rent','money'],['abuse','notsafe'],['postpartum','newparent'],['caregiver','caregiver'],['sports betting','gambling'],['trans','lgbtq'],['binge','eating'],['find a therapist','care']]){
   r.push([`search "${q}" → ${id} first`, a.G(`searchMatch(${JSON.stringify(q)})[0].id`)===id]); } }
 // ---- safety ----
 {const a=boot(); let on=''; for(const sc of ['crisis','crisis-full','crisis-no','safety-check']){ a.G(`session.screen=${JSON.stringify(sc)}; lastRendered=null; render()`); if(/pathStart|moreHelp|leaveQuickly|path-988/.test(a.w.document.getElementById('app').innerHTML)) on=sc; }
