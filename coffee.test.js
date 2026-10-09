@@ -1,4 +1,5 @@
 // HAVE COFFEE WITH ZIGZAG: a few quiet minutes, scripted, finite, nothing kept, not a person, ends at putting the phone down.
+// 6.29: the search word list (SEARCH_INDEX) is plain words people might type ("chatbot", "tiktok", "safe word"); it is left out of the wording guards below.
 const {JSDOM}=require('jsdom');
 const fs=require('fs'), path=require('path');
 const HTML=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
@@ -76,7 +77,7 @@ const r=[];
  r.push(['10: never claims to be human or a friend, or to know how you feel', !/I'm a real person|I am a person|beside you|know exactly how you feel|been through this|your friend|always here|don't need anyone/i.test(copy)]);
  r.push(['21: no clichés', !/better place|happens for a reason|time heals|move on/i.test(copy)]);
  r.push(['12: no points, streaks, badges or scores', !/streak|points|badge|score|level/i.test(copy)]);
- r.push(['26: no AI or network', !/openai|anthropic|chatbot|llm/i.test(HTML.replace(/\/\*[\s\S]*?\*\//g,'')) && boot().w.netCalls===0]);}
+ r.push(['26: no AI or network', !/openai|anthropic|chatbot|llm/i.test(HTML.replace(/const SEARCH_INDEX = \[[\s\S]*?\n\];/,'').replace(/\/\*[\s\S]*?\*\//g,'')) && boot().w.netCalls===0]);}
 r.push(['10/29: reduced motion: steam and sip are static', /@media \(prefers-reduced-motion:reduce\)\{\.coffee-cup \.steam path,\.coffee-cup \.cup\{animation:none\}\}/.test(HTML) && /html\.reduce \.coffee-cup \.steam path,html\.reduce \.coffee-cup \.cup\{animation:none\}/.test(HTML)]);
 console.log(r.map(x=>(x[1]?'PASS ':'FAIL ')+x[0]+(x[1]||!x[2]?'':' — '+x[2])).join('\n'));
 process.exit(0);

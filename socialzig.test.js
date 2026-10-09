@@ -1,4 +1,5 @@
 // SOCIAL ZIG: "Is this helping?" No shaming, no platforms, nothing read or stored; routes to existing steps.
+// 6.29: the search word list (SEARCH_INDEX) is plain words people might type ("chatbot", "tiktok", "safe word"); it is left out of the wording guards below.
 const {JSDOM}=require('jsdom');
 const fs=require('fs'), path=require('path');
 const HTML=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
@@ -66,7 +67,7 @@ const r=[];
  a.G('openCrisis()'); a.G('ACTIONS.szGo("find")'); r.push(['13: RED blocks every Social Zig action', a.S().screen==='crisis']);}
 {const a=boot(); const copy=a.G('JSON.stringify(SZ)');
  r.push(['17: no shaming or diagnosis', !/wast|addict|should know|ruin|bad for you|stop being|too much time|compulsive|disorder/i.test(copy)]);
- r.push(['9/10/15: no platform access, no AI, no tracking', !/instagram|tiktok|facebook|graph\.|screen time|ScreenTime|openai|anthropic/i.test(HTML.replace(/\/\*[\s\S]*?\*\//g,'')) ]);
+ r.push(['9/10/15: no platform access, no AI, no tracking', !/instagram|tiktok|facebook|graph\.|screen time|ScreenTime|openai|anthropic/i.test(HTML.replace(/const SEARCH_INDEX = \[[\s\S]*?\n\];/,'').replace(/\/\*[\s\S]*?\*\//g,'')) ]);
  r.push(['15: no streaks, points, badges or likes', !/streak|points|badge|likes/i.test(copy)]);
  r.push(['in the library as an array entry, never suggested outside Tech check', a.G('findIntervention("social_zig").states.length')===0]);}
 console.log(r.map(x=>(x[1]?'PASS ':'FAIL ')+x[0]+(x[1]||!x[2]?'':' — '+x[2])).join('\n'));

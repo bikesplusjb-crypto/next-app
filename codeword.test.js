@@ -1,4 +1,5 @@
 // Stage 6.8: Code word. Set up on a good day (My Plan); on a hard day one tap sends just the word.
+// 6.29: the search word list (SEARCH_INDEX) is plain words people might type ("chatbot", "tiktok", "safe word"); it is left out of the wording guards below.
 const {JSDOM}=require('jsdom');
 const fs=require('fs');
 const HTML=fs.readFileSync(require('path').join(__dirname,'index.html'),'utf8');
@@ -86,7 +87,7 @@ const render=(a,setup)=>a.G(`lastRendered=null; ui=freshUi(); ${setup}; render()
  r.push(['Remove code word', !a.G('getPlan().codeWord') && !JSON.parse(a.dump()['next.v1.sensitive']).plan.codeWord]);}
 {const a=withWord(); a.G('ACTIONS.tab("settings")'); a.click(act('askDelete')); a.click(act('deleteAll'));
  r.push(['Delete everything removes it', !a.G('getPlan().codeWord') && !Object.values(a.dump()).join('').includes('codeWord')]);}
-r.push(['no "safe word" mode: nothing typed into the app opens a mode', !/safe ?word/i.test(HTML.replace(/This replaces the "safe word" idea[^.]*\./,''))]);
+r.push(['no "safe word" mode: nothing typed into the app opens a mode', !/safe ?word/i.test(HTML.replace(/const SEARCH_INDEX = \[[\s\S]*?\n\];/,'').replace(/This replaces the "safe word" idea[^.]*\./,''))]);
 
 console.log(r.map(x=>(x[1]?'PASS ':'FAIL ')+x[0]+(x[1]||!x[2]?'':' — '+x[2])).join('\n'));
 process.exit(0);
