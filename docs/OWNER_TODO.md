@@ -32,3 +32,7 @@ Send them `REVIEW.md` and `docs/CLINICIAN_REVIEW.md` (D1–D46 plus D-diary). Pa
 ## 4. Translator
 
 Send them `docs/SPANISH_REVIEW.md`. Spanish stays off until they and the clinician approve it.
+
+## Decisions already made
+
+- **Free, always (2026-10-09):** ZigZag Mind is free for everyone, always; donations (Ko-fi) are optional and unlock nothing. The wording "Free for everyone, always." stays.
