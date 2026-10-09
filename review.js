@@ -368,11 +368,15 @@ list([
   'End: "'+PR.endNow+'" (Now) or "'+PR.end+'" · "'+PR.big+'" Talk to someone → Put the phone down'
 ]);
 
-H(3,'Share ZigZag Mind (owner request, 2026-10-09)');
+H(3,'Join ZigZag Mind: get the app, tell a friend, support it (owner request, 2026-10-09)');
+const JO=G('JOIN');
 list([
-  'Where: the bottom of Home (next to "Worried about someone?"), Settings (under About) with "'+G('SHARE.note')+'", and the About page. Never on crisis screens.',
-  'Phone: the share sheet with "'+G('SHARE.title')+'" / "'+G('SHARE.text')+'" and the site link. Computers without a share sheet: "'+G('SHARE.label')+': '+G('SHARE.copy')+'" copies the same line and link.',
-  'Shares the link only: nothing about the person, no tracking codes.'
+  'Where: "'+JO.label+'" at the bottom of Home (under "Worried about someone?"), in Settings under About (with "'+G('SHARE.note')+'"), and on the About page; Search ("join", "install", "tell a friend", "donate"). Never on crisis screens.',
+  'Screen: "'+JO.label+'" / "'+JO.sub+'"',
+  '"'+JO.appHead+'" / "'+JO.appMeta+'" → ['+JO.install+'] (the browser\'s own install prompt, Android / Chrome) · iPhone: "'+JO.iphone+'" · other browsers: "'+JO.other+'" · installed: "'+JO.installed+'"',
+  '"'+JO.friendHead+'" / "'+JO.friendMeta+'" → the phone\'s share sheet with "'+G('SHARE.title')+'" / "'+G('SHARE.text')+'" and the site link (phones without one: a text message; computers: Copy link)',
+  '"'+JO.supportHead+'" / "'+JO.supportMeta+'" → the donate link',
+  'No account, no email, nothing collected. Shares the link only: nothing about the person, no tracking codes.'
 ]);
 
 H(3,'Search (6.29, STAGE6-29-ADDENDUM.md; CLINICIAN REVIEW REQUIRED for the routing)');

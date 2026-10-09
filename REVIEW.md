@@ -1296,11 +1296,14 @@ Why (for reviewers only; never shown as statements about people): in 2023 an ave
 - 4: "When will you do it?" → "Now" · "Later today" · "Tomorrow"
 - End: "Go do it. That's the whole step." (Now) or "That's the step. You don't have to solve the whole thing." · "Too big to do alone?" Talk to someone → Put the phone down
 
-### Share ZigZag Mind (owner request, 2026-10-09)
+### Join ZigZag Mind: get the app, tell a friend, support it (owner request, 2026-10-09)
 
-- Where: the bottom of Home (next to "Worried about someone?"), Settings (under About) with "Shares the link only. Nothing about you.", and the About page. Never on crisis screens.
-- Phone: the share sheet with "ZigZag Mind" / "ZigZag Mind: free, private help for hard moments, one small step at a time." and the site link. Computers without a share sheet: "Share ZigZag Mind: Copy link" copies the same line and link.
-- Shares the link only: nothing about the person, no tracking codes.
+- Where: "Join ZigZag Mind" at the bottom of Home (under "Worried about someone?"), in Settings under About (with "Shares the link only. Nothing about you."), and on the About page; Search ("join", "install", "tell a friend", "donate"). Never on crisis screens.
+- Screen: "Join ZigZag Mind" / "No account. No sign-up. It's free, and what you add stays on this phone."
+- "Get the app" / "Add it to your phone so it opens like an app, even without a connection." → [Add to my phone] (the browser's own install prompt, Android / Chrome) · iPhone: "On iPhone: tap Share, then Add to Home Screen." · other browsers: "In your browser's menu, choose Install app or Add to Home Screen." · installed: "It's already on this phone."
+- "Tell a friend" / "Send the link to someone who might need it. Only the link, nothing about you." → the phone's share sheet with "ZigZag Mind" / "ZigZag Mind: free, private help for hard moments, one small step at a time." and the site link (phones without one: a text message; computers: Copy link)
+- "Support ZigZag Mind" / "Free for everyone, always. If it helped, you can help keep it running." → the donate link
+- No account, no email, nothing collected. Shares the link only: nothing about the person, no tracking codes.
 
 ### Search (6.29, STAGE6-29-ADDENDUM.md; CLINICIAN REVIEW REQUIRED for the routing)
 
@@ -1309,7 +1312,7 @@ Why (for reviewers only; never shown as statements about people): in 2023 an ave
 - Every query: safety check first, on each pause (~600 ms) and on submit. RED → the crisis screen, query discarded. YELLOW → support bar on, results still shown.
 - Results: up to 5 cards (title + one line), then "Not it? I don't know what I need →". Nothing matches: "Here are some places to start:" I don't know what I need · Talk to someone · Calm down with Zags · Help. Never "No results".
 - Nothing remembered: no history, no recent searches, no saved query; it clears when you leave the screen.
-- Index: 45 paths, 655 words. Breakup / heartbreak words lead to "I feel sad or low" (no heartbreak path yet). "pills" alone → the urge path; "took all my pills" → crisis (safety check).
+- Index: 45 paths, 667 words. Breakup / heartbreak words lead to "I feel sad or low" (no heartbreak path yet). "pills" alone → the urge path; "took all my pills" → crisis (safety check).
 Every path in the index (title — one line):
 - "It feels like panic" — One wave at a time, with a 911 line if it's new
 - "Calm down" — Slow your body down: breathing, grounding, Zags
@@ -1354,7 +1357,7 @@ Every path in the index (title — one line):
 - "Progress" — What you did this week, and your reset map
 - "Settings" — Dark mode, text size, export or delete everything
 - "Privacy & terms" — What stays on your phone, and what doesn't
-- "Share ZigZag Mind" — Send the link to someone (the link only, nothing about you)
+- "Join ZigZag Mind" — Get the app, tell a friend, or support it. No account.
 - "Help now" — 988, 911, and a real person fast
 
 ### Your reset map (owner request, 2026-10-06; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)
@@ -1765,7 +1768,7 @@ Rendered for each state where the screen changes by state. Identical renders are
 - **Button:** More
 - **Button:** Tech check — AI, scrolling, or checking is getting to me
 - **Link → `support/#worried`:** Worried about someone? How to help →
-- **Link → `sms:?&body=ZigZag Mind: free, private help for hard moments, one small step at a time. https://zigzagmind.com/`:** Share ZigZag Mind
+- **Button:** Join ZigZag Mind
 - **Button:** Home
 - **Button:** My Plan
 - **Button:** Progress
@@ -2424,6 +2427,22 @@ _When: distraction_
 - It's not weakness, and it's not your fault. You don't have to fix all of it.
 - If it ever feels like more than heavy, call or text 988, any time. Call 988 · Text 988
 - **Button:** Next
+
+### `join`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Join ZigZag Mind
+- No account. No sign-up. It's free, and what you add stays on this phone.
+- **Heading:** Get the app
+- Add it to your phone so it opens like an app, even without a connection.
+- In your browser's menu, choose Install app or Add to Home Screen.
+- **Heading:** Tell a friend
+- Send the link to someone who might need it. Only the link, nothing about you.
+- **Link → `sms:?&body=ZigZag Mind: free, private help for hard moments, one small step at a time. https://zigzagmind.com/`:** Tell a friend
+- **Heading:** Support ZigZag Mind
+- Free for everyone, always. If it helped, you can help keep it running.
+- **Link → `https://ko-fi.com/zigzagmind`:** Support ZigZag Mind
 
 ### `search`
 
@@ -3632,7 +3651,7 @@ _When: distraction_
 - **Button:** More
 - **Button:** Tech check — AI, scrolling, or checking is getting to me
 - **Link → `support/#worried`:** Worried about someone? How to help →
-- **Link → `sms:?&body=ZigZag Mind: free, private help for hard moments, one small step at a time. https://zigzagmind.com/`:** Share ZigZag Mind
+- **Button:** Join ZigZag Mind
 - **Button:** Home
 - **Button:** My Plan
 - **Button:** Progress
@@ -3665,7 +3684,7 @@ _When: distraction_
 - **Button:** More
 - **Button:** Tech check — AI, scrolling, or checking is getting to me
 - **Link → `support/#worried`:** Worried about someone? How to help →
-- **Link → `sms:?&body=ZigZag Mind: free, private help for hard moments, one small step at a time. https://zigzagmind.com/`:** Share ZigZag Mind
+- **Button:** Join ZigZag Mind
 - **Button:** Home
 - **Button:** My Plan
 - **Button:** Progress
@@ -3698,7 +3717,7 @@ _When: distraction_
 - **Button:** More
 - **Button:** Tech check — AI, scrolling, or checking is getting to me
 - **Link → `support/#worried`:** Worried about someone? How to help →
-- **Link → `sms:?&body=ZigZag Mind: free, private help for hard moments, one small step at a time. https://zigzagmind.com/`:** Share ZigZag Mind
+- **Button:** Join ZigZag Mind
 - **Button:** Home
 - **Button:** My Plan
 - **Button:** Progress
@@ -4325,7 +4344,7 @@ _When: distraction_
 - **Heading:** About
 - **Button:** About ZigZag Mind
 - **Button:** Privacy & terms
-- **Link → `sms:?&body=ZigZag Mind: free, private help for hard moments, one small step at a time. https://zigzagmind.com/`:** Share ZigZag Mind
+- **Button:** Join ZigZag Mind
 - Shares the link only. Nothing about you.
 - ZigZag Mind is a self-help support tool. It is not therapy, medical care, or an emergency service. If you're in danger, call 911 or call or text 988.
 - **Link → `https://ko-fi.com/zigzagmind`:** Support ZigZag Mind
@@ -4414,7 +4433,7 @@ _When: distraction_
 - **Link → `tel:988`:** Call or text 988
 - **Button:** Try ZigZag Mind
 - **Button:** How it works
-- **Link → `sms:?&body=ZigZag Mind: free, private help for hard moments, one small step at a time. https://zigzagmind.com/`:** Share ZigZag Mind
+- **Button:** Join ZigZag Mind
 - **Heading:** When your mind is racing
 - Turn tangled thoughts into one next step.
 - **Heading:** When you feel stuck

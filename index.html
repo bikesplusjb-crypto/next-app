@@ -1543,12 +1543,38 @@ const SHARE = {
 };
 function shareUrl(){ try { return /^https?:$/.test(location.protocol) ? location.origin + "/" : "https://zigzagmind.com/"; } catch (_){ return "https://zigzagmind.com/"; } }
 function canShare(){ try { return typeof navigator.share === "function"; } catch (_){ return false; } }
-function shareButton(cls){
-  if (canShare()) return `<button class="${cls}" data-act="shareApp">${SHARE.label}</button>`;
+function shareButton(cls, label = SHARE.label){
+  if (canShare()) return `<button class="${cls}" data-act="shareApp">${label}</button>`;
   // data-kind: sharing the app isn't "reaching out". Phones without a share sheet text it; computers copy it.
-  if (canPhone()) return `<a class="${cls}" href="sms:?&body=${encodeURIComponent(`${SHARE.text} ${shareUrl()}`)}" data-kind="share">${SHARE.label}</a>`;
-  return copyButton(`${SHARE.text} ${shareUrl()}`, cls, `${SHARE.label}: ${SHARE.copy}`, `data-kind="share"`);
+  if (canPhone()) return `<a class="${cls}" href="sms:?&body=${encodeURIComponent(`${SHARE.text} ${shareUrl()}`)}" data-kind="share">${label}</a>`;
+  return copyButton(`${SHARE.text} ${shareUrl()}`, cls, `${label}: ${SHARE.copy}`, `data-kind="share"`);
 }
+
+/* JOIN ZIGZAG MIND (owner request, 2026-10-09: "App and support or tell a friend"). No account, no sign-up: three ways
+   to join in. Get the app (the browser's own install prompt where there is one; otherwise how to add it), Tell a
+   friend (the share button), Support ZigZag Mind (the existing donate link). Nothing is collected or sent. */
+const JOIN = {
+  label:"Join ZigZag Mind",
+  sub:"No account. No sign-up. It's free, and what you add stays on this phone.",
+  appHead:"Get the app",
+  appMeta:"Add it to your phone so it opens like an app, even without a connection.",
+  install:"Add to my phone",
+  installed:"It's already on this phone.",
+  iphone:"On iPhone: tap Share, then Add to Home Screen.",
+  other:"In your browser's menu, choose Install app or Add to Home Screen.",
+  friendHead:"Tell a friend",
+  friendMeta:"Send the link to someone who might need it. Only the link, nothing about you.",
+  friend:"Tell a friend",
+  supportHead:"Support ZigZag Mind",
+  supportMeta:"Free for everyone, always. If it helped, you can help keep it running."
+};
+let installEvt = null;   // the browser's install prompt, kept until used (Android / Chrome)
+function appInstalled(){
+  let on = navigator.standalone === true;
+  try { on = on || !!(window.matchMedia && window.matchMedia("(display-mode: standalone)").matches); } catch (_){}
+  return on;
+}
+function isIphone(){ const ua = navigator.userAgent || ""; return /iPhone|iPad|iPod/.test(ua); }
 
 /* 6.29 SEARCH (STAGE6-29-ADDENDUM.md). Searches only ZigZag Mind's own paths: SEARCH_INDEX is a constant in this file;
    nothing goes to the web, an API or a server. Every query goes through safetyCheck first, on each pause in typing
@@ -1661,8 +1687,8 @@ const SEARCH_INDEX = [
     words:["settings","dark mode","light mode","large text","text size","bigger text","delete","delete everything","export","download my data","reduce motion"] },
   { id:"privacy", title:"Privacy & terms", desc:"What stays on your phone, and what doesn't", screen:"privacy", act:"privacyOpen",
     words:["privacy","terms","private","is this private","who can see","my data","data","tracking"] },
-  { id:"share", title:"Share ZigZag Mind", desc:"Send the link to someone (the link only, nothing about you)", screen:"settings", act:"tab", arg:"settings",
-    words:["share","share the app","share zigzag","send the app","send the link","tell a friend","recommend","invite"] },
+  { id:"join", title:"Join ZigZag Mind", desc:"Get the app, tell a friend, or support it. No account.", screen:"join", act:"joinOpen",
+    words:["join","join zigzag","share","share the app","share zigzag","send the app","send the link","tell a friend","recommend","invite","install","download","get the app","app","add to home screen","home screen","donate","support zigzag","ko fi","kofi"] },
   { id:"help", title:"Help now", desc:"988, 911, and a real person fast", screen:"crisis", act:"crisis",
     words:["help","help me","crisis","988","911","emergency","hotline","lifeline","crisis line","i need help","need help now","dont feel safe","not safe","unsafe","danger","in danger"] }
 ];
@@ -3906,7 +3932,7 @@ const SCREENS = {
       </div>` : ""}
       ${!getPlan().trustedPeople.length && !getPlan().helps.length ? `<button class="card wide" data-act="tab" data-arg="plan" style="margin:14px 0 16px;width:100%">${icon("plan")}<span>${l10n("home.buildPlan")}<span class="meta">${l10n("home.buildPlanMeta")}</span></span></button>` : ""}
       <p class="worried-row"><a class="worried-link" href="support/#worried" target="_blank" rel="noopener">${l10n("home.worried")}</a></p>
-      <p class="worried-row share-row">${shareButton("link")}</p>` };   // 6.19 A: a door for friends and family
+      <p class="worried-row share-row"><button class="link" data-act="joinOpen">${JOIN.label}</button></p>` };   // 6.19 A: a door for friends and family
   },
 
   /* 6.3: Calm. (Zags, 6.7, will be the featured card here.) */
@@ -4517,6 +4543,20 @@ const SCREENS = {
     return { close:true, body:`${stepTitle(HEAVY.end, true)}${line988}`,
       actions:`<button class="btn btn-primary" data-act="putDown">Put the phone down</button>
         <button class="btn btn-secondary" data-act="route" data-arg="connect">Talk to someone</button>` };
+  },
+
+  /* JOIN: get the app, tell a friend, support it. No account. */
+  join(){
+    const app = appInstalled() ? `<p class="small join-done" style="margin:10px 0 0">${JOIN.installed}</p>`
+      : installEvt ? `<button class="btn btn-primary" style="margin-top:10px" data-act="installApp">${JOIN.install}</button>`
+      : `<p class="small join-how" style="margin:10px 0 0">${isIphone() ? JOIN.iphone : JOIN.other}</p>`;
+    return { close:true, body:`
+      ${title(JOIN.label)}
+      <p class="sub">${JOIN.sub}</p>
+      <div class="panel join-app"><h3>${JOIN.appHead}</h3><p class="small" style="margin:4px 0 0">${JOIN.appMeta}</p>${app}</div>
+      <div class="panel join-friend"><h3>${JOIN.friendHead}</h3><p class="small" style="margin:4px 0 10px">${JOIN.friendMeta}</p>${shareButton("btn btn-secondary", JOIN.friend)}</div>
+      ${donateUrl() ? `<div class="panel join-support"><h3>${JOIN.supportHead}</h3><p class="small" style="margin:4px 0 10px">${JOIN.supportMeta}</p>
+        <a class="btn btn-secondary donate" href="${esc(donateUrl())}" target="_blank" rel="noopener">${JOIN.supportHead}</a></div>` : ""}` };
   },
 
   /* 6.29 SEARCH: the field stays put; results update in place (#searchResults) so typing is never interrupted */
@@ -6542,7 +6582,7 @@ const SCREENS = {
       <h2>${l10n("set.about")}</h2>
       <button class="btn btn-secondary" data-act="about">${l10n("set.aboutApp")}</button>
       <button class="btn btn-secondary" style="margin-top:10px" data-act="privacyOpen">${l10n("privacy.link")}</button>
-      <div style="margin-top:10px">${shareButton("btn btn-secondary")}</div>
+      <button class="btn btn-secondary" style="margin-top:10px" data-act="joinOpen">${JOIN.label}</button>
       <p class="small" style="margin:6px 0 0">${SHARE.note}</p>
       <p class="disclaimer" style="margin-bottom:16px">ZigZag Mind is a self-help support tool. It is not therapy, medical care, or an emergency service. If you're in danger, call 911 or call or text 988.</p>
       ${donateUrl() ? `<div class="donate-row"><a class="donate" href="${esc(donateUrl())}" target="_blank" rel="noopener">Support ZigZag Mind</a>
@@ -6633,7 +6673,7 @@ const SCREENS = {
       <div class="stack" style="margin-top:20px">
         <button class="btn btn-primary" data-act="home">Try ZigZag Mind</button>
         <button class="btn btn-secondary" data-act="howScroll">How it works</button>
-        ${shareButton("btn btn-secondary")}
+        <button class="btn btn-secondary" data-act="joinOpen">${JOIN.label}</button>
       </div>
       <div class="panel"><h3>When your mind is racing</h3><p class="small" style="margin:4px 0 0">Turn tangled thoughts into one next step.</p></div>
       <div class="panel" style="margin-top:10px"><h3>When you feel stuck</h3><p class="small" style="margin:4px 0 0">Take one tiny action.</p></div>
@@ -7925,6 +7965,13 @@ const ACTIONS = {
     dispatch({ type:"SET_ENGINE_RESULT", pick:arg, reason:`${findIntervention(arg).name} helped you before.` });
     lastRendered = null; render();
   },
+  joinOpen(){ if (blockIfRed()) return; go("join"); },
+  installApp(){   // the browser's own install prompt; whatever the person chooses, the screen updates
+    if (!installEvt) return;
+    const e = installEvt; installEvt = null;
+    try { e.prompt(); (e.userChoice || Promise.resolve()).then(() => { if (session.screen === "join"){ lastRendered = null; render(); } }, () => {}); } catch (_){}
+    if (session.screen === "join"){ lastRendered = null; render(); }
+  },
   shareApp(){   // the phone's share sheet; if the person closes it, nothing happens
     if (!canShare()) return;
     try { const p = navigator.share({ title:SHARE.title, text:SHARE.text, url:shareUrl() }); if (p && p.catch) p.catch(() => {}); } catch (_){}
@@ -8690,6 +8737,10 @@ document.addEventListener("change", e => {
 document.addEventListener("pointerdown", e => {
   if (session.screen === "focus" && e.target.closest("#focusArea")){ e.preventDefault(); focusTap(); }
 });
+/* JOIN: keep the browser's install prompt for "Add to my phone" (Android / Chrome); nothing else is recorded. */
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; if (session.screen === "join"){ lastRendered = null; render(); } });
+window.addEventListener("appinstalled", () => { installEvt = null; if (session.screen === "join"){ lastRendered = null; render(); } });
+
 /* 6.29: each pause in typing (debounced) and every submit runs the safety check first */
 document.addEventListener("input", e => {
   if (!e.target || e.target.id !== "searchQ") return;

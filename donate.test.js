@@ -34,7 +34,8 @@ r.push(['one constant at the top of the app script', /<script>\s*"use strict";\s
 
 // ---- never anywhere else ----
 {const a=boot(withUrl(URL_)); a.G('ACTIONS.loadSample()');
- const screens=a.G('Object.keys(SCREENS)').filter(s=>s!=='settings' && s!=='about');
+ // 2026-10-09: Join ZigZag Mind (owner request: "App and support or tell a friend") also shows it, as its third part.
+ const screens=a.G('Object.keys(SCREENS)').filter(s=>s!=='settings' && s!=='about' && s!=='join');
  const found=[];
  for(const s of screens){
    for(const st of ['anxious','low','distraction']){

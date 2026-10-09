@@ -27,6 +27,7 @@ Method: read the code in `index.html`, `support/index.html` and `sw.js` at the c
 | In memory only (gone on reload) | | `session`, `ui` | Safety level (GREEN/YELLOW/RED), "I still feel bad" and 9–10 counts, Human First counters, free text being typed, games, Zags state |
 
 - **Saving off** (Settings): nothing is written to `localStorage`, and the saved store is removed.
+- **Join ZigZag Mind (2026-10-09):** no account and nothing collected. "Add to my phone" uses the browser's own install prompt (the page keeps it in memory until tapped); the donate link opens Ko-fi.
 - **Share ZigZag Mind (2026-10-09):** hands the phone's share sheet the site link and one fixed line; nothing about the person, no tracking codes. Without a share sheet it copies the same text. The app sends nothing itself.
 - **Search (6.29):** the query lives only in memory while the Search screen is open and is cleared when the person leaves it. No search history, no recent searches, no saved query, no logging; the field has `autocomplete="off"` and no `name`. The index (`SEARCH_INDEX`) is a constant in the page: nothing is sent anywhere. A RED query opens the crisis screen and is discarded.
 - **Not encrypted.** Anyone with access to the unlocked phone and browser, or its backups, can read `localStorage`. (Already an open item in HANDOFF.md.) **One exception (6.21):** the optional diary lock encrypts diary entries on the phone; everything else is not encrypted.
