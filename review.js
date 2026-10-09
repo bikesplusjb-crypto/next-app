@@ -368,6 +368,19 @@ list([
   'End: "'+PR.endNow+'" (Now) or "'+PR.end+'" · "'+PR.big+'" Talk to someone → Put the phone down'
 ]);
 
+H(3,'Search (6.29, STAGE6-29-ADDENDUM.md; CLINICIAN REVIEW REQUIRED for the routing)');
+const SE=G('SEARCH');
+list([
+  'Home: a field under "I don\'t feel safe": "'+SE.placeholder+'". Tight screens (large text, small phones): a magnifier next to Help instead.',
+  'Screen "'+SE.title+'": field (autocomplete off) · "'+SE.sub+'" · before typing: "'+SE.suggestLbl+'" '+SE.suggest.map(x=>`"${x[1]}"`).join(' · '),
+  'Every query: safety check first, on each pause (~'+SE.debounceMs+' ms) and on submit. RED → the crisis screen, query discarded. YELLOW → support bar on, results still shown.',
+  'Results: up to '+SE.max+' cards (title + one line), then "'+SE.notIt+' '+SE.notItLink+'". Nothing matches: "'+SE.start+'" I don\'t know what I need · Talk to someone · Calm down with Zags · Help. Never "No results".',
+  'Nothing remembered: no history, no recent searches, no saved query; it clears when you leave the screen.',
+  'Index: '+G('SEARCH_INDEX.length')+' paths, '+G('SEARCH_INDEX.reduce((n,e)=>n+e.words.length,0)')+' words. Breakup / heartbreak words lead to "I feel sad or low" (no heartbreak path yet). "pills" alone → the urge path; "took all my pills" → crisis (safety check).'
+]);
+P('Every path in the index (title — one line):');
+list(G('SEARCH_INDEX').map(e=>'"'+e.title+'" — '+e.desc+(e.faith?' (only when Faith & hope is on)':'')));
+
 H(3,'Your reset map (owner request, 2026-10-06; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)');
 const RM=G('RESET_MAP');
 list([

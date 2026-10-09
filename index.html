@@ -1611,7 +1611,7 @@ const SEARCH_INDEX = [
     words:["warm drink","tea","hot chocolate","cocoa","warm","something warm"] },
   { id:"coffee", title:"Have coffee with ZigZag", desc:"A few quiet minutes, scripted", screen:"coffee", act:"coffeeStart",
     words:["coffee","keep me company","sit with me","company"] },
-  { id:"kind", title:"Talk to yourself like a friend", desc:"What would you tell someone you love?", screen:"kind", act:"kindStart",
+  { id:"kind", title:"Talk to yourself like a friend", desc:"What would you tell someone you love?", screen:"intervention", act:"lowPick", arg:"kind_stranger",
     words:["be kind","kind to myself","self compassion","hard on myself","beat myself up","beating myself up","self talk","hate myself","im stupid","im a failure","failure"] },
   { id:"borrow", title:"Borrow ten minutes", desc:"Just the next ten minutes", screen:"borrow", act:"lowPick", arg:"borrow_ten",
     words:["ten minutes","10 minutes","next ten minutes","borrow","get through the next","get through today"] },
@@ -1700,7 +1700,12 @@ const searchIcon = () => `<svg viewBox="0 0 24 24" fill="none" stroke="currentCo
 function searchResultsHtml(q){
   const n = normalizeText(q).trim();
   if (!n) return `<p class="small" style="margin:6px 0 8px">${SEARCH.suggestLbl}</p><div class="sits search-suggest">${SEARCH.suggest.map(([k, l]) => `<button class="sit" data-act="searchSuggest" data-arg="${esc(k)}">${l}</button>`).join("")}</div>`;
-  return searchStartHtml();
+  const hits = searchMatch(q);
+  if (!hits.length) return searchStartHtml();   // never "no results"
+  return `<div class="list search-hits">${hits.map(e => e.href
+      ? `<a class="card" href="${e.href}" target="_blank" rel="noopener" data-search="${e.id}"><span>${e.title}<span class="meta">${e.desc}</span></span></a>`
+      : `<button class="card" data-act="searchGo" data-arg="${e.id}"><span>${e.title}<span class="meta">${e.desc}</span></span></button>`).join("")}</div>
+    <p class="search-not">${SEARCH.notIt} <button class="link inline" data-act="dontKnow">${SEARCH.notItLink}</button></p>`;
 }
 function searchStartHtml(){
   return `<p class="search-start" style="margin:6px 0 8px">${SEARCH.start}</p><div class="list">
@@ -7895,6 +7900,13 @@ const ACTIONS = {
     lastRendered = null; render();
   },
   searchOpen(){ if (blockIfRed()) return; searchQ = ""; go("search"); },
+  searchGo(arg){   // straight into the path, with the same function its normal button calls
+    if (blockIfRed()) return;
+    const e = SEARCH_INDEX.find(x => x.id === arg);
+    if (!e || e.href || (e.faith && !faithOn()) || typeof ACTIONS[e.act] !== "function") return;
+    searchQ = ""; clearTimeout(searchTimer); searchTimer = null;
+    ACTIONS[e.act](e.arg);
+  },
   searchSuggest(arg){
     if (blockIfRed()) return;
     const k = SEARCH.suggest.find(x => x[0] === arg); if (!k) return;

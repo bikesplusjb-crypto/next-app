@@ -1296,6 +1296,60 @@ Why (for reviewers only; never shown as statements about people): in 2023 an ave
 - 4: "When will you do it?" → "Now" · "Later today" · "Tomorrow"
 - End: "Go do it. That's the whole step." (Now) or "That's the step. You don't have to solve the whole thing." · "Too big to do alone?" Talk to someone → Put the phone down
 
+### Search (6.29, STAGE6-29-ADDENDUM.md; CLINICIAN REVIEW REQUIRED for the routing)
+
+- Home: a field under "I don't feel safe": "Search: panic, breakup, can't sleep…". Tight screens (large text, small phones): a magnifier next to Help instead.
+- Screen "Search": field (autocomplete off) · "Only ZigZag Mind's own tools. Nothing you type here is saved." · before typing: "Try:" "Panic" · "Can't sleep" · "Breakup" · "Lonely" · "Urge"
+- Every query: safety check first, on each pause (~600 ms) and on submit. RED → the crisis screen, query discarded. YELLOW → support bar on, results still shown.
+- Results: up to 5 cards (title + one line), then "Not it? I don't know what I need →". Nothing matches: "Here are some places to start:" I don't know what I need · Talk to someone · Calm down with Zags · Help. Never "No results".
+- Nothing remembered: no history, no recent searches, no saved query; it clears when you leave the screen.
+- Index: 44 paths, 647 words. Breakup / heartbreak words lead to "I feel sad or low" (no heartbreak path yet). "pills" alone → the urge path; "took all my pills" → crisis (safety check).
+Every path in the index (title — one line):
+- "It feels like panic" — One wave at a time, with a 911 line if it's new
+- "Calm down" — Slow your body down: breathing, grounding, Zags
+- "Calm down with Zags" — Breathe together for a minute
+- "Butterfly hug" — Cross your arms and tap, left and right
+- "Hold & answer" — Hold your thumb gently and answer five easy questions
+- "What's true" — Start with what you know is still true
+- "Get out of my head" — Quick games and distractions
+- "I'm spiraling" — Get the thoughts out of your head, one at a time
+- "Park it for later" — Pick a time to think about it, and set it down for now
+- "One problem, one step" — Pick one problem and the smallest step
+- "Understand it" — Two or three short questions to make sense of it
+- "I don't know what I need" — That's okay. Start here.
+- "Connect" — A person, not another answer: the Warm Line and your people
+- "Reach someone, step by step" — Pick a person, send a ready message, then: did they answer?
+- "Be around people" — Somewhere with people, no talking needed
+- "Change the scene" — Small moves and somewhere to go
+- "Find something" — Photo missions: notice something around you
+- "I feel sad or low" — One small step. Also for breakups and heartbreak.
+- "Most of my days feel heavy" — When it's not one bad day but most days
+- "I have an urge" — Drink, drugs or vape: give it a little time first
+- "I lost someone" — Grief, a death, or a pet who died
+- "Bullied — now or before" — At school, at work, online, or years ago
+- "PTSD, trauma, or military" — Flashbacks, nightmares, on edge, veterans
+- "I'm really angry" — Step away and let your body come down
+- "Tech check" — AI, scrolling, or checking is getting to me
+- "Cozy up" — Something warm, a blanket, softer light (a sleep version at night)
+- "Make something warm" — A warm drink, made slowly
+- "Have coffee with ZigZag" — A few quiet minutes, scripted
+- "Talk to yourself like a friend" — What would you tell someone you love?
+- "Borrow ten minutes" — Just the next ten minutes
+- "My Plan" — Your safety plan: signs, what helps, people, reasons
+- "I need my plan now" — Your plan, all on one screen
+- "Code word" — One word that tells your person you need them
+- "My hope box" — Your reasons, songs and photos in one place
+- "Just out of the ER" — The first 30 days after the ER or hospital
+- "A line for today" — A private line a day, ending on what's still true
+- "Doodle" — Draw anything, then keep it or let it go
+- "Turn it into a song" — Three lines become a song
+- "Worried about someone?" — How to help a friend or family member
+- "Faith & hope" — A few verses for hard moments (only when Faith & hope is on)
+- "Progress" — What you did this week, and your reset map
+- "Settings" — Dark mode, text size, export or delete everything
+- "Privacy & terms" — What stays on your phone, and what doesn't
+- "Help now" — 988, 911, and a real person fast
+
 ### Your reset map (owner request, 2026-10-06; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)
 
 - Progress → "Your reset map": "What has helped you before, by situation. Only on this phone." (empty: "This fills in as you use ZigZag Mind and say what helped."). Grouped by "When you're anxious" · "When you're spiraling" · "When you feel low" · "When there's an urge" · "When you need to get out of your head"; up to 3 things each that helped, e.g. "Helped 2 of 3 times", each with [Try it]. "Not a score. Just what you told ZigZag Mind." Counts only, never percentages or scores. Built from check-ins already kept on this phone; "That helped" is now noted on its check-in.
