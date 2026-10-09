@@ -1534,12 +1534,12 @@ const BUTTERFLY = {
 /* SHARE ZIGZAG MIND (owner request, 2026-10-09). Shares only the site's address and one line about it, through the
    phone's own share sheet (Web Share API); where there isn't one, a Copy link button. Never anything about the
    person: no plan, no history, no tracking codes in the link. Not on crisis screens. */
-const SHARE = {
-  label:"Share ZigZag Mind",
+const SHARE = {   // owner, 2026-10-09: "make it safe and honest": says what it is and isn't, and where to get help now
+  label:"Share with a friend",
   title:"ZigZag Mind",
-  text:"ZigZag Mind: free, private help for hard moments, one small step at a time.",
-  copy:"Copy link",
-  note:"Shares the link only. Nothing about you."
+  text:"ZigZag Mind is a free app with small steps for hard moments. It's not therapy or an emergency service. If you're in crisis, call or text 988 (US).",
+  copy:"Copy message",
+  note:"Only this message and the link are shared. Nothing about you."
 };
 function shareUrl(){ try { return /^https?:$/.test(location.protocol) ? location.origin + "/" : "https://zigzagmind.com/"; } catch (_){ return "https://zigzagmind.com/"; } }
 function canShare(){ try { return typeof navigator.share === "function"; } catch (_){ return false; } }
@@ -1550,21 +1550,22 @@ function shareButton(cls, label = SHARE.label){
   return copyButton(`${SHARE.text} ${shareUrl()}`, cls, `${label}: ${SHARE.copy}`, `data-kind="share"`);
 }
 
-/* JOIN ZIGZAG MIND (owner request, 2026-10-09: "App and support or tell a friend"). No account, no sign-up: three ways
-   to join in. Get the app (the browser's own install prompt where there is one; otherwise how to add it), Tell a
+/* SHARE WITH A FRIEND (owner request, 2026-10-09: "App and support or tell a friend", then "make it safe and honest").
+   Not "Join": there is nothing to join (no account, no sign-up, no community). Shows the exact message before it's sent. Get the app (the browser's own install prompt where there is one; otherwise how to add it), Tell a
    friend (the share button), Support ZigZag Mind (the existing donate link). Nothing is collected or sent. */
 const JOIN = {
-  label:"Join ZigZag Mind",
-  sub:"No account. No sign-up. It's free, and what you add stays on this phone.",
+  label:"Share with a friend",
+  sub:"No account and no sign-up. ZigZag Mind is free, and the app itself never sends anything you add.",
+  preview:"This is exactly what they'll get:",
   appHead:"Get the app",
-  appMeta:"Add it to your phone so it opens like an app, even without a connection.",
+  appMeta:"Add it to your home screen so it opens like an app. The basics work without internet; calls and texts still need phone service.",
   install:"Add to my phone",
   installed:"It's already on this phone.",
   iphone:"On iPhone: tap Share, then Add to Home Screen.",
   other:"In your browser's menu, choose Install app or Add to Home Screen.",
-  friendHead:"Tell a friend",
-  friendMeta:"Send the link to someone who might need it. Only the link, nothing about you.",
-  friend:"Tell a friend",
+  friendHead:"Share with a friend",
+  friendMeta:"Only this message and the link are shared. Nothing about you.",
+  friend:"Share with a friend",
   supportHead:"Support ZigZag Mind",
   supportMeta:"Free for everyone, always. If it helped, you can help keep it running."
 };
@@ -1687,8 +1688,8 @@ const SEARCH_INDEX = [
     words:["settings","dark mode","light mode","large text","text size","bigger text","delete","delete everything","export","download my data","reduce motion"] },
   { id:"privacy", title:"Privacy & terms", desc:"What stays on your phone, and what doesn't", screen:"privacy", act:"privacyOpen",
     words:["privacy","terms","private","is this private","who can see","my data","data","tracking"] },
-  { id:"join", title:"Join ZigZag Mind", desc:"Get the app, tell a friend, or support it. No account.", screen:"join", act:"joinOpen",
-    words:["join","join zigzag","share","share the app","share zigzag","send the app","send the link","tell a friend","recommend","invite","install","download","get the app","app","add to home screen","home screen","donate","support zigzag","ko fi","kofi"] },
+  { id:"join", title:"Share with a friend", desc:"Send the link to someone, get the app, or support it. No account.", screen:"join", act:"joinOpen",
+    words:["share with a friend","share with friend","join","join zigzag","share","share the app","share zigzag","send the app","send the link","tell a friend","recommend","invite","install","download","get the app","app","add to home screen","home screen","donate","support zigzag","ko fi","kofi"] },
   { id:"help", title:"Help now", desc:"988, 911, and a real person fast", screen:"crisis", act:"crisis",
     words:["help","help me","crisis","988","911","emergency","hotline","lifeline","crisis line","i need help","need help now","dont feel safe","not safe","unsafe","danger","in danger"] }
 ];
@@ -4548,13 +4549,15 @@ const SCREENS = {
   /* JOIN: get the app, tell a friend, support it. No account. */
   join(){
     const app = appInstalled() ? `<p class="small join-done" style="margin:10px 0 0">${JOIN.installed}</p>`
-      : installEvt ? `<button class="btn btn-primary" style="margin-top:10px" data-act="installApp">${JOIN.install}</button>`
+      : installEvt ? `<button class="btn btn-secondary" style="margin-top:10px" data-act="installApp">${JOIN.install}</button>`
       : `<p class="small join-how" style="margin:10px 0 0">${isIphone() ? JOIN.iphone : JOIN.other}</p>`;
     return { close:true, body:`
       ${title(JOIN.label)}
       <p class="sub">${JOIN.sub}</p>
+      <div class="panel join-friend"><p class="small" style="margin:0 0 6px">${JOIN.preview}</p>
+        <p class="copy-text share-preview">${esc(SHARE.text)} ${esc(shareUrl())}</p>
+        <p class="small" style="margin:8px 0 10px">${JOIN.friendMeta}</p>${shareButton("btn btn-primary", JOIN.friend)}</div>
       <div class="panel join-app"><h3>${JOIN.appHead}</h3><p class="small" style="margin:4px 0 0">${JOIN.appMeta}</p>${app}</div>
-      <div class="panel join-friend"><h3>${JOIN.friendHead}</h3><p class="small" style="margin:4px 0 10px">${JOIN.friendMeta}</p>${shareButton("btn btn-secondary", JOIN.friend)}</div>
       ${donateUrl() ? `<div class="panel join-support"><h3>${JOIN.supportHead}</h3><p class="small" style="margin:4px 0 10px">${JOIN.supportMeta}</p>
         <a class="btn btn-secondary donate" href="${esc(donateUrl())}" target="_blank" rel="noopener">${JOIN.supportHead}</a></div>` : ""}` };
   },

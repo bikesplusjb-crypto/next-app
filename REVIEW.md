@@ -1296,12 +1296,12 @@ Why (for reviewers only; never shown as statements about people): in 2023 an ave
 - 4: "When will you do it?" → "Now" · "Later today" · "Tomorrow"
 - End: "Go do it. That's the whole step." (Now) or "That's the step. You don't have to solve the whole thing." · "Too big to do alone?" Talk to someone → Put the phone down
 
-### Join ZigZag Mind: get the app, tell a friend, support it (owner request, 2026-10-09)
+### Share with a friend: share it, get the app, support it (owner request, 2026-10-09: "make it safe and honest")
 
-- Where: "Join ZigZag Mind" at the bottom of Home (under "Worried about someone?"), in Settings under About (with "Shares the link only. Nothing about you."), and on the About page; Search ("join", "install", "tell a friend", "donate"). Never on crisis screens.
-- Screen: "Join ZigZag Mind" / "No account. No sign-up. It's free, and what you add stays on this phone."
-- "Get the app" / "Add it to your phone so it opens like an app, even without a connection." → [Add to my phone] (the browser's own install prompt, Android / Chrome) · iPhone: "On iPhone: tap Share, then Add to Home Screen." · other browsers: "In your browser's menu, choose Install app or Add to Home Screen." · installed: "It's already on this phone."
-- "Tell a friend" / "Send the link to someone who might need it. Only the link, nothing about you." → the phone's share sheet with "ZigZag Mind" / "ZigZag Mind: free, private help for hard moments, one small step at a time." and the site link (phones without one: a text message; computers: Copy link)
+- Where: "Share with a friend" at the bottom of Home (under "Worried about someone?"), in Settings under About (with "Only this message and the link are shared. Nothing about you."), and on the About page; Search ("share", "tell a friend", "install", "donate"). Never on crisis screens. Not called "Join": there is nothing to join.
+- Screen: "Share with a friend" / "No account and no sign-up. ZigZag Mind is free, and the app itself never sends anything you add."
+- "Get the app" / "Add it to your home screen so it opens like an app. The basics work without internet; calls and texts still need phone service." → [Add to my phone] (the browser's own install prompt, Android / Chrome) · iPhone: "On iPhone: tap Share, then Add to Home Screen." · other browsers: "In your browser's menu, choose Install app or Add to Home Screen." · installed: "It's already on this phone."
+- First: "This is exactly what they'll get:" then the exact message: "ZigZag Mind is a free app with small steps for hard moments. It's not therapy or an emergency service. If you're in crisis, call or text 988 (US)." + the site link / "Only this message and the link are shared. Nothing about you." → [Share with a friend] (the phone's share sheet; phones without one: a text message; computers: Copy message)
 - "Support ZigZag Mind" / "Free for everyone, always. If it helped, you can help keep it running." → the donate link
 - No account, no email, nothing collected. Shares the link only: nothing about the person, no tracking codes.
 
@@ -1312,7 +1312,7 @@ Why (for reviewers only; never shown as statements about people): in 2023 an ave
 - Every query: safety check first, on each pause (~600 ms) and on submit. RED → the crisis screen, query discarded. YELLOW → support bar on, results still shown.
 - Results: up to 5 cards (title + one line), then "Not it? I don't know what I need →". Nothing matches: "Here are some places to start:" I don't know what I need · Talk to someone · Calm down with Zags · Help. Never "No results".
 - Nothing remembered: no history, no recent searches, no saved query; it clears when you leave the screen.
-- Index: 45 paths, 667 words. Breakup / heartbreak words lead to "I feel sad or low" (no heartbreak path yet). "pills" alone → the urge path; "took all my pills" → crisis (safety check).
+- Index: 45 paths, 669 words. Breakup / heartbreak words lead to "I feel sad or low" (no heartbreak path yet). "pills" alone → the urge path; "took all my pills" → crisis (safety check).
 Every path in the index (title — one line):
 - "It feels like panic" — One wave at a time, with a 911 line if it's new
 - "Calm down" — Slow your body down: breathing, grounding, Zags
@@ -1357,7 +1357,7 @@ Every path in the index (title — one line):
 - "Progress" — What you did this week, and your reset map
 - "Settings" — Dark mode, text size, export or delete everything
 - "Privacy & terms" — What stays on your phone, and what doesn't
-- "Join ZigZag Mind" — Get the app, tell a friend, or support it. No account.
+- "Share with a friend" — Send the link to someone, get the app, or support it. No account.
 - "Help now" — 988, 911, and a real person fast
 
 ### Your reset map (owner request, 2026-10-06; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)
@@ -1768,7 +1768,7 @@ Rendered for each state where the screen changes by state. Identical renders are
 - **Button:** More
 - **Button:** Tech check — AI, scrolling, or checking is getting to me
 - **Link → `support/#worried`:** Worried about someone? How to help →
-- **Button:** Join ZigZag Mind
+- **Button:** Share with a friend
 - **Button:** Home
 - **Button:** My Plan
 - **Button:** Progress
@@ -2432,14 +2432,15 @@ _When: distraction_
 
 - **Button:** × _(screen reader: "Close and go to home")_
 - **Button:** Help _(screen reader: "Get help now")_
-- **Heading:** Join ZigZag Mind
-- No account. No sign-up. It's free, and what you add stays on this phone.
+- **Heading:** Share with a friend
+- No account and no sign-up. ZigZag Mind is free, and the app itself never sends anything you add.
+- This is exactly what they'll get:
+- ZigZag Mind is a free app with small steps for hard moments. It's not therapy or an emergency service. If you're in crisis, call or text 988 (US). https://zigzagmind.com/
+- Only this message and the link are shared. Nothing about you.
+- **Link → `sms:?&body=ZigZag Mind is a free app with small steps for hard moments. It's not therapy or an emergency service. If you're in crisis, call or text 988 (US). https://zigzagmind.com/`:** Share with a friend
 - **Heading:** Get the app
-- Add it to your phone so it opens like an app, even without a connection.
+- Add it to your home screen so it opens like an app. The basics work without internet; calls and texts still need phone service.
 - In your browser's menu, choose Install app or Add to Home Screen.
-- **Heading:** Tell a friend
-- Send the link to someone who might need it. Only the link, nothing about you.
-- **Link → `sms:?&body=ZigZag Mind: free, private help for hard moments, one small step at a time. https://zigzagmind.com/`:** Tell a friend
 - **Heading:** Support ZigZag Mind
 - Free for everyone, always. If it helped, you can help keep it running.
 - **Link → `https://ko-fi.com/zigzagmind`:** Support ZigZag Mind
@@ -3651,7 +3652,7 @@ _When: distraction_
 - **Button:** More
 - **Button:** Tech check — AI, scrolling, or checking is getting to me
 - **Link → `support/#worried`:** Worried about someone? How to help →
-- **Button:** Join ZigZag Mind
+- **Button:** Share with a friend
 - **Button:** Home
 - **Button:** My Plan
 - **Button:** Progress
@@ -3684,7 +3685,7 @@ _When: distraction_
 - **Button:** More
 - **Button:** Tech check — AI, scrolling, or checking is getting to me
 - **Link → `support/#worried`:** Worried about someone? How to help →
-- **Button:** Join ZigZag Mind
+- **Button:** Share with a friend
 - **Button:** Home
 - **Button:** My Plan
 - **Button:** Progress
@@ -3717,7 +3718,7 @@ _When: distraction_
 - **Button:** More
 - **Button:** Tech check — AI, scrolling, or checking is getting to me
 - **Link → `support/#worried`:** Worried about someone? How to help →
-- **Button:** Join ZigZag Mind
+- **Button:** Share with a friend
 - **Button:** Home
 - **Button:** My Plan
 - **Button:** Progress
@@ -4344,8 +4345,8 @@ _When: distraction_
 - **Heading:** About
 - **Button:** About ZigZag Mind
 - **Button:** Privacy & terms
-- **Button:** Join ZigZag Mind
-- Shares the link only. Nothing about you.
+- **Button:** Share with a friend
+- Only this message and the link are shared. Nothing about you.
 - ZigZag Mind is a self-help support tool. It is not therapy, medical care, or an emergency service. If you're in danger, call 911 or call or text 988.
 - **Link → `https://ko-fi.com/zigzagmind`:** Support ZigZag Mind
 - Free for everyone, always. If it helped, you can help keep it running.
@@ -4433,7 +4434,7 @@ _When: distraction_
 - **Link → `tel:988`:** Call or text 988
 - **Button:** Try ZigZag Mind
 - **Button:** How it works
-- **Button:** Join ZigZag Mind
+- **Button:** Share with a friend
 - **Heading:** When your mind is racing
 - Turn tangled thoughts into one next step.
 - **Heading:** When you feel stuck
