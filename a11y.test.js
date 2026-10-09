@@ -46,12 +46,14 @@ r.push(['focus game: reduced motion is side to side only', focusY(true)===0]);
    a.G(`lastRendered=null; ui=freshUi(); ui.thoughts=[{text:"A worried thought",place:null}]; ui.editSection=${s==='plan-edit'?'"trustedPeople"':'null'};
         session={...initialSession, screen:${JSON.stringify(s)}, currentState:"anxious", currentInterventionId:"walking", currentBeforeRating:7}; render();`);
    const d=a.doc;
-   if(!d.getElementById('screen-title') || d.activeElement!==d.getElementById('screen-title')) bad.title.push(s);
+   // 6.29: Search focuses its labelled field instead (the screen still has a title)
+   const want=s==='search'?d.getElementById('searchQ'):d.getElementById('screen-title');
+   if(!d.getElementById('screen-title') || !want || d.activeElement!==want) bad.title.push(s);
    if(!d.querySelector('header .help-pill[data-act="crisis"]')) bad.help.push(s);
    d.querySelectorAll('#app button, #app a[href]').forEach(e=>{ if(!name(e)) bad.names.push(s); });
    d.querySelectorAll('#app input, #app textarea, #app select').forEach(e=>{ if(!(e.id&&d.querySelector(`label[for="${e.id}"]`)) && !e.getAttribute('aria-label') && !e.getAttribute('aria-labelledby') && !e.closest('label')) bad.labels.push(s+'#'+e.id); });
  }
- r.push([`all ${screens.length} screens move focus to their title`, screens.length>=37 && bad.title.length===0, bad.title.join()]);
+ r.push([`all ${screens.length} screens move focus to their title (Search: to its field)`, screens.length>=37 && bad.title.length===0, bad.title.join()]);
  r.push(['Help is in the top bar of every screen', bad.help.length===0, bad.help.join()]);
  r.push(['every button and link has a name', bad.names.length===0, [...new Set(bad.names)].join()]);
  r.push(['every text field has a label', bad.labels.length===0, bad.labels.join()]);

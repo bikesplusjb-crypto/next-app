@@ -63,6 +63,7 @@ ZigZag Mind is comfortable with people leaving. That is the goal, not a failure.
 | 6.23 | 6.23 | I feel sad or low (owner request, 2026-10-04) |
 | 6.27 | 6.27 | Bullied, now or before (STAGE6-27-ADDENDUM.md) |
 | 6.28 | 6.28 | PTSD, trauma, or military (STAGE6-28-ADDENDUM.md) |
+| 6.29 | 6.29 | Search (STAGE6-29-ADDENDUM.md) |
 | — | Most of my days feel heavy | Owner request, 2026-10-05 |
 | — | Hold & answer | Owner handoff, 2026-10-05 |
 | — | Understand it | Owner handoff, 2026-10-04 (FEEL → UNDERSTAND → ACT, optional) |

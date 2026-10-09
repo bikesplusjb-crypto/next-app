@@ -285,6 +285,18 @@ h1.home-tag{font-size:22px;font-weight:500;line-height:1.25;letter-spacing:-.01e
 .home-sub{font-size:15px;line-height:1.4;color:var(--text-muted);margin:2px 0 0}
 /* Large text (about 200%): keep "I don't feel safe" on the first screen. */
 @media (max-width:320px){.home-sub,.home-hero .zz{display:none}h1.home-tag{font-size:18px}}
+/* 6.29 Search: a field on Home; on tight screens (large text, small phones) a magnifier next to Help instead */
+.home-search{display:flex;align-items:center;gap:10px;width:100%;margin:12px 0 4px;padding:0 14px;min-height:46px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--text-muted);font-size:16px;text-align:left}
+.home-search svg,.search-btn svg{width:18px;height:18px;flex:none}
+.top-right{display:flex;align-items:center;gap:8px}
+.search-btn{display:none;width:48px;height:48px;border-radius:24px;border:1px solid var(--line);background:var(--surface);color:var(--text);place-items:center}
+@media (max-width:320px){.home-search{display:none}.search-btn{display:grid}}
+.search-form{display:flex;gap:8px;margin-top:8px}
+.search-form input{flex:1 1 auto;min-width:0;min-height:52px;padding:0 14px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);color:var(--text);font-size:18px}
+.search-form button{flex:none;min-height:52px;padding:0 16px;border-radius:14px;border:none;background:var(--primary);color:var(--on-primary);font-weight:600;font-size:16px}
+.search-results{margin-top:14px}
+.search-results .card{width:100%}
+.search-not{margin-top:16px}
 .btn-big{min-height:72px;font-size:19px;border-radius:20px;margin-top:10px}
 .routes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
 .route{min-height:80px;border-radius:18px;background:var(--surface);border:1px solid var(--line);padding:10px 14px;
@@ -1517,6 +1529,60 @@ const BUTTERFLY = {
   same:"That's okay. Not everything works every time.",
   next:"Next"
 };
+
+/* 6.29 SEARCH (STAGE6-29-ADDENDUM.md). Searches only ZigZag Mind's own paths: SEARCH_INDEX is a constant in this file;
+   nothing goes to the web, an API or a server. Every query goes through safetyCheck first, on each pause in typing
+   (debounced) and on every submit: RED → openCrisis() and the query is discarded; YELLOW → support bar on, results
+   still shown. Never "No results". Nothing is remembered: no history, no recent searches, no saved query, no logging;
+   the query lives only in memory while the Search screen is open and is cleared when the person leaves it. */
+const SEARCH = {
+  title:"Search",
+  placeholder:"Search: panic, breakup, can't sleep…",
+  aria:"Search ZigZag Mind",
+  go:"Search",
+  homeAria:"Search ZigZag Mind: panic, breakup, can't sleep",
+  suggestLbl:"Try:",
+  suggest:[["panic","Panic"],["can't sleep","Can't sleep"],["breakup","Breakup"],["lonely","Lonely"],["urge","Urge"]],
+  sub:"Only ZigZag Mind's own tools. Nothing you type here is saved.",
+  start:"Here are some places to start:",
+  notIt:"Not it?",
+  notItLink:"I don't know what I need →",
+  max:5,
+  debounceMs:600
+};
+let searchQ = "", searchTimer = null;   // memory only, while the Search screen is open
+const searchIcon = () => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.2-4.2"/></svg>`;
+function searchResultsHtml(q){
+  const n = normalizeText(q).trim();
+  if (!n) return `<p class="small" style="margin:6px 0 8px">${SEARCH.suggestLbl}</p><div class="sits search-suggest">${SEARCH.suggest.map(([k, l]) => `<button class="sit" data-act="searchSuggest" data-arg="${esc(k)}">${l}</button>`).join("")}</div>`;
+  return searchStartHtml();
+}
+function searchStartHtml(){
+  return `<p class="search-start" style="margin:6px 0 8px">${SEARCH.start}</p><div class="list">
+    <button class="card" data-act="dontKnow"><span>I don't know what I need</span></button>
+    <button class="card" data-act="talk"><span>Talk to someone</span></button>
+    <button class="card" data-act="zags" data-arg="calm"><span>Calm down with Zags</span></button>
+    <button class="card" data-act="crisis"><span>Help</span></button></div>`;
+}
+/* Every query: safety first. RED discards it and opens the crisis screen; YELLOW turns the support bar on. */
+function searchRun(raw){
+  clearTimeout(searchTimer); searchTimer = null;
+  if (session.screen !== "search") return;
+  if (blockIfRed()){ searchQ = ""; return; }
+  const q = String(raw || "").slice(0, 120);
+  const level = safetyCheck(q);
+  const box = document.getElementById("searchQ");
+  if (level === "RED"){ searchQ = ""; if (box) box.value = ""; openCrisis(); return; }
+  searchQ = q;
+  if (level === "YELLOW" && !session.yellow){
+    applySafetyResult("YELLOW"); render();   // the support bar is in the header: redraw (same screen), then put the field back
+    const b = document.getElementById("searchQ");
+    if (b){ b.value = q; try { b.focus(); b.setSelectionRange(q.length, q.length); } catch (_){} }
+    return;
+  }
+  const out = document.getElementById("searchResults");
+  if (out) out.innerHTML = searchResultsHtml(q);
+}
 
 /* MY HOPE BOX (from the 2026-10-05 research pass, after the VA's Virtual Hope Box; wording drafted by Claude Code,
    CLINICIAN REVIEW REQUIRED). One place for what the person already kept: reasons to stay, their songs, and
@@ -3621,7 +3687,7 @@ const BEFORE_HEAD = {
 
 const SCREENS = {
   home(){
-    return { nav:true, close:false, body:`
+    return { nav:true, close:false, searchBtn:true, body:`
       <div class="home-hero">
         <div class="brand-row">
           <button class="brand" data-act="wordmark" aria-label="ZigZag Mind">ZigZag Mind</button>
@@ -3634,6 +3700,7 @@ const SCREENS = {
         ${isNight() ? `<p class="home-sub home-night">${l10n("home.night")}</p>` : ""}
       </div>
       <button class="card wide safety home-safe" data-act="crisis">${icon("shield", "safety")}<span>${l10n("home.unsafe")}<span class="meta">${l10n("home.unsafeMeta")}</span></span></button>
+      <button class="home-search" data-act="searchOpen" aria-label="${SEARCH.homeAria}">${searchIcon()}<span>${SEARCH.placeholder}</span></button>
       ${afterBar()}
       ${afterEnded() ? `<div class="panel after-end" role="note"><p style="margin:0">${AFTER_END_NOTE}</p>
         <div style="display:flex;justify-content:flex-end"><button class="link" data-act="afterEndOk">Okay</button></div></div>` : ""}
@@ -4277,6 +4344,18 @@ const SCREENS = {
     return { close:true, body:`${stepTitle(HEAVY.end, true)}${line988}`,
       actions:`<button class="btn btn-primary" data-act="putDown">Put the phone down</button>
         <button class="btn btn-secondary" data-act="route" data-arg="connect">Talk to someone</button>` };
+  },
+
+  /* 6.29 SEARCH: the field stays put; results update in place (#searchResults) so typing is never interrupted */
+  search(){
+    return { close:true, body:`
+      ${title(SEARCH.title)}
+      <form class="search-form" id="searchForm" role="search" autocomplete="off" novalidate>
+        <input id="searchQ" type="search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" maxlength="120" placeholder="${esc(SEARCH.placeholder)}" aria-label="${SEARCH.aria}">
+        <button type="submit">${SEARCH.go}</button>
+      </form>
+      <p class="small" style="margin:8px 0 0">${SEARCH.sub}</p>
+      <div class="search-results" id="searchResults" aria-live="polite">${searchResultsHtml(searchQ)}</div>` };
   },
 
   /* BRIDGE: pick a person (or 988), then "Did they answer?"; the person always taps the call or text themselves */
@@ -6836,10 +6915,11 @@ function patternTap(i){
 
 function topBar(def){
   const left = def.close ? `<button class="icon-btn" data-act="home" aria-label="${l10n("help.close")}">×</button>` : `<span class="spacer"></span>`;
-  return `<div class="topbar">${left}
+  const search = def.searchBtn ? `<button class="search-btn" data-act="searchOpen" aria-label="${SEARCH.aria}">${searchIcon()}</button>` : "";
+  return `<div class="topbar">${left}<div class="top-right">${search}
     <button class="help-pill" data-act="crisis" aria-label="${l10n("help.aria")}">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"/></svg>
-      ${l10n("help.label")}</button></div>`;
+      ${l10n("help.label")}</button></div></div>`;
 }
 function yellowBar(){
   return `<div class="ybar" role="region" aria-label="Support">
@@ -6903,6 +6983,8 @@ function render(){
     ${def.nav ? tabBar() : ""}
     ${session.devPanelOpen ? devPanel() : ""}`;
   fitChrome();
+  if (s !== "search" && (searchQ || searchTimer)){ searchQ = ""; clearTimeout(searchTimer); searchTimer = null; }   // 6.29: the query never outlives the screen
+  if (s === "search" && changed){ const b = document.getElementById("searchQ"); if (b) b.value = ""; searchQ = ""; }   // arrives empty; focus goes to the field below
   if (s === "doodle") doodleMount();   // 6.22: the canvas is new after every render; redraw the strokes
   if (s === "home") zagsHintPlace();
   if (changed){
@@ -6912,7 +6994,7 @@ function render(){
     if (!/^diary/.test(s)){ ui.diaryDraft = null; diaryRelock(false); }   // 6.21: leaving the diary drops an unsaved draft and re-locks it
     if (crisis){ ui.grief = null; ui.fsGrief = false; }    // nothing from the grief path survives a crisis screen
     window.scrollTo(0, 0);
-    const h = document.getElementById("screen-title");
+    const h = document.getElementById(s === "search" ? "searchQ" : "screen-title");
     if (h) h.focus({ preventScroll:true });
     lastRendered = s;
     clearInterval(palmsTimer); palmsTimer = null;
@@ -7667,6 +7749,13 @@ const ACTIONS = {
     dispatch({ type:"SET_ENGINE_RESULT", pick:arg, reason:`${findIntervention(arg).name} helped you before.` });
     lastRendered = null; render();
   },
+  searchOpen(){ if (blockIfRed()) return; searchQ = ""; go("search"); },
+  searchSuggest(arg){
+    if (blockIfRed()) return;
+    const k = SEARCH.suggest.find(x => x[0] === arg); if (!k) return;
+    const b = document.getElementById("searchQ"); if (b) b.value = k[0];
+    searchRun(k[0]);
+  },
   bridgeStart(){ if (blockIfRed()) return; ui.bridge = { tried:[], waiting:null, done:false }; lastRendered = null; go("bridge"); },
   bridgeAnswer(arg){
     if (blockIfRed()) return;
@@ -8414,6 +8503,20 @@ document.addEventListener("change", e => {
 document.addEventListener("pointerdown", e => {
   if (session.screen === "focus" && e.target.closest("#focusArea")){ e.preventDefault(); focusTap(); }
 });
+/* 6.29: each pause in typing (debounced) and every submit runs the safety check first */
+document.addEventListener("input", e => {
+  if (!e.target || e.target.id !== "searchQ") return;
+  clearTimeout(searchTimer);
+  const v = e.target.value;
+  searchTimer = setTimeout(() => searchRun(v), SEARCH.debounceMs);
+});
+document.addEventListener("submit", e => {
+  if (!e.target || e.target.id !== "searchForm") return;
+  e.preventDefault();
+  const b = document.getElementById("searchQ");
+  searchRun(b ? b.value : "");
+});
+
 document.addEventListener("keydown", e => {
   if (session.screen === "focus" && document.activeElement && document.activeElement.id === "focusArea" && (e.key === " " || e.key === "Enter")){
     e.preventDefault(); focusTap();

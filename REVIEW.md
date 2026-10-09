@@ -1679,6 +1679,7 @@ Rendered for each state where the screen changes by state. Identical renders are
 
 ### `home`
 
+- **Button:** Search ZigZag Mind
 - **Button:** Help _(screen reader: "Get help now")_
 - **Button:** ZigZag Mind
 - **Button:** Calm down with Zags
@@ -1688,6 +1689,7 @@ Rendered for each state where the screen changes by state. Identical renders are
 - **Button:** Calm down with Zags
 - Tap me when you want to breathe together.
 - **Button:** Okay
+- **Button:** Search: panic, breakup, can't sleep… _(screen reader: "Search ZigZag Mind: panic, breakup, can't sleep")_
 - **Button:** I don't know what I need
 - **Button:** Calm down
 - **Button:** Get out of my head
@@ -2360,6 +2362,21 @@ _When: distraction_
 - It's not weakness, and it's not your fault. You don't have to fix all of it.
 - If it ever feels like more than heavy, call or text 988, any time. Call 988 · Text 988
 - **Button:** Next
+
+### `search`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Search
+- **Text box** "Search ZigZag Mind" (hint: "Search: panic, breakup, can't sleep…")
+- **Button:** Search
+- Only ZigZag Mind's own tools. Nothing you type here is saved.
+- Try:
+- **Button:** Panic
+- **Button:** Can't sleep
+- **Button:** Breakup
+- **Button:** Lonely
+- **Button:** Urge
 
 ### `bridge`
 
@@ -3528,6 +3545,7 @@ _When: distraction_
 
 ### `faith`
 
+- **Button:** Search ZigZag Mind
 - **Button:** Help _(screen reader: "Get help now")_
 - **Button:** ZigZag Mind
 - **Button:** Calm down with Zags
@@ -3537,6 +3555,7 @@ _When: distraction_
 - **Heading:** It's okay not to be okay.
 - You don't have to figure everything out right now.
 - **Button:** I don't feel safe — Get to a real person fast
+- **Button:** Search: panic, breakup, can't sleep… _(screen reader: "Search ZigZag Mind: panic, breakup, can't sleep")_
 - **Button:** I don't know what I need
 - **Button:** Calm down
 - **Button:** Get out of my head
@@ -3558,6 +3577,7 @@ _When: distraction_
 
 ### `faith-passage`
 
+- **Button:** Search ZigZag Mind
 - **Button:** Help _(screen reader: "Get help now")_
 - **Button:** ZigZag Mind
 - **Button:** Calm down with Zags
@@ -3567,6 +3587,7 @@ _When: distraction_
 - **Heading:** It's okay not to be okay.
 - You don't have to figure everything out right now.
 - **Button:** I don't feel safe — Get to a real person fast
+- **Button:** Search: panic, breakup, can't sleep… _(screen reader: "Search ZigZag Mind: panic, breakup, can't sleep")_
 - **Button:** I don't know what I need
 - **Button:** Calm down
 - **Button:** Get out of my head
@@ -3588,6 +3609,7 @@ _When: distraction_
 
 ### `faith-pray`
 
+- **Button:** Search ZigZag Mind
 - **Button:** Help _(screen reader: "Get help now")_
 - **Button:** ZigZag Mind
 - **Button:** Calm down with Zags
@@ -3597,6 +3619,7 @@ _When: distraction_
 - **Heading:** It's okay not to be okay.
 - You don't have to figure everything out right now.
 - **Button:** I don't feel safe — Get to a real person fast
+- **Button:** Search: panic, breakup, can't sleep… _(screen reader: "Search ZigZag Mind: panic, breakup, can't sleep")_
 - **Button:** I don't know what I need
 - **Button:** Calm down
 - **Button:** Get out of my head
