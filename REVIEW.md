@@ -757,6 +757,8 @@ Changed for review: the craving button now reads "I have an urge to use (drink o
 - "My time and distance plan"
 - "Things to avoid when I'm struggling" (hint: "One per line.")
 - "What I want ZigZag Mind to remind me" (hint: "Short statements in your own words. One per line.")
+- "A note for a hard day" (hint: "Write this on an okay day, for a hard one. What do you want to remember? Who should you call? What has helped before?")
+- "When this happens, I'll…" (hint: "Plan ahead for the moments you know are hard. Up to three.")
 
 ### Get out of my head: every game screen, in play order
 
@@ -1295,6 +1297,12 @@ Why (for reviewers only; never shown as statements about people): in 2023 an ave
 - 3: "Pick the smallest one." / "The one you could actually start."
 - 4: "When will you do it?" → "Now" · "Later today" · "Tomorrow"
 - End: "Go do it. That's the whole step." (Now) or "That's the step. You don't have to solve the whole thing." · "Too big to do alone?" Talk to someone → Put the phone down
+
+### My Plan: a note for a hard day, and "When this happens, I'll…" (owner request, 2026-10-09; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)
+
+- "A note for a hard day": "Write this on an okay day, for a hard one. What do you want to remember? Who should you call? What has helped before?" For example: "This feeling passes. Call Sam. Shower, then a walk. You've gotten through this before." Empty: "Write it on an okay day. You'll see it here, and on a hard day." Up to 600 characters. Shown as "A note from you, for today" on I need my plan now and first in the Hope box; in My Plan and the printed plan.
+- "When this happens, I'll…": "Plan ahead for the moments you know are hard. Up to three." Three rows "When…" / "I'll…" (examples: "I can't sleep at 3am" → "go to the couch and breathe with Zags"; "I want to text my ex" → "wait ten minutes and text a friend instead"; "I want to drink" → "call Sam and take a walk"). Shown as "When …, I'll …." in My Plan, I need my plan now and the printed plan.
+- Like every My Plan field: not run through the safety check, saved only when saving is on, exported, removed by Delete everything.
 
 ### Other kinds of help (owner request, 2026-10-09; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)
 
@@ -4307,6 +4315,12 @@ _When: distraction_
 - **Heading:** Reasons to stay
 - **Button:** Edit _(screen reader: "Edit: Reasons to stay")_
 - Nothing here yet.
+- **Heading:** A note for a hard day
+- **Button:** Edit _(screen reader: "Edit: A note for a hard day")_
+- Write it on an okay day. You'll see it here, and on a hard day.
+- **Heading:** When this happens, I'll…
+- **Button:** Edit _(screen reader: "Edit: When this happens, I'll…")_
+- For example: "When I can't sleep at 3am, I'll go to the couch and breathe with Zags."
 - **Heading:** People and places that take my mind off things
 - **Button:** Edit _(screen reader: "Edit: People and places that take my mind off things")_
 - The coffee shop on Main St

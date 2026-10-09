@@ -3361,7 +3361,7 @@ function helpLabel(h){
    "sensitive" (plan, check-ins, activity) is kept apart from "product" data. */
 function emptyPlan(){
   return { myName:"", anchor:"", warningSigns:[], helps:[], places:[], trustedPeople:[], professional:{ name:"", phone:"" },
-    timeDistance:{ keepAway:"", holder:"", getBack:"" }, avoid:[], reminders:[], reasons:[] };
+    timeDistance:{ keepAway:"", holder:"", getBack:"" }, avoid:[], reminders:[], reasons:[], hardNote:"", ifThen:[] };
 }
 /* 6.11: "Making my space safer" became the time and distance plan. Old text moves into the first field. */
 function migratePlan(pl){
@@ -3370,6 +3370,8 @@ function migratePlan(pl){
   if (typeof pl.saferSpace === "string" && pl.saferSpace.trim() && !pl.timeDistance.keepAway) pl.timeDistance.keepAway = pl.saferSpace.trim();
   delete pl.saferSpace;
   pl.reasons = Array.isArray(pl.reasons) ? pl.reasons.map(x => String(x).trim().slice(0, 120)).filter(Boolean).slice(0, 10) : [];   // 6.18 D5
+  pl.hardNote = String(pl.hardNote || "").slice(0, HARD_NOTE_MAX);   // 2026-10-09: a note for a hard day
+  pl.ifThen = Array.isArray(pl.ifThen) ? pl.ifThen.filter(x => x && typeof x === "object").map(x => ({ when:String(x.when || "").trim().slice(0, 120), then:String(x.then || "").trim().slice(0, 120) })).filter(x => x.when && x.then).slice(0, 3) : [];
   return pl;
 }
 function samplePlan(){
@@ -4864,6 +4866,7 @@ const SCREENS = {
     return { close:true, body:`
       ${title(HOPE_BOX.name)}
       <p class="sub">${HOPE_BOX.sub}</p>
+      ${getPlan().hardNote ? `<div class="panel hope-sec hope-note"><p class="lbl">${HARD_NOTE.shown}</p><p class="heavy-line" style="white-space:pre-wrap;margin:6px 0 0">${esc(getPlan().hardNote)}</p></div>` : ""}
       ${reasons.length ? `<div class="panel hope-sec hope-reasons"><p class="lbl">${HOPE_BOX.reasons}</p>${reasons.map(x => `<p class="heavy-line" style="margin:6px 0 0">${esc(x)}</p>`).join("")}</div>` : ""}
       ${list.length ? `<div class="panel hope-sec hope-songs"><p class="lbl">${HOPE_BOX.songs}</p>${list.map(x => { const n = x.lines[0].length > 40 ? x.lines[0].slice(0, 40) + "…" : x.lines[0];
           return `<div class="song-row"><span><b>${esc(n)}</b><span class="small">${esc(songDate(x.date))}</span></span><span class="song-btns"><button class="edit-btn" data-act="songOpen" data-arg="${esc(x.id)}" aria-label="${HOPE_BOX.play}: ${esc(n)}">${HOPE_BOX.play}</button></span></div>`; }).join("")}</div>` : ""}
@@ -5887,7 +5890,9 @@ const SCREENS = {
         ${people.length ? people.map(p => pairOrStack(`<a class="btn btn-outline" href="${telLink(p.phone)}"${attr} aria-label="${callText(`Call ${esc(p.name)}`, p.phone)}">${callText(`Call ${esc(p.name)}`, p.phone)}</a>`,
             textOrCopy({ phone:p.phone, body:HARD_TIME_MSG, label:`Text ${esc(p.name)}`, cls:"btn btn-outline", attr:attr.trim(), aria:`Text ${esc(p.name)}` }), "margin-top:10px")).join("")
           : `<p class="small" style="margin:6px 0 0">No one in your plan yet. 988 is below, any time.</p>`}</div>
+      ${pb.hardNote ? `<div class="panel pn hardnote-now"><p class="lbl">${HARD_NOTE.shown}</p><p style="white-space:pre-wrap">${esc(pb.hardNote)}</p></div>` : ""}
       ${(pb.reasons || []).length ? `<div class="panel pn"><p class="lbl">Reasons to stay</p>${pb.reasons.map(x => `<p>${esc(x)}</p>`).join("")}</div>` : ""}
+      ${(pb.ifThen || []).length ? `<div class="panel pn ifthen-now"><p class="lbl">${IF_THEN.shown}</p>${pb.ifThen.map(x => `<p>${esc(IF_THEN.line(x.when, x.then))}</p>`).join("")}</div>` : ""}
       ${pb.places.length ? `<div class="panel pn"><p class="lbl">Places I can go</p><p>${pb.places.map(esc).join(" · ")}</p></div>` : ""}
       ${tdLines ? `<div class="panel pn"><p class="lbl">My time and distance plan</p>${tdLines}</div>` : ""}
       ${pb.reminders.length ? `<div class="panel pn"><p class="lbl">What I want to remember</p>${pb.reminders.map(x => `<p>${esc(x)}</p>`).join("")}</div>` : ""}
@@ -6588,6 +6593,8 @@ const SCREENS = {
         ${pb.anchor ? `<p class="small" style="margin:8px 0 0">${l10n("plan.anchor")} ${esc(pb.anchor)}</p>` : ""}</div>
       <div class="panel">${head("reasons", l10n("plan.h.reasons"))}${ul(pb.reasons || [])}
         ${editable && songs().length ? `<button class="link" data-act="songList">${l10n("plan.songsToo")}</button>` : ""}</div>
+      <div class="panel hardnote-panel">${head("hardNote", "A note for a hard day")}${pb.hardNote ? `<p class="heavy-line" style="white-space:pre-wrap;margin:8px 0 0">${esc(pb.hardNote)}</p>` : `<p class="empty">${HARD_NOTE.empty}</p>`}</div>
+      <div class="panel ifthen-panel">${head("ifThen", IF_THEN.shown)}${(pb.ifThen || []).length ? `<ul>${pb.ifThen.map(x => `<li>${esc(IF_THEN.line(x.when, x.then))}</li>`).join("")}</ul>` : `<p class="empty">${IF_THEN.empty}</p>`}</div>
       <div class="panel">${head("places", l10n("plan.h.places"))}${ul(pb.places)}</div>
       <div class="panel">${head("trustedPeople", l10n("plan.h.trustedPeople"))}
         <p class="note" style="margin-top:6px">${l10n("plan.neverContact")}</p>
@@ -6637,7 +6644,13 @@ const SCREENS = {
         <textarea class="field" id="edList">${esc(pb[key].join("\n"))}</textarea>`;
     } else if (kind === "text"){
       form = `<label class="sub" for="edText">${esc(hint)}</label>
-        <textarea class="field" id="edText" style="min-height:110px">${esc(pb[key])}</textarea>`;
+        ${key === "hardNote" ? `<p class="small" style="margin:0 0 8px">${HARD_NOTE.example}</p>` : ""}
+        <textarea class="field" id="edText" style="min-height:${key === "hardNote" ? 160 : 110}px" maxlength="${key === "hardNote" ? HARD_NOTE_MAX : 300}">${esc(pb[key] || "")}</textarea>`;
+    } else if (kind === "ifthen"){
+      const it = pb.ifThen || [];
+      form = `<p class="sub">${esc(hint)}</p>${[0,1,2].map(i => `<div class="panel ifthen-row" style="margin-top:10px">
+          <label class="small" for="itw${i}">${IF_THEN.when}</label><input class="field" id="itw${i}" maxlength="120" placeholder="${esc(IF_THEN.whenPh[i])}" value="${esc((it[i] || {}).when || "")}">
+          <label class="small" for="itt${i}" style="margin-top:6px;display:block">${IF_THEN.then}</label><input class="field" id="itt${i}" maxlength="120" placeholder="${esc(IF_THEN.thenPh[i])}" value="${esc((it[i] || {}).then || "")}"></div>`).join("")}`;
     } else if (kind === "td"){
       const td = pb.timeDistance || {};
       form = `<p class="sub">Time and distance can make a hard moment safer. Write it in your own words. It stays on this phone.</p>
@@ -6882,6 +6895,26 @@ const SCREENS = {
   }
 };
 
+/* A NOTE FOR A HARD DAY and WHEN THIS HAPPENS, I'LL… (owner request, 2026-10-09; wording drafted by Claude Code,
+   CLINICIAN REVIEW REQUIRED, D58). Written on a good day, shown on a hard one: in My Plan, "I need my plan now" and the
+   Hope box. Like every My Plan field they are not run through safetyCheck (plan fields are exempt), are saved only
+   when saving is on, and go with Export and Delete everything. */
+const HARD_NOTE_MAX = 600;
+const HARD_NOTE = {
+  hint:"Write this on an okay day, for a hard one. What do you want to remember? Who should you call? What has helped before?",
+  shown:"A note from you, for today",
+  empty:"Write it on an okay day. You'll see it here, and on a hard day.",
+  example:"For example: \"This feeling passes. Call Sam. Shower, then a walk. You've gotten through this before.\""
+};
+const IF_THEN = {
+  hint:"Plan ahead for the moments you know are hard. Up to three.",
+  when:"When…", then:"I'll…",
+  whenPh:["I can't sleep at 3am","I want to text my ex","I want to drink"],
+  thenPh:["go to the couch and breathe with Zags","wait ten minutes and text a friend instead","call Sam and take a walk"],
+  shown:"When this happens, I'll…",
+  empty:"For example: \"When I can't sleep at 3am, I'll go to the couch and breathe with Zags.\"",
+  line:(w, t) => `When ${w}, I'll ${t}.`
+};
 const PLAN_SECTIONS = [
   ["warningSigns","How I know a hard moment is starting","list","In your own words. One per line."],
   ["helps","Things that help me on my own","helps",""],
@@ -6891,7 +6924,10 @@ const PLAN_SECTIONS = [
   ["professional","Professional and crisis support","pro",""],
   ["timeDistance","My time and distance plan","td",""],
   ["avoid","Things to avoid when I'm struggling","list","One per line."],
-  ["reminders","What I want ZigZag Mind to remind me","list","Short statements in your own words. One per line."]
+  ["reminders","What I want ZigZag Mind to remind me","list","Short statements in your own words. One per line."],
+  // 2026-10-09 (owner: "really help people"): written on a good day, for a hard one. Plan fields: not safety-checked.
+  ["hardNote","A note for a hard day","text",HARD_NOTE.hint],
+  ["ifThen","When this happens, I'll…","ifthen",IF_THEN.hint]
 ];
 
 function computeProgress(){
@@ -7231,6 +7267,8 @@ function printPlanHTML(includeCode){
     ${sec("Things that help me", pb.helps.length ? list(pb.helps.map(helpLabel)) : "")}
     ${sec("My anchor", pb.anchor ? `<p>${esc(pb.anchor)}</p>` : "")}
     ${sec("Reasons to stay", (pb.reasons || []).length ? list(pb.reasons) : "")}
+    ${sec("A note for a hard day", pb.hardNote ? `<p style="white-space:pre-wrap">${esc(pb.hardNote)}</p>` : "")}
+    ${sec("When this happens, I'll…", (pb.ifThen || []).length ? list(pb.ifThen.map(x => IF_THEN.line(x.when, x.then))) : "")}
     ${sec("People and places that take my mind off things", pb.places.length ? list(pb.places) : "")}
     ${sec("My trusted people", people.length ? list(people.map(p => `${p.name}${p.relationship ? ` (${p.relationship})` : ""}: ${p.phone}`)) : "")}
     ${sec("Professional support", pb.professional && pb.professional.name ? `<p>${esc(pb.professional.name)}${pb.professional.phone ? `: ${esc(pb.professional.phone)}` : ""}</p>` : "")}
@@ -8795,7 +8833,9 @@ const ACTIONS = {
     if (kind === "list"){
       pb[key] = val("edList").split("\n").map(x => x.trim().slice(0, 120)).filter(Boolean).slice(0, 10);
     } else if (kind === "text"){
-      pb[key] = val("edText").slice(0, 300);
+      pb[key] = val("edText").slice(0, key === "hardNote" ? HARD_NOTE_MAX : 300);
+    } else if (kind === "ifthen"){
+      pb.ifThen = [0,1,2].map(i => ({ when:val("itw" + i).slice(0, 120), then:val("itt" + i).slice(0, 120) })).filter(x => x.when && x.then);
     } else if (kind === "td"){
       pb.timeDistance = { keepAway:val("td0").slice(0, 400), holder:val("td1").slice(0, 200), getBack:val("td2").slice(0, 200) };
     } else if (kind === "helps"){

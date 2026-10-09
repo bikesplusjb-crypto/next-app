@@ -29,7 +29,7 @@ Send any of these:
 
 ## 3. Clinician
 
-Send them `REVIEW.md` and `docs/CLINICIAN_REVIEW.md` (D1–D57 plus D-diary). Paste their decisions back to Claude Code.
+Send them `REVIEW.md` and `docs/CLINICIAN_REVIEW.md` (D1–D58 plus D-diary). Paste their decisions back to Claude Code.
 
 ## 4. Translator
 

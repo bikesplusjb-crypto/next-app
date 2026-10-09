@@ -368,6 +368,13 @@ list([
   'End: "'+PR.endNow+'" (Now) or "'+PR.end+'" · "'+PR.big+'" Talk to someone → Put the phone down'
 ]);
 
+H(3,'My Plan: a note for a hard day, and "When this happens, I\'ll…" (owner request, 2026-10-09; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)');
+list([
+  '"A note for a hard day": "'+G('HARD_NOTE.hint')+'" '+G('HARD_NOTE.example')+' Empty: "'+G('HARD_NOTE.empty')+'" Up to '+G('HARD_NOTE_MAX')+' characters. Shown as "'+G('HARD_NOTE.shown')+'" on I need my plan now and first in the Hope box; in My Plan and the printed plan.',
+  '"'+G('IF_THEN.shown')+'": "'+G('IF_THEN.hint')+'" Three rows "'+G('IF_THEN.when')+'" / "'+G('IF_THEN.then')+'" (examples: '+G('IF_THEN.whenPh').map((w,i)=>'"'+w+'" → "'+G('IF_THEN.thenPh')[i]+'"').join('; ')+'). Shown as "When …, I\'ll …." in My Plan, I need my plan now and the printed plan.',
+  'Like every My Plan field: not run through the safety check, saved only when saving is on, exported, removed by Delete everything.'
+]);
+
 H(3,'Other kinds of help (owner request, 2026-10-09; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)');
 const MH=G('MORE_HELP');
 P('Home → More → "'+G('l10n("home.otherHelp")')+'" → "'+MH.title+'" / "'+MH.sub+'" (7 paths, then "'+MH.more+'"). Each path: one idea per screen, Next, an ending (Put the phone down · Talk to someone), and on every screen "'+G('LINE988')+'" (Not safe at home: its own line). No typing, nothing saved. Outside resources hidden until verified. Also from Search; "I slipped" also from the first urge screen.');
