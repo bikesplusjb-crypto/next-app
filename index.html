@@ -1533,7 +1533,7 @@ const BUTTERFLY = {
 /* 6.29 SEARCH (STAGE6-29-ADDENDUM.md). Searches only ZigZag Mind's own paths: SEARCH_INDEX is a constant in this file;
    nothing goes to the web, an API or a server. Every query goes through safetyCheck first, on each pause in typing
    (debounced) and on every submit: RED → openCrisis() and the query is discarded; YELLOW → support bar on, results
-   still shown. Never "No results". Nothing is remembered: no history, no recent searches, no saved query, no logging;
+   still shown. Never an empty "nothing found" page. Nothing is remembered: no history, no recent searches, no saved query, no logging;
    the query lives only in memory while the Search screen is open and is cleared when the person leaves it. */
 const SEARCH = {
   title:"Search",
@@ -1701,7 +1701,7 @@ function searchResultsHtml(q){
   const n = normalizeText(q).trim();
   if (!n) return `<p class="small" style="margin:6px 0 8px">${SEARCH.suggestLbl}</p><div class="sits search-suggest">${SEARCH.suggest.map(([k, l]) => `<button class="sit" data-act="searchSuggest" data-arg="${esc(k)}">${l}</button>`).join("")}</div>`;
   const hits = searchMatch(q);
-  if (!hits.length) return searchStartHtml();   // never "no results"
+  if (!hits.length) return searchStartHtml();   // never an empty page: places to start instead
   return `<div class="list search-hits">${hits.map(e => e.href
       ? `<a class="card" href="${e.href}" target="_blank" rel="noopener" data-search="${e.id}"><span>${e.title}<span class="meta">${e.desc}</span></span></a>`
       : `<button class="card" data-act="searchGo" data-arg="${e.id}"><span>${e.title}<span class="meta">${e.desc}</span></span></button>`).join("")}</div>

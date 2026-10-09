@@ -634,3 +634,15 @@ Tests: `ptsd.test.js`; `home.test.js` checks five chips plus More.
 ## Most of my days feel heavy (owner request, as built, 2026-10-05)
 
 A short path for persistent heaviness (not one hard moment): `heavy` screen, steps by `ui.heavy.step` (0 opening, 1 tell someone who can help, 2 one small thing for today, 3 end). Copy in `HEAVY`. Entry: Home → More chip, and a small link on the "I feel sad or low" first screen. Step 1 repeats the existing two-weeks doctor/counselor line and offers one sentence to say at a visit plus a prepared text to a trusted person (sms, or Copy on computers). Step 2 opens existing steps only (the low tiny things, A line for today, Borrow ten minutes). A 988 line on every screen. No typing, nothing saved, not in the engine, never on crisis screens. Built from a one-line owner request; wording is a clinician item (D37). Tests: `heavy.test.js`.
+
+## 6.29 Search (as built, 2026-10-09)
+
+Built per STAGE6-29-ADDENDUM.md A–E, one commit per part. Entry: a field on Home (`.home-search` → `searchOpen`) and, on tight screens (≤320 CSS px: large text, small phones), a magnifier (`.search-btn`) next to Help in Home's top bar instead; both open the `search` screen. Copy in `SEARCH`; the index is `SEARCH_INDEX` (44 entries, 647 words); matching in `searchMatch` (the safety normalizer, then exact phrase > a phrase inside the query > every word > partial: a word, one letter off for 5+ letters, or a word's start; a strong hit drops weak partial ones; common filler words ignored). Every query runs `safetyCheck` first in `searchRun`, on each pause in typing (600 ms, `input` listener) and on submit (`submit` listener). Results update in place (`#searchResults`) so the field keeps focus. `searchGo` calls the same ACTIONS function as the normal button. The query lives in `searchQ` (memory) and is cleared when the screen changes. Differences from the text, and why:
+
+- **The Home field sits under "I don't feel safe", not under the tagline.** Directly under the tagline it became the first choice on Home, which the standing rule (and six tests) forbid. It is still on Home's first screen in normal text.
+- **There is no heartbreak path.** Breakup / heartbreak words lead to "I feel sad or low", whose search description says "Also for breakups and heartbreak." Not invented.
+- **Panic words go to "It feels like panic" first** (built 2026-10-05), with "Calm down" from the anxiety, overwhelm and breathing words.
+- **"hopeless"** (YELLOW) is also a word for "I feel sad or low", so the YELLOW test query shows a result next to the support bar. "trapped in my room" (from the addendum's table) is YELLOW too.
+- **Three wording-guard tests** (codeword, coffee, socialzig) skip the `SEARCH_INDEX` block: it holds words people type ("chatbot", "tiktok", "safe word"), not features.
+- **The a11y "focus to the title" test** expects focus on the Search field on the Search screen.
+
