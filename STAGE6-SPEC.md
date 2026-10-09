@@ -646,3 +646,12 @@ Built per STAGE6-29-ADDENDUM.md A–E, one commit per part. Entry: a field on Ho
 - **Three wording-guard tests** (codeword, coffee, socialzig) skip the `SEARCH_INDEX` block: it holds words people type ("chatbot", "tiktok", "safe word"), not features.
 - **The a11y "focus to the title" test** expects focus on the Search field on the Search screen.
 
+## Owner request 2026-10-09: "really help people" (as built)
+
+- **Share with a friend** (`join` screen; `SHARE`, `JOIN`): the exact message shown first; share sheet / text / Copy message; Get the app (`beforeinstallprompt`, iPhone steps); Support (Ko-fi). Not called "Join".
+- **Other kinds of help** (`more-help` hub, `path` screen, `PATHS`, `MORE_RESOURCES`): Getting to real care, I slipped, Heartbreak, Money/work/housing, Not safe at home ("Leave quickly" → `quickExit(PATH_EXIT.url)`), New parent, Caring for someone, Gambling, LGBTQ+, Food/eating/body image. New outside resources are `verified:false` (CRISIS_RESOURCE_VERIFICATION.md); the gambling helpline is now 1-800-MY-RESET.
+- **My Plan**: `hardNote` and `ifThen` (PLAN_SECTIONS; not safety-checked, like all plan fields); shown on plan-now, Hope box, print.
+- **Read aloud** (`prefs.readAloud`, `readNow`): Settings switch; speaker button next to Help, not on crisis screens.
+- **Public pages**: `/help/` (help-pages.js) and `/card/` (vendored MIT qrcode-generator).
+- Wording drafted by Claude Code; clinician items D47–D60.
+
