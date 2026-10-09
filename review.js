@@ -368,6 +368,17 @@ list([
   'End: "'+PR.endNow+'" (Now) or "'+PR.end+'" · "'+PR.big+'" Talk to someone → Put the phone down'
 ]);
 
+H(3,'Other kinds of help (owner request, 2026-10-09; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)');
+const MH=G('MORE_HELP');
+P('Home → More → "'+G('l10n("home.otherHelp")')+'" → "'+MH.title+'" / "'+MH.sub+'" (7 paths, then "'+MH.more+'"). Each path: one idea per screen, Next, an ending (Put the phone down · Talk to someone), and on every screen "'+G('LINE988')+'" (Not safe at home: its own line). No typing, nothing saved. Outside resources hidden until verified. Also from Search; "I slipped" also from the first urge screen.');
+for(const [id,Pth] of Object.entries(G('PATHS'))){
+  H(4,Pth.title+' — '+Pth.meta);
+  list([...Pth.steps.map((x,i)=>(i+1)+': "'+x.h+'"'+(x.p?' / "'+x.p+'"':'')+(x.list?' · '+x.list.map(y=>`"${y}"`).join(' · '):'')+(x.say?' · You could say: "'+x.say+'"':'')+(x.msg?' · prepared text: "'+x.msg+'"':'')+(x.call211?' · [Call 211]':'')+(x.supportLink?' · ['+x.supportLink+']':'')+(x.opts?' · '+x.opts.map(o=>'['+o[0]+']').join(' '):'')+(x.res?' · resources: '+x.res.join(', '):'')),
+    'End: "'+Pth.end.h+'"'+(Pth.end.opts?' · '+Pth.end.opts.map(o=>'['+o[0]+']').join(' '):'')+(Pth.res?' · resources (hidden until verified, except ndvh): '+Pth.res.join(', '):''),
+    ...(Pth.danger?['Also: "'+Pth.danger+'"']:[]), ...(Pth.line?['Help line on every screen: "'+Pth.line+'"']:[]),
+    ...(Pth.quickExit?['"'+G('PATH_EXIT.label')+'" on every screen ("'+G('PATH_EXIT.note')+'"): replaces the page with '+G('PATH_EXIT.url')+', no history entry.']:[])]);
+}
+
 H(3,'Share with a friend: share it, get the app, support it (owner request, 2026-10-09: "make it safe and honest")');
 const JO=G('JOIN');
 list([

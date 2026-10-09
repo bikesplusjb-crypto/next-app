@@ -182,6 +182,21 @@ Every entry is **hidden** (`BULLY_RESOURCES` in index.html, `verified:false`) un
 | Person responsible | Owner |
 | Status | **OPEN** |
 
+## Other kinds of help (2026-10-09): hidden until the owner verifies
+
+Found by search on 2026-10-09. **None is shown.** Check each on the official site (or call), then tell Claude Code, for example: "SAMHSA verified: 1-800-662-4357, https://…, 2026-10-10, JB".
+
+| Key | Resource | Number / link found | Official source to check | Notes from the search |
+|---|---|---|---|---|
+| samhsa | SAMHSA National Helpline | 1-800-662-4357 (HELP); text your ZIP to 435748 | https://www.samhsa.gov/find-help/helplines/national-helpline | Free, confidential, 24/7, English and Spanish, treatment referral. The online locator is listed as both findtreatment.samhsa.gov and findtreatment.gov: confirm which is current. |
+| hrsa | Find a community health center | https://findahealthcenter.hrsa.gov/ | same | Sliding fee based on income and family size (secondary sources). |
+| mmh | National Maternal Mental Health Hotline | 1-833-852-6262 (1-833-TLC-MAMA), call or text | https://mchb.hrsa.gov/programs-impact/national-maternal-mental-health-hotline | 24/7, English and Spanish (from the 2026-10-05 search). |
+| nami | NAMI HelpLine | 1-800-950-6264 | https://www.nami.org/helpline | Earlier search: option 4 for family caregivers, text "FAMILY" to 62640, Mon–Fri 10am–10pm ET. Confirm before showing hours or the text option. |
+| reset | National Problem Gambling Helpline | **1-800-MY-RESET (1-800-697-3738)**, call or text; chat 1800myreset.org | https://www.ncpgambling.org/ (and its April 2026 toolkit) | **The number changed:** NCPG stopped using 1-800-GAMBLER after a court order (Sept 2025); 1-800-MY-RESET is the new national number (early 2026). The old 1-800-522-4700 reportedly still routes. |
+| translifeline | Trans Lifeline | (877) 565-8860 (US) | https://translifeline.org/contact/ | Hours vary across sources (Wikipedia: Mon–Fri 10am–6pm PT). Confirm hours before showing any. |
+| anad | ANAD Eating Disorders Helpline | 888-375-7767 | https://anad.org/ | Hours conflict across sources (9–5 vs 9–9 CT, weekdays). The NEDA helpline closed in 2023: not used. |
+| ndvh | National Domestic Violence Hotline | already verified (2026-10-05) | — | Shown in "Not safe at home". |
+
 ## Things this check could not verify (need a person)
 
 - That every number connects today, from a US mobile phone, by call and (for 988) by text.

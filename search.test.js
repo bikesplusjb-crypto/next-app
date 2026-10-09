@@ -60,7 +60,7 @@ const r=[];
 
  // ---- one query per table row → that path first ----
  const ROWS=[['Calm down / breathing / grounding','freaking out','calm'],['Get out of my head / games','games','head'],['Connect / I feel alone','lonely','connect'],
-  ['Change the scene','need air','scene'],['Sad or low','depressed','low'],['Urge','vape','urge'],['Heartbreak (→ sad or low)','broke up','low'],
+  ['Change the scene','need air','scene'],['Sad or low','depressed','low'],['Urge','vape','urge'],['Heartbreak','broke up','heartbreak'],
   ['Grief','my dog died','grief'],['Bullied','cyberbullying','bully'],['PTSD, trauma, or military','flashback','ptsd'],['Tech check','doomscrolling','tech'],
   ['Cozy up / sleep',"can't sleep",'cozy'],['My plan','safety plan','plan'],['Code word','code word','codeword'],['I need my plan','need my plan','plannow'],
   ['Just out of the ER','psych ward','after'],['A line for today','journal','diary'],['Doodle','draw','doodle'],['Song','music','song'],
@@ -93,7 +93,7 @@ const r=[];
   r.push(['B: every entry names a real ACTIONS function (or a link)', a.G('SEARCH_INDEX.every(e=>e.href||typeof ACTIONS[e.act]==="function")')]); }
 
  // ---- nothing remembered ----
- {const a=boot(); a.G('saveStore()'); a.G('ACTIONS.searchOpen()'); a.submit('my ex cheated on me'); a.click(act('searchGo','low'));
+ {const a=boot(); a.G('saveStore()'); a.G('ACTIONS.searchOpen()'); a.submit('my ex cheated on me'); a.click(act('searchGo','heartbreak'));
   a.G('ACTIONS.home()'); a.G('ACTIONS.searchOpen()');
   r.push(['no history: after searching and coming back, the field is empty and no earlier query appears', a.box().value==='' && !/cheated/i.test(a.app()) && !/recent/i.test(a.w.document.getElementById('searchResults').textContent)]);
   r.push(['no history: storage holds no query text', !/cheated/i.test(a.store())]);

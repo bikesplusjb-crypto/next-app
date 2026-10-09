@@ -8,7 +8,7 @@ Every Spanish line below is a **draft** (not reviewed). Please give each one a h
 
 Notes for the translator: keep "988", "911", "211" and "ZigZag Mind" as they are. Lines starting with a space or comma are joined to a name or number on screen (for example "Llamar a" + a name). `&` is shown on screen as "&".
 
-Strings: 228 (crisis-screen: 46).
+Strings: 229 (crisis-screen: 46).
 
 
 ## Help button
@@ -92,6 +92,7 @@ Strings: 228 (crisis-screen: 46).
 | `home.heavy` | Most of my days feel heavy | Casi todos mis días se sienten pesados |  | DRAFT |
 | `home.panic` | It feels like panic | Se siente como pánico |  | DRAFT |
 | `home.angry` | I'm really angry | Estoy muy enojado |  | DRAFT |
+| `home.otherHelp` | Other kinds of help | Otros tipos de ayuda |  | DRAFT |
 | `home.tech` | Tech check | Revisión de tecnología |  | DRAFT |
 | `home.techMeta` | AI, scrolling, or checking is getting to me | La IA, las redes o revisar el teléfono me están afectando |  | DRAFT |
 | `home.zagsHint` | Tap me when you want to breathe together. | Tócame cuando quieras respirar juntos. |  | DRAFT |

@@ -756,6 +756,7 @@ const L10N = {
     "home.heavy":"Most of my days feel heavy",
     "home.panic":"It feels like panic",
     "home.angry":"I'm really angry",
+    "home.otherHelp":"Other kinds of help",
     "home.tech":"Tech check",
     "home.techMeta":"AI, scrolling, or checking is getting to me",
     "home.zagsHint":"Tap me when you want to breathe together.",
@@ -986,6 +987,7 @@ const L10N = {
     "home.heavy":{ text:"Casi todos mis días se sienten pesados", draft:true },
     "home.panic":{ text:"Se siente como pánico", draft:true },
     "home.angry":{ text:"Estoy muy enojado", draft:true },
+    "home.otherHelp":{ text:"Otros tipos de ayuda", draft:true },
     "home.tech":{ text:"Revisión de tecnología", draft:true },
     "home.techMeta":{ text:"La IA, las redes o revisar el teléfono me están afectando", draft:true },
     "home.zagsHint":{ text:"Tócame cuando quieras respirar juntos.", draft:true },
@@ -1550,6 +1552,122 @@ function shareButton(cls, label = SHARE.label){
   return copyButton(`${SHARE.text} ${shareUrl()}`, cls, `${label}: ${SHARE.copy}`, `data-kind="share"`);
 }
 
+/* OTHER KINDS OF HELP (owner request, 2026-10-09: "really help people… even if it's one person"). Short paths for
+   moments and people the app didn't reach yet. Wording drafted by Claude Code: CLINICIAN REVIEW REQUIRED (D47–D57).
+   One shared engine (PATHS + the "path" screen): one idea per screen, Next, an ending, a help line on every screen.
+   No typing, nothing saved, not in the engine, never on crisis screens. Outside resources stay hidden until the owner
+   verifies them (CRISIS_RESOURCE_VERIFICATION.md); the National Domestic Violence Hotline is already verified. */
+const MORE_RESOURCES = {   // all hidden until the owner verifies them (sources in CRISIS_RESOURCE_VERIFICATION.md)
+  samhsa:{ name:"SAMHSA National Helpline", what:"Free, confidential treatment referral and information, 24/7, English and Spanish.", phone:"18006624357", number:"1-800-662-4357", url:"https://www.samhsa.gov/find-help/helplines/national-helpline", source:"https://www.samhsa.gov/find-help/helplines/national-helpline", verified:false },
+  hrsa:{ name:"Find a community health center", what:"Health centers charge based on what you can pay.", url:"https://findahealthcenter.hrsa.gov/", source:"https://findahealthcenter.hrsa.gov/", verified:false },
+  mmh:{ name:"National Maternal Mental Health Hotline", what:"Free, confidential, 24/7. Call or text. English and Spanish.", phone:"18338526262", number:"1-833-852-6262", textTo:"18338526262", textLabel:"Text 1-833-852-6262", url:"https://mchb.hrsa.gov/programs-impact/national-maternal-mental-health-hotline", source:"https://mchb.hrsa.gov/programs-impact/national-maternal-mental-health-hotline", verified:false },
+  nami:{ name:"NAMI HelpLine", what:"Information and support for people with mental health conditions and the people who care for them.", phone:"18009506264", number:"1-800-950-6264", url:"https://www.nami.org/helpline", source:"https://www.nami.org/helpline", verified:false },
+  reset:{ name:"National Problem Gambling Helpline", what:"Free, confidential, 24/7. Call or text.", phone:"18006973738", number:"1-800-MY-RESET (1-800-697-3738)", textTo:"18006973738", textLabel:"Text 1-800-MY-RESET", url:"https://www.1800myreset.org/", source:"https://www.ncpgambling.org/", verified:false },
+  translifeline:{ name:"Trans Lifeline", what:"Peer support run by and for trans people.", phone:"18775658860", number:"877-565-8860", url:"https://translifeline.org/", source:"https://translifeline.org/contact/", verified:false },
+  anad:{ name:"ANAD Eating Disorders Helpline", what:"Free support and referrals.", phone:"18883757767", number:"888-375-7767", url:"https://anad.org/", source:"https://anad.org/", verified:false }
+};
+function moreRes(keys){
+  const list = (keys || []).map(k => k === "ndvh" ? TRAUMA_RESOURCES.find(e => e.key === "ndvh") : MORE_RESOURCES[k])
+    .filter(e => e && e.verified === true && (e.phone || /^https:\/\/\S+$/.test(e.url)));
+  return list.length ? `<div class="panel path-res">${list.map(e => `<h3>${esc(e.name)}</h3><p class="small">${esc(e.what)}</p>${resourceBits(e)}`).join("")}</div>` : "";
+}
+const LINE988 = "If it ever feels like too much, call or text 988, any time.";
+const PATHS = {
+  care:{ title:"Getting to real care", meta:"Finding a counselor or doctor, and what to say", res:["samhsa","hrsa"],
+    steps:[
+      { h:"Where to start", list:["Your doctor. They can help, or refer you to someone who can.","Your insurance. The member number on the back of your card can list counselors who take it.","A community health center. They charge based on what you can pay.","211. They can point you to low-cost help near you."], call211:true },
+      { h:"What to say when you call", p:"You can change the words. You don't have to explain everything.", say:"Hi, I'm looking for a counselor for stress and low mood. Are you taking new people? Do you take my insurance, or have a sliding scale?" },
+      { h:"Good questions to ask", list:["What will it cost me?","How soon could I be seen?","Do you offer video visits?","What happens if it isn't a good fit?"] },
+      { h:"If you can't wait", p:"You don't need an appointment for a hard moment. You can call or text 988, any time." }
+    ],
+    end:{ h:"Looking for care is a strong step.", p:"It can take a few tries to find the right person. That's normal." } },
+  slipped:{ title:"I slipped", meta:"After drinking or using", res:["samhsa"], danger:"If someone can't wake up, isn't breathing, or has blue lips, call 911 now.",
+    steps:[
+      { h:"One slip isn't the end of anything.", p:"It doesn't erase the work you've done. Right now, the only job is getting through tonight safely." },
+      { h:"Right now", list:["Don't drive. Not even a short way.","Drink some water, and eat something if you can.","Stay somewhere safe, near someone if you can.","Don't use any more tonight. Put what's left out of reach, or out of the house."] },
+      { h:"Tell one person", p:"You don't have to explain everything.", msg:"I slipped tonight. I don't need a lecture, I just don't want to be alone with it. Can you check on me?" },
+      { h:"Tomorrow", list:["Drink water and eat.","Tell your sponsor, counselor, or someone you trust.","Look at what led up to it, without blaming yourself.","Start again. Starting again counts."] }
+    ],
+    end:{ h:"You're still here, and you can start again.", p:"" } },
+  heartbreak:{ title:"Heartbreak or a breakup", meta:"When it hurts to miss them",
+    steps:[
+      { h:"Heartbreak is a real loss.", p:"It can hurt in your body, mess with your sleep, and come in waves. That's normal." },
+      { h:"Don't text them tonight.", p:"If you want to, wait first. If you still want to later, write it in your notes instead, and decide tomorrow.", opts:[["Borrow ten minutes","lowPick","borrow_ten"]] },
+      { h:"Step back from their profile.", list:["Mute or hide them for now. You can undo it later.","Move photos to a folder you don't open every day.","Checking again and again keeps the hurt fresh."] },
+      { h:"Lean on someone.", p:"Tell a friend you're having a hard time. You don't have to explain it all.", msg:"I'm having a hard time with the breakup. Can we talk or hang out soon?" }
+    ],
+    end:{ h:"One day at a time is enough.", p:"", opts:[["Cozy up","cozyStart",""],["I feel sad or low","flow","low"]] } },
+  money:{ title:"Money, work or housing stress", meta:"Bills, a lost job, rent",
+    steps:[
+      { h:"Money stress is real stress.", p:"It can make everything feel urgent at once. Let's make it smaller." },
+      { h:"Pick the one thing that's most urgent.", p:"Just one: rent, a bill, food, a shutoff notice. Everything else can wait until tomorrow." },
+      { h:"Ask for help with it.", list:["211 connects people to local help with rent, food, utilities and more.","You can call the company and ask for a payment plan or more time. It's okay to ask."], say:"I'm having trouble paying this month. Can we set up a payment plan or a later due date?", call211:true },
+      { h:"Lost a job?", list:["Apply for unemployment in your state as soon as you can.","Tell one person. You don't have to carry this alone."] }
+    ],
+    end:{ h:"One thing at a time. You're doing what you can.", p:"" } },
+  notsafe:{ title:"Not safe at home", meta:"Someone at home hurts, scares or controls you", quickExit:true, res:["ndvh"],
+    line:"If you're in danger right now, call 911. To talk, call or text 988.",
+    steps:[
+      { h:"What's happening isn't your fault.", p:"You deserve to be safe. You don't have to explain anything here." },
+      { h:"Talk to someone who knows how to help.", p:"Trained advocates can help you think it through, any time.", res:["ndvh"] },
+      { h:"If it's safe to, think about:", list:["A safe place you could go, and how you'd get there.","One person you could tell, and a word that means \"come get me.\"","Keeping your phone charged and important papers together."] },
+      { h:"On a shared phone", list:["Use Leave quickly at the top of these screens.","In Settings, you can turn saving off and delete everything.","You may want to clear this browser's history."] }
+    ],
+    end:{ h:"You can come back to this any time.", p:"" } },
+  newparent:{ title:"New parent or pregnant", meta:"When it's harder than people said", res:["mmh"],
+    danger:"If you're scared you might hurt yourself or anyone else, call or text 988 now, or call 911.",
+    steps:[
+      { h:"Hard feelings during pregnancy or after a baby are common.", p:"Sadness, worry, anger, or not feeling like yourself. It's not your fault, and it doesn't mean you're a bad parent." },
+      { h:"One small thing for you", list:["Eat something and drink water.","Rest when someone else can watch the baby, even for 20 minutes.","Ask one person for one specific thing: a meal, laundry, an hour."], msg:"I'm having a harder time than I thought. Could you help with one thing this week?" },
+      { h:"Tell your doctor or midwife.", p:"These feelings can get better with help. One sentence is enough:", say:"I haven't felt like myself lately, and I'd like some help." }
+    ],
+    end:{ h:"Asking for help is part of taking care of your baby.", p:"" } },
+  caregiver:{ title:"Caring for someone", meta:"When someone you love is struggling", res:["nami"],
+    steps:[
+      { h:"Caring for someone is a lot.", p:"Your needs matter too." },
+      { h:"One thing for you today", list:["Eat, drink water, step outside for a few minutes.","Tell someone how you're really doing.","It's okay to set limits and say what you can't do."] },
+      { h:"Help for helping them", p:"The supporter guide has what to say, what not to say, and what to do if things get worse.", supportLink:"Open the supporter guide" },
+      { h:"If they talk about not wanting to be alive", p:"Call or text 988 together. If they're in danger right now, call 911." }
+    ],
+    end:{ h:"Looking after yourself helps them too.", p:"" } },
+  gambling:{ title:"Gambling urges", meta:"Betting, casinos, apps", res:["reset"],
+    steps:[
+      { h:"The urge rises, peaks and passes.", p:"You don't have to act on it. Give it some time first.", opts:[["Borrow ten minutes","lowPick","borrow_ten"]] },
+      { h:"Make it harder to bet tonight.", list:["Log out of betting apps, or delete them for now.","Give your cards to someone you trust for a while.","Many betting sites and states let you block yourself (self-exclusion)."] },
+      { h:"Tell someone.", p:"You don't have to explain it all.", msg:"I'm having a hard time with gambling urges tonight. Can we talk?" }
+    ],
+    end:{ h:"Not betting tonight counts.", p:"" } },
+  lgbtq:{ title:"LGBTQ+ and struggling", meta:"When people don't get who you are", res:["translifeline"],
+    steps:[
+      { h:"You deserve support that gets who you are.", p:"If people have rejected or hurt you because of who you are, that's not your fault." },
+      { h:"Find your people.", list:["Reach out to a friend who gets it.","Many areas have LGBTQ+ centers and support groups. 211 can help you find one."], call211:true },
+      { h:"Talk to someone tonight.", p:"988 is for everyone, any time." }
+    ],
+    end:{ h:"You belong here.", p:"" } },
+  eating:{ title:"Food, eating or body image", meta:"When food or your body feels hard", res:["anad"],
+    danger:"If you feel very unwell in your body, get medical help or call 911.",
+    steps:[
+      { h:"You deserve care, not judgment.", p:"Struggling with food or your body is common, and you're not alone." },
+      { h:"For right now", list:["Step away from mirrors, scales, and apps that make it worse.","Text or sit with someone you trust.","Be as kind to your body as you would to a friend's."] },
+      { h:"A doctor can help.", p:"One sentence is enough:", say:"I've been struggling with food and my body, and I'd like some help." }
+    ],
+    end:{ h:"Small steps count.", p:"" } }
+};
+const PATH_EXIT = { label:"Leave quickly", note:"Opens a plain weather page.", url:"https://www.weather.gov/" };
+const MORE_HELP = {
+  title:"Other kinds of help", sub:"Pick what fits. Each one is short, and nothing is saved.",
+  first:["care","slipped","heartbreak","money","notsafe","newparent","caregiver"],
+  rest:["gambling","lgbtq","eating"],
+  more:"More", next:"Next", putDown:"Put the phone down", talk:"Talk to someone",
+  sendLbl:"Or send this, if it helps:", sayLbl:"You could say:", call211:"Call 211"
+};
+let quickExit = url => { try { location.replace(url); } catch (_){} };   // replaceable in tests
+function pathMsg(msg){
+  const p = person();
+  return `<p class="small" style="margin:14px 0 6px">${MORE_HELP.sendLbl}</p><div class="sits">${canPhone()
+    ? `<a class="sit idea" href="${smsLink(p ? p.phone : "", msg)}">${esc(msg)}</a>` : copyButton(msg, "sit idea", esc(msg))}</div>`;
+}
+
 /* SHARE WITH A FRIEND (owner request, 2026-10-09: "App and support or tell a friend", then "make it safe and honest").
    Not "Join": there is nothing to join (no account, no sign-up, no community). Shows the exact message before it's sent. Get the app (the browser's own install prompt where there is one; otherwise how to add it), Tell a
    friend (the share button), Support ZigZag Mind (the existing donate link). Nothing is collected or sent. */
@@ -1635,9 +1753,8 @@ const SEARCH_INDEX = [
     words:["stuck","stuck inside","trapped in my room","need air","fresh air","get out","go outside","outside","walk","take a walk","leave the house","change the scene","somewhere to go","cabin fever"] },
   { id:"find", title:"Find something", desc:"Photo missions: notice something around you", screen:"find-something", act:"fsStart",
     words:["find something","photo","photos","camera","picture","take a picture","notice","mission","scavenger hunt"] },
-  { id:"low", title:"I feel sad or low", desc:"One small step. Also for breakups and heartbreak.", screen:"sad", act:"flow", arg:"low",
-    words:["sad","sadness","depressed","depresed","depressd","depression","down","feeling down","feel down","low","empty","numb","crying","cry","cant stop crying","tears","dark cloud","no energy","unmotivated","no motivation","blah","blue","miserable","unhappy","gloomy","hopeless",
-      "breakup","break up","broke up","broken up","breaking up","dumped","got dumped","ex","my ex","cheated","cheated on","cheating","divorce","divorced","separated","miss them","heartbroken","heart broken","heartbreak","broken heart","rejected","relationship ended","she left","he left","they left me"] },
+  { id:"low", title:"I feel sad or low", desc:"Feels like a dark cloud? One small step.", screen:"sad", act:"flow", arg:"low",
+    words:["sad","sadness","depressed","depresed","depressd","depression","down","feeling down","feel down","low","empty","numb","crying","cry","cant stop crying","tears","dark cloud","no energy","unmotivated","no motivation","blah","blue","miserable","unhappy","gloomy","hopeless"] },
   { id:"heavy", title:"Most of my days feel heavy", desc:"When it's not one bad day but most days", screen:"heavy", act:"heavyStart",
     words:["most days","every day","everyday","all the time","for weeks","for months","always sad","always tired","heavy","weighed down","been like this","nothing feels good"] },
   { id:"urge", title:"I have an urge", desc:"Drink, drugs or vape: give it a little time first", screen:"before", act:"flow", arg:"craving",
@@ -1688,6 +1805,28 @@ const SEARCH_INDEX = [
     words:["settings","dark mode","light mode","large text","text size","bigger text","delete","delete everything","export","download my data","reduce motion"] },
   { id:"privacy", title:"Privacy & terms", desc:"What stays on your phone, and what doesn't", screen:"privacy", act:"privacyOpen",
     words:["privacy","terms","private","is this private","who can see","my data","data","tracking"] },
+  { id:"heartbreak", title:"Heartbreak or a breakup", desc:"When it hurts to miss them", screen:"path", act:"pathStart", arg:"heartbreak",
+    words:["breakup","break up","broke up","broken up","breaking up","dumped","got dumped","ex","my ex","cheated","cheated on","cheating","divorce","divorced","separated","miss them","heartbroken","heart broken","heartbreak","broken heart","rejected","relationship ended","she left","he left","they left me","text my ex"] },
+  { id:"slipped", title:"I slipped", desc:"After drinking or using: no shame, just tonight", screen:"path", act:"pathStart", arg:"slipped",
+    words:["i slipped","slipped up","i relapsed","relapsed","already drank","already used","i drank","i used","got drunk","drunk again","used again","hungover","hangover","messed up"] },
+  { id:"money", title:"Money, work or housing stress", desc:"Bills, a lost job, rent", screen:"path", act:"pathStart", arg:"money",
+    words:["money","broke","bills","cant pay","rent","eviction","evicted","debt","lost my job","fired","laid off","unemployed","job","work stress","housing","homeless","food","shutoff","overdue"] },
+  { id:"notsafe", title:"Not safe at home", desc:"Someone at home hurts, scares or controls you", screen:"path", act:"pathStart", arg:"notsafe",
+    words:["not safe at home","unsafe at home","abuse","abusive","domestic violence","dv","partner hits me","hits me","controlling","controls me","scared of my partner","scared at home","afraid at home","abusive relationship"] },
+  { id:"newparent", title:"New parent or pregnant", desc:"When it's harder than people said", screen:"path", act:"pathStart", arg:"newparent",
+    words:["new parent","new mom","new dad","baby","newborn","postpartum","post partum","ppd","pregnant","pregnancy","after the baby","baby blues","breastfeeding","no sleep baby"] },
+  { id:"caregiver", title:"Caring for someone", desc:"When someone you love is struggling", screen:"path", act:"pathStart", arg:"caregiver",
+    words:["caregiver","caring for","taking care of","burned out caring","my mom is sick","my dad is sick","caretaker","family member is struggling","support them"] },
+  { id:"gambling", title:"Gambling urges", desc:"Betting, casinos, apps", screen:"path", act:"pathStart", arg:"gambling",
+    words:["gambling","gamble","betting","bet","bets","sports betting","casino","slots","poker","lottery","scratch offs","lost money betting"] },
+  { id:"lgbtq", title:"LGBTQ+ and struggling", desc:"When people don't get who you are", screen:"path", act:"pathStart", arg:"lgbtq",
+    words:["lgbtq","lgbt","gay","lesbian","bi","bisexual","trans","transgender","nonbinary","non binary","queer","coming out","came out","family rejected me"] },
+  { id:"eating", title:"Food, eating or body image", desc:"When food or your body feels hard", screen:"path", act:"pathStart", arg:"eating",
+    words:["eating","eating disorder","food","binge","binging","purging","not eating","body image","hate my body","weight","fat","anorexia","bulimia","diet"] },
+  { id:"care", title:"Getting to real care", desc:"Finding a counselor or doctor, and what to say", screen:"path", act:"pathStart", arg:"care",
+    words:["therapist","therapy","counselor","counseling","psychiatrist","find a therapist","find help","doctor","appointment","insurance","low cost","cant afford therapy","sliding scale","treatment","rehab","what to say"] },
+  { id:"morehelp", title:"Other kinds of help", desc:"Short paths for more situations", screen:"more-help", act:"moreHelp",
+    words:["other help","more help","something else","other","self help","categories"] },
   { id:"join", title:"Share with a friend", desc:"Send the link to someone, get the app, or support it. No account.", screen:"join", act:"joinOpen",
     words:["share with a friend","share with friend","join","join zigzag","share","share the app","share zigzag","send the app","send the link","tell a friend","recommend","invite","install","download","get the app","app","add to home screen","home screen","donate","support zigzag","ko fi","kofi"] },
   { id:"help", title:"Help now", desc:"988, 911, and a real person fast", screen:"crisis", act:"crisis",
@@ -3923,7 +4062,8 @@ const SCREENS = {
         <button class="sit" data-act="ptsdStart">${l10n("home.ptsd")}</button>
         <button class="sit" data-act="heavyStart">${l10n("home.heavy")}</button>
         <button class="sit" data-act="panicStart">${l10n("home.panic")}</button>
-        <button class="sit" data-act="angryStart">${l10n("home.angry")}</button>`
+        <button class="sit" data-act="angryStart">${l10n("home.angry")}</button>
+        <button class="sit" data-act="moreHelp">${l10n("home.otherHelp")}</button>`
         : `<button class="sit sit-more" data-act="homeMore" aria-expanded="false">${l10n("home.more")}</button>`}
       </div>
       <button class="card wide tech-row" data-act="techStart">${icon("phone")}<span>${l10n("home.tech")}<span class="meta">${l10n("home.techMeta")}</span></span></button>
@@ -4023,7 +4163,8 @@ const SCREENS = {
         ${session.currentState === "spiraling" ? `<button class="link" data-act="undStopStart">${UNDERSTAND.stopLink}</button>
         <button class="link worry-link" data-act="worryStart">${WORRY.link}</button>
         <button class="link problem-link" data-act="problemStart">${PROBLEM.link}</button>` : ""}
-        ${session.currentState === "anxious" ? `<button class="link panic-link" data-act="panicStart">${PANIC.link}</button>` : ""}` };
+        ${session.currentState === "anxious" ? `<button class="link panic-link" data-act="panicStart">${PANIC.link}</button>` : ""}
+        ${session.currentState === "craving" ? `<button class="link slipped-link" data-act="pathStart" data-arg="slipped">Already drank or used? I slipped</button>` : ""}` };
   },
 
   "anx-feet"(){
@@ -4544,6 +4685,41 @@ const SCREENS = {
     return { close:true, body:`${stepTitle(HEAVY.end, true)}${line988}`,
       actions:`<button class="btn btn-primary" data-act="putDown">Put the phone down</button>
         <button class="btn btn-secondary" data-act="route" data-arg="connect">Talk to someone</button>` };
+  },
+
+  /* OTHER KINDS OF HELP: the hub, and every short path on one engine */
+  "more-help"(){
+    const ids = ui.moreHelpAll ? [...MORE_HELP.first, ...MORE_HELP.rest] : MORE_HELP.first;
+    return { close:true, body:`
+      ${title(MORE_HELP.title)}
+      <p class="sub">${MORE_HELP.sub}</p>
+      <div class="list">${ids.filter(id => PATHS[id]).map(id => `<button class="card" data-act="pathStart" data-arg="${id}"><span>${PATHS[id].title}<span class="meta">${PATHS[id].meta}</span></span></button>`).join("")}
+        ${ui.moreHelpAll ? "" : `<button class="card more-help-more" data-act="moreHelpAll" aria-expanded="false"><span>${MORE_HELP.more}</span></button>`}</div>
+      <p class="small heavy-988">${LINE988} <a href="${LINKS.call988}">Call 988</a> · ${text988Inline()}</p>` };
+  },
+  path(){
+    const st = ui.path || {}, P = PATHS[st.id];
+    if (!P) return SCREENS["more-help"]();
+    const i = st.step || 0, last = i >= P.steps.length;
+    const s = last ? P.end : P.steps[i];
+    const exit = P.quickExit ? `<button class="btn btn-outline quick-exit" data-act="leaveQuickly">${PATH_EXIT.label}</button><p class="small" style="margin:4px 0 12px">${PATH_EXIT.note}</p>` : "";
+    const opts = (s.opts || []).map(([l, a, g], k) => `<button class="card" data-act="pathOpt" data-arg="${k}"><span>${l}</span></button>`).join("");
+    const body = `${exit}${stepTitle(s.h, i === 0 || last)}
+      ${s.p ? `<p class="sub" style="font-size:19px">${s.p}</p>` : ""}
+      ${s.list ? `<ul class="path-list">${s.list.map(x => `<li>${x}</li>`).join("")}</ul>` : ""}
+      ${s.say ? `<p class="small" style="margin:12px 0 6px">${MORE_HELP.sayLbl}</p><p class="copy-text heavy-line">"${s.say}"</p>` : ""}
+      ${s.call211 ? `<a class="btn btn-secondary" style="margin-top:12px" href="${LINKS.call211}">${MORE_HELP.call211}</a>` : ""}
+      ${s.res ? moreRes(s.res) : ""}
+      ${s.supportLink ? `<a class="btn btn-secondary" style="margin-top:12px" href="support/" target="_blank" rel="noopener">${s.supportLink}</a>` : ""}
+      ${s.msg ? pathMsg(s.msg) : ""}
+      ${opts ? `<div class="list" style="margin-top:12px">${opts}</div>` : ""}
+      ${last ? moreRes(P.res) : ""}
+      ${P.danger && (last || i === 1) ? `<p class="note path-danger">${P.danger}</p>` : ""}
+      <p class="small heavy-988 path-988">${P.line || LINE988} <a href="${LINKS.call988}">Call 988</a> · ${text988Inline()}</p>`;
+    return { close:true, body, actions: last
+      ? `<button class="btn btn-primary" data-act="putDown">${MORE_HELP.putDown}</button>
+        <button class="btn btn-secondary" data-act="route" data-arg="connect">${MORE_HELP.talk}</button>`
+      : `<button class="btn btn-primary" data-act="pathNext">${MORE_HELP.next}</button>` };
   },
 
   /* JOIN: get the app, tell a friend, support it. No account. */
@@ -7968,6 +8144,18 @@ const ACTIONS = {
     dispatch({ type:"SET_ENGINE_RESULT", pick:arg, reason:`${findIntervention(arg).name} helped you before.` });
     lastRendered = null; render();
   },
+  moreHelp(){ if (blockIfRed()) return; ui.moreHelpAll = false; go("more-help"); },
+  moreHelpAll(){ if (blockIfRed()) return; ui.moreHelpAll = true; lastRendered = null; render(); },
+  pathStart(arg){ if (blockIfRed()) return; if (!PATHS[arg]) return; ui.path = { id:arg, step:0 }; lastRendered = null; go("path"); },
+  pathNext(){ if (blockIfRed()) return; const p = ui.path; if (!p || !PATHS[p.id]) return; p.step = Math.min((p.step || 0) + 1, PATHS[p.id].steps.length); lastRendered = null; render(); },
+  pathOpt(arg){
+    if (blockIfRed()) return;
+    const p = ui.path, P = p && PATHS[p.id]; if (!P) return;
+    const s = (p.step || 0) >= P.steps.length ? P.end : P.steps[p.step || 0];
+    const o = (s.opts || [])[Number(arg)]; if (!o || typeof ACTIONS[o[1]] !== "function") return;
+    ACTIONS[o[1]](o[2]);
+  },
+  leaveQuickly(){ app.innerHTML = ""; quickExit(PATH_EXIT.url); },   // a plain weather page, without a history entry
   joinOpen(){ if (blockIfRed()) return; go("join"); },
   installApp(){   // the browser's own install prompt; whatever the person chooses, the screen updates
     if (!installEvt) return;

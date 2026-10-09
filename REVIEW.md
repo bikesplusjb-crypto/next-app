@@ -1215,7 +1215,7 @@ Contact line (only when CONTACT_EMAIL is set): "Questions? Email [address]."
 
 D. Crisis Text Line (**hidden until the owner verifies it**; CRISIS_TEXT_LINE.verified is true): one line below the 988 buttons on the full crisis screen and Connect, on the printed plan, and in the supporter guide's "Get help together": "Rather text a stranger? Text HOME to 741741 (Crisis Text Line)." (phones: Text HOME to 741741 is a text link; computers: shown as text).
 
-E. Spanish interface: **scaffolding only, nothing shown**. SPANISH_ENABLED is false. 228 strings (onboarding, Home, crisis screens, Calm, Connect, My Plan, Help, Settings labels) now live in one table; English is unchanged. Every Spanish line is a DRAFT for a human translator and the clinician: docs/SPANISH_REVIEW.md. A draft crisis-screen line is never shown, even with Spanish on.
+E. Spanish interface: **scaffolding only, nothing shown**. SPANISH_ENABLED is false. 229 strings (onboarding, Home, crisis screens, Calm, Connect, My Plan, Help, Settings labels) now live in one table; English is unchanged. Every Spanish line is a DRAFT for a human translator and the clinician: docs/SPANISH_REVIEW.md. A draft crisis-screen line is never shown, even with Spanish on.
 
 F. Feedback (only when FEEDBACK_URL is set; it is empty): on About only, "Did ZigZag Mind help? Tell us anonymously →" (new tab). Privacy page adds: "If you use the feedback link on About, that form is a separate service. It receives only what you type there."
 
@@ -1296,6 +1296,91 @@ Why (for reviewers only; never shown as statements about people): in 2023 an ave
 - 4: "When will you do it?" → "Now" · "Later today" · "Tomorrow"
 - End: "Go do it. That's the whole step." (Now) or "That's the step. You don't have to solve the whole thing." · "Too big to do alone?" Talk to someone → Put the phone down
 
+### Other kinds of help (owner request, 2026-10-09; wording drafted by Claude Code; CLINICIAN REVIEW REQUIRED)
+
+Home → More → "Other kinds of help" → "Other kinds of help" / "Pick what fits. Each one is short, and nothing is saved." (7 paths, then "More"). Each path: one idea per screen, Next, an ending (Put the phone down · Talk to someone), and on every screen "If it ever feels like too much, call or text 988, any time." (Not safe at home: its own line). No typing, nothing saved. Outside resources hidden until verified. Also from Search; "I slipped" also from the first urge screen.
+
+#### Getting to real care — Finding a counselor or doctor, and what to say
+
+- 1: "Where to start" · "Your doctor. They can help, or refer you to someone who can." · "Your insurance. The member number on the back of your card can list counselors who take it." · "A community health center. They charge based on what you can pay." · "211. They can point you to low-cost help near you." · [Call 211]
+- 2: "What to say when you call" / "You can change the words. You don't have to explain everything." · You could say: "Hi, I'm looking for a counselor for stress and low mood. Are you taking new people? Do you take my insurance, or have a sliding scale?"
+- 3: "Good questions to ask" · "What will it cost me?" · "How soon could I be seen?" · "Do you offer video visits?" · "What happens if it isn't a good fit?"
+- 4: "If you can't wait" / "You don't need an appointment for a hard moment. You can call or text 988, any time."
+- End: "Looking for care is a strong step." · resources (hidden until verified, except ndvh): samhsa, hrsa
+
+#### I slipped — After drinking or using
+
+- 1: "One slip isn't the end of anything." / "It doesn't erase the work you've done. Right now, the only job is getting through tonight safely."
+- 2: "Right now" · "Don't drive. Not even a short way." · "Drink some water, and eat something if you can." · "Stay somewhere safe, near someone if you can." · "Don't use any more tonight. Put what's left out of reach, or out of the house."
+- 3: "Tell one person" / "You don't have to explain everything." · prepared text: "I slipped tonight. I don't need a lecture, I just don't want to be alone with it. Can you check on me?"
+- 4: "Tomorrow" · "Drink water and eat." · "Tell your sponsor, counselor, or someone you trust." · "Look at what led up to it, without blaming yourself." · "Start again. Starting again counts."
+- End: "You're still here, and you can start again." · resources (hidden until verified, except ndvh): samhsa
+- Also: "If someone can't wake up, isn't breathing, or has blue lips, call 911 now."
+
+#### Heartbreak or a breakup — When it hurts to miss them
+
+- 1: "Heartbreak is a real loss." / "It can hurt in your body, mess with your sleep, and come in waves. That's normal."
+- 2: "Don't text them tonight." / "If you want to, wait first. If you still want to later, write it in your notes instead, and decide tomorrow." · [Borrow ten minutes]
+- 3: "Step back from their profile." · "Mute or hide them for now. You can undo it later." · "Move photos to a folder you don't open every day." · "Checking again and again keeps the hurt fresh."
+- 4: "Lean on someone." / "Tell a friend you're having a hard time. You don't have to explain it all." · prepared text: "I'm having a hard time with the breakup. Can we talk or hang out soon?"
+- End: "One day at a time is enough." · [Cozy up] [I feel sad or low]
+
+#### Money, work or housing stress — Bills, a lost job, rent
+
+- 1: "Money stress is real stress." / "It can make everything feel urgent at once. Let's make it smaller."
+- 2: "Pick the one thing that's most urgent." / "Just one: rent, a bill, food, a shutoff notice. Everything else can wait until tomorrow."
+- 3: "Ask for help with it." · "211 connects people to local help with rent, food, utilities and more." · "You can call the company and ask for a payment plan or more time. It's okay to ask." · You could say: "I'm having trouble paying this month. Can we set up a payment plan or a later due date?" · [Call 211]
+- 4: "Lost a job?" · "Apply for unemployment in your state as soon as you can." · "Tell one person. You don't have to carry this alone."
+- End: "One thing at a time. You're doing what you can."
+
+#### Not safe at home — Someone at home hurts, scares or controls you
+
+- 1: "What's happening isn't your fault." / "You deserve to be safe. You don't have to explain anything here."
+- 2: "Talk to someone who knows how to help." / "Trained advocates can help you think it through, any time." · resources: ndvh
+- 3: "If it's safe to, think about:" · "A safe place you could go, and how you'd get there." · "One person you could tell, and a word that means "come get me."" · "Keeping your phone charged and important papers together."
+- 4: "On a shared phone" · "Use Leave quickly at the top of these screens." · "In Settings, you can turn saving off and delete everything." · "You may want to clear this browser's history."
+- End: "You can come back to this any time." · resources (hidden until verified, except ndvh): ndvh
+- Help line on every screen: "If you're in danger right now, call 911. To talk, call or text 988."
+- "Leave quickly" on every screen ("Opens a plain weather page."): replaces the page with https://www.weather.gov/, no history entry.
+
+#### New parent or pregnant — When it's harder than people said
+
+- 1: "Hard feelings during pregnancy or after a baby are common." / "Sadness, worry, anger, or not feeling like yourself. It's not your fault, and it doesn't mean you're a bad parent."
+- 2: "One small thing for you" · "Eat something and drink water." · "Rest when someone else can watch the baby, even for 20 minutes." · "Ask one person for one specific thing: a meal, laundry, an hour." · prepared text: "I'm having a harder time than I thought. Could you help with one thing this week?"
+- 3: "Tell your doctor or midwife." / "These feelings can get better with help. One sentence is enough:" · You could say: "I haven't felt like myself lately, and I'd like some help."
+- End: "Asking for help is part of taking care of your baby." · resources (hidden until verified, except ndvh): mmh
+- Also: "If you're scared you might hurt yourself or anyone else, call or text 988 now, or call 911."
+
+#### Caring for someone — When someone you love is struggling
+
+- 1: "Caring for someone is a lot." / "Your needs matter too."
+- 2: "One thing for you today" · "Eat, drink water, step outside for a few minutes." · "Tell someone how you're really doing." · "It's okay to set limits and say what you can't do."
+- 3: "Help for helping them" / "The supporter guide has what to say, what not to say, and what to do if things get worse." · [Open the supporter guide]
+- 4: "If they talk about not wanting to be alive" / "Call or text 988 together. If they're in danger right now, call 911."
+- End: "Looking after yourself helps them too." · resources (hidden until verified, except ndvh): nami
+
+#### Gambling urges — Betting, casinos, apps
+
+- 1: "The urge rises, peaks and passes." / "You don't have to act on it. Give it some time first." · [Borrow ten minutes]
+- 2: "Make it harder to bet tonight." · "Log out of betting apps, or delete them for now." · "Give your cards to someone you trust for a while." · "Many betting sites and states let you block yourself (self-exclusion)."
+- 3: "Tell someone." / "You don't have to explain it all." · prepared text: "I'm having a hard time with gambling urges tonight. Can we talk?"
+- End: "Not betting tonight counts." · resources (hidden until verified, except ndvh): reset
+
+#### LGBTQ+ and struggling — When people don't get who you are
+
+- 1: "You deserve support that gets who you are." / "If people have rejected or hurt you because of who you are, that's not your fault."
+- 2: "Find your people." · "Reach out to a friend who gets it." · "Many areas have LGBTQ+ centers and support groups. 211 can help you find one." · [Call 211]
+- 3: "Talk to someone tonight." / "988 is for everyone, any time."
+- End: "You belong here." · resources (hidden until verified, except ndvh): translifeline
+
+#### Food, eating or body image — When food or your body feels hard
+
+- 1: "You deserve care, not judgment." / "Struggling with food or your body is common, and you're not alone."
+- 2: "For right now" · "Step away from mirrors, scales, and apps that make it worse." · "Text or sit with someone you trust." · "Be as kind to your body as you would to a friend's."
+- 3: "A doctor can help." / "One sentence is enough:" · You could say: "I've been struggling with food and my body, and I'd like some help."
+- End: "Small steps count." · resources (hidden until verified, except ndvh): anad
+- Also: "If you feel very unwell in your body, get medical help or call 911."
+
 ### Share with a friend: share it, get the app, support it (owner request, 2026-10-09: "make it safe and honest")
 
 - Where: "Share with a friend" at the bottom of Home (under "Worried about someone?"), in Settings under About (with "Only this message and the link are shared. Nothing about you."), and on the About page; Search ("share", "tell a friend", "install", "donate"). Never on crisis screens. Not called "Join": there is nothing to join.
@@ -1312,7 +1397,7 @@ Why (for reviewers only; never shown as statements about people): in 2023 an ave
 - Every query: safety check first, on each pause (~600 ms) and on submit. RED → the crisis screen, query discarded. YELLOW → support bar on, results still shown.
 - Results: up to 5 cards (title + one line), then "Not it? I don't know what I need →". Nothing matches: "Here are some places to start:" I don't know what I need · Talk to someone · Calm down with Zags · Help. Never "No results".
 - Nothing remembered: no history, no recent searches, no saved query; it clears when you leave the screen.
-- Index: 45 paths, 669 words. Breakup / heartbreak words lead to "I feel sad or low" (no heartbreak path yet). "pills" alone → the urge path; "took all my pills" → crisis (safety check).
+- Index: 56 paths, 802 words. Breakup / heartbreak words lead to "I feel sad or low" (no heartbreak path yet). "pills" alone → the urge path; "took all my pills" → crisis (safety check).
 Every path in the index (title — one line):
 - "It feels like panic" — One wave at a time, with a 911 line if it's new
 - "Calm down" — Slow your body down: breathing, grounding, Zags
@@ -1331,7 +1416,7 @@ Every path in the index (title — one line):
 - "Be around people" — Somewhere with people, no talking needed
 - "Change the scene" — Small moves and somewhere to go
 - "Find something" — Photo missions: notice something around you
-- "I feel sad or low" — One small step. Also for breakups and heartbreak.
+- "I feel sad or low" — Feels like a dark cloud? One small step.
 - "Most of my days feel heavy" — When it's not one bad day but most days
 - "I have an urge" — Drink, drugs or vape: give it a little time first
 - "I lost someone" — Grief, a death, or a pet who died
@@ -1357,6 +1442,17 @@ Every path in the index (title — one line):
 - "Progress" — What you did this week, and your reset map
 - "Settings" — Dark mode, text size, export or delete everything
 - "Privacy & terms" — What stays on your phone, and what doesn't
+- "Heartbreak or a breakup" — When it hurts to miss them
+- "I slipped" — After drinking or using: no shame, just tonight
+- "Money, work or housing stress" — Bills, a lost job, rent
+- "Not safe at home" — Someone at home hurts, scares or controls you
+- "New parent or pregnant" — When it's harder than people said
+- "Caring for someone" — When someone you love is struggling
+- "Gambling urges" — Betting, casinos, apps
+- "LGBTQ+ and struggling" — When people don't get who you are
+- "Food, eating or body image" — When food or your body feels hard
+- "Getting to real care" — Finding a counselor or doctor, and what to say
+- "Other kinds of help" — Short paths for more situations
 - "Share with a friend" — Send the link to someone, get the app, or support it. No account.
 - "Help now" — 988, 911, and a real person fast
 
@@ -1882,6 +1978,7 @@ _When: craving_
 - 10 · the most intense
 - **Button:** Continue
 - **Button:** Skip
+- **Button:** Already drank or used? I slipped
 
 _When: distraction_
 
@@ -2427,6 +2524,38 @@ _When: distraction_
 - It's not weakness, and it's not your fault. You don't have to fix all of it.
 - If it ever feels like more than heavy, call or text 988, any time. Call 988 · Text 988
 - **Button:** Next
+
+### `more-help`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Other kinds of help
+- Pick what fits. Each one is short, and nothing is saved.
+- **Button:** Getting to real care — Finding a counselor or doctor, and what to say
+- **Button:** I slipped — After drinking or using
+- **Button:** Heartbreak or a breakup — When it hurts to miss them
+- **Button:** Money, work or housing stress — Bills, a lost job, rent
+- **Button:** Not safe at home — Someone at home hurts, scares or controls you
+- **Button:** New parent or pregnant — When it's harder than people said
+- **Button:** Caring for someone — When someone you love is struggling
+- **Button:** More
+- If it ever feels like too much, call or text 988, any time. Call 988 · Text 988
+
+### `path`
+
+- **Button:** × _(screen reader: "Close and go to home")_
+- **Button:** Help _(screen reader: "Get help now")_
+- **Heading:** Other kinds of help
+- Pick what fits. Each one is short, and nothing is saved.
+- **Button:** Getting to real care — Finding a counselor or doctor, and what to say
+- **Button:** I slipped — After drinking or using
+- **Button:** Heartbreak or a breakup — When it hurts to miss them
+- **Button:** Money, work or housing stress — Bills, a lost job, rent
+- **Button:** Not safe at home — Someone at home hurts, scares or controls you
+- **Button:** New parent or pregnant — When it's harder than people said
+- **Button:** Caring for someone — When someone you love is struggling
+- **Button:** More
+- If it ever feels like too much, call or text 988, any time. Call 988 · Text 988
 
 ### `join`
 
