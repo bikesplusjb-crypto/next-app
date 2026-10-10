@@ -16,6 +16,8 @@ They stay hidden until you confirm them. Check the official website or call the 
 
 **New 2026-10-09 (Other kinds of help, all hidden until you check):** SAMHSA National Helpline · community health center finder (HRSA) · Maternal Mental Health Hotline · NAMI HelpLine · Problem Gambling Helpline (**now 1-800-MY-RESET**, not 1-800-GAMBLER) · Trans Lifeline · ANAD. Numbers and sources: `docs/CRISIS_RESOURCE_VERIFICATION.md`.
 
+**New 2026-10-10 (grief and money, all hidden until you check):** AFSP suicide loss support groups · Postpartum Support International HelpLine (1-800-944-4773) · National Foundation for Credit Counseling (1-800-388-2227) · CFPB debt collection page · Social Security (1-800-772-1213) · FTC fraud reporting (reportfraud.ftc.gov). Until then, those steps point to 211.
+
 **Done 2026-10-05:** RAINN, National Domestic Violence Hotline, Crisis Text Line, Treasure Coast Hospice grief support, Cornell pet-loss line, GriefShare, Workplace Bullying Institute, Cyber Civil Rights Initiative, StopBullying.gov and the three VA links (you confirmed the links work). **Still to do:** call the Florida Warm Line (1-800-945-1355) between 4pm and 10pm to confirm it still runs; confirm 211 Palm Beach/Treasure Coast on its own website (or by dialing 211) for Help near me, and pick what to list for local recovery meetings. Details: `docs/CRISIS_RESOURCE_VERIFICATION.md`.
 
 ## 2. Your settings (5 minutes)
@@ -29,7 +31,7 @@ Send any of these:
 
 ## 3. Clinician
 
-Send them `REVIEW.md` and `docs/CLINICIAN_REVIEW.md` (D1–D63 plus D-diary). Paste their decisions back to Claude Code.
+Send them `REVIEW.md` and `docs/CLINICIAN_REVIEW.md` (D1–D66 plus D-diary). Paste their decisions back to Claude Code.
 
 ## 4. Translator
 

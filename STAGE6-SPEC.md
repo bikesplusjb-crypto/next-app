@@ -655,3 +655,12 @@ Built per STAGE6-29-ADDENDUM.md A–E, one commit per part. Entry: a field on Ho
 - **Public pages**: `/help/` (help-pages.js) and `/card/` (vendored MIT qrcode-generator).
 - Wording drafted by Claude Code; clinician items D47–D60.
 
+
+### Grief and money, with follow-through (2026-10-10, owner: "both, i want more follow through")
+
+- **Seven paths** on the PATHS engine: After a suicide loss, Pregnancy or baby loss, Grief others don't understand, After a death: the first things to do (with the scam warning), Debt and collectors (with a payday-loan pause), Medical bills, Someone says I owe money now. Hub groups "Grief and loss" and "Money".
+- **Follow-through** (`P.follow`, `FOLLOW`; actions `pathPick`, `pathDid`, `pathBack`, `pathSave`): the ending offers "Pick one next step" (3), then "Did you do it?" I did it / Not yet / It didn't work out. Also on Money and Getting to real care. "Add this to My Plan" adds one `ifThen` line, only on a tap. No reminders.
+- **Resources** `afsp`, `psi`, `nfcc`, `cfpb`, `ssa`, `ftc`: `verified:false` (hidden); those steps show 211 meanwhile.
+- **Search**: seven entries. "suicide" is never an index word; any query with it opens the crisis screen (authoritative logic, unchanged; D64).
+- **Public pages**: can't pay my bills, grieving a suicide loss, grieving a miscarriage (19 pages total).
+- Tests: `followthrough.test.js`; `paths.test.js` extended. Clinician items D64–D66.

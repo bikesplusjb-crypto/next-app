@@ -1412,6 +1412,30 @@ Plain pages at /help/ for things people search for at night. Each: "In crisis or
 - 1: "Plan the day a little." / "Decide what you'll do and what you'll skip. Have a time to leave and a way home."
 - 2: "One thing just for you." / "A walk, a favorite food, a quiet hour."
 - 3: "Tell one person." / ""Today's a hard day for me. Could you check in on me later?""
+
+#### Can't pay my bills and I'm panicking
+
+- Lead: "Money stress is real stress. It can make everything feel urgent at once. Let's make it smaller."
+- 1: "Pick the one most urgent thing." / "Rent, a shutoff notice, food. Just one. The rest can wait until tomorrow."
+- 2: "Ask for time." / "Call the company: "I'm having trouble paying. Can we set up a payment plan or a later due date?" It's okay to ask."
+- 3: "Get free help." / "Call 211 for local help with rent, food and utilities. Nonprofit credit counselors can help with a plan. Never pay anyone with gift cards or a wire transfer."
+- Note: "If money worries ever make you think about not being here, call or text 988, any time."
+
+#### Grieving someone who died by suicide
+
+- Lead: "Losing someone to suicide is a different kind of grief. Shock, guilt, anger and questions with no answers are all common."
+- 1: "The "what ifs" are common." / "Many people go over and over what they could have done. It doesn't mean it was your fault."
+- 2: "You decide what you share." / ""They died by suicide. I don't want to talk about the details, but I wanted you to know.""
+- 3: "Find people who understand." / "Support groups for people who lost someone to suicide meet in person and online. 211 can help you find one."
+- Note: "Grief like this can bring dark thoughts of your own. If it does, call or text 988 and say you lost someone to suicide."
+
+#### Grieving a miscarriage or baby loss
+
+- Lead: "However early or late, your loss is real, and you're allowed to grieve. It's not your fault."
+- 1: "Let it come in waves." / "Grief can come and go, and partners may grieve differently. Some days, like the due date, can be especially hard."
+- 2: "Tell people only what you want to." / ""We lost the baby. I don't want to talk about it much yet, but I wanted you to know.""
+- 3: "Tell your doctor or midwife how you're feeling." / ""Since the loss, I haven't felt like myself. I'd like some support.""
+- Note: "If you have heavy bleeding, a fever, or severe pain, call your doctor or 911."
 Printable card (/card/, linked from Share with a friend): eight wallet cards per page with a QR code of the site's plain address (made on the device by a small MIT-licensed library), "Small steps for hard moments. Free, no account.", "In crisis? Call or text 988. In danger? Call 911.", "Not therapy or an emergency service." Check the address opens before printing.
 
 ### Read aloud (owner request, 2026-10-09)
@@ -1435,6 +1459,9 @@ Home → More → "Other kinds of help" → "Other kinds of help" / "Pick what f
 - 3: "Good questions to ask" · "What will it cost me?" · "How soon could I be seen?" · "Do you offer video visits?" · "What happens if it isn't a good fit?"
 - 4: "If you can't wait" / "You don't need an appointment for a hard moment. You can call or text 988, any time."
 - End: "Looking for care is a strong step." · resources (hidden until verified, except ndvh): samhsa, hrsa
+- Next step 1: "Call your doctor's office" · You could say: "I've been struggling with stress and low mood. Could I get an appointment, or a referral to a counselor?" · My Plan line: "When I'm ready to look for care, I'll call my doctor's office and ask for a referral."
+- Next step 2: "Call the number on your insurance card" · You could say: "Can you give me a list of counselors near me who take my plan and are taking new people?" · My Plan line: "When I'm ready to look for care, I'll call my insurance for a list of counselors."
+- Next step 3: "Call 211 for low-cost help" / "They can point you to sliding-scale counseling and community health centers." · [Call 211] · My Plan line: "When I'm ready to look for care, I'll call 211 for low-cost counseling."
 
 #### I slipped — After drinking or using
 
@@ -1460,6 +1487,9 @@ Home → More → "Other kinds of help" → "Other kinds of help" / "Pick what f
 - 3: "Ask for help with it." · "211 connects people to local help with rent, food, utilities and more." · "You can call the company and ask for a payment plan or more time. It's okay to ask." · You could say: "I'm having trouble paying this month. Can we set up a payment plan or a later due date?" · [Call 211]
 - 4: "Lost a job?" · "Apply for unemployment in your state as soon as you can." · "Tell one person. You don't have to carry this alone."
 - End: "One thing at a time. You're doing what you can."
+- Next step 1: "Call 211 about the most urgent thing" / "Rent, food, a utility bill: they can point you to local help." · [Call 211] · My Plan line: "When money stress hits, I'll call 211 about the most urgent bill."
+- Next step 2: "Call one company and ask for more time" · You could say: "I'm having trouble paying this month. Can we set up a payment plan or a later due date?" · My Plan line: "When money stress hits, I'll call the company and ask for more time."
+- Next step 3: "Tell one person" · prepared text: "Money's really tight right now and I'm stressed. Can we talk?" · My Plan line: "When money stress hits, I'll tell one person about the money stress."
 
 #### Not safe at home — Someone at home hurts, scares or controls you
 
@@ -1591,6 +1621,97 @@ Home → More → "Other kinds of help" → "Other kinds of help" / "Pick what f
 - 3: "Small ways to meet people" · "Go to the same place regularly: a café, gym, library, park." · "Try one group: a class, a volunteer shift, a faith community, a club." · "Say yes to one invitation, even a small one." · [Be around people]
 - End: "One small connection at a time."
 
+#### After a suicide loss — When someone you love died by suicide
+
+- 1: "Losing someone to suicide is a different kind of grief." / "Shock, guilt, anger, relief, questions with no answers. People feel all of these. None of it means you loved them less."
+- 2: "The "what ifs"" · "Many people go over and over what they could have done. It's a common part of this grief." · "It doesn't mean it was your fault." · "You don't have to find the answer to every question to keep going."
+- 3: "You decide what you share." · "Some people won't know what to say, or will say the wrong thing." · "You get to choose what you tell, and who you tell." · You could say: "They died by suicide. I don't want to talk about the details, but I wanted you to know."
+- 4: "Look after your own safety too." / "Grief like this can bring dark thoughts of your own. If it does, you don't have to wait until it's an emergency. Call or text 988 and say you lost someone to suicide."
+- End: "You don't have to carry this alone." · resources (hidden until verified, except ndvh): afsp
+- Next step 1: "Find a group for people who lost someone to suicide" / "Groups meet in person and online. Being with people who understand can help. 211 can also help you find one near you." · [Call 211] · resources: afsp · My Plan line: "When the grief hits hard, I'll look for a suicide loss support group."
+- Next step 2: "Tell one person how you're really doing" / "Not the details. Just the truth about today." · prepared text: "Today's really hard. I'm missing them. Can you check on me?" · My Plan line: "When the grief hits hard, I'll tell one person how I'm really doing."
+- Next step 3: "Talk to a doctor or counselor" / "One sentence is enough:" · You could say: "Someone close to me died by suicide, and I'm having a hard time. I'd like some help." · My Plan line: "When the grief hits hard, I'll ask my doctor or a counselor for help."
+
+#### Pregnancy or baby loss — Miscarriage, stillbirth, or losing a baby
+
+- 1: "Your loss is real." / "However early or late, you're allowed to grieve. It's not your fault."
+- 2: "Your body and your heart" · "Your body may still be healing. Follow your care team's instructions." · "Grief can come in waves, and partners may grieve differently." · "Some days, like the due date, can be especially hard."
+- 3: "What to tell people" / "You don't have to explain." · You could say: "We lost the baby. I don't want to talk about it much yet, but I wanted you to know." · prepared text: "I'm having a really hard day about the baby. Could you check on me?"
+- End: "However you're feeling is okay." · resources (hidden until verified, except ndvh): psi
+- Also: "If you have heavy bleeding, a fever, or severe pain, call your doctor or 911."
+- Next step 1: "Call a helpline for pregnancy and baby loss" / "Trained people can listen and help you find support." · [Call 211] · resources: psi · My Plan line: "When the loss feels too heavy, I'll call a pregnancy loss helpline."
+- Next step 2: "Tell your doctor or midwife how you're feeling" / "Grief after a loss is common, and they can help." · You could say: "Since the loss, I haven't felt like myself. I'd like some support." · My Plan line: "When the loss feels too heavy, I'll tell my doctor or midwife how I'm feeling."
+- Next step 3: "Ask one person for one thing" / "A meal, a ride, someone to sit with you." · prepared text: "I'm struggling since we lost the baby. Could you help with one thing this week?" · My Plan line: "When the loss feels too heavy, I'll ask one person for one thing."
+
+#### Grief others don't understand — A pet, an ex, a friend far away, a hard relationship
+
+- 1: "Your grief counts." / "Some losses don't get cards or time off: a pet, a friend from far away, someone you had a hard relationship with, someone you never got to meet. The hurt is still real."
+- 2: "Make a little space for it." · "Say their name, out loud or in writing." · "Do one small thing to remember them: look at a photo, light a candle, go somewhere they loved." · "You don't need anyone's permission to be sad."
+- 3: "Find one person who gets it." · prepared text: "I'm grieving a loss not everyone understands. Could I talk to you about it?"
+- 4: "If it isn't easing" / "Grief has no deadline. If months have passed and it's still hard to get through the day, a grief counselor or support group can help." · [Getting to real care]
+- End: "Missing them makes sense." · [I lost someone]
+- Next step 1: "Do one small thing to remember them" · "Look at a photo." · "Write them a few lines." · "Go somewhere they loved." · My Plan line: "When I miss them, I'll do one small thing to remember them."
+- Next step 2: "Tell one person" · prepared text: "I'm missing someone today. Can I tell you about them?" · My Plan line: "When I miss them, I'll tell one person I'm missing them."
+- Next step 3: "Look for a grief support group" / "Many hospices and community centers run free grief groups, even if your person wasn't in hospice. 211 can help you find one." · [Call 211] · My Plan line: "When I miss them, I'll look for a grief support group."
+
+#### After a death: the first things to do — Practical steps, one at a time, and a scam warning
+
+- 1: "You don't have to do it all at once." / "There's a lot of paperwork after a death. Most of it can wait a few days. Grief comes first."
+- 2: "The first few days" · "Ask the funeral home for several copies of the death certificate. Many places will ask for one." · "Find out if there's a will, and who's named to handle things." · "Ask one person to help tell family and friends."
+- 3: "In the first weeks" · "Social Security needs to know. The funeral home often reports it. Ask them." · "Contact their bank, employer, and insurance companies." · "Keep a notebook: who you called, when, and what they said."
+- 4: "Watch for scams." · "Scammers read obituaries and target families." · "No real agency will ask you to pay with gift cards, a wire transfer or crypto." · "If someone calls about a debt or a payment, hang up. Call the number on an official letter or website instead." · "It's okay to say "I'll call you back.""
+- 5: "Ask for help." / "You don't have to be the only one doing this." · prepared text: "Could you help me with some of the calls and paperwork this week?"
+- End: "One task at a time is enough." · resources (hidden until verified, except ndvh): ssa
+- Next step 1: "Get copies of the death certificate" / "Ask the funeral home. Several copies saves trouble later." · You could say: "Could I get several certified copies of the death certificate?" · My Plan line: "When the paperwork feels like too much, I'll ask the funeral home for death certificate copies."
+- Next step 2: "Ask one person to help" · prepared text: "Could you help me with some of the calls and paperwork this week?" · My Plan line: "When the paperwork feels like too much, I'll ask one person to help with the calls."
+- Next step 3: "Start a notebook" · "One page per call: who, when, what they said." · "Keep it with the death certificates." · My Plan line: "When the paperwork feels like too much, I'll write down each call in one notebook."
+
+#### Debt and collectors — Bills piling up, calls from collectors
+
+- 1: "Debt is stressful, and common." / "It's a money problem, not a measure of you. Let's take it one piece at a time."
+- 2: "Know your rights with collectors." · "Debt collectors aren't allowed to threaten you, use abusive language, or lie to you." · "You can ask for the details of the debt in writing." · "You don't have to agree to anything on the first call." · You could say: "Please send me the details of this debt in writing."
+- 3: "Before you pay anyone" · "Check that the debt is really yours and the amount is right." · "Never pay with gift cards, a wire transfer or crypto. That's a sign of a scam." · "Don't give bank details on a call you didn't expect. Hang up and call the number on your statement."
+- 4: "Before a payday or title loan" · "These loans can cost much more than they seem." · "Ask the company you owe for more time first." · "211 may know of local emergency help." · [Call 211]
+- 5: "Get free help with a plan." / "Nonprofit credit counselors can look at your whole budget with you. Be careful of anyone who charges big fees up front or promises to make your debt disappear."
+- End: "One bill at a time. You're dealing with it." · resources (hidden until verified, except ndvh): nfcc, cfpb
+- Help line on every screen: "If money worries ever make you think about not being here, call or text 988, any time."
+- Next step 1: "Talk to a nonprofit credit counselor" / "They can help you see your options. 211 can also point you to free money help nearby." · [Call 211] · resources: nfcc · My Plan line: "When bills pile up, I'll call a nonprofit credit counselor."
+- Next step 2: "Write every debt on one page" · "Who you owe." · "How much." · "When it's due." · "Then circle the most urgent one." · My Plan line: "When bills pile up, I'll write every debt on one page and circle the most urgent."
+- Next step 3: "Call one company and ask for a plan" · You could say: "I'm having trouble paying. Can we set up a payment plan or a later due date?" · My Plan line: "When bills pile up, I'll call one company and ask for a payment plan."
+
+#### Medical bills — A big bill you can't pay
+
+- 1: "A big medical bill is scary." / "You may have more options than it seems. Before you pay it all, check it."
+- 2: "Check the bill." · "Ask for an itemized bill: a list of every charge." · "Look for things you didn't get, or charges listed twice." · "Check what insurance paid. If they denied it, ask why. You can appeal."
+- 3: "Ask about financial assistance." / "Many hospitals, especially nonprofit ones, have financial assistance (sometimes called charity care) for people who qualify. Ask the billing office." · You could say: "I can't afford this bill. Do you have a financial assistance program? Can you send me the application?"
+- 4: "Ask for a payment plan." / "If you still owe something, ask for a monthly amount you can really pay." · You could say: "Can we set up a payment plan I can afford each month?"
+- End: "Asking questions about a bill is allowed."
+- Help line on every screen: "If money worries ever make you think about not being here, call or text 988, any time."
+- Next step 1: "Ask for an itemized bill" · You could say: "Could you send me an itemized bill with every charge?" · My Plan line: "When a medical bill comes, I'll ask for an itemized bill before I pay."
+- Next step 2: "Ask about financial assistance" · You could say: "Do you have a financial assistance program? Can you send me the application?" · My Plan line: "When a medical bill comes, I'll ask the billing office about financial assistance."
+- Next step 3: "Ask for a payment plan" · You could say: "Can we set up a payment plan I can afford each month?" · My Plan line: "When a medical bill comes, I'll ask for a payment plan I can afford."
+
+#### Someone says I owe money now — A call, text or letter demanding money fast
+
+- 1: "Stop. You don't have to pay right now." / "Pressure to pay right away is a common sign of a scam. Real agencies and companies give you time."
+- 2: "Signs it's a scam" · "They want gift cards, a wire transfer, crypto or a payment app." · "They threaten arrest, jail or deportation today." · "They tell you to keep it secret or stay on the phone."
+- 3: "What to do" · "Hang up, or don't reply." · "Look up the real number yourself, from a bill, a card or an official website, and call that." · "Talk to someone you trust before you pay anything."
+- 4: "If you already paid" · "Call your bank or card company right away. They may be able to stop it." · "It's not your fault. Scammers are very good at this."
+- End: "Slowing down was the right move." · resources (hidden until verified, except ndvh): ftc
+- Help line on every screen: "If this ever makes you think about not being here, call or text 988, any time."
+- Next step 1: "Call the real number yourself" / "From a bill, the back of a card, or an official website. Not the number they gave you." · My Plan line: "When someone says I owe money now, I'll hang up and call the real number myself."
+- Next step 2: "Tell someone you trust" · prepared text: "Someone says I owe money and they want it now. Can you help me check if it's real?" · My Plan line: "When someone says I owe money now, I'll tell someone I trust before I pay."
+- Next step 3: "Call your bank, if you already paid" / "Call the number on the back of your card. Ask them to stop or reverse the payment." · My Plan line: "When someone says I owe money now, I'll call my bank right away."
+
+#### Follow-through after a path (owner, 2026-10-10: "i want more follow through"; D66)
+
+- Ending: "Pick one next step" / "Just one. You can come back for the others." (three next steps)
+- Each step: its own words, then "Did you do it?" / "Come back here after you try. There's no rush, and no wrong answer." · [I did it] [Not yet] [It didn't work out] · [Add this to My Plan] · [Pick a different step]
+- I did it → "You did it. That took something." / "One step is enough for today." · "When you're ready, another step:" (the steps not done yet)
+- Not yet → "That's okay. Let's make it smaller." · "Just find the number or the website, and keep it where you'll see it." · "Ask someone to sit with you while you do it." · "Pick a time: tomorrow morning, or after lunch." · the step's script again · still "Did you do it?"
+- It didn't work out → "That happens. It doesn't mean nothing will help." / "Try a different way in:" (the other steps) · [Call 211]
+- Add this to My Plan → "Added to My Plan. You can change or remove it there." (only on a tap; at most three lines; full: "Your plan already has three "When this happens" lines. You can change them in My Plan.")
+
 ### Donation footer (owner request, 2026-10-09)
 
 A quiet line at the bottom of the main screens (home, plan, progress, search, more-help, tech, hope-box, song-list, noticed-list, privacy): "Free for everyone, always. Support ZigZag Mind" (opens Ko-fi in a new tab). Never inside a hard moment, never on crisis screens, never while YELLOW or RED. Settings / About / Share keep their full row. The supporter guide's footer has the same line.
@@ -1611,7 +1732,7 @@ A quiet line at the bottom of the main screens (home, plan, progress, search, mo
 - Every query: safety check first, on each pause (~600 ms) and on submit. RED → the crisis screen, query discarded. YELLOW → support bar on, results still shown.
 - Results: up to 5 cards (title + one line), then "Not it? I don't know what I need →". Nothing matches: "Here are some places to start:" I don't know what I need · Talk to someone · Calm down with Zags · Help. Never "No results".
 - Nothing remembered: no history, no recent searches, no saved query; it clears when you leave the screen.
-- Index: 67 paths, 925 words. Breakup / heartbreak words lead to "I feel sad or low" (no heartbreak path yet). "pills" alone → the urge path; "took all my pills" → crisis (safety check).
+- Index: 74 paths, 1008 words. Breakup / heartbreak words lead to "I feel sad or low" (no heartbreak path yet). "pills" alone → the urge path; "took all my pills" → crisis (safety check).
 Every path in the index (title — one line):
 - "It feels like panic" — One wave at a time, with a 911 line if it's new
 - "Calm down" — Slow your body down: breathing, grounding, Zags
@@ -1677,6 +1798,13 @@ Every path in the index (title — one line):
 - "Holidays or anniversaries" — When a date or season is hard
 - "Sunday night dread" — Worrying about the week ahead
 - "New place, no one around yet" — After a move, a new job or a new school
+- "When someone took their own life" — Grief after losing someone this way
+- "Pregnancy or baby loss" — Miscarriage, stillbirth, or losing a baby
+- "Grief others don't understand" — A pet, an ex, a friend far away, a hard relationship
+- "After a death: the first things to do" — Practical steps, one at a time, and a scam warning
+- "Debt and collectors" — Bills piling up, calls from collectors
+- "Medical bills" — A big bill you can't pay
+- "Someone says I owe money now" — A call, text or letter demanding money fast
 - "Other kinds of help" — Short paths for more situations
 - "Share with a friend" — Send the link to someone, get the app, or support it. No account.
 - "Help now" — 988, 911, and a real person fast

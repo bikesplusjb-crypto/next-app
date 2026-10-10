@@ -1584,7 +1584,14 @@ const MORE_RESOURCES = {   // all hidden until the owner verifies them (sources 
   nami:{ name:"NAMI HelpLine", what:"Information and support for people with mental health conditions and the people who care for them.", phone:"18009506264", number:"1-800-950-6264", url:"https://www.nami.org/helpline", source:"https://www.nami.org/helpline", verified:false },
   reset:{ name:"National Problem Gambling Helpline", what:"Free, confidential, 24/7. Call or text.", phone:"18006973738", number:"1-800-MY-RESET (1-800-697-3738)", textTo:"18006973738", textLabel:"Text 1-800-MY-RESET", url:"https://www.1800myreset.org/", source:"https://www.ncpgambling.org/", verified:false },
   translifeline:{ name:"Trans Lifeline", what:"Peer support run by and for trans people.", phone:"18775658860", number:"877-565-8860", url:"https://translifeline.org/", source:"https://translifeline.org/contact/", verified:false },
-  anad:{ name:"ANAD Eating Disorders Helpline", what:"Free support and referrals.", phone:"18883757767", number:"888-375-7767", url:"https://anad.org/", source:"https://anad.org/", verified:false }
+  anad:{ name:"ANAD Eating Disorders Helpline", what:"Free support and referrals.", phone:"18883757767", number:"888-375-7767", url:"https://anad.org/", source:"https://anad.org/", verified:false },
+  // Round 4: grief and money (2026-10-10)
+  afsp:{ name:"American Foundation for Suicide Prevention: loss support", what:"Support groups for people who lost someone to suicide, in person and online.", url:"https://afsp.org/find-a-support-group/", source:"https://afsp.org/find-a-support-group/", verified:false },
+  psi:{ name:"Postpartum Support International HelpLine", what:"Support for mental health during and after pregnancy, including after a pregnancy or baby loss.", phone:"18009444773", number:"1-800-944-4773", url:"https://postpartum.net/", source:"https://postpartum.net/get-help/", verified:false },
+  nfcc:{ name:"National Foundation for Credit Counseling", what:"Nonprofit credit counseling: help with a budget, debt and your options.", phone:"18003882227", number:"1-800-388-2227", url:"https://www.nfcc.org/", source:"https://www.nfcc.org/", verified:false },
+  cfpb:{ name:"Consumer Financial Protection Bureau", what:"Explains your rights with debt collectors, and takes complaints.", url:"https://www.consumerfinance.gov/consumer-tools/debt-collection/", source:"https://www.consumerfinance.gov/consumer-tools/debt-collection/", verified:false },
+  ssa:{ name:"Social Security", what:"Report a death, and ask about survivor benefits.", phone:"18007721213", number:"1-800-772-1213", url:"https://www.ssa.gov/", source:"https://www.ssa.gov/", verified:false },
+  ftc:{ name:"Report a scam (FTC)", what:"Report fraud to the Federal Trade Commission.", url:"https://reportfraud.ftc.gov/", source:"https://reportfraud.ftc.gov/", verified:false }
 };
 function moreRes(keys){
   const list = (keys || []).map(k => k === "ndvh" ? TRAUMA_RESOURCES.find(e => e.key === "ndvh") : MORE_RESOURCES[k])
@@ -1600,7 +1607,12 @@ const PATHS = {
       { h:"Good questions to ask", list:["What will it cost me?","How soon could I be seen?","Do you offer video visits?","What happens if it isn't a good fit?"] },
       { h:"If you can't wait", p:"You don't need an appointment for a hard moment. You can call or text 988, any time." }
     ],
-    end:{ h:"Looking for care is a strong step.", p:"It can take a few tries to find the right person. That's normal." } },
+    end:{ h:"Looking for care is a strong step.", p:"It can take a few tries to find the right person. That's normal." },
+    follow:{ when:"I'm ready to look for care", picks:[
+      { label:"Call your doctor's office", say:"I've been struggling with stress and low mood. Could I get an appointment, or a referral to a counselor?", then:"call my doctor's office and ask for a referral" },
+      { label:"Call the number on your insurance card", say:"Can you give me a list of counselors near me who take my plan and are taking new people?", then:"call my insurance for a list of counselors" },
+      { label:"Call 211 for low-cost help", p:"They can point you to sliding-scale counseling and community health centers.", call211:true, then:"call 211 for low-cost counseling" }
+    ] } },
   slipped:{ title:"I slipped", meta:"After drinking or using", res:["samhsa"], danger:"If someone can't wake up, isn't breathing, or has blue lips, call 911 now.",
     steps:[
       { h:"One slip isn't the end of anything.", p:"It doesn't erase the work you've done. Right now, the only job is getting through tonight safely." },
@@ -1624,7 +1636,12 @@ const PATHS = {
       { h:"Ask for help with it.", list:["211 connects people to local help with rent, food, utilities and more.","You can call the company and ask for a payment plan or more time. It's okay to ask."], say:"I'm having trouble paying this month. Can we set up a payment plan or a later due date?", call211:true },
       { h:"Lost a job?", list:["Apply for unemployment in your state as soon as you can.","Tell one person. You don't have to carry this alone."] }
     ],
-    end:{ h:"One thing at a time. You're doing what you can.", p:"" } },
+    end:{ h:"One thing at a time. You're doing what you can.", p:"" },
+    follow:{ when:"money stress hits", picks:[
+      { label:"Call 211 about the most urgent thing", p:"Rent, food, a utility bill: they can point you to local help.", call211:true, then:"call 211 about the most urgent bill" },
+      { label:"Call one company and ask for more time", say:"I'm having trouble paying this month. Can we set up a payment plan or a later due date?", then:"call the company and ask for more time" },
+      { label:"Tell one person", msg:"Money's really tight right now and I'm stressed. Can we talk?", then:"tell one person about the money stress" }
+    ] } },
   notsafe:{ title:"Not safe at home", meta:"Someone at home hurts, scares or controls you", quickExit:true, res:["ndvh"],
     line:"If you're in danger right now, call 911. To talk, call or text 988.",
     steps:[
@@ -1755,20 +1772,147 @@ const PATHS = {
       { h:"Keep your old people close.", p:"A quick message counts.", msg:"I miss you. Can we catch up this week?" },
       { h:"Small ways to meet people", list:["Go to the same place regularly: a café, gym, library, park.","Try one group: a class, a volunteer shift, a faith community, a club.","Say yes to one invitation, even a small one."], opts:[["Be around people","aroundPeople",""]] }
     ],
-    end:{ h:"One small connection at a time.", p:"" } }
+    end:{ h:"One small connection at a time.", p:"" } },
+  // Round 4: grief and money, with follow-through (owner, 2026-10-10: "both, i want more follow through").
+  // Wording drafted by Claude Code: CLINICIAN REVIEW REQUIRED (D64–D66). Every outside resource hidden until verified.
+  suicideloss:{ title:"After a suicide loss", meta:"When someone you love died by suicide", res:["afsp"],
+    steps:[
+      { h:"Losing someone to suicide is a different kind of grief.", p:"Shock, guilt, anger, relief, questions with no answers. People feel all of these. None of it means you loved them less." },
+      { h:"The \"what ifs\"", list:["Many people go over and over what they could have done. It's a common part of this grief.","It doesn't mean it was your fault.","You don't have to find the answer to every question to keep going."] },
+      { h:"You decide what you share.", list:["Some people won't know what to say, or will say the wrong thing.","You get to choose what you tell, and who you tell."], say:"They died by suicide. I don't want to talk about the details, but I wanted you to know." },
+      { h:"Look after your own safety too.", p:"Grief like this can bring dark thoughts of your own. If it does, you don't have to wait until it's an emergency. Call or text 988 and say you lost someone to suicide." }
+    ],
+    end:{ h:"You don't have to carry this alone.", p:"" },
+    follow:{ when:"the grief hits hard", picks:[
+      { label:"Find a group for people who lost someone to suicide", p:"Groups meet in person and online. Being with people who understand can help. 211 can also help you find one near you.", res:["afsp"], call211:true, then:"look for a suicide loss support group" },
+      { label:"Tell one person how you're really doing", p:"Not the details. Just the truth about today.", msg:"Today's really hard. I'm missing them. Can you check on me?", then:"tell one person how I'm really doing" },
+      { label:"Talk to a doctor or counselor", p:"One sentence is enough:", say:"Someone close to me died by suicide, and I'm having a hard time. I'd like some help.", then:"ask my doctor or a counselor for help" }
+    ] } },
+  babyloss:{ title:"Pregnancy or baby loss", meta:"Miscarriage, stillbirth, or losing a baby", res:["psi"],
+    danger:"If you have heavy bleeding, a fever, or severe pain, call your doctor or 911.",
+    steps:[
+      { h:"Your loss is real.", p:"However early or late, you're allowed to grieve. It's not your fault." },
+      { h:"Your body and your heart", list:["Your body may still be healing. Follow your care team's instructions.","Grief can come in waves, and partners may grieve differently.","Some days, like the due date, can be especially hard."] },
+      { h:"What to tell people", p:"You don't have to explain.", say:"We lost the baby. I don't want to talk about it much yet, but I wanted you to know.", msg:"I'm having a really hard day about the baby. Could you check on me?" }
+    ],
+    end:{ h:"However you're feeling is okay.", p:"" },
+    follow:{ when:"the loss feels too heavy", picks:[
+      { label:"Call a helpline for pregnancy and baby loss", p:"Trained people can listen and help you find support.", res:["psi"], call211:true, then:"call a pregnancy loss helpline" },
+      { label:"Tell your doctor or midwife how you're feeling", p:"Grief after a loss is common, and they can help.", say:"Since the loss, I haven't felt like myself. I'd like some support.", then:"tell my doctor or midwife how I'm feeling" },
+      { label:"Ask one person for one thing", p:"A meal, a ride, someone to sit with you.", msg:"I'm struggling since we lost the baby. Could you help with one thing this week?", then:"ask one person for one thing" }
+    ] } },
+  griefnot:{ title:"Grief others don't understand", meta:"A pet, an ex, a friend far away, a hard relationship",
+    steps:[
+      { h:"Your grief counts.", p:"Some losses don't get cards or time off: a pet, a friend from far away, someone you had a hard relationship with, someone you never got to meet. The hurt is still real." },
+      { h:"Make a little space for it.", list:["Say their name, out loud or in writing.","Do one small thing to remember them: look at a photo, light a candle, go somewhere they loved.","You don't need anyone's permission to be sad."] },
+      { h:"Find one person who gets it.", msg:"I'm grieving a loss not everyone understands. Could I talk to you about it?" },
+      { h:"If it isn't easing", p:"Grief has no deadline. If months have passed and it's still hard to get through the day, a grief counselor or support group can help.", opts:[["Getting to real care","pathStart","care"]] }
+    ],
+    end:{ h:"Missing them makes sense.", p:"", opts:[["I lost someone","griefStart",""]] },
+    follow:{ when:"I miss them", picks:[
+      { label:"Do one small thing to remember them", list:["Look at a photo.","Write them a few lines.","Go somewhere they loved."], then:"do one small thing to remember them" },
+      { label:"Tell one person", msg:"I'm missing someone today. Can I tell you about them?", then:"tell one person I'm missing them" },
+      { label:"Look for a grief support group", p:"Many hospices and community centers run free grief groups, even if your person wasn't in hospice. 211 can help you find one.", call211:true, then:"look for a grief support group" }
+    ] } },
+  afterdeath:{ title:"After a death: the first things to do", meta:"Practical steps, one at a time, and a scam warning", res:["ssa"],
+    steps:[
+      { h:"You don't have to do it all at once.", p:"There's a lot of paperwork after a death. Most of it can wait a few days. Grief comes first." },
+      { h:"The first few days", list:["Ask the funeral home for several copies of the death certificate. Many places will ask for one.","Find out if there's a will, and who's named to handle things.","Ask one person to help tell family and friends."] },
+      { h:"In the first weeks", list:["Social Security needs to know. The funeral home often reports it. Ask them.","Contact their bank, employer, and insurance companies.","Keep a notebook: who you called, when, and what they said."] },
+      { h:"Watch for scams.", list:["Scammers read obituaries and target families.","No real agency will ask you to pay with gift cards, a wire transfer or crypto.","If someone calls about a debt or a payment, hang up. Call the number on an official letter or website instead.","It's okay to say \"I'll call you back.\""] },
+      { h:"Ask for help.", p:"You don't have to be the only one doing this.", msg:"Could you help me with some of the calls and paperwork this week?" }
+    ],
+    end:{ h:"One task at a time is enough.", p:"" },
+    follow:{ when:"the paperwork feels like too much", picks:[
+      { label:"Get copies of the death certificate", p:"Ask the funeral home. Several copies saves trouble later.", say:"Could I get several certified copies of the death certificate?", then:"ask the funeral home for death certificate copies" },
+      { label:"Ask one person to help", msg:"Could you help me with some of the calls and paperwork this week?", then:"ask one person to help with the calls" },
+      { label:"Start a notebook", list:["One page per call: who, when, what they said.","Keep it with the death certificates."], then:"write down each call in one notebook" }
+    ] } },
+  debt:{ title:"Debt and collectors", meta:"Bills piling up, calls from collectors", res:["nfcc","cfpb"],
+    line:"If money worries ever make you think about not being here, call or text 988, any time.",
+    steps:[
+      { h:"Debt is stressful, and common.", p:"It's a money problem, not a measure of you. Let's take it one piece at a time." },
+      { h:"Know your rights with collectors.", list:["Debt collectors aren't allowed to threaten you, use abusive language, or lie to you.","You can ask for the details of the debt in writing.","You don't have to agree to anything on the first call."], say:"Please send me the details of this debt in writing." },
+      { h:"Before you pay anyone", list:["Check that the debt is really yours and the amount is right.","Never pay with gift cards, a wire transfer or crypto. That's a sign of a scam.","Don't give bank details on a call you didn't expect. Hang up and call the number on your statement."] },
+      { h:"Before a payday or title loan", list:["These loans can cost much more than they seem.","Ask the company you owe for more time first.","211 may know of local emergency help."], call211:true },
+      { h:"Get free help with a plan.", p:"Nonprofit credit counselors can look at your whole budget with you. Be careful of anyone who charges big fees up front or promises to make your debt disappear." }
+    ],
+    end:{ h:"One bill at a time. You're dealing with it.", p:"" },
+    follow:{ when:"bills pile up", picks:[
+      { label:"Talk to a nonprofit credit counselor", p:"They can help you see your options. 211 can also point you to free money help nearby.", res:["nfcc"], call211:true, then:"call a nonprofit credit counselor" },
+      { label:"Write every debt on one page", list:["Who you owe.","How much.","When it's due.","Then circle the most urgent one."], then:"write every debt on one page and circle the most urgent" },
+      { label:"Call one company and ask for a plan", say:"I'm having trouble paying. Can we set up a payment plan or a later due date?", then:"call one company and ask for a payment plan" }
+    ] } },
+  medbills:{ title:"Medical bills", meta:"A big bill you can't pay",
+    line:"If money worries ever make you think about not being here, call or text 988, any time.",
+    steps:[
+      { h:"A big medical bill is scary.", p:"You may have more options than it seems. Before you pay it all, check it." },
+      { h:"Check the bill.", list:["Ask for an itemized bill: a list of every charge.","Look for things you didn't get, or charges listed twice.","Check what insurance paid. If they denied it, ask why. You can appeal."] },
+      { h:"Ask about financial assistance.", p:"Many hospitals, especially nonprofit ones, have financial assistance (sometimes called charity care) for people who qualify. Ask the billing office.", say:"I can't afford this bill. Do you have a financial assistance program? Can you send me the application?" },
+      { h:"Ask for a payment plan.", p:"If you still owe something, ask for a monthly amount you can really pay.", say:"Can we set up a payment plan I can afford each month?" }
+    ],
+    end:{ h:"Asking questions about a bill is allowed.", p:"" },
+    follow:{ when:"a medical bill comes", picks:[
+      { label:"Ask for an itemized bill", say:"Could you send me an itemized bill with every charge?", then:"ask for an itemized bill before I pay" },
+      { label:"Ask about financial assistance", say:"Do you have a financial assistance program? Can you send me the application?", then:"ask the billing office about financial assistance" },
+      { label:"Ask for a payment plan", say:"Can we set up a payment plan I can afford each month?", then:"ask for a payment plan I can afford" }
+    ] } },
+  owemoney:{ title:"Someone says I owe money now", meta:"A call, text or letter demanding money fast", res:["ftc"],
+    line:"If this ever makes you think about not being here, call or text 988, any time.",
+    steps:[
+      { h:"Stop. You don't have to pay right now.", p:"Pressure to pay right away is a common sign of a scam. Real agencies and companies give you time." },
+      { h:"Signs it's a scam", list:["They want gift cards, a wire transfer, crypto or a payment app.","They threaten arrest, jail or deportation today.","They tell you to keep it secret or stay on the phone."] },
+      { h:"What to do", list:["Hang up, or don't reply.","Look up the real number yourself, from a bill, a card or an official website, and call that.","Talk to someone you trust before you pay anything."] },
+      { h:"If you already paid", list:["Call your bank or card company right away. They may be able to stop it.","It's not your fault. Scammers are very good at this."] }
+    ],
+    end:{ h:"Slowing down was the right move.", p:"" },
+    follow:{ when:"someone says I owe money now", picks:[
+      { label:"Call the real number yourself", p:"From a bill, the back of a card, or an official website. Not the number they gave you.", then:"hang up and call the real number myself" },
+      { label:"Tell someone you trust", msg:"Someone says I owe money and they want it now. Can you help me check if it's real?", then:"tell someone I trust before I pay" },
+      { label:"Call your bank, if you already paid", p:"Call the number on the back of your card. Ask them to stop or reverse the payment.", then:"call my bank right away" }
+    ] } }
 };
 const PATH_EXIT = { label:"Leave quickly", note:"Opens a plain weather page.", url:"https://www.weather.gov/" };
 const MORE_HELP = {
   title:"Other kinds of help", sub:"Pick what fits. Each one is short, and nothing is saved.",
   first:["care","slipped","heartbreak","money","notsafe","newparent","caregiver"],
-  rest:["bed","fight","health","burnout","pain","school","gambling","lgbtq","eating","scary","sensory","holidays","sunday","newplace"],
-  groups:[["Right now",["slipped","notsafe","fight","scary","sensory"]],["Day to day",["bed","burnout","sunday","school","money"]],
-    ["People and relationships",["heartbreak","newplace","holidays","caregiver","lgbtq"]],["Body and health",["health","pain","eating","newparent","gambling"]],
+  rest:["bed","fight","health","burnout","pain","school","gambling","lgbtq","eating","scary","sensory","holidays","sunday","newplace",
+    "suicideloss","babyloss","griefnot","afterdeath","debt","medbills","owemoney"],
+  groups:[["Right now",["slipped","notsafe","fight","scary","sensory"]],["Day to day",["bed","burnout","sunday","school"]],
+    ["Grief and loss",["suicideloss","babyloss","griefnot","afterdeath","holidays"]],
+    ["Money",["money","debt","medbills","owemoney"]],
+    ["People and relationships",["heartbreak","newplace","caregiver","lgbtq"]],["Body and health",["health","pain","eating","newparent","gambling"]],
     ["Getting help",["care"]]],
   more:"More", next:"Next", putDown:"Put the phone down", talk:"Talk to someone",
   sendLbl:"Or send this, if it helps:", sayLbl:"You could say:", call211:"Call 211"
 };
+/* FOLLOW-THROUGH (owner, 2026-10-10: "i want more follow through"). After a path: pick ONE next step, then "Did you
+   do it?" (like the Bridge's "Did they answer?"). Not yet: a smaller way in. Didn't work: another way. Nothing is
+   saved unless the person taps "Add this to My Plan" (a "When this happens, I'll…" line, our own words, at most 3).
+   No reminders, no notifications, nothing counted. CLINICIAN REVIEW REQUIRED (D66). */
+const FOLLOW = {
+  pickH:"Pick one next step", pickSub:"Just one. You can come back for the others.",
+  didQ:"Did you do it?", didSub:"Come back here after you try. There's no rush, and no wrong answer.",
+  did:"I did it", notYet:"Not yet", nope:"It didn't work out",
+  didH:"You did it. That took something.", didP:"One step is enough for today.",
+  another:"When you're ready, another step:",
+  notYetH:"That's okay. Let's make it smaller.",
+  smaller:["Just find the number or the website, and keep it where you'll see it.","Ask someone to sit with you while you do it.","Pick a time: tomorrow morning, or after lunch."],
+  nopeH:"That happens. It doesn't mean nothing will help.", nopeP:"Try a different way in:",
+  save:"Add this to My Plan", saved:"Added to My Plan. You can change or remove it there.",
+  full:"Your plan already has three \"When this happens\" lines. You can change them in My Plan.",
+  already:"It's in My Plan.", back:"Pick a different step"
+};
 let quickExit = url => { try { location.replace(url); } catch (_){} };   // replaceable in tests
+function pathBits(s){   // one step (or one follow-through pick) of a path
+  return `${s.p ? `<p class="sub" style="font-size:19px">${s.p}</p>` : ""}
+      ${s.list ? `<ul class="path-list">${s.list.map(x => `<li>${x}</li>`).join("")}</ul>` : ""}
+      ${s.say ? `<p class="small" style="margin:12px 0 6px">${MORE_HELP.sayLbl}</p><p class="copy-text heavy-line">"${s.say}"</p>` : ""}
+      ${s.call211 ? `<a class="btn btn-secondary" style="margin-top:12px" href="${LINKS.call211}">${MORE_HELP.call211}</a>` : ""}
+      ${s.res ? moreRes(s.res) : ""}
+      ${s.supportLink ? `<a class="btn btn-secondary" style="margin-top:12px" href="support/" target="_blank" rel="noopener">${s.supportLink}</a>` : ""}
+      ${s.msg ? pathMsg(s.msg) : ""}`;
+}
 function pathMsg(msg){
   const p = person();
   return `<p class="small" style="margin:14px 0 6px">${MORE_HELP.sendLbl}</p><div class="sits">${canPhone()
@@ -1918,7 +2062,7 @@ const SEARCH_INDEX = [
   { id:"slipped", title:"I slipped", desc:"After drinking or using: no shame, just tonight", screen:"path", act:"pathStart", arg:"slipped",
     words:["i slipped","slipped up","i relapsed","relapsed","already drank","already used","i drank","i used","got drunk","drunk again","used again","hungover","hangover","messed up"] },
   { id:"money", title:"Money, work or housing stress", desc:"Bills, a lost job, rent", screen:"path", act:"pathStart", arg:"money",
-    words:["money","broke","bills","cant pay","rent","eviction","evicted","debt","lost my job","fired","laid off","unemployed","job","work stress","housing","homeless","food","shutoff","overdue"] },
+    words:["money","broke","bills","cant pay","rent","eviction","evicted","lost my job","fired","laid off","unemployed","job","work stress","housing","homeless","food","shutoff","overdue"] },
   { id:"notsafe", title:"Not safe at home", desc:"Someone at home hurts, scares or controls you", screen:"path", act:"pathStart", arg:"notsafe",
     words:["not safe at home","unsafe at home","abuse","abusive","domestic violence","dv","partner hits me","hits me","controlling","controls me","scared of my partner","scared at home","afraid at home","abusive relationship"] },
   { id:"newparent", title:"New parent or pregnant", desc:"When it's harder than people said", screen:"path", act:"pathStart", arg:"newparent",
@@ -1955,6 +2099,22 @@ const SEARCH_INDEX = [
     words:["sunday","sunday scaries","dread","dreading","monday","week ahead","dread work","dont want to go to work"] },
   { id:"newplace", title:"New place, no one around yet", desc:"After a move, a new job or a new school", screen:"path", act:"pathStart", arg:"newplace",
     words:["moved","new city","new town","new place","new job","new school","dont know anyone","no friends here","homesick","miss home","relocated"] },
+  // Round 4 (2026-10-10). "suicide" is never in the index (title or words): safetyCheck sends any query with it to the
+  // crisis screen, which stays authoritative. The card opens the "After a suicide loss" path (D64).
+  { id:"suicideloss", title:"When someone took their own life", desc:"Grief after losing someone this way", screen:"path", act:"pathStart", arg:"suicideloss",
+    words:["killed himself","killed herself","killed themselves","took his own life","took her own life","took their own life","loss survivor","survivor of loss"] },
+  { id:"babyloss", title:"Pregnancy or baby loss", desc:"Miscarriage, stillbirth, or losing a baby", screen:"path", act:"pathStart", arg:"babyloss",
+    words:["miscarriage","miscarried","had a miscarriage","stillbirth","stillborn","lost the baby","lost my baby","lost our baby","baby loss","pregnancy loss","infant loss","ectopic","chemical pregnancy"] },
+  { id:"griefnot", title:"Grief others don't understand", desc:"A pet, an ex, a friend far away, a hard relationship", screen:"path", act:"pathStart", arg:"griefnot",
+    words:["no one understands my grief","nobody gets it","its just a pet","only a pet","grief not easing","still grieving","grief wont go away","estranged","complicated grief","never got to say goodbye"] },
+  { id:"afterdeath", title:"After a death: the first things to do", desc:"Practical steps, one at a time, and a scam warning", screen:"path", act:"pathStart", arg:"afterdeath",
+    words:["death certificate","funeral home","funeral arrangements","estate","executor","their will","probate","paperwork after death","what to do when someone dies","someone died what now","social security death","survivor benefits"] },
+  { id:"debt", title:"Debt and collectors", desc:"Bills piling up, calls from collectors", screen:"path", act:"pathStart", arg:"debt",
+    words:["debt","in debt","debt collector","debt collectors","collector","collectors","collections","credit card debt","owe money","payday loan","title loan","loan","credit counseling","behind on payments","garnish","garnished"] },
+  { id:"medbills", title:"Medical bills", desc:"A big bill you can't pay", screen:"path", act:"pathStart", arg:"medbills",
+    words:["medical bill","medical bills","hospital bill","er bill","doctor bill","ambulance bill","cant pay hospital","charity care","financial assistance","itemized bill","insurance denied","claim denied"] },
+  { id:"owemoney", title:"Someone says I owe money now", desc:"A call, text or letter demanding money fast", screen:"path", act:"pathStart", arg:"owemoney",
+    words:["scam","scammed","is this a scam","scam call","irs call","owe the irs","gift cards","pay with gift cards","they want money now","threatened arrest","warrant call","got scammed","fraud"] },
   { id:"morehelp", title:"Other kinds of help", desc:"Short paths for more situations", screen:"more-help", act:"moreHelp",
     words:["other help","more help","something else","other","self help","categories"] },
   { id:"join", title:"Share with a friend", desc:"Send the link to someone, get the app, or support it. No account.", screen:"join", act:"joinOpen",
@@ -4867,24 +5027,44 @@ const SCREENS = {
     const st = ui.path || {}, P = PATHS[st.id];
     if (!P) return SCREENS["more-help"]();
     const i = st.step || 0, last = i >= P.steps.length;
-    const s = last ? P.end : P.steps[i];
     const exit = P.quickExit ? `<button class="btn btn-outline quick-exit" data-act="leaveQuickly">${PATH_EXIT.label}</button><p class="small" style="margin:4px 0 12px">${PATH_EXIT.note}</p>` : "";
+    const line = `<p class="small heavy-988 path-988">${P.line || LINE988} <a href="${LINKS.call988}">Call 988</a> · ${text988Inline()}</p>`;
+    const endActs = `<button class="btn btn-primary" data-act="putDown">${MORE_HELP.putDown}</button>
+        <button class="btn btn-secondary" data-act="route" data-arg="connect">${MORE_HELP.talk}</button>`;
+    const F = last && P.follow, pk = F && st.phase ? F.picks[st.pick] : null;
+    if (pk){   // follow-through: one next step, then "Did you do it?"
+      const picks = ks => ks.length ? `<div class="list" style="margin-top:8px">${ks.map(k => `<button class="card" data-act="pathPick" data-arg="${k}"><span>${F.picks[k].label}</span></button>`).join("")}</div>` : "";
+      const others = F.picks.map((_, k) => k).filter(k => k !== st.pick && !(st.done || []).includes(k));
+      const inPlan = (getPlan().ifThen || []).some(x => x.when === F.when && x.then === pk.then);
+      const save = st.saved === "full" ? `<p class="small follow-saved">${FOLLOW.full}</p>`
+        : inPlan ? `<p class="small follow-saved">${st.saved ? FOLLOW.saved : FOLLOW.already}</p><p class="copy-text">${esc(IF_THEN.line(F.when, pk.then))}</p>`
+        : `<button class="btn btn-outline follow-save" style="margin-top:12px" data-act="pathSave">${FOLLOW.save}</button>`;
+      const did = `<p class="lbl" style="margin:18px 0 6px">${FOLLOW.didQ}</p><p class="small" style="margin:0 0 8px">${FOLLOW.didSub}</p>`;
+      const didActs = `<button class="btn btn-primary" data-act="pathDid" data-arg="did">${FOLLOW.did}</button>
+        <button class="btn btn-secondary" data-act="pathDid" data-arg="notyet">${FOLLOW.notYet}</button>
+        <button class="btn btn-secondary" data-act="pathDid" data-arg="nope">${FOLLOW.nope}</button>`;
+      if (st.phase === "did") return { close:true, body:`${exit}${stepTitle(FOLLOW.didH, true)}<p class="sub" style="font-size:19px">${FOLLOW.didP}</p>
+        ${others.length ? `<p class="lbl" style="margin:18px 0 6px">${FOLLOW.another}</p>${picks(others)}` : ""}${line}`, actions:endActs };
+      if (st.phase === "nope") return { close:true, body:`${exit}${stepTitle(FOLLOW.nopeH, true)}<p class="sub" style="font-size:19px">${FOLLOW.nopeP}</p>
+        ${picks(others)}<a class="btn btn-secondary" style="margin-top:12px" href="${LINKS.call211}">${MORE_HELP.call211}</a>${line}`, actions:endActs };
+      if (st.phase === "notyet") return { close:true, body:`${exit}${stepTitle(FOLLOW.notYetH, true)}
+        <p class="small" style="margin:0 0 6px">${esc(pk.label)}</p><ul class="path-list">${FOLLOW.smaller.map(x => `<li>${x}</li>`).join("")}</ul>
+        ${pk.say ? `<p class="small" style="margin:12px 0 6px">${MORE_HELP.sayLbl}</p><p class="copy-text heavy-line">"${pk.say}"</p>` : ""}
+        ${save}${did}${line}`, actions:didActs };
+      return { close:true, body:`${exit}${stepTitle(pk.label, true)}${pathBits(pk)}${save}
+        <button class="link follow-back" style="margin-top:12px" data-act="pathBack">${FOLLOW.back}</button>${did}${line}`, actions:didActs };
+    }
+    const s = last ? P.end : P.steps[i];
     const opts = (s.opts || []).map(([l, a, g], k) => `<button class="card" data-act="pathOpt" data-arg="${k}"><span>${l}</span></button>`).join("");
-    const body = `${exit}${stepTitle(s.h, i === 0 || last)}
-      ${s.p ? `<p class="sub" style="font-size:19px">${s.p}</p>` : ""}
-      ${s.list ? `<ul class="path-list">${s.list.map(x => `<li>${x}</li>`).join("")}</ul>` : ""}
-      ${s.say ? `<p class="small" style="margin:12px 0 6px">${MORE_HELP.sayLbl}</p><p class="copy-text heavy-line">"${s.say}"</p>` : ""}
-      ${s.call211 ? `<a class="btn btn-secondary" style="margin-top:12px" href="${LINKS.call211}">${MORE_HELP.call211}</a>` : ""}
-      ${s.res ? moreRes(s.res) : ""}
-      ${s.supportLink ? `<a class="btn btn-secondary" style="margin-top:12px" href="support/" target="_blank" rel="noopener">${s.supportLink}</a>` : ""}
-      ${s.msg ? pathMsg(s.msg) : ""}
+    const follow = F ? `<div class="panel follow-pick"><p class="lbl" style="margin:0 0 4px">${FOLLOW.pickH}</p><p class="small" style="margin:0 0 8px">${FOLLOW.pickSub}</p>
+      <div class="list">${F.picks.map((x, k) => `<button class="card" data-act="pathPick" data-arg="${k}"><span>${x.label}</span></button>`).join("")}</div></div>` : "";
+    const body = `${exit}${stepTitle(s.h, i === 0 || last)}${pathBits(s)}
       ${opts ? `<div class="list" style="margin-top:12px">${opts}</div>` : ""}
+      ${follow}
       ${last ? moreRes(P.res) : ""}
       ${P.danger && (last || i === 1) ? `<p class="note path-danger">${P.danger}</p>` : ""}
-      <p class="small heavy-988 path-988">${P.line || LINE988} <a href="${LINKS.call988}">Call 988</a> · ${text988Inline()}</p>`;
-    return { close:true, body, actions: last
-      ? `<button class="btn btn-primary" data-act="putDown">${MORE_HELP.putDown}</button>
-        <button class="btn btn-secondary" data-act="route" data-arg="connect">${MORE_HELP.talk}</button>`
+      ${line}`;
+    return { close:true, body, actions: last ? endActs
       : `<button class="btn btn-primary" data-act="pathNext">${MORE_HELP.next}</button>` };
   },
 
@@ -8365,6 +8545,29 @@ const ACTIONS = {
     const s = (p.step || 0) >= P.steps.length ? P.end : P.steps[p.step || 0];
     const o = (s.opts || [])[Number(arg)]; if (!o || typeof ACTIONS[o[1]] !== "function") return;
     ACTIONS[o[1]](o[2]);
+  },
+  pathPick(arg){
+    if (blockIfRed()) return;
+    const p = ui.path, P = p && PATHS[p.id], k = Number(arg);
+    if (!P || !P.follow || (p.step || 0) < P.steps.length || !P.follow.picks[k]) return;
+    p.phase = "pick"; p.pick = k; p.saved = null; lastRendered = null; render();
+  },
+  pathDid(arg){
+    if (blockIfRed()) return;
+    const p = ui.path; if (!p || !p.phase || !["did","notyet","nope"].includes(arg)) return;
+    if (arg === "did") p.done = [...new Set([...(p.done || []), p.pick])];
+    p.phase = arg; lastRendered = null; render();
+  },
+  pathBack(){ if (blockIfRed()) return; const p = ui.path; if (!p) return; p.phase = null; lastRendered = null; render(); },
+  pathSave(){   // only on the person's tap: one "When this happens, I'll…" line in My Plan (our words, not theirs)
+    if (blockIfRed()) return;
+    const p = ui.path, P = p && PATHS[p.id], pk = P && P.follow && p.phase ? P.follow.picks[p.pick] : null; if (!pk) return;
+    const pl = getPlan(); pl.ifThen = Array.isArray(pl.ifThen) ? pl.ifThen : [];
+    if (!pl.ifThen.some(x => x.when === P.follow.when && x.then === pk.then)){
+      if (pl.ifThen.length >= 3){ p.saved = "full"; lastRendered = null; render(); return; }
+      pl.ifThen.push({ when:P.follow.when, then:pk.then }); saveStore();
+    }
+    p.saved = "saved"; render();
   },
   leaveQuickly(){ app.innerHTML = ""; quickExit(PATH_EXIT.url); },   // a plain weather page, without a history entry
   joinOpen(){ if (blockIfRed()) return; go("join"); },

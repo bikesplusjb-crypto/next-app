@@ -100,7 +100,29 @@ const PAGES = [
     lead:"Some days carry a lot: loss, loneliness, family stress. You're not the only one.",
     steps:[["Plan the day a little.","Decide what you'll do and what you'll skip. Have a time to leave and a way home."],
       ["One thing just for you.","A walk, a favorite food, a quiet hour."],
-      ["Tell one person.","\"Today's a hard day for me. Could you check in on me later?\""]] }
+      ["Tell one person.","\"Today's a hard day for me. Could you check in on me later?\""]] },
+  // Round 4: grief and money (2026-10-10). Clinician item D65.
+  { slug:"cant-pay-my-bills", title:"Can't pay my bills and I'm panicking",
+    desc:"Three steps when bills pile up and money panic sets in.",
+    lead:"Money stress is real stress. It can make everything feel urgent at once. Let's make it smaller.",
+    steps:[["Pick the one most urgent thing.","Rent, a shutoff notice, food. Just one. The rest can wait until tomorrow."],
+      ["Ask for time.","Call the company: \"I'm having trouble paying. Can we set up a payment plan or a later due date?\" It's okay to ask."],
+      ["Get free help.","Call 211 for local help with rent, food and utilities. Nonprofit credit counselors can help with a plan. Never pay anyone with gift cards or a wire transfer."]],
+    note:"If money worries ever make you think about not being here, call or text 988, any time." },
+  { slug:"grieving-a-suicide-loss", title:"Grieving someone who died by suicide",
+    desc:"Small steps for the grief after losing someone to suicide.",
+    lead:"Losing someone to suicide is a different kind of grief. Shock, guilt, anger and questions with no answers are all common.",
+    steps:[["The \"what ifs\" are common.","Many people go over and over what they could have done. It doesn't mean it was your fault."],
+      ["You decide what you share.","\"They died by suicide. I don't want to talk about the details, but I wanted you to know.\""],
+      ["Find people who understand.","Support groups for people who lost someone to suicide meet in person and online. 211 can help you find one."]],
+    note:"Grief like this can bring dark thoughts of your own. If it does, call or text 988 and say you lost someone to suicide." },
+  { slug:"grieving-a-miscarriage", title:"Grieving a miscarriage or baby loss",
+    desc:"Small steps after a miscarriage, stillbirth or losing a baby.",
+    lead:"However early or late, your loss is real, and you're allowed to grieve. It's not your fault.",
+    steps:[["Let it come in waves.","Grief can come and go, and partners may grieve differently. Some days, like the due date, can be especially hard."],
+      ["Tell people only what you want to.","\"We lost the baby. I don't want to talk about it much yet, but I wanted you to know.\""],
+      ["Tell your doctor or midwife how you're feeling.","\"Since the loss, I haven't felt like myself. I'd like some support.\""]],
+    note:"If you have heavy bleeding, a fever, or severe pain, call your doctor or 911." }
 ];
 const CSS = `:root{--bg:#f7f3ec;--surface:#fff;--text:#1f2a2a;--muted:#5b6464;--primary:#33726b;--safety:#b85c44;--line:#e4ddd2}
 @media (prefers-color-scheme:dark){:root{--bg:#141a1a;--surface:#1d2525;--text:#eef2f1;--muted:#a9b4b2;--primary:#7cc3b8;--safety:#e59a84;--line:#2c3636}}

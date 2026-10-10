@@ -197,6 +197,19 @@ Found by search on 2026-10-09. **None is shown.** Check each on the official sit
 | anad | ANAD Eating Disorders Helpline | 888-375-7767 | https://anad.org/ | Hours conflict across sources (9–5 vs 9–9 CT, weekdays). The NEDA helpline closed in 2023: not used. |
 | ndvh | National Domestic Violence Hotline | already verified (2026-10-05) | — | Shown in "Not safe at home". |
 
+## Grief and money (2026-10-10): hidden until the owner verifies
+
+From Claude Code's general knowledge, not a live check this time. **None is shown.** Until each is verified, those steps show 211 instead.
+
+| Key | Resource | Number / link to check | Official source to check | Notes |
+|---|---|---|---|---|
+| afsp | American Foundation for Suicide Prevention: loss support groups | https://afsp.org/find-a-support-group/ | same | Also runs "Healing Conversations" (a trained volunteer who also lost someone). Confirm the page address and whether to list Healing Conversations. |
+| psi | Postpartum Support International HelpLine | 1-800-944-4773 | https://postpartum.net/get-help/ | Not a crisis line; returns calls/texts. Confirm call/text options and Spanish before adding any. Covers pregnancy and infant loss. |
+| nfcc | National Foundation for Credit Counseling | 1-800-388-2227 | https://www.nfcc.org/ | Nonprofit network; confirm the number. |
+| cfpb | Consumer Financial Protection Bureau: debt collection | https://www.consumerfinance.gov/consumer-tools/debt-collection/ | same | Rights with collectors, complaints. Link only. |
+| ssa | Social Security | 1-800-772-1213 | https://www.ssa.gov/ | Reporting a death (usually done by the funeral home), survivor benefits. Confirm the number. |
+| ftc | FTC fraud reporting | https://reportfraud.ftc.gov/ | same | Link only. |
+
 ## Things this check could not verify (need a person)
 
 - That every number connects today, from a US mobile phone, by call and (for 988) by text.

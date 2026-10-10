@@ -392,8 +392,17 @@ for(const [id,Pth] of Object.entries(G('PATHS'))){
   list([...Pth.steps.map((x,i)=>(i+1)+': "'+x.h+'"'+(x.p?' / "'+x.p+'"':'')+(x.list?' · '+x.list.map(y=>`"${y}"`).join(' · '):'')+(x.say?' · You could say: "'+x.say+'"':'')+(x.msg?' · prepared text: "'+x.msg+'"':'')+(x.call211?' · [Call 211]':'')+(x.supportLink?' · ['+x.supportLink+']':'')+(x.opts?' · '+x.opts.map(o=>'['+o[0]+']').join(' '):'')+(x.res?' · resources: '+x.res.join(', '):'')),
     'End: "'+Pth.end.h+'"'+(Pth.end.opts?' · '+Pth.end.opts.map(o=>'['+o[0]+']').join(' '):'')+(Pth.res?' · resources (hidden until verified, except ndvh): '+Pth.res.join(', '):''),
     ...(Pth.danger?['Also: "'+Pth.danger+'"']:[]), ...(Pth.line?['Help line on every screen: "'+Pth.line+'"']:[]),
-    ...(Pth.quickExit?['"'+G('PATH_EXIT.label')+'" on every screen ("'+G('PATH_EXIT.note')+'"): replaces the page with '+G('PATH_EXIT.url')+', no history entry.']:[])]);
+    ...(Pth.quickExit?['"'+G('PATH_EXIT.label')+'" on every screen ("'+G('PATH_EXIT.note')+'"): replaces the page with '+G('PATH_EXIT.url')+', no history entry.']:[]),
+    ...(Pth.follow?Pth.follow.picks.map((x,k)=>'Next step '+(k+1)+': "'+x.label+'"'+(x.p?' / "'+x.p+'"':'')+(x.list?' · '+x.list.map(y=>`"${y}"`).join(' · '):'')+(x.say?' · You could say: "'+x.say+'"':'')+(x.msg?' · prepared text: "'+x.msg+'"':'')+(x.call211?' · [Call 211]':'')+(x.res?' · resources: '+x.res.join(', '):'')+' · My Plan line: "'+G('IF_THEN.line')(Pth.follow.when,x.then)+'"'):[])]);
 }
+const FW=G('FOLLOW');
+H(4,'Follow-through after a path (owner, 2026-10-10: "i want more follow through"; D66)');
+list(['Ending: "'+FW.pickH+'" / "'+FW.pickSub+'" (three next steps)',
+  'Each step: its own words, then "'+FW.didQ+'" / "'+FW.didSub+'" · ['+FW.did+'] ['+FW.notYet+'] ['+FW.nope+'] · ['+FW.save+'] · ['+FW.back+']',
+  FW.did+' → "'+FW.didH+'" / "'+FW.didP+'" · "'+FW.another+'" (the steps not done yet)',
+  FW.notYet+' → "'+FW.notYetH+'" · '+FW.smaller.map(y=>`"${y}"`).join(' · ')+' · the step\'s script again · still "'+FW.didQ+'"',
+  FW.nope+' → "'+FW.nopeH+'" / "'+FW.nopeP+'" (the other steps) · [Call 211]',
+  FW.save+' → "'+FW.saved+'" (only on a tap; at most three lines; full: "'+FW.full+'")']);
 
 H(3,'Donation footer (owner request, 2026-10-09)');
 P('A quiet line at the bottom of the main screens ('+G('DONATE_FOOT_ON').join(', ')+'): "Free for everyone, always. Support ZigZag Mind" (opens Ko-fi in a new tab). Never inside a hard moment, never on crisis screens, never while YELLOW or RED. Settings / About / Share keep their full row. The supporter guide\'s footer has the same line.');
