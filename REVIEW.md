@@ -1067,7 +1067,7 @@ A static page for the people in someone's plan: no scripts, no storage, no track
 - Talk to someone who gets it. The Florida Warm Line is free and is also for family and friends supporting someone: 1-800-945-1355, every day 4pm–10pm Eastern. Not a crisis line. For a crisis, call or text 988.
 - **Link → `tel:18009451355`:** 1-800-945-1355
 
-Footer: "ZigZag Mind is a self-help support tool, not an emergency service."
+Footer: "ZigZag Mind is a self-help support tool, not an emergency service.Free for everyone, always. Support ZigZag Mind"
 
 ### I need my plan (6.12)
 
@@ -1591,6 +1591,10 @@ Home → More → "Other kinds of help" → "Other kinds of help" / "Pick what f
 - 3: "Small ways to meet people" · "Go to the same place regularly: a café, gym, library, park." · "Try one group: a class, a volunteer shift, a faith community, a club." · "Say yes to one invitation, even a small one." · [Be around people]
 - End: "One small connection at a time."
 
+### Donation footer (owner request, 2026-10-09)
+
+A quiet line at the bottom of the main screens (home, plan, progress, search, more-help, tech, hope-box, song-list, noticed-list, privacy): "Free for everyone, always. Support ZigZag Mind" (opens Ko-fi in a new tab). Never inside a hard moment, never on crisis screens, never while YELLOW or RED. Settings / About / Share keep their full row. The supporter guide's footer has the same line.
+
 ### Share with a friend: share it, get the app, support it (owner request, 2026-10-09: "make it safe and honest")
 
 - Where: "Share with a friend" at the bottom of Home (under "Worried about someone?"), in Settings under About (with "Only this message and the link are shared. Nothing about you."), and on the About page; Search ("share", "tell a friend", "install", "donate"). Never on crisis screens. Not called "Join": there is nothing to join.
@@ -2086,6 +2090,7 @@ Rendered for each state where the screen changes by state. Identical renders are
 - **Button:** Tech check — AI, scrolling, or checking is getting to me
 - **Link → `support/#worried`:** Worried about someone? How to help →
 - **Button:** Share with a friend
+- Free for everyone, always. Support ZigZag Mind
 - **Button:** Home
 - **Button:** My Plan
 - **Button:** Progress
@@ -2629,6 +2634,7 @@ _When: distraction_
 - **Heading:** Things I noticed
 - Only on this phone. Not a feed, not shared.
 - Nothing here yet.
+- Free for everyone, always. Support ZigZag Mind
 - **Button:** Find something
 
 ### `ptsd`
@@ -2761,6 +2767,7 @@ _When: distraction_
 - **Button:** Caring for someone — When someone you love is struggling
 - **Button:** More
 - If it ever feels like too much, call or text 988, any time. Call 988 · Text 988
+- Free for everyone, always. Support ZigZag Mind
 
 ### `path`
 
@@ -2810,6 +2817,7 @@ _When: distraction_
 - **Button:** Breakup
 - **Button:** Lonely
 - **Button:** Urge
+- Free for everyone, always. Support ZigZag Mind
 
 ### `bridge`
 
@@ -2884,6 +2892,7 @@ _When: distraction_
 - **Button:** Add a reason to stay
 - **Button:** Make a song
 - **Button:** Find something
+- Free for everyone, always. Support ZigZag Mind
 - **Button:** Back
 
 ### `hold`
@@ -3573,6 +3582,7 @@ _When: distraction_
 - **Heading:** What ZigZag Mind is
 - A self-help tool for adults 18 and over. It is not therapy, medical care or an emergency service, and it can't promise any outcome. If you're in danger, call 911 or call or text 988.
 - Donations are voluntary and don't unlock anything. Everything is free for everyone.
+- Free for everyone, always. Support ZigZag Mind
 - **Button:** Back
 
 ### `around-people`
@@ -4087,6 +4097,7 @@ _When: distraction_
 - **Button:** I'm afraid I'm falling behind
 - **Button:** AI is taking the place of people — Getting attached, or using it instead of people
 - **Button:** My AI changed or is gone
+- Free for everyone, always. Support ZigZag Mind
 
 ### `tc-reliance`
 
@@ -4267,6 +4278,7 @@ _When: distraction_
 - **Heading:** My songs
 - Saved only on this phone. Listen back and notice what's changed.
 - No songs yet.
+- Free for everyone, always. Support ZigZag Mind
 - **Button:** Make a new song
 
 ### `borrow`
@@ -4586,6 +4598,7 @@ _When: distraction_
 - **Heading:** What I want ZigZag Mind to remind me
 - **Button:** Edit _(screen reader: "Edit: What I want ZigZag Mind to remind me")_
 - Don't make big decisions when I'm overwhelmed.
+- Free for everyone, always. Support ZigZag Mind
 - **Button:** Home
 - **Button:** My Plan
 - **Button:** Progress
@@ -4657,6 +4670,7 @@ _When: distraction_
 - **Button:** Try it _(screen reader: "Try it: Water")_
 - Not a score. Just what you told ZigZag Mind.
 - Includes fictional sample data. You can remove it in Settings.
+- Free for everyone, always. Support ZigZag Mind
 - **Button:** Home
 - **Button:** My Plan
 - **Button:** Progress

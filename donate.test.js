@@ -1,4 +1,5 @@
-// Quiet "Support ZigZag Mind" link: one constant, Settings and About only, hidden when empty. Nothing stored or tracked.
+// Quiet "Support ZigZag Mind" link: one constant; Settings, About and Share with a friend, plus (owner, 2026-10-09) a quiet
+// footer line on ordinary screens. Never on crisis screens, never while YELLOW or RED, hidden when empty. Nothing stored or tracked.
 const {JSDOM}=require('jsdom');
 const fs=require('fs');
 const SRC=fs.readFileSync(require('path').join(__dirname,'index.html'),'utf8');
@@ -43,8 +44,25 @@ r.push(['one constant at the top of the app script', /<script>\s*"use strict";\s
      if(/Support ZigZag Mind|ko-fi/i.test(a.doc.body.innerHTML.replace(/<script[\s\S]*?<\/script>/g,''))){ found.push(s); break; }
    }
  }
- r.push([`never on any other screen (${screens.length}: Home, flows, Calm, crisis, Help, My Plan, check-ins…)`, screens.length>=50 && found.length===0, found.join()]);
+ r.push([`never on any other screen while YELLOW or RED (${screens.length}: Home, flows, Calm, crisis, Help, My Plan, check-ins…)`, screens.length>=50 && found.length===0, found.join()]);
  r.push(['the list covers Home, crisis, Help, Calm, My Plan and the check-ins', ['home','crisis','crisis-full','talk','calm','plan','checkin','game-check','recommendation','zags','connect'].every(s=>screens.includes(s))]);}
+
+// ---- the footer line (owner, 2026-10-09) ----
+{const a=boot(withUrl(URL_)); const foot=()=>a.doc.querySelector('#app main .donate-foot a.donate');
+ r.push(['footer: a quiet line at the bottom of Home (GREEN)', !!foot() && foot().getAttribute('href')===URL_ && foot().getAttribute('target')==='_blank' && foot().getAttribute('rel')==='noopener']);
+ r.push(['footer: Home\'s first choice is still "I don\'t feel safe"', [...a.doc.querySelectorAll('#app main [data-act]')].find(e=>!['wordmark','zags'].includes(e.dataset.act)).dataset.act==='crisis']);
+ r.push(['footer: it is the last thing on the screen', a.doc.querySelector('#app main .content').lastElementChild.classList.contains('donate-foot')]);
+ a.G('ACTIONS.tab("plan")'); r.push(['footer: on the main screens (My Plan)', !!foot()]);
+ a.G('ACTIONS.moreHelp()'); r.push(['footer: on Other kinds of help', !!foot()]);
+ let inMoment=''; for(const x of ['ACTIONS.route("calm")','ACTIONS.route("connect")','ACTIONS.flow("anxious")','ACTIONS.pathStart("slipped")','ACTIONS.panicStart()','ACTIONS.bullyStart()','ACTIONS.holdStart()']){ a.G(`session={...initialSession, screen:"home"}; ${x}`); if(foot()) inMoment+=x+' '; }
+ r.push(['footer: never inside a hard moment (Calm, Connect, flows, paths, panic, bullying, Hold & answer)', !inMoment, inMoment]);
+ let on=''; for(const sc of ['crisis','crisis-full','crisis-no','safety-check']){ a.G(`session={...initialSession, screen:${JSON.stringify(sc)}}; lastRendered=null; render()`); if(foot()) on=sc; }
+ r.push(['footer: never on crisis screens, even when GREEN', !on]);
+ a.G('session={...initialSession, screen:"home"}; dispatch({type:"SET_SAFETY_LEVEL",level:"YELLOW"}); lastRendered=null; render()'); r.push(['footer: hidden while YELLOW (support bar on)', !foot() && !!a.doc.querySelector('header .ybar')]);
+ const b=boot(withUrl(URL_)); b.G('ACTIONS.tab("settings")'); r.push(['footer: not doubled where the donate row already shows (Settings)', b.doc.querySelectorAll('#app .donate-foot').length===0]);
+ const c=boot(EMPTY); r.push(['footer: hidden when the link is empty', !c.doc.querySelector('.donate-foot')]); }
+{const g=fs.readFileSync(require('path').join(__dirname,'support','index.html'),'utf8');
+ r.push(['supporter guide: "Support ZigZag Mind" in its footer', /<footer>[^]*Free for everyone, always\. <a href="https:\/\/ko-fi\.com\/zigzagmind" target="_blank" rel="noopener">Support ZigZag Mind<\/a><\/footer>/.test(g)]); }
 
 // ---- hidden when empty (or left as the placeholder) ----
 for(const [label,html] of [['empty',EMPTY],['placeholder left in',withUrl('PASTE-LINK-HERE')],['not a web link',withUrl('javascript:alert(1)')]]){

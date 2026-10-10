@@ -395,6 +395,9 @@ for(const [id,Pth] of Object.entries(G('PATHS'))){
     ...(Pth.quickExit?['"'+G('PATH_EXIT.label')+'" on every screen ("'+G('PATH_EXIT.note')+'"): replaces the page with '+G('PATH_EXIT.url')+', no history entry.']:[])]);
 }
 
+H(3,'Donation footer (owner request, 2026-10-09)');
+P('A quiet line at the bottom of the main screens ('+G('DONATE_FOOT_ON').join(', ')+'): "Free for everyone, always. Support ZigZag Mind" (opens Ko-fi in a new tab). Never inside a hard moment, never on crisis screens, never while YELLOW or RED. Settings / About / Share keep their full row. The supporter guide\'s footer has the same line.');
+
 H(3,'Share with a friend: share it, get the app, support it (owner request, 2026-10-09: "make it safe and honest")');
 const JO=G('JOIN');
 list([

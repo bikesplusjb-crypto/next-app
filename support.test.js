@@ -15,7 +15,7 @@ const CSS=(PAGE.match(/<style>([\s\S]*?)<\/style>/)||[])[1]||'';
 r.push(['no network calls: nothing loaded from anywhere else', !/fetch\(|XMLHttpRequest|sendBeacon|WebSocket|EventSource|import\(|navigator\.share|window\.open/.test(PAGE) && !/@import|url\(/i.test(CSS)
   && [...g.querySelectorAll('[src], link[href]')].every(e=>!/^(https?:)?\/\//.test(e.getAttribute('src')||e.getAttribute('href')))]);
 r.push(['no storage APIs', !/localStorage|sessionStorage|indexedDB|document\.cookie|caches\./.test(PAGE)]);
-r.push(['no tracking: no analytics, pixels or third-party links', !/analytics|gtag|pixel|facebook|google|plausible|segment/i.test(PAGE) && hrefs.every(h=>/^(tel|sms):|^#[a-z-]+$/.test(h))]);   // #...: links within this page (6.19 A)
+r.push(['no tracking: no analytics, pixels or third-party links', !/analytics|gtag|pixel|facebook|google|plausible|segment/i.test(PAGE) && hrefs.every(h=>/^(tel|sms):|^#[a-z-]+$/.test(h) || h==='https://ko-fi.com/zigzagmind')]);   // #...: links within this page (6.19 A); Ko-fi: the owner's donate link in the footer (2026-10-09), a plain link
 r.push(['988 present: call and text', hrefs.includes('tel:988') && hrefs.includes('sms:988') && /988 helps people who are supporting someone, too/.test(text)]);
 r.push(['911 present: if they\'re in danger or took something', hrefs.includes('tel:911') && text.includes("Call 911 if they're in danger or took something")]);
 const H=[...g.querySelectorAll('h2')].map(h=>h.textContent);
@@ -26,7 +26,7 @@ r.push(['what to say: ask directly; asking doesn\'t put the idea in their head; 
 // 6.18 D6 (owner-approved, clinician review): the one gun-storage sentence is the only exception; nothing else may name a means.
 const GUN_P = [...g.querySelectorAll('#gunLine')].map(e=>e.textContent.replace(/\s+/g,' ')).join(' ');
 r.push(['time and distance: no specifics (except the approved gun-storage line, 6.18 D6)', text.includes('Offer to hold onto things for a while') && !/gun|firearm|pill|medication|knife|rope|lock/i.test(text.replace(GUN_P,'')) && /^If there's a gun at home: the safest step/.test(GUN_P)]);
-r.push(['footer: not an emergency service', g.querySelector('footer').textContent.trim()==='ZigZag Mind is a self-help support tool, not an emergency service.']);
+r.push(['footer: not an emergency service (and, since 2026-10-09, the donate line)', g.querySelector('footer').textContent.trim().startsWith('ZigZag Mind is a self-help support tool, not an emergency service.') && /Support ZigZag Mind/.test(g.querySelector('footer').textContent)]);
 const words=g.querySelector('main').textContent.trim().split(/\s+/).length;
 r.push(['readable in 3 minutes (well under 600 words)', words<600, words]);
 r.push(['same design tokens, light and dark', /--primary:#2F6F6A/.test(PAGE) && /prefers-color-scheme:dark/.test(PAGE) && /--safety:#B5562E/.test(PAGE)]);

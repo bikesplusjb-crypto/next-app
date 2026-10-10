@@ -339,6 +339,8 @@ span.dot.on{background:var(--accent)}
 
 /* Donation link (Settings and About only) */
 .donate-row{border-top:1px solid var(--line);padding:14px 0 20px}
+.donate-foot{margin:28px 0 8px;padding-top:10px;border-top:1px solid var(--line);font-size:13px;color:var(--text-muted);text-align:center}
+.donate-foot a.donate{font-size:13px;font-weight:600}
 a.donate{color:var(--text-muted);font-weight:600;font-size:15px}
 
 /* Helping others: Do something kind */
@@ -654,6 +656,16 @@ const PRIVACY_PAGE = [
     ""],
   ["", "Donations are voluntary and don't unlock anything. Everything is free for everyone.", ""]
 ];
+/* Owner request, 2026-10-09: a quiet "Support ZigZag Mind" line at the bottom of app screens. Safety guards (Claude
+   Code, clinician item D63): only on the main screens people browse (never inside a hard moment, where several screens
+   are deliberately "nothing else": the phone-down ending, the sad-song step, the bullying path, Hold & answer…),
+   never on crisis screens, never while YELLOW or RED, and not where the full donate row already shows
+   (Settings, About, Share with a friend). */
+const DONATE_FOOT_ON = ["home","plan","progress","search","more-help","tech","hope-box","song-list","noticed-list","privacy"];
+function donateFoot(s){
+  if (!donateUrl() || !DONATE_FOOT_ON.includes(s) || CRISIS_SCREENS.includes(s) || session.safetyLevel !== "GREEN" || session.yellow) return "";
+  return `<p class="donate-foot">Free for everyone, always. <a class="donate" href="${esc(donateUrl())}" target="_blank" rel="noopener">Support ZigZag Mind</a></p>`;
+}
 function donateUrl(){ return /^https:\/\/\S+$/.test(DONATE_URL) ? DONATE_URL : ""; }
 
 /* =========================================================
@@ -7570,7 +7582,7 @@ function render(){
   app.innerHTML = `
     <header class="top">${topBar(def)}${showY ? yellowBar() : ""}</header>
     <main class="screen${changed && !crisis && !PTSD_PLAIN.includes(s) ? " enter" : ""}">
-      <div class="content">${def.body}</div>
+      <div class="content">${def.body}${donateFoot(s)}</div>
       ${def.actions ? `<div class="actions">${def.actions}</div>` : ""}
     </main>
     ${def.nav ? tabBar() : ""}
