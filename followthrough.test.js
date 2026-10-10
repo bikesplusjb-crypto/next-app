@@ -16,13 +16,16 @@ function boot({phone=true}={}){ const errs=[];
 const act=(a,arg)=>arg!==undefined?`[data-act="${a}"][data-arg="${arg}"]`:`[data-act="${a}"]`;
 const title=a=>a.w.document.getElementById('screen-title').textContent;
 const toEnd=(a,id)=>{ a.G(`ACTIONS.pathStart(${JSON.stringify(id)})`); for(let k=0;k<12 && a.has(act('pathNext'));k++) a.click(act('pathNext')); };
-const NEW=['suicideloss','babyloss','griefnot','afterdeath','debt','medbills','owemoney'];
+const NEW=['suicideloss','babyloss','griefnot','afterdeath','debt','medbills','owemoney','joblost','regret','legal','lifechange','recovery'];
 const r=[];
 const FOLLOWED=boot().G('Object.keys(PATHS).filter(k=>PATHS[k].follow)');
 r.push([`the seven new paths, plus Money and Getting to real care, end with a next step (${FOLLOWED.length})`, NEW.every(id=>FOLLOWED.includes(id)) && FOLLOWED.includes('money') && FOLLOWED.includes('care')]);
+r.push(['round 5: follow-through on I slipped, Heartbreak, New parent, Caring for someone, Gambling, Burned out, New place, Health worry', ['slipped','heartbreak','newparent','caregiver','gambling','burnout','newplace','health'].every(id=>FOLLOWED.includes(id))]);
+r.push(['never on "Not safe at home" (nothing saved on a phone someone else may check)', !FOLLOWED.includes('notsafe')]);
+r.push(['every "When…, I\'ll…" line fits My Plan (120 characters)', boot().G('Object.values(PATHS).filter(P=>P.follow).every(P=>P.follow.when.length<=120 && P.follow.picks.every(x=>x.then && x.then.length<=120))')]);
 // ---- hub ----
 {const a=boot(); a.G('ACTIONS.moreHelp(); ACTIONS.moreHelpAll()'); const heads=[...a.w.document.querySelectorAll('#app .lbl')].map(e=>e.textContent);
- r.push(['hub: "Grief and loss" and "Money" headings', heads.includes('Grief and loss') && heads.includes('Money')]);
+ r.push(['hub: "Grief and loss" and "Money, work and legal" headings', heads.includes('Grief and loss') && heads.includes('Money, work and legal')]);
  r.push(['hub: every new path listed', NEW.every(id=>a.has(act('pathStart',id)))]);
  r.push(['hub: first screen still 7 paths + More', a.G('MORE_HELP.first.length')===7]); }
 // ---- the loop, on every path that has one ----
@@ -60,7 +63,7 @@ for(const id of FOLLOWED){
  r.push(['blockIfRed on every follow-through action, and nothing saved from RED', c.S()==='crisis' && c.G('getPlan().ifThen.length')===0]);
  const d=boot(); toEnd(d,'care'); d.click(act('pathPick','2')); d.click(act('pathBack')); r.push(['"Pick a different step" goes back to the list', d.has('.follow-pick')]); }
 // ---- outside resources ----
-{const a=boot(); r.push(['new resources (AFSP, PSI, NFCC, CFPB, Social Security, FTC) are all hidden until verified', ['afsp','psi','nfcc','cfpb','ssa','ftc'].every(k=>a.G(`MORE_RESOURCES.${k}.verified===false && !!MORE_RESOURCES.${k}.source`))]);
+{const a=boot(); r.push(['new resources (AFSP, PSI, NFCC, CFPB, Social Security, FTC, CareerOneStop, legal aid) are all hidden until verified', ['afsp','psi','nfcc','cfpb','ssa','ftc','careeronestop','lsc'].every(k=>a.G(`MORE_RESOURCES.${k}.verified===false && !!MORE_RESOURCES.${k}.source`))]);
  let shown=''; for(const id of FOLLOWED){ toEnd(a,id); for(let k=0;k<3;k++){ a.G(`ACTIONS.pathPick("${k}")`); const h=a.w.document.getElementById('app').innerHTML;
    for(const [key,e] of Object.entries(a.G('MORE_RESOURCES'))) if((e.phone && h.includes('tel:'+e.phone)) || h.includes(e.url)) shown+=id+':'+key+' '; a.G('ACTIONS.pathBack()'); } }
  r.push(['unverified numbers and links never show, in steps or picks', shown==='', shown]);
@@ -71,6 +74,10 @@ for(const id of FOLLOWED){
  r.push(['money paths: "If money worries ever make you think about not being here, call or text 988"', ['debt','medbills'].every(id=>t(id).includes('If money worries ever make you think about not being here'))]);
  r.push(['After a death: the scam warning (gift cards, wire, crypto; hang up and call the official number)', /gift cards, a wire transfer or crypto/.test(t('afterdeath')) && /Scammers read obituaries/.test(t('afterdeath'))]);
  r.push(['Someone says I owe money: "You don\'t have to pay right now" and if you already paid, call your bank', /You don't have to pay right now/.test(t('owemoney')) && /Call your bank/.test(t('owemoney'))]);
+ r.push(['Early recovery: the warning about stopping some substances suddenly', /can be dangerous. Talk to a doctor about stopping safely/.test(t('recovery'))]);
+ r.push(['Court or legal trouble: never ignore a court date; public defender; 211', /Never ignore a court date/.test(t('legal')) && /public defender/.test(t('legal'))]);
+ r.push(['Lost my job: apply for unemployment soon; the 988 line', /Apply for unemployment/.test(t('joblost')) && /If losing your job ever makes you think about not being here/.test(t('joblost'))]);
+ r.push(['I did something I regret: guilt vs shame, a real apology, no excuses', /You can work with guilt/.test(t('regret')) && /doesn't make excuses/.test(t('regret'))]);
  r.push(['Debt: a payday-loan pause', /payday or title loan/.test(t('debt'))]);
  r.push(['After a suicide loss: "not your fault" and their own safety (988)', /doesn't mean it was your fault/.test(t('suicideloss')) && /Look after your own safety too/.test(t('suicideloss'))]);
  r.push(['Pregnancy or baby loss: the medical warning (bleeding, fever, pain → doctor or 911)', /heavy bleeding, a fever, or severe pain/.test(t('babyloss'))]);
@@ -78,7 +85,7 @@ for(const id of FOLLOWED){
  const copy=JSON.stringify(a.G('PATHS'))+JSON.stringify(a.G('FOLLOW'));
  r.push(['no promises, streaks or pressure ("will get better", "streak", "you should have")', !/will get better|guarantee|streak|you should have|cure/i.test(copy)]); }
 // ---- search and safety ----
-{const a=boot(); for(const [q,id] of [['miscarriage','babyloss'],['stillborn','babyloss'],['took his own life','suicideloss'],['only a pet','griefnot'],['funeral home','afterdeath'],['debt collector','debt'],['medical bills','medbills'],['gift cards','owemoney']])
+{const a=boot(); for(const [q,id] of [['miscarriage','babyloss'],['stillborn','babyloss'],['took his own life','suicideloss'],['only a pet','griefnot'],['funeral home','afterdeath'],['debt collector','debt'],['medical bills','medbills'],['gift cards','owemoney'],['laid off','joblost'],['i feel guilty','regret'],['court date','legal'],['empty nest','lifechange'],['early recovery','recovery']])
    r.push([`search "${q}" → ${id} first`, a.G(`searchMatch(${JSON.stringify(q)})[0].id`)===id]);
  r.push(['"suicide" is never in the search index, title or words (the safety check sends it to the crisis screen)', a.G('SEARCH_INDEX.every(e=>![e.title,e.desc,...(e.words||[])].some(w=>/suicid/i.test(w)))')]);
  const b=boot(); b.G('ACTIONS.searchOpen()'); const q=b.w.document.getElementById('searchQ'); q.value='lost my brother to suicide'; q.form.dispatchEvent(new b.w.Event('submit',{bubbles:true,cancelable:true}));

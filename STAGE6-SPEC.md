@@ -664,3 +664,9 @@ Built per STAGE6-29-ADDENDUM.md A–E, one commit per part. Entry: a field on Ho
 - **Search**: seven entries. "suicide" is never an index word; any query with it opens the crisis screen (authoritative logic, unchanged; D64).
 - **Public pages**: can't pay my bills, grieving a suicide loss, grieving a miscarriage (19 pages total).
 - Tests: `followthrough.test.js`; `paths.test.js` extended. Clinician items D64–D66.
+
+### Round 5 (2026-10-10, owner: "keep adding")
+
+- **Five paths**: Lost my job, I did something I regret, Court or legal trouble, A big life change, Early recovery; each with follow-through. Hub group renamed "Money, work and legal".
+- **Follow-through added** to I slipped, Heartbreak, New parent, Caring for someone, Gambling, Burned out, New place, Health worry. Never on Not safe at home.
+- **Resources** `careeronestop`, `lsc`: hidden until verified. Search: five entries (job-loss words moved from Money to Lost my job). Public pages: lost my job, early recovery (21 total). Clinician items D67–D68.

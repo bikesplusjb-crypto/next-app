@@ -122,7 +122,22 @@ const PAGES = [
     steps:[["Let it come in waves.","Grief can come and go, and partners may grieve differently. Some days, like the due date, can be especially hard."],
       ["Tell people only what you want to.","\"We lost the baby. I don't want to talk about it much yet, but I wanted you to know.\""],
       ["Tell your doctor or midwife how you're feeling.","\"Since the loss, I haven't felt like myself. I'd like some support.\""]],
-    note:"If you have heavy bleeding, a fever, or severe pain, call your doctor or 911." }
+    note:"If you have heavy bleeding, a fever, or severe pain, call your doctor or 911." },
+  // Round 5 (2026-10-10). Clinician item D67.
+  { slug:"lost-my-job", title:"Lost my job: what to do this week",
+    desc:"Small steps after being fired, laid off or let go.",
+    lead:"Losing a job can hit your money, your routine and how you see yourself all at once. It isn't the whole story of you.",
+    steps:[["Apply for unemployment soon.","Use your state's official .gov site. Waiting can cost you weeks. 211 can help if you get stuck."],
+      ["Ask about your last paycheck and insurance.","\"When does my last paycheck come, is unused vacation paid out, and what happens with my health insurance?\""],
+      ["Keep a little routine, and tell one person.","Up at the same time, outside once a day. \"I lost my job. I could use someone to talk to this week.\""]],
+    note:"If losing your job ever makes you think about not being here, call or text 988, any time." },
+  { slug:"early-recovery", title:"Early recovery: getting through the first weeks",
+    desc:"Small steps for the first weeks without drinking or using.",
+    lead:"Sleep, mood and cravings can be all over the place at first. That's common, and it does change with time.",
+    steps:[["Know your hard times.","The time of day you used to drink or use, certain people or places, being hungry, angry, lonely or tired."],
+      ["Have a plan for cravings.","The urge rises, peaks and passes. Text someone before you act on it. Leave the place."],
+      ["Don't do it alone.","Meetings, a sponsor, a counselor, or one sober friend. 211 can help you find treatment or a meeting."]],
+    note:"Stopping some substances suddenly, like alcohol or certain pills, can be dangerous. Talk to a doctor about stopping safely." }
 ];
 const CSS = `:root{--bg:#f7f3ec;--surface:#fff;--text:#1f2a2a;--muted:#5b6464;--primary:#33726b;--safety:#b85c44;--line:#e4ddd2}
 @media (prefers-color-scheme:dark){:root{--bg:#141a1a;--surface:#1d2525;--text:#eef2f1;--muted:#a9b4b2;--primary:#7cc3b8;--safety:#e59a84;--line:#2c3636}}

@@ -1591,6 +1591,8 @@ const MORE_RESOURCES = {   // all hidden until the owner verifies them (sources 
   nfcc:{ name:"National Foundation for Credit Counseling", what:"Nonprofit credit counseling: help with a budget, debt and your options.", phone:"18003882227", number:"1-800-388-2227", url:"https://www.nfcc.org/", source:"https://www.nfcc.org/", verified:false },
   cfpb:{ name:"Consumer Financial Protection Bureau", what:"Explains your rights with debt collectors, and takes complaints.", url:"https://www.consumerfinance.gov/consumer-tools/debt-collection/", source:"https://www.consumerfinance.gov/consumer-tools/debt-collection/", verified:false },
   ssa:{ name:"Social Security", what:"Report a death, and ask about survivor benefits.", phone:"18007721213", number:"1-800-772-1213", url:"https://www.ssa.gov/", source:"https://www.ssa.gov/", verified:false },
+  careeronestop:{ name:"CareerOneStop", what:"A U.S. Department of Labor site: unemployment benefits by state, job search, training.", url:"https://www.careeronestop.org/", source:"https://www.careeronestop.org/", verified:false },
+  lsc:{ name:"Find free legal aid (Legal Services Corporation)", what:"Find a legal aid office near you, for people who can't afford a lawyer.", url:"https://www.lsc.gov/about-lsc/what-legal-aid/get-legal-help", source:"https://www.lsc.gov/", verified:false },
   ftc:{ name:"Report a scam (FTC)", what:"Report fraud to the Federal Trade Commission.", url:"https://reportfraud.ftc.gov/", source:"https://reportfraud.ftc.gov/", verified:false }
 };
 function moreRes(keys){
@@ -1620,7 +1622,12 @@ const PATHS = {
       { h:"Tell one person", p:"You don't have to explain everything.", msg:"I slipped tonight. I don't need a lecture, I just don't want to be alone with it. Can you check on me?" },
       { h:"Tomorrow", list:["Drink water and eat.","Tell your sponsor, counselor, or someone you trust.","Look at what led up to it, without blaming yourself.","Start again. Starting again counts."] }
     ],
-    end:{ h:"You're still here, and you can start again.", p:"" } },
+    end:{ h:"You're still here, and you can start again.", p:"" },
+    follow:{ when:"I slip", picks:[
+      { label:"Tell one person", msg:"I slipped. I don't need a lecture, I just don't want to be alone with it. Can you check on me?", then:"tell one person, without waiting" },
+      { label:"Tell your sponsor, counselor or doctor", say:"I slipped, and I want to get back on track. Can we talk about what happened?", then:"tell my sponsor, counselor or doctor" },
+      { label:"Find a meeting today", p:"Meetings happen in person and online, many every day. 211 can help you find one.", res:["samhsa"], call211:true, then:"go to a meeting the same day" }
+    ] } },
   heartbreak:{ title:"Heartbreak or a breakup", meta:"When it hurts to miss them",
     steps:[
       { h:"Heartbreak is a real loss.", p:"It can hurt in your body, mess with your sleep, and come in waves. That's normal." },
@@ -1628,7 +1635,12 @@ const PATHS = {
       { h:"Step back from their profile.", list:["Mute or hide them for now. You can undo it later.","Move photos to a folder you don't open every day.","Checking again and again keeps the hurt fresh."] },
       { h:"Lean on someone.", p:"Tell a friend you're having a hard time. You don't have to explain it all.", msg:"I'm having a hard time with the breakup. Can we talk or hang out soon?" }
     ],
-    end:{ h:"One day at a time is enough.", p:"", opts:[["Cozy up","cozyStart",""],["I feel sad or low","flow","low"]] } },
+    end:{ h:"One day at a time is enough.", p:"", opts:[["Cozy up","cozyStart",""],["I feel sad or low","flow","low"]] },
+    follow:{ when:"I want to text my ex", picks:[
+      { label:"Mute or hide their profile", list:["Mute or hide them, for now.","You can undo it later."], then:"mute their profile instead of checking it" },
+      { label:"Make a plan with a friend", msg:"I'm having a hard time with the breakup. Can we hang out this week?", then:"make a plan with a friend" },
+      { label:"Write it in your notes instead", list:["Write everything you want to say.","Don't send it.","Read it again tomorrow."], then:"write it in my notes and decide tomorrow" }
+    ] } },
   money:{ title:"Money, work or housing stress", meta:"Bills, a lost job, rent",
     steps:[
       { h:"Money stress is real stress.", p:"It can make everything feel urgent at once. Let's make it smaller." },
@@ -1658,7 +1670,12 @@ const PATHS = {
       { h:"One small thing for you", list:["Eat something and drink water.","Rest when someone else can watch the baby, even for 20 minutes.","Ask one person for one specific thing: a meal, laundry, an hour."], msg:"I'm having a harder time than I thought. Could you help with one thing this week?" },
       { h:"Tell your doctor or midwife.", p:"These feelings can get better with help. One sentence is enough:", say:"I haven't felt like myself lately, and I'd like some help." }
     ],
-    end:{ h:"Asking for help is part of taking care of your baby.", p:"" } },
+    end:{ h:"Asking for help is part of taking care of your baby.", p:"" },
+    follow:{ when:"I don't feel like myself", picks:[
+      { label:"Tell your doctor or midwife", say:"I haven't felt like myself lately, and I'd like some help.", then:"tell my doctor or midwife" },
+      { label:"Ask one person for one thing", msg:"I'm having a harder time than I thought. Could you help with one thing this week?", then:"ask one person for one specific thing" },
+      { label:"Call a maternal mental health line", p:"Trained counselors can listen, any time.", res:["mmh"], call211:true, then:"call a maternal mental health line" }
+    ] } },
   caregiver:{ title:"Caring for someone", meta:"When someone you love is struggling", res:["nami"],
     steps:[
       { h:"Caring for someone is a lot.", p:"Your needs matter too." },
@@ -1666,14 +1683,24 @@ const PATHS = {
       { h:"Help for helping them", p:"The supporter guide has what to say, what not to say, and what to do if things get worse.", supportLink:"Open the supporter guide" },
       { h:"If they talk about not wanting to be alive", p:"Call or text 988 together. If they're in danger right now, call 911." }
     ],
-    end:{ h:"Looking after yourself helps them too.", p:"" } },
+    end:{ h:"Looking after yourself helps them too.", p:"" },
+    follow:{ when:"caring for them is too much", picks:[
+      { label:"Ask someone to take over for a few hours", msg:"I could really use a break. Could you sit with them for a few hours this week?", then:"ask someone to take over for a few hours" },
+      { label:"Look for caregiver support", p:"Support groups and respite care exist for caregivers. 211 can point you to them.", res:["nami"], call211:true, then:"look for a caregiver support group" },
+      { label:"Do one thing just for you today", list:["Step outside.","Eat a real meal.","Call a friend about anything else."], then:"do one thing just for me" }
+    ] } },
   gambling:{ title:"Gambling urges", meta:"Betting, casinos, apps", res:["reset"],
     steps:[
       { h:"The urge rises, peaks and passes.", p:"You don't have to act on it. Give it some time first.", opts:[["Borrow ten minutes","lowPick","borrow_ten"]] },
       { h:"Make it harder to bet tonight.", list:["Log out of betting apps, or delete them for now.","Give your cards to someone you trust for a while.","Many betting sites and states let you block yourself (self-exclusion)."] },
       { h:"Tell someone.", p:"You don't have to explain it all.", msg:"I'm having a hard time with gambling urges tonight. Can we talk?" }
     ],
-    end:{ h:"Not betting tonight counts.", p:"" } },
+    end:{ h:"Not betting tonight counts.", p:"" },
+    follow:{ when:"the urge to bet hits", picks:[
+      { label:"Block betting sites and apps", list:["Delete the apps.","Use self-exclusion on betting sites and in your state.","Ask your bank about blocking gambling payments."], then:"block betting apps and sites" },
+      { label:"Call or text a gambling helpline", p:"Free, confidential help.", res:["reset"], call211:true, then:"call a gambling helpline" },
+      { label:"Tell someone you trust", msg:"I'm having a hard time with gambling. Can we talk?", then:"tell someone I trust" }
+    ] } },
   lgbtq:{ title:"LGBTQ+ and struggling", meta:"When people don't get who you are", res:["translifeline"],
     steps:[
       { h:"You deserve support that gets who you are.", p:"If people have rejected or hurt you because of who you are, that's not your fault." },
@@ -1711,7 +1738,12 @@ const PATHS = {
       { h:"Go easy on the searching.", list:["Searching symptoms late at night often makes it worse.","Write your questions down for the doctor instead.","Ask when and how you'll get results."] },
       { h:"Get through today.", list:["Do one normal thing.","Tell one person you're waiting."], opts:[["Park it for later","worryStart",""]] }
     ],
-    end:{ h:"One day at a time.", p:"" } },
+    end:{ h:"One day at a time.", p:"" },
+    follow:{ when:"I'm waiting on health news", picks:[
+      { label:"Write your questions for the doctor", list:["What could this be?","What happens next?","When will I hear back?"], then:"write my questions down instead of searching" },
+      { label:"Ask when you'll get results", say:"When should I expect my results, and how will I get them?", then:"ask when I'll get results" },
+      { label:"Tell one person you're waiting", msg:"I'm waiting on some health results and it's on my mind. Could you check on me?", then:"tell one person I'm waiting" }
+    ] } },
   burnout:{ title:"Burned out", meta:"Running on empty from work, school or caring",
     steps:[
       { h:"Burnout means it's been too much for too long.", p:"It's not weakness or laziness." },
@@ -1719,7 +1751,12 @@ const PATHS = {
       { h:"One small refill", list:["Step outside for five minutes.","Eat a real meal, away from a screen.","Go to bed a little earlier tonight."] },
       { h:"If it's been weeks", p:"Talking to a doctor or counselor can help, and so can looking at time off or support at work.", opts:[["Getting to real care","pathStart","care"]] }
     ],
-    end:{ h:"Rest is part of the work.", p:"" } },
+    end:{ h:"Rest is part of the work.", p:"" },
+    follow:{ when:"I'm running on empty", picks:[
+      { label:"Say no to one thing this week", say:"I can't take that on this week. Can we move it?", then:"say no to one thing that week" },
+      { label:"Go to bed a little earlier tonight", list:["Pick a time.","Phone away 30 minutes before."], then:"go to bed a little earlier" },
+      { label:"Talk to a doctor or counselor", say:"I've been burned out for weeks and I'm not bouncing back. I'd like some help.", then:"talk to a doctor or counselor" }
+    ] } },
   pain:{ title:"A hard pain day", meta:"When pain is wearing you down",
     danger:"If the pain is new, sudden or severe, get medical help or call 911.",
     steps:[
@@ -1772,7 +1809,12 @@ const PATHS = {
       { h:"Keep your old people close.", p:"A quick message counts.", msg:"I miss you. Can we catch up this week?" },
       { h:"Small ways to meet people", list:["Go to the same place regularly: a café, gym, library, park.","Try one group: a class, a volunteer shift, a faith community, a club.","Say yes to one invitation, even a small one."], opts:[["Be around people","aroundPeople",""]] }
     ],
-    end:{ h:"One small connection at a time.", p:"" } },
+    end:{ h:"One small connection at a time.", p:"" },
+    follow:{ when:"I feel alone in a new place", picks:[
+      { label:"Message someone from home", msg:"I miss you. Can we catch up this week?", then:"message someone from home" },
+      { label:"Go to the same place three times", list:["A café, gym, library or park.","Same time each week.","Faces start to become familiar."], then:"go back to the same place each week" },
+      { label:"Try one group", list:["A class.","A volunteer shift.","A faith community or club."], call211:true, then:"try one group" }
+    ] } },
   // Round 4: grief and money, with follow-through (owner, 2026-10-10: "both, i want more follow through").
   // Wording drafted by Claude Code: CLINICIAN REVIEW REQUIRED (D64–D66). Every outside resource hidden until verified.
   suicideloss:{ title:"After a suicide loss", meta:"When someone you love died by suicide", res:["afsp"],
@@ -1870,6 +1912,73 @@ const PATHS = {
       { label:"Call the real number yourself", p:"From a bill, the back of a card, or an official website. Not the number they gave you.", then:"hang up and call the real number myself" },
       { label:"Tell someone you trust", msg:"Someone says I owe money and they want it now. Can you help me check if it's real?", then:"tell someone I trust before I pay" },
       { label:"Call your bank, if you already paid", p:"Call the number on the back of your card. Ask them to stop or reverse the payment.", then:"call my bank right away" }
+    ] } },
+  // Round 5 (owner, 2026-10-10: "keep adding"). Wording drafted by Claude Code: CLINICIAN REVIEW REQUIRED (D67).
+  joblost:{ title:"Lost my job", meta:"Fired, laid off, or let go", res:["careeronestop"],
+    line:"If losing your job ever makes you think about not being here, call or text 988, any time.",
+    steps:[
+      { h:"Losing a job is a big loss.", p:"It can hit your money, your routine and how you see yourself all at once. Shock, anger and shame are common. It isn't the whole story of you." },
+      { h:"This week", list:["Apply for unemployment in your state as soon as you can. Waiting can cost you weeks.","Ask about your last paycheck, unused vacation pay, and health insurance.","Write down the date, who told you, and what they said."] },
+      { h:"Keep a little routine.", list:["Get up around the same time.","Get outside once a day.","Give the job search set hours, then stop for the day."] },
+      { h:"Tell one person.", p:"You don't have to explain everything.", msg:"I lost my job. I'm okay for now, but I could use someone to talk to this week." }
+    ],
+    end:{ h:"This is a hard chapter, not the end of the story.", p:"", opts:[["Money, work or housing stress","pathStart","money"]] },
+    follow:{ when:"I'm worried about work", picks:[
+      { label:"Apply for unemployment", p:"Search your state's name and \"unemployment\" and use the official .gov site. 211 can help if you get stuck.", call211:true, then:"apply for unemployment on my state's .gov site" },
+      { label:"Ask about your last paycheck and insurance", say:"Can you tell me when my last paycheck comes, whether unused vacation is paid out, and what happens with my health insurance?", then:"ask about my last paycheck and insurance" },
+      { label:"Tell one person", msg:"I lost my job. I'm okay for now, but I could use someone to talk to this week.", then:"tell one person I lost my job" }
+    ] } },
+  regret:{ title:"I did something I regret", meta:"Guilt, shame, or wishing you could take it back",
+    steps:[
+      { h:"Everyone does things they regret.", p:"Feeling bad about it means you care. Guilt says \"I did something wrong.\" Shame says \"I am bad.\" You can work with guilt." },
+      { h:"Look at it plainly.", list:["What happened, in one or two sentences.","What part was yours, and what wasn't.","What you'd do differently next time."] },
+      { h:"If you can, make it right.", p:"A real apology names what you did, doesn't make excuses, and asks what would help.", say:"I'm sorry for what I did. It wasn't okay. Is there anything I can do to make it right?" },
+      { h:"Then let it teach you, not define you.", p:"Talk to yourself the way you would to a good friend who made the same mistake." }
+    ],
+    end:{ h:"You can make a mistake and still be a good person.", p:"" },
+    follow:{ when:"I keep replaying what I did", picks:[
+      { label:"Apologize, if it's safe and right to", say:"I'm sorry for what I did. It wasn't okay. Is there anything I can do to make it right?", then:"make a real apology, if it's right to" },
+      { label:"Write it down, then close the notebook", list:["What happened.","What part was mine.","What I'll do next time."], then:"write it down once, then close the notebook" },
+      { label:"Tell someone you trust", msg:"I did something I really regret and I can't stop thinking about it. Could we talk?", then:"tell someone I trust" }
+    ] } },
+  legal:{ title:"Court or legal trouble", meta:"An arrest, a court date, or a legal letter", res:["lsc"],
+    steps:[
+      { h:"Legal trouble is scary.", p:"Not knowing what will happen is one of the hardest parts. Let's take it one step at a time." },
+      { h:"Get the facts straight.", list:["Keep every letter and paper in one folder.","Write down every date: court, deadlines, appointments.","Never ignore a court date or a legal letter. Missing one can make things worse."] },
+      { h:"Get legal help.", list:["If you were charged with a crime, you can ask the court for a public defender if you can't afford a lawyer.","For things like eviction, debt or family court, free legal aid may be available.","211 can point you to legal help near you."], call211:true },
+      { h:"Look after yourself while you wait.", p:"Waiting is exhausting. Tell one person, keep a little routine, and get some sleep.", msg:"I'm dealing with some legal stuff and I'm stressed. Can we talk?" }
+    ],
+    end:{ h:"You don't have to figure this out alone.", p:"" },
+    follow:{ when:"I'm worried about the legal stuff", picks:[
+      { label:"Put every paper and date in one place", list:["One folder for every letter.","Every date on one page, or in your calendar."], then:"put every legal paper and date in one folder" },
+      { label:"Look for free legal help", p:"Legal aid offices help people who can't afford a lawyer. 211 can point you to one.", res:["lsc"], call211:true, then:"look for free legal help" },
+      { label:"Tell one person", msg:"I'm dealing with some legal stuff and I'm stressed. Can we talk?", then:"tell one person what's going on" }
+    ] } },
+  lifechange:{ title:"A big life change", meta:"Retired, kids moved out, a health change, a new chapter",
+    steps:[
+      { h:"Even good changes can feel like loss.", p:"When a role you've had for years ends, it's normal to feel lost, flat or restless for a while." },
+      { h:"Give the day a shape.", list:["A reason to get up: a walk, a coffee somewhere, a class.","One thing with people each week.","One thing that's just yours: a project, a hobby, learning something."] },
+      { h:"Find your people again.", list:["Call an old friend.","Try a group: volunteering, a faith community, a club, a class.","Libraries and community centers often have free groups."], opts:[["Be around people","aroundPeople",""]] }
+    ],
+    end:{ h:"New chapters take time to settle into.", p:"" },
+    follow:{ when:"the days feel empty", picks:[
+      { label:"Plan one thing with people this week", msg:"Would you like to get coffee or take a walk this week?", then:"plan one thing with people each week" },
+      { label:"Try one group or class", list:["Volunteering.","A class at the library or community center.","A faith community or club."], call211:true, then:"try one group or class" },
+      { label:"Give tomorrow a shape", list:["One reason to get up.","One thing outside.","One thing that's just yours."], then:"plan one reason to get up tomorrow" }
+    ] } },
+  recovery:{ title:"Early recovery", meta:"The first weeks and months without drinking or using", res:["samhsa"],
+    danger:"Stopping some substances suddenly, like alcohol or certain pills, can be dangerous. Talk to a doctor about stopping safely.",
+    steps:[
+      { h:"The first weeks are hard.", p:"Sleep, mood and cravings can be all over the place for a while. That's common, and it does change with time." },
+      { h:"Know your hard times.", list:["The time of day you used to drink or use.","Certain people, places or paydays.","Being hungry, angry, lonely or tired."] },
+      { h:"Have a plan for cravings.", list:["The urge rises, peaks and passes.","Call or text someone before you act on it.","Leave the place, or get something else in your hands."], opts:[["I have an urge","flow","craving"]] },
+      { h:"You don't have to do it alone.", p:"Meetings, a sponsor, a counselor, or one sober friend. Many people need more than one kind of support." }
+    ],
+    end:{ h:"Every day you keep going counts.", p:"" },
+    follow:{ when:"a craving hits", picks:[
+      { label:"Text someone before you act on it", msg:"I'm having a hard time with cravings. Can you talk for a few minutes?", then:"text someone before I act on it" },
+      { label:"Find a meeting or a counselor", p:"Meetings happen in person and online, many every day. 211 can help you find treatment or a meeting near you.", res:["samhsa"], call211:true, then:"go to a meeting or call a counselor" },
+      { label:"Plan your hardest time of day", list:["What time is hardest?","Where will you be instead?","Who will you be with, or text?"], then:"be somewhere else at my hardest time of day" }
     ] } }
 };
 const PATH_EXIT = { label:"Leave quickly", note:"Opens a plain weather page.", url:"https://www.weather.gov/" };
@@ -1877,11 +1986,11 @@ const MORE_HELP = {
   title:"Other kinds of help", sub:"Pick what fits. Each one is short, and nothing is saved.",
   first:["care","slipped","heartbreak","money","notsafe","newparent","caregiver"],
   rest:["bed","fight","health","burnout","pain","school","gambling","lgbtq","eating","scary","sensory","holidays","sunday","newplace",
-    "suicideloss","babyloss","griefnot","afterdeath","debt","medbills","owemoney"],
+    "suicideloss","babyloss","griefnot","afterdeath","debt","medbills","owemoney","joblost","regret","legal","lifechange","recovery"],
   groups:[["Right now",["slipped","notsafe","fight","scary","sensory"]],["Day to day",["bed","burnout","sunday","school"]],
     ["Grief and loss",["suicideloss","babyloss","griefnot","afterdeath","holidays"]],
-    ["Money",["money","debt","medbills","owemoney"]],
-    ["People and relationships",["heartbreak","newplace","caregiver","lgbtq"]],["Body and health",["health","pain","eating","newparent","gambling"]],
+    ["Money, work and legal",["money","joblost","debt","medbills","owemoney","legal"]],
+    ["People and relationships",["heartbreak","regret","newplace","lifechange","caregiver","lgbtq"]],["Body and health",["health","pain","eating","newparent","gambling","recovery"]],
     ["Getting help",["care"]]],
   more:"More", next:"Next", putDown:"Put the phone down", talk:"Talk to someone",
   sendLbl:"Or send this, if it helps:", sayLbl:"You could say:", call211:"Call 211"
@@ -2062,7 +2171,7 @@ const SEARCH_INDEX = [
   { id:"slipped", title:"I slipped", desc:"After drinking or using: no shame, just tonight", screen:"path", act:"pathStart", arg:"slipped",
     words:["i slipped","slipped up","i relapsed","relapsed","already drank","already used","i drank","i used","got drunk","drunk again","used again","hungover","hangover","messed up"] },
   { id:"money", title:"Money, work or housing stress", desc:"Bills, a lost job, rent", screen:"path", act:"pathStart", arg:"money",
-    words:["money","broke","bills","cant pay","rent","eviction","evicted","lost my job","fired","laid off","unemployed","job","work stress","housing","homeless","food","shutoff","overdue"] },
+    words:["money","broke","bills","cant pay","rent","eviction","evicted","job","work stress","housing","homeless","food","shutoff","overdue"] },
   { id:"notsafe", title:"Not safe at home", desc:"Someone at home hurts, scares or controls you", screen:"path", act:"pathStart", arg:"notsafe",
     words:["not safe at home","unsafe at home","abuse","abusive","domestic violence","dv","partner hits me","hits me","controlling","controls me","scared of my partner","scared at home","afraid at home","abusive relationship"] },
   { id:"newparent", title:"New parent or pregnant", desc:"When it's harder than people said", screen:"path", act:"pathStart", arg:"newparent",
@@ -2113,6 +2222,16 @@ const SEARCH_INDEX = [
     words:["debt","in debt","debt collector","debt collectors","collector","collectors","collections","credit card debt","owe money","payday loan","title loan","loan","credit counseling","behind on payments","garnish","garnished"] },
   { id:"medbills", title:"Medical bills", desc:"A big bill you can't pay", screen:"path", act:"pathStart", arg:"medbills",
     words:["medical bill","medical bills","hospital bill","er bill","doctor bill","ambulance bill","cant pay hospital","charity care","financial assistance","itemized bill","insurance denied","claim denied"] },
+  { id:"joblost", title:"Lost my job", desc:"Fired, laid off, or let go", screen:"path", act:"pathStart", arg:"joblost",
+    words:["lost my job","got fired","fired","laid off","let go","got let go","job loss","unemployment","unemployed","terminated","downsized","no job"] },
+  { id:"regret", title:"I did something I regret", desc:"Guilt, shame, or wishing you could take it back", screen:"path", act:"pathStart", arg:"regret",
+    words:["regret","i regret","guilt","guilty","ashamed","shame","embarrassed","i feel terrible","take it back","apologize","apology","i said something bad","my fault","i screwed up"] },
+  { id:"legal", title:"Court or legal trouble", desc:"An arrest, a court date, or a legal letter", screen:"path", act:"pathStart", arg:"legal",
+    words:["court","court date","arrested","got arrested","charged","lawyer","public defender","legal aid","legal trouble","probation","sued","lawsuit","custody","subpoena","dui","ticket"] },
+  { id:"lifechange", title:"A big life change", desc:"Retired, kids moved out, a health change, a new chapter", screen:"path", act:"pathStart", arg:"lifechange",
+    words:["retired","retirement","empty nest","kids moved out","kids left","life change","big change","new chapter","dont know what to do with myself","bored retired","lost my purpose","purpose"] },
+  { id:"recovery", title:"Early recovery", desc:"The first weeks and months without drinking or using", screen:"path", act:"pathStart", arg:"recovery",
+    words:["early recovery","recovery","newly sober","just got sober","days sober","sober curious","quit drinking","stopped drinking","quit using","in recovery","withdrawal","detox","aa","na","sponsor","meeting","meetings"] },
   { id:"owemoney", title:"Someone says I owe money now", desc:"A call, text or letter demanding money fast", screen:"path", act:"pathStart", arg:"owemoney",
     words:["scam","scammed","is this a scam","scam call","irs call","owe the irs","gift cards","pay with gift cards","they want money now","threatened arrest","warrant call","got scammed","fraud"] },
   { id:"morehelp", title:"Other kinds of help", desc:"Short paths for more situations", screen:"more-help", act:"moreHelp",

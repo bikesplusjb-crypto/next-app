@@ -209,6 +209,8 @@ From Claude Code's general knowledge, not a live check this time. **None is show
 | cfpb | Consumer Financial Protection Bureau: debt collection | https://www.consumerfinance.gov/consumer-tools/debt-collection/ | same | Rights with collectors, complaints. Link only. |
 | ssa | Social Security | 1-800-772-1213 | https://www.ssa.gov/ | Reporting a death (usually done by the funeral home), survivor benefits. Confirm the number. |
 | ftc | FTC fraud reporting | https://reportfraud.ftc.gov/ | same | Link only. |
+| careeronestop | CareerOneStop (U.S. Department of Labor) | https://www.careeronestop.org/ | same | Unemployment benefits by state. Link only. |
+| lsc | Legal Services Corporation: find legal aid | https://www.lsc.gov/about-lsc/what-legal-aid/get-legal-help | https://www.lsc.gov/ | Confirm the "get legal help" page address. Link only. |
 
 ## Things this check could not verify (need a person)
 

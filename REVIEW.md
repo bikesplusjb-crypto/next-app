@@ -1436,6 +1436,22 @@ Plain pages at /help/ for things people search for at night. Each: "In crisis or
 - 2: "Tell people only what you want to." / ""We lost the baby. I don't want to talk about it much yet, but I wanted you to know.""
 - 3: "Tell your doctor or midwife how you're feeling." / ""Since the loss, I haven't felt like myself. I'd like some support.""
 - Note: "If you have heavy bleeding, a fever, or severe pain, call your doctor or 911."
+
+#### Lost my job: what to do this week
+
+- Lead: "Losing a job can hit your money, your routine and how you see yourself all at once. It isn't the whole story of you."
+- 1: "Apply for unemployment soon." / "Use your state's official .gov site. Waiting can cost you weeks. 211 can help if you get stuck."
+- 2: "Ask about your last paycheck and insurance." / ""When does my last paycheck come, is unused vacation paid out, and what happens with my health insurance?""
+- 3: "Keep a little routine, and tell one person." / "Up at the same time, outside once a day. "I lost my job. I could use someone to talk to this week.""
+- Note: "If losing your job ever makes you think about not being here, call or text 988, any time."
+
+#### Early recovery: getting through the first weeks
+
+- Lead: "Sleep, mood and cravings can be all over the place at first. That's common, and it does change with time."
+- 1: "Know your hard times." / "The time of day you used to drink or use, certain people or places, being hungry, angry, lonely or tired."
+- 2: "Have a plan for cravings." / "The urge rises, peaks and passes. Text someone before you act on it. Leave the place."
+- 3: "Don't do it alone." / "Meetings, a sponsor, a counselor, or one sober friend. 211 can help you find treatment or a meeting."
+- Note: "Stopping some substances suddenly, like alcohol or certain pills, can be dangerous. Talk to a doctor about stopping safely."
 Printable card (/card/, linked from Share with a friend): eight wallet cards per page with a QR code of the site's plain address (made on the device by a small MIT-licensed library), "Small steps for hard moments. Free, no account.", "In crisis? Call or text 988. In danger? Call 911.", "Not therapy or an emergency service." Check the address opens before printing.
 
 ### Read aloud (owner request, 2026-10-09)
@@ -1471,6 +1487,9 @@ Home → More → "Other kinds of help" → "Other kinds of help" / "Pick what f
 - 4: "Tomorrow" · "Drink water and eat." · "Tell your sponsor, counselor, or someone you trust." · "Look at what led up to it, without blaming yourself." · "Start again. Starting again counts."
 - End: "You're still here, and you can start again." · resources (hidden until verified, except ndvh): samhsa
 - Also: "If someone can't wake up, isn't breathing, or has blue lips, call 911 now."
+- Next step 1: "Tell one person" · prepared text: "I slipped. I don't need a lecture, I just don't want to be alone with it. Can you check on me?" · My Plan line: "When I slip, I'll tell one person, without waiting."
+- Next step 2: "Tell your sponsor, counselor or doctor" · You could say: "I slipped, and I want to get back on track. Can we talk about what happened?" · My Plan line: "When I slip, I'll tell my sponsor, counselor or doctor."
+- Next step 3: "Find a meeting today" / "Meetings happen in person and online, many every day. 211 can help you find one." · [Call 211] · resources: samhsa · My Plan line: "When I slip, I'll go to a meeting the same day."
 
 #### Heartbreak or a breakup — When it hurts to miss them
 
@@ -1479,6 +1498,9 @@ Home → More → "Other kinds of help" → "Other kinds of help" / "Pick what f
 - 3: "Step back from their profile." · "Mute or hide them for now. You can undo it later." · "Move photos to a folder you don't open every day." · "Checking again and again keeps the hurt fresh."
 - 4: "Lean on someone." / "Tell a friend you're having a hard time. You don't have to explain it all." · prepared text: "I'm having a hard time with the breakup. Can we talk or hang out soon?"
 - End: "One day at a time is enough." · [Cozy up] [I feel sad or low]
+- Next step 1: "Mute or hide their profile" · "Mute or hide them, for now." · "You can undo it later." · My Plan line: "When I want to text my ex, I'll mute their profile instead of checking it."
+- Next step 2: "Make a plan with a friend" · prepared text: "I'm having a hard time with the breakup. Can we hang out this week?" · My Plan line: "When I want to text my ex, I'll make a plan with a friend."
+- Next step 3: "Write it in your notes instead" · "Write everything you want to say." · "Don't send it." · "Read it again tomorrow." · My Plan line: "When I want to text my ex, I'll write it in my notes and decide tomorrow."
 
 #### Money, work or housing stress — Bills, a lost job, rent
 
@@ -1508,6 +1530,9 @@ Home → More → "Other kinds of help" → "Other kinds of help" / "Pick what f
 - 3: "Tell your doctor or midwife." / "These feelings can get better with help. One sentence is enough:" · You could say: "I haven't felt like myself lately, and I'd like some help."
 - End: "Asking for help is part of taking care of your baby." · resources (hidden until verified, except ndvh): mmh
 - Also: "If you're scared you might hurt yourself or anyone else, call or text 988 now, or call 911."
+- Next step 1: "Tell your doctor or midwife" · You could say: "I haven't felt like myself lately, and I'd like some help." · My Plan line: "When I don't feel like myself, I'll tell my doctor or midwife."
+- Next step 2: "Ask one person for one thing" · prepared text: "I'm having a harder time than I thought. Could you help with one thing this week?" · My Plan line: "When I don't feel like myself, I'll ask one person for one specific thing."
+- Next step 3: "Call a maternal mental health line" / "Trained counselors can listen, any time." · [Call 211] · resources: mmh · My Plan line: "When I don't feel like myself, I'll call a maternal mental health line."
 
 #### Caring for someone — When someone you love is struggling
 
@@ -1516,6 +1541,9 @@ Home → More → "Other kinds of help" → "Other kinds of help" / "Pick what f
 - 3: "Help for helping them" / "The supporter guide has what to say, what not to say, and what to do if things get worse." · [Open the supporter guide]
 - 4: "If they talk about not wanting to be alive" / "Call or text 988 together. If they're in danger right now, call 911."
 - End: "Looking after yourself helps them too." · resources (hidden until verified, except ndvh): nami
+- Next step 1: "Ask someone to take over for a few hours" · prepared text: "I could really use a break. Could you sit with them for a few hours this week?" · My Plan line: "When caring for them is too much, I'll ask someone to take over for a few hours."
+- Next step 2: "Look for caregiver support" / "Support groups and respite care exist for caregivers. 211 can point you to them." · [Call 211] · resources: nami · My Plan line: "When caring for them is too much, I'll look for a caregiver support group."
+- Next step 3: "Do one thing just for you today" · "Step outside." · "Eat a real meal." · "Call a friend about anything else." · My Plan line: "When caring for them is too much, I'll do one thing just for me."
 
 #### Gambling urges — Betting, casinos, apps
 
@@ -1523,6 +1551,9 @@ Home → More → "Other kinds of help" → "Other kinds of help" / "Pick what f
 - 2: "Make it harder to bet tonight." · "Log out of betting apps, or delete them for now." · "Give your cards to someone you trust for a while." · "Many betting sites and states let you block yourself (self-exclusion)."
 - 3: "Tell someone." / "You don't have to explain it all." · prepared text: "I'm having a hard time with gambling urges tonight. Can we talk?"
 - End: "Not betting tonight counts." · resources (hidden until verified, except ndvh): reset
+- Next step 1: "Block betting sites and apps" · "Delete the apps." · "Use self-exclusion on betting sites and in your state." · "Ask your bank about blocking gambling payments." · My Plan line: "When the urge to bet hits, I'll block betting apps and sites."
+- Next step 2: "Call or text a gambling helpline" / "Free, confidential help." · [Call 211] · resources: reset · My Plan line: "When the urge to bet hits, I'll call a gambling helpline."
+- Next step 3: "Tell someone you trust" · prepared text: "I'm having a hard time with gambling. Can we talk?" · My Plan line: "When the urge to bet hits, I'll tell someone I trust."
 
 #### LGBTQ+ and struggling — When people don't get who you are
 
@@ -1560,6 +1591,9 @@ Home → More → "Other kinds of help" → "Other kinds of help" / "Pick what f
 - 3: "Get through today." · "Do one normal thing." · "Tell one person you're waiting." · [Park it for later]
 - End: "One day at a time."
 - Also: "If you have new or severe symptoms, call your doctor, or 911 in an emergency."
+- Next step 1: "Write your questions for the doctor" · "What could this be?" · "What happens next?" · "When will I hear back?" · My Plan line: "When I'm waiting on health news, I'll write my questions down instead of searching."
+- Next step 2: "Ask when you'll get results" · You could say: "When should I expect my results, and how will I get them?" · My Plan line: "When I'm waiting on health news, I'll ask when I'll get results."
+- Next step 3: "Tell one person you're waiting" · prepared text: "I'm waiting on some health results and it's on my mind. Could you check on me?" · My Plan line: "When I'm waiting on health news, I'll tell one person I'm waiting."
 
 #### Burned out — Running on empty from work, school or caring
 
@@ -1568,6 +1602,9 @@ Home → More → "Other kinds of help" → "Other kinds of help" / "Pick what f
 - 3: "One small refill" · "Step outside for five minutes." · "Eat a real meal, away from a screen." · "Go to bed a little earlier tonight."
 - 4: "If it's been weeks" / "Talking to a doctor or counselor can help, and so can looking at time off or support at work." · [Getting to real care]
 - End: "Rest is part of the work."
+- Next step 1: "Say no to one thing this week" · You could say: "I can't take that on this week. Can we move it?" · My Plan line: "When I'm running on empty, I'll say no to one thing that week."
+- Next step 2: "Go to bed a little earlier tonight" · "Pick a time." · "Phone away 30 minutes before." · My Plan line: "When I'm running on empty, I'll go to bed a little earlier."
+- Next step 3: "Talk to a doctor or counselor" · You could say: "I've been burned out for weeks and I'm not bouncing back. I'd like some help." · My Plan line: "When I'm running on empty, I'll talk to a doctor or counselor."
 
 #### A hard pain day — When pain is wearing you down
 
@@ -1620,6 +1657,9 @@ Home → More → "Other kinds of help" → "Other kinds of help" / "Pick what f
 - 2: "Keep your old people close." / "A quick message counts." · prepared text: "I miss you. Can we catch up this week?"
 - 3: "Small ways to meet people" · "Go to the same place regularly: a café, gym, library, park." · "Try one group: a class, a volunteer shift, a faith community, a club." · "Say yes to one invitation, even a small one." · [Be around people]
 - End: "One small connection at a time."
+- Next step 1: "Message someone from home" · prepared text: "I miss you. Can we catch up this week?" · My Plan line: "When I feel alone in a new place, I'll message someone from home."
+- Next step 2: "Go to the same place three times" · "A café, gym, library or park." · "Same time each week." · "Faces start to become familiar." · My Plan line: "When I feel alone in a new place, I'll go back to the same place each week."
+- Next step 3: "Try one group" · "A class." · "A volunteer shift." · "A faith community or club." · [Call 211] · My Plan line: "When I feel alone in a new place, I'll try one group."
 
 #### After a suicide loss — When someone you love died by suicide
 
@@ -1703,6 +1743,62 @@ Home → More → "Other kinds of help" → "Other kinds of help" / "Pick what f
 - Next step 2: "Tell someone you trust" · prepared text: "Someone says I owe money and they want it now. Can you help me check if it's real?" · My Plan line: "When someone says I owe money now, I'll tell someone I trust before I pay."
 - Next step 3: "Call your bank, if you already paid" / "Call the number on the back of your card. Ask them to stop or reverse the payment." · My Plan line: "When someone says I owe money now, I'll call my bank right away."
 
+#### Lost my job — Fired, laid off, or let go
+
+- 1: "Losing a job is a big loss." / "It can hit your money, your routine and how you see yourself all at once. Shock, anger and shame are common. It isn't the whole story of you."
+- 2: "This week" · "Apply for unemployment in your state as soon as you can. Waiting can cost you weeks." · "Ask about your last paycheck, unused vacation pay, and health insurance." · "Write down the date, who told you, and what they said."
+- 3: "Keep a little routine." · "Get up around the same time." · "Get outside once a day." · "Give the job search set hours, then stop for the day."
+- 4: "Tell one person." / "You don't have to explain everything." · prepared text: "I lost my job. I'm okay for now, but I could use someone to talk to this week."
+- End: "This is a hard chapter, not the end of the story." · [Money, work or housing stress] · resources (hidden until verified, except ndvh): careeronestop
+- Help line on every screen: "If losing your job ever makes you think about not being here, call or text 988, any time."
+- Next step 1: "Apply for unemployment" / "Search your state's name and "unemployment" and use the official .gov site. 211 can help if you get stuck." · [Call 211] · My Plan line: "When I'm worried about work, I'll apply for unemployment on my state's .gov site."
+- Next step 2: "Ask about your last paycheck and insurance" · You could say: "Can you tell me when my last paycheck comes, whether unused vacation is paid out, and what happens with my health insurance?" · My Plan line: "When I'm worried about work, I'll ask about my last paycheck and insurance."
+- Next step 3: "Tell one person" · prepared text: "I lost my job. I'm okay for now, but I could use someone to talk to this week." · My Plan line: "When I'm worried about work, I'll tell one person I lost my job."
+
+#### I did something I regret — Guilt, shame, or wishing you could take it back
+
+- 1: "Everyone does things they regret." / "Feeling bad about it means you care. Guilt says "I did something wrong." Shame says "I am bad." You can work with guilt."
+- 2: "Look at it plainly." · "What happened, in one or two sentences." · "What part was yours, and what wasn't." · "What you'd do differently next time."
+- 3: "If you can, make it right." / "A real apology names what you did, doesn't make excuses, and asks what would help." · You could say: "I'm sorry for what I did. It wasn't okay. Is there anything I can do to make it right?"
+- 4: "Then let it teach you, not define you." / "Talk to yourself the way you would to a good friend who made the same mistake."
+- End: "You can make a mistake and still be a good person."
+- Next step 1: "Apologize, if it's safe and right to" · You could say: "I'm sorry for what I did. It wasn't okay. Is there anything I can do to make it right?" · My Plan line: "When I keep replaying what I did, I'll make a real apology, if it's right to."
+- Next step 2: "Write it down, then close the notebook" · "What happened." · "What part was mine." · "What I'll do next time." · My Plan line: "When I keep replaying what I did, I'll write it down once, then close the notebook."
+- Next step 3: "Tell someone you trust" · prepared text: "I did something I really regret and I can't stop thinking about it. Could we talk?" · My Plan line: "When I keep replaying what I did, I'll tell someone I trust."
+
+#### Court or legal trouble — An arrest, a court date, or a legal letter
+
+- 1: "Legal trouble is scary." / "Not knowing what will happen is one of the hardest parts. Let's take it one step at a time."
+- 2: "Get the facts straight." · "Keep every letter and paper in one folder." · "Write down every date: court, deadlines, appointments." · "Never ignore a court date or a legal letter. Missing one can make things worse."
+- 3: "Get legal help." · "If you were charged with a crime, you can ask the court for a public defender if you can't afford a lawyer." · "For things like eviction, debt or family court, free legal aid may be available." · "211 can point you to legal help near you." · [Call 211]
+- 4: "Look after yourself while you wait." / "Waiting is exhausting. Tell one person, keep a little routine, and get some sleep." · prepared text: "I'm dealing with some legal stuff and I'm stressed. Can we talk?"
+- End: "You don't have to figure this out alone." · resources (hidden until verified, except ndvh): lsc
+- Next step 1: "Put every paper and date in one place" · "One folder for every letter." · "Every date on one page, or in your calendar." · My Plan line: "When I'm worried about the legal stuff, I'll put every legal paper and date in one folder."
+- Next step 2: "Look for free legal help" / "Legal aid offices help people who can't afford a lawyer. 211 can point you to one." · [Call 211] · resources: lsc · My Plan line: "When I'm worried about the legal stuff, I'll look for free legal help."
+- Next step 3: "Tell one person" · prepared text: "I'm dealing with some legal stuff and I'm stressed. Can we talk?" · My Plan line: "When I'm worried about the legal stuff, I'll tell one person what's going on."
+
+#### A big life change — Retired, kids moved out, a health change, a new chapter
+
+- 1: "Even good changes can feel like loss." / "When a role you've had for years ends, it's normal to feel lost, flat or restless for a while."
+- 2: "Give the day a shape." · "A reason to get up: a walk, a coffee somewhere, a class." · "One thing with people each week." · "One thing that's just yours: a project, a hobby, learning something."
+- 3: "Find your people again." · "Call an old friend." · "Try a group: volunteering, a faith community, a club, a class." · "Libraries and community centers often have free groups." · [Be around people]
+- End: "New chapters take time to settle into."
+- Next step 1: "Plan one thing with people this week" · prepared text: "Would you like to get coffee or take a walk this week?" · My Plan line: "When the days feel empty, I'll plan one thing with people each week."
+- Next step 2: "Try one group or class" · "Volunteering." · "A class at the library or community center." · "A faith community or club." · [Call 211] · My Plan line: "When the days feel empty, I'll try one group or class."
+- Next step 3: "Give tomorrow a shape" · "One reason to get up." · "One thing outside." · "One thing that's just yours." · My Plan line: "When the days feel empty, I'll plan one reason to get up tomorrow."
+
+#### Early recovery — The first weeks and months without drinking or using
+
+- 1: "The first weeks are hard." / "Sleep, mood and cravings can be all over the place for a while. That's common, and it does change with time."
+- 2: "Know your hard times." · "The time of day you used to drink or use." · "Certain people, places or paydays." · "Being hungry, angry, lonely or tired."
+- 3: "Have a plan for cravings." · "The urge rises, peaks and passes." · "Call or text someone before you act on it." · "Leave the place, or get something else in your hands." · [I have an urge]
+- 4: "You don't have to do it alone." / "Meetings, a sponsor, a counselor, or one sober friend. Many people need more than one kind of support."
+- End: "Every day you keep going counts." · resources (hidden until verified, except ndvh): samhsa
+- Also: "Stopping some substances suddenly, like alcohol or certain pills, can be dangerous. Talk to a doctor about stopping safely."
+- Next step 1: "Text someone before you act on it" · prepared text: "I'm having a hard time with cravings. Can you talk for a few minutes?" · My Plan line: "When a craving hits, I'll text someone before I act on it."
+- Next step 2: "Find a meeting or a counselor" / "Meetings happen in person and online, many every day. 211 can help you find treatment or a meeting near you." · [Call 211] · resources: samhsa · My Plan line: "When a craving hits, I'll go to a meeting or call a counselor."
+- Next step 3: "Plan your hardest time of day" · "What time is hardest?" · "Where will you be instead?" · "Who will you be with, or text?" · My Plan line: "When a craving hits, I'll be somewhere else at my hardest time of day."
+
 #### Follow-through after a path (owner, 2026-10-10: "i want more follow through"; D66)
 
 - Ending: "Pick one next step" / "Just one. You can come back for the others." (three next steps)
@@ -1732,7 +1828,7 @@ A quiet line at the bottom of the main screens (home, plan, progress, search, mo
 - Every query: safety check first, on each pause (~600 ms) and on submit. RED → the crisis screen, query discarded. YELLOW → support bar on, results still shown.
 - Results: up to 5 cards (title + one line), then "Not it? I don't know what I need →". Nothing matches: "Here are some places to start:" I don't know what I need · Talk to someone · Calm down with Zags · Help. Never "No results".
 - Nothing remembered: no history, no recent searches, no saved query; it clears when you leave the screen.
-- Index: 74 paths, 1008 words. Breakup / heartbreak words lead to "I feel sad or low" (no heartbreak path yet). "pills" alone → the urge path; "took all my pills" → crisis (safety check).
+- Index: 79 paths, 1075 words. Breakup / heartbreak words lead to "I feel sad or low" (no heartbreak path yet). "pills" alone → the urge path; "took all my pills" → crisis (safety check).
 Every path in the index (title — one line):
 - "It feels like panic" — One wave at a time, with a 911 line if it's new
 - "Calm down" — Slow your body down: breathing, grounding, Zags
@@ -1804,6 +1900,11 @@ Every path in the index (title — one line):
 - "After a death: the first things to do" — Practical steps, one at a time, and a scam warning
 - "Debt and collectors" — Bills piling up, calls from collectors
 - "Medical bills" — A big bill you can't pay
+- "Lost my job" — Fired, laid off, or let go
+- "I did something I regret" — Guilt, shame, or wishing you could take it back
+- "Court or legal trouble" — An arrest, a court date, or a legal letter
+- "A big life change" — Retired, kids moved out, a health change, a new chapter
+- "Early recovery" — The first weeks and months without drinking or using
 - "Someone says I owe money now" — A call, text or letter demanding money fast
 - "Other kinds of help" — Short paths for more situations
 - "Share with a friend" — Send the link to someone, get the app, or support it. No account.
